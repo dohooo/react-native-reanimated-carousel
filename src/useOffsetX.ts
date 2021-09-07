@@ -36,10 +36,6 @@ export const useOffsetX = (opts: IOpts) => {
             -(1.5 * width - 1),
             startPos,
         ];
-        if (index === 1) {
-            console.log(JSON.stringify(inputRange));
-            console.log(JSON.stringify(outputRange));
-        }
         return interpolate(
             handlerOffsetX.value,
             inputRange,
