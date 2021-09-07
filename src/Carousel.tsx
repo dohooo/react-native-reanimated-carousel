@@ -128,10 +128,10 @@ function Carousel<T extends unknown = any>(
     }, [_data]);
     const computedAnimResult = useComputedAnim(width, data.length);
     const { next, prev } = useCarouselController({ width, handlerOffsetX });
-    const offsetX = useDerivedValue(
-        () => handlerOffsetX.value % computedAnimResult.WL,
-        []
-    );
+    const offsetX = useDerivedValue(() => {
+        const x = handlerOffsetX.value % computedAnimResult.WL;
+        return isNaN(x) ? 0 : x;
+    }, []);
     const animatedListScrollHandler =
         useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
             onStart: (_, ctx: any) => {
