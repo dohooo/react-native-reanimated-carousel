@@ -25,6 +25,8 @@
     "@babel/runtime": "^7.9.6",
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-preset-expo": "8.3.0",
-    "expo-cli": "^4.0.13"
+    "expo-cli": "^4.0.13",
+    "react-native-gesture-handler": "^1.10.3",
+    "react-native-reanimated": "^2.2.0"
   }
 }

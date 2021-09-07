@@ -1,5 +1,2 @@
-export default {
-  multiply(a: number, b: number) {
-    return Promise.resolve(a * b);
-  },
-};
+import Carousel from './Carousel';
+export default Carousel;
