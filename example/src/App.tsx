@@ -20,10 +20,13 @@ export default function App() {
             <View style={{ height: 300 }}>
                 <Carousel<{ color: string }>
                     width={width}
+                    height={300}
                     data={[
                         { color: 'red' },
                         { color: 'purple' },
-                        { color: 'yellow' },
+                        { color: 'blue' },
+                        { color: 'pink' },
+                        { color: 'green' },
                     ]}
                     renderItem={({ color }) => {
                         return (

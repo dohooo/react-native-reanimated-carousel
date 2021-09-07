@@ -14,7 +14,7 @@ import Animated, {
 import { CarouselItem } from './CarouselItem';
 import { fillNum } from './fillNum';
 import type { TLayout } from './layouts';
-import { DefaultLayout } from './layouts/DefaultLayout';
+import { DefaultLayout } from './layouts/index';
 import { useCarouselController } from './useCarouselController';
 import { useComputedAnim } from './useComputedAnim';
 
@@ -103,7 +103,7 @@ function Carousel<T extends unknown = any>(
 ) {
     const {
         height = '100%',
-        data,
+        data: _data = [],
         width,
         layout = 'default',
         renderItem,
@@ -117,6 +117,15 @@ function Carousel<T extends unknown = any>(
     const { onPressItem } = props;
     const handlerOffsetX = useSharedValue<number>(0);
     const timer = React.useRef<NodeJS.Timer>();
+    const data = React.useMemo<T[]>(() => {
+        if (_data.length === 1) {
+            return [_data[0], _data[0], _data[0]];
+        }
+        if (_data.length === 2) {
+            return [_data[0], _data[1], _data[0], _data[1]];
+        }
+        return _data;
+    }, [_data]);
     const computedAnimResult = useComputedAnim(width, data.length);
     const { next, prev } = useCarouselController({ width, handlerOffsetX });
     const offsetX = useDerivedValue(
@@ -188,8 +197,9 @@ function Carousel<T extends unknown = any>(
     const Layouts = React.useMemo(() => {
         switch (layout) {
             case 'default':
-            default:
                 return DefaultLayout;
+            default:
+                return undefined;
         }
     }, [layout]);
 
@@ -202,6 +212,7 @@ function Carousel<T extends unknown = any>(
                         width,
                         height,
                         flexDirection: 'row',
+                        position: 'relative',
                     },
                     style,
                 ]}
@@ -217,19 +228,24 @@ function Carousel<T extends unknown = any>(
                             index={index}
                             key={index}
                         >
-                            {/* <View style={{ backgroundColor: "red", flex: 1 }} /> */}
-                            <Layouts
-                                parallaxScrollingOffset={
-                                    parallaxScrollingOffset
-                                }
-                                parallaxScrollingScale={parallaxScrollingScale}
-                                computedAnimResult={computedAnimResult}
-                                width={width}
-                                handlerOffsetX={offsetX}
-                                index={index}
-                            >
-                                {renderItem(item, index)}
-                            </Layouts>
+                            {Layouts ? (
+                                <Layouts
+                                    parallaxScrollingOffset={
+                                        parallaxScrollingOffset
+                                    }
+                                    parallaxScrollingScale={
+                                        parallaxScrollingScale
+                                    }
+                                    computedAnimResult={computedAnimResult}
+                                    width={width}
+                                    handlerOffsetX={offsetX}
+                                    index={index}
+                                >
+                                    {renderItem(item, index)}
+                                </Layouts>
+                            ) : (
+                                renderItem(item, index)
+                            )}
                         </CarouselItem>
                     );
                 })}

@@ -1,5 +1,3 @@
-import { DefaultLayout } from './DefaultLayout';
+export { DefaultLayout } from './DefaultLayout';
 
 export type TLayout = 'default';
-
-export default { DefaultLayout };

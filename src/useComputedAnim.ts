@@ -2,19 +2,21 @@ export interface IComputedAnimResult {
     MAX: number;
     MIN: number;
     WL: number;
+    LENGTH: number;
 }
 
 export function useComputedAnim(
     width: number,
-    length: number
+    LENGTH: number
 ): IComputedAnimResult {
-    const MAX = ((length - 1) / 2) * width * 1;
-    const MIN = ((length - 1) / 2) * width * -1;
-    const WL = width * length;
+    const MAX = (LENGTH - 2) * width;
+    const MIN = -MAX;
+    const WL = width * LENGTH;
 
     return {
         MAX,
         MIN,
         WL,
+        LENGTH,
     };
 }

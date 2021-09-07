@@ -14,28 +14,32 @@ interface IOpts {
 
 export const useOffsetX = (opts: IOpts) => {
     const { handlerOffsetX, index, width, computedAnimResult } = opts;
-    const { MAX, WL, MIN } = computedAnimResult;
+    const { MAX, WL, MIN, LENGTH } = computedAnimResult;
     const x = useDerivedValue(() => {
         const Wi = width * index;
         const startPos = Wi > MAX ? MAX - Wi : Wi < MIN ? MIN - Wi : Wi;
         const inputRange = [
             -WL,
-            -WL / 2 - startPos - 1,
-            -WL / 2 - startPos,
+            -((LENGTH - 2) * width + width / 2) - startPos - 1,
+            -((LENGTH - 2) * width + width / 2) - startPos,
             0,
-            WL / 2 - startPos,
-            WL / 2 - startPos + 1,
+            (LENGTH - 2) * width + width / 2 - startPos,
+            (LENGTH - 2) * width + width / 2 - startPos + 1,
             WL,
         ];
         const outputRange = [
             startPos,
-            WL / 2 - 1,
-            -WL / 2,
+            1.5 * width - 1,
+            -((LENGTH - 2) * width + width / 2),
             startPos,
-            WL / 2,
-            -WL / 2 + 1,
+            (LENGTH - 2) * width + width / 2,
+            -(1.5 * width - 1),
             startPos,
         ];
+        if (index === 1) {
+            console.log(JSON.stringify(inputRange));
+            console.log(JSON.stringify(outputRange));
+        }
         return interpolate(
             handlerOffsetX.value,
             inputRange,
