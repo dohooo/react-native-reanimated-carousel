@@ -1,6 +1,6 @@
 {
   "name": "react-native-reanimated-carousel",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Simple carousel component.fully implemented using Reanimated 2.Infinitely scrolling, very smooth.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
