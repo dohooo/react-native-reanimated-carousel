@@ -7,6 +7,7 @@ import {
 import Animated, {
     runOnJS,
     useAnimatedGestureHandler,
+    useAnimatedReaction,
     useDerivedValue,
     useSharedValue,
     withTiming,
@@ -17,6 +18,8 @@ import type { TMode } from './layouts';
 import { ParallaxLayout } from './layouts/index';
 import { useCarouselController } from './useCarouselController';
 import { useComputedAnim } from './useComputedAnim';
+import { useLoop } from './useLoop';
+import { useComputedIndex } from './useComputedIndex';
 
 export const _withTiming = (
     num: number,
@@ -91,11 +94,25 @@ export interface ICarouselProps<T extends unknown> {
      * @default 0.8
      */
     parallaxScrollingScale?: number;
+    /**
+     * Callback fired when navigating to an item
+     */
+    onSnapToItem?: (index: number) => void;
 }
 
 export interface ICarouselInstance {
+    /**
+     * Play the last one
+     */
     prev: () => void;
+    /**
+     * Play the next one
+     */
     next: () => void;
+    /**
+     * Get current item index
+     */
+    getCurrentIndex: () => number;
 }
 
 function Carousel<T extends unknown = any>(
@@ -109,15 +126,15 @@ function Carousel<T extends unknown = any>(
         loop = true,
         mode = 'default',
         renderItem,
-        autoPlay = false,
-        autoPlayReverse = false,
-        autoPlayInterval = 1000,
+        autoPlay,
+        autoPlayReverse,
+        autoPlayInterval,
         parallaxScrollingOffset,
         parallaxScrollingScale,
+        onSnapToItem,
         style,
     } = props;
     const handlerOffsetX = useSharedValue<number>(0);
-    const timer = React.useRef<NodeJS.Timer>();
     const data = React.useMemo<T[]>(() => {
         if (_data.length === 1) {
             return [_data[0], _data[0], _data[0]];
@@ -129,13 +146,46 @@ function Carousel<T extends unknown = any>(
     }, [_data]);
 
     const computedAnimResult = useComputedAnim(width, data.length);
-
-    const { next, prev } = useCarouselController({ width, handlerOffsetX });
+    const carouselController = useCarouselController({ width, handlerOffsetX });
+    useLoop({
+        autoPlay,
+        autoPlayInterval,
+        autoPlayReverse,
+        carouselController,
+    });
+    const { index, computedIndex } = useComputedIndex({
+        length: data.length,
+        handlerOffsetX,
+        width,
+    });
 
     const offsetX = useDerivedValue(() => {
         const x = handlerOffsetX.value % computedAnimResult.WL;
         return isNaN(x) ? 0 : x;
     }, [computedAnimResult]);
+
+    useAnimatedReaction(
+        () => index.value,
+        (i) => onSnapToItem && runOnJS(onSnapToItem)(i),
+        [onSnapToItem]
+    );
+
+    const callComputedIndex = React.useCallback(
+        (isFinished: boolean) => isFinished && computedIndex?.(),
+        [computedIndex]
+    );
+
+    const next = React.useCallback(() => {
+        return carouselController.next(callComputedIndex);
+    }, [carouselController, callComputedIndex]);
+
+    const prev = React.useCallback(() => {
+        return carouselController.prev(callComputedIndex);
+    }, [carouselController, callComputedIndex]);
+
+    const getCurrentIndex = React.useCallback(() => {
+        return index.value;
+    }, [index]);
 
     const animatedListScrollHandler =
         useAnimatedGestureHandler<PanGestureHandlerGestureEvent>(
@@ -153,7 +203,7 @@ function Carousel<T extends unknown = any>(
                     handlerOffsetX.value = Math.max(
                         Math.min(
                             ctx.startContentOffsetX +
-                            Math.round(e.translationX),
+                                Math.round(e.translationX),
                             0
                         ),
                         -(data.length - 1) * width
@@ -163,20 +213,24 @@ function Carousel<T extends unknown = any>(
                     const intTranslationX = Math.round(e.translationX);
                     const sub = Math.abs(intTranslationX);
 
+                    function _withTimingCallback(num: number) {
+                        return _withTiming(num, callComputedIndex);
+                    }
+
                     if (intTranslationX > 0) {
                         if (!loop && handlerOffsetX.value >= 0) {
                             return;
                         }
 
                         if (sub > width / 2) {
-                            handlerOffsetX.value = _withTiming(
+                            handlerOffsetX.value = _withTimingCallback(
                                 fillNum(
                                     width,
                                     handlerOffsetX.value + (width - sub)
                                 )
                             );
                         } else {
-                            handlerOffsetX.value = _withTiming(
+                            handlerOffsetX.value = _withTimingCallback(
                                 fillNum(width, handlerOffsetX.value - sub)
                             );
                         }
@@ -192,14 +246,14 @@ function Carousel<T extends unknown = any>(
                         }
 
                         if (sub > width / 2) {
-                            handlerOffsetX.value = _withTiming(
+                            handlerOffsetX.value = _withTimingCallback(
                                 fillNum(
                                     width,
                                     handlerOffsetX.value - (width - sub)
                                 )
                             );
                         } else {
-                            handlerOffsetX.value = _withTiming(
+                            handlerOffsetX.value = _withTimingCallback(
                                 fillNum(width, handlerOffsetX.value + sub)
                             );
                         }
@@ -214,22 +268,9 @@ function Carousel<T extends unknown = any>(
         return {
             next,
             prev,
+            getCurrentIndex,
         };
     });
-
-    React.useEffect(() => {
-        if (timer.current) {
-            clearInterval(timer.current);
-        }
-        if (autoPlay) {
-            timer.current = setInterval(() => {
-                autoPlayReverse ? prev() : next();
-            }, autoPlayInterval);
-        }
-        return () => {
-            !!timer.current && clearInterval(timer.current);
-        };
-    }, [autoPlay, autoPlayReverse, autoPlayInterval, prev, next]);
 
     const Layouts = React.useMemo<React.FC<{ index: number }>>(() => {
         switch (mode) {

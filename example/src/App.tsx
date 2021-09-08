@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
-import { Button, Dimensions, View } from 'react-native';
+import { Button, Dimensions, Text, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { ICarouselInstance } from '../../src/Carousel';
 
@@ -31,7 +31,10 @@ export default function App() {
                         { color: 'yellow' },
                     ]}
                     parallaxScrollingScale={0.8}
-                    renderItem={({ color }) => {
+                    onSnapToItem={(index) => {
+                        console.log('current index:', index);
+                    }}
+                    renderItem={({ color }, index) => {
                         return (
                             <View
                                 style={{
@@ -50,8 +53,12 @@ export default function App() {
                                         style={{
                                             flex: 1,
                                             backgroundColor: color,
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
                                         }}
-                                    />
+                                    >
+                                        <Text>{index}</Text>
+                                    </View>
                                 </TouchableWithoutFeedback>
                             </View>
                         );

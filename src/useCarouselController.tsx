@@ -8,7 +8,12 @@ interface IOpts {
     handlerOffsetX: Animated.SharedValue<number>;
 }
 
-export function useCarouselController(opts: IOpts) {
+export interface ICarouselController {
+    prev: (callback?: (isFinished: boolean) => void) => void;
+    next: (callback?: (isFinished: boolean) => void) => void;
+}
+
+export function useCarouselController(opts: IOpts): ICarouselController {
     const lock = useSharedValue<boolean>(false);
     const { width, handlerOffsetX } = opts;
 
@@ -24,23 +29,35 @@ export function useCarouselController(opts: IOpts) {
         lock.value = true;
     }, [lock]);
 
-    const next = React.useCallback(() => {
-        if (lock.value) return;
-        openLock();
-        handlerOffsetX.value = _withTiming(
-            handlerOffsetX.value - width,
-            closeLock
-        );
-    }, [width, openLock, closeLock, lock, handlerOffsetX]);
+    const next = React.useCallback(
+        (callback?: (isFinished: boolean) => void) => {
+            if (lock.value) return;
+            openLock();
+            handlerOffsetX.value = _withTiming(
+                handlerOffsetX.value - width,
+                (isFinished: boolean) => {
+                    callback?.(isFinished);
+                    closeLock(isFinished);
+                }
+            );
+        },
+        [width, openLock, closeLock, lock, handlerOffsetX]
+    );
 
-    const prev = React.useCallback(() => {
-        if (lock.value) return;
-        openLock();
-        handlerOffsetX.value = _withTiming(
-            handlerOffsetX.value + width,
-            closeLock
-        );
-    }, [width, openLock, closeLock, lock, handlerOffsetX]);
+    const prev = React.useCallback(
+        (callback?: (isFinished: boolean) => void) => {
+            if (lock.value) return;
+            openLock();
+            handlerOffsetX.value = _withTiming(
+                handlerOffsetX.value + width,
+                (isFinished: boolean) => {
+                    callback?.(isFinished);
+                    closeLock(isFinished);
+                }
+            );
+        },
+        [width, openLock, closeLock, lock, handlerOffsetX]
+    );
 
     return {
         next,

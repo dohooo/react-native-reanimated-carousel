@@ -67,6 +67,14 @@ import Carousel from "react-native-reanimated-carousel";
 | style                   | false    | {}      | ViewStyle                                   | Carousel container style                                                       |
 | height                  | false    | '100%'  | undefined \| string \| number               | Specified carousel container height                                            |
 
+## Ref
+
+| name            | types      | description            |
+| --------------- | ---------- | ---------------------- |
+| prev            | ()=>void   | Play the last one      |
+| loop            | ()=>void   | Play the next one      |
+| getCurrentIndex | ()=>number | Get current item index |
+
 ## Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
