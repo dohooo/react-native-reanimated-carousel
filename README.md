@@ -63,7 +63,6 @@ import Carousel from "react-native-reanimated-carousel";
 | layout                  | false    | defalut | 'default'                                   | Carousel Animated transitions                                                  |
 | parallaxScrollingOffset | false    | 100     | number                                      | When use 'default' Layout props,this prop can be control prev/next item offset |
 | parallaxScrollingScale  | false    | 0.8     | number                                      | When use 'default' Layout props,this prop can be control prev/next item scale  |
-| onPressItem             | false    |         | (data: any, index: number) => void          | Press item callback                                                            |
 | style                   | false    | {}      | ViewStyle                                   | Carousel container style                                                       |
 | height                  | false    | '100%'  | undefined \| string \| number               | Specified carousel container height                                            |
 

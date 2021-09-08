@@ -42,10 +42,6 @@ export interface ICarouselProps<T extends unknown> {
      */
     layout?: TLayout;
     /**
-     * Press item callback.
-     */
-    onPressItem?: (data: any, index: number) => void;
-    /**
      * Render carousel item.
      */
     renderItem: (data: T, index: number) => React.ReactNode;
@@ -114,7 +110,6 @@ function Carousel<T extends unknown = any>(
         parallaxScrollingScale,
         style,
     } = props;
-    const { onPressItem } = props;
     const handlerOffsetX = useSharedValue<number>(0);
     const timer = React.useRef<NodeJS.Timer>();
     const data = React.useMemo<T[]>(() => {
@@ -223,7 +218,6 @@ function Carousel<T extends unknown = any>(
                             computedAnimResult={computedAnimResult}
                             width={width}
                             height={height}
-                            onPress={() => onPressItem?.(item, index)}
                             handlerOffsetX={offsetX}
                             index={index}
                             key={index}

@@ -1,6 +1,5 @@
 import React from 'react';
 import { FlexStyle, View } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import type { IComputedAnimResult } from './useComputedAnim';
 import { useOffsetX } from './useOffsetX';
@@ -10,13 +9,11 @@ export const CarouselItem: React.FC<{
     handlerOffsetX: Animated.SharedValue<number>;
     width: number;
     height?: FlexStyle['height'];
-    onPress?: () => void;
     computedAnimResult: IComputedAnimResult;
 }> = (props) => {
     const {
         handlerOffsetX,
         index,
-        onPress,
         children,
         width,
         height = '100%',
@@ -31,9 +28,7 @@ export const CarouselItem: React.FC<{
 
     return (
         <Animated.View style={offsetXStyle}>
-            <TouchableWithoutFeedback onPress={onPress}>
-                <View style={{ width, height }}>{children}</View>
-            </TouchableWithoutFeedback>
+            <View style={{ width, height }}>{children}</View>
         </Animated.View>
     );
 };
