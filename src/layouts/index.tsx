@@ -1,3 +1,3 @@
-export { DefaultLayout } from './DefaultLayout';
+export { ParallaxLayout } from './ParallaxLayout';
 
-export type TLayout = 'default';
+export type TMode = 'default' | 'parallax';

@@ -23,7 +23,7 @@ Or if you use npm:
 npm install react-native-reanimated-carousel
 ```
 
-Now we need to install [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler) and [`react-native-reanimated(>=2.0.0)`](https://github.com/kmagiera/react-native-reanimated). 
+Now we need to install [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler) and [`react-native-reanimated(>=2.0.0)`](https://github.com/kmagiera/react-native-reanimated).
 Don't use Expo to install reanimated it not supported `Reanimated(v2)`
 
 ## Usage
@@ -60,7 +60,8 @@ import Carousel from "react-native-reanimated-carousel";
 | autoPlay                | false    | false   | boolean                                     | Auto play                                                                      |
 | autoPlayReverse         | false    | false   | boolean                                     | Auto play reverse playback                                                     |
 | autoPlayInterval        | false    | 1000    | autoPlayInterval                            | Auto play playback interval                                                    |
-| layout                  | false    | defalut | 'default'                                   | Carousel Animated transitions                                                  |
+| mode                    | false    | defalut | 'default'\|'parallax'                       | Carousel Animated transitions                                                  |
+| loop                    | false    | true    | boolean                                     | Carousel loop playback                                                         |
 | parallaxScrollingOffset | false    | 100     | number                                      | When use 'default' Layout props,this prop can be control prev/next item offset |
 | parallaxScrollingScale  | false    | 0.8     | number                                      | When use 'default' Layout props,this prop can be control prev/next item scale  |
 | style                   | false    | {}      | ViewStyle                                   | Carousel container style                                                       |

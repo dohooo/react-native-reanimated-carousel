@@ -13,8 +13,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import { CarouselItem } from './CarouselItem';
 import { fillNum } from './fillNum';
-import type { TLayout } from './layouts';
-import { DefaultLayout } from './layouts/index';
+import type { TMode } from './layouts';
+import { ParallaxLayout } from './layouts/index';
 import { useCarouselController } from './useCarouselController';
 import { useComputedAnim } from './useComputedAnim';
 
@@ -37,10 +37,15 @@ export const _withTiming = (
 export interface ICarouselProps<T extends unknown> {
     ref?: React.Ref<ICarouselInstance>;
     /**
+     * Carousel loop playback.
+     * @default true
+     */
+    loop?: boolean;
+    /**
      * Carousel Animated transitions.
      * @default 'default'
      */
-    layout?: TLayout;
+    mode?: TMode;
     /**
      * Render carousel item.
      */
@@ -101,7 +106,8 @@ function Carousel<T extends unknown = any>(
         height = '100%',
         data: _data = [],
         width,
-        layout = 'default',
+        loop = true,
+        mode = 'default',
         renderItem,
         autoPlay = false,
         autoPlayReverse = false,
@@ -121,52 +127,88 @@ function Carousel<T extends unknown = any>(
         }
         return _data;
     }, [_data]);
+
     const computedAnimResult = useComputedAnim(width, data.length);
+
     const { next, prev } = useCarouselController({ width, handlerOffsetX });
+
     const offsetX = useDerivedValue(() => {
         const x = handlerOffsetX.value % computedAnimResult.WL;
         return isNaN(x) ? 0 : x;
     }, []);
+
     const animatedListScrollHandler =
-        useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
-            onStart: (_, ctx: any) => {
-                ctx.startContentOffsetX = handlerOffsetX.value;
-            },
-            onActive: (e, ctx: any) => {
-                handlerOffsetX.value =
-                    ctx.startContentOffsetX + Math.round(e.translationX);
-            },
-            onEnd: (e) => {
-                const intTranslationX = Math.round(e.translationX);
-                const sub = Math.abs(intTranslationX);
-
-                if (intTranslationX > 0) {
-                    if (sub > width / 2) {
-                        handlerOffsetX.value = _withTiming(
-                            fillNum(width, handlerOffsetX.value + (width - sub))
-                        );
-                    } else {
-                        handlerOffsetX.value = _withTiming(
-                            fillNum(width, handlerOffsetX.value - sub)
-                        );
+        useAnimatedGestureHandler<PanGestureHandlerGestureEvent>(
+            {
+                onStart: (_, ctx: any) => {
+                    ctx.startContentOffsetX = handlerOffsetX.value;
+                },
+                onActive: (e, ctx: any) => {
+                    if (loop) {
+                        handlerOffsetX.value =
+                            ctx.startContentOffsetX +
+                            Math.round(e.translationX);
+                        return;
                     }
-                    return;
-                }
+                    handlerOffsetX.value = Math.max(
+                        Math.min(
+                            ctx.startContentOffsetX +
+                                Math.round(e.translationX),
+                            0
+                        ),
+                        -(data.length - 1) * width
+                    );
+                },
+                onEnd: (e) => {
+                    const intTranslationX = Math.round(e.translationX);
+                    const sub = Math.abs(intTranslationX);
 
-                if (intTranslationX < 0) {
-                    if (sub > width / 2) {
-                        handlerOffsetX.value = _withTiming(
-                            fillNum(width, handlerOffsetX.value - (width - sub))
-                        );
-                    } else {
-                        handlerOffsetX.value = _withTiming(
-                            fillNum(width, handlerOffsetX.value + sub)
-                        );
+                    if (intTranslationX > 0) {
+                        if (!loop && handlerOffsetX.value >= 0) {
+                            return;
+                        }
+
+                        if (sub > width / 2) {
+                            handlerOffsetX.value = _withTiming(
+                                fillNum(
+                                    width,
+                                    handlerOffsetX.value + (width - sub)
+                                )
+                            );
+                        } else {
+                            handlerOffsetX.value = _withTiming(
+                                fillNum(width, handlerOffsetX.value - sub)
+                            );
+                        }
+                        return;
                     }
-                    return;
-                }
+
+                    if (intTranslationX < 0) {
+                        if (
+                            !loop &&
+                            handlerOffsetX.value <= -(data.length - 1) * width
+                        ) {
+                            return;
+                        }
+
+                        if (sub > width / 2) {
+                            handlerOffsetX.value = _withTiming(
+                                fillNum(
+                                    width,
+                                    handlerOffsetX.value - (width - sub)
+                                )
+                            );
+                        } else {
+                            handlerOffsetX.value = _withTiming(
+                                fillNum(width, handlerOffsetX.value + sub)
+                            );
+                        }
+                        return;
+                    }
+                },
             },
-        });
+            [loop]
+        );
 
     React.useImperativeHandle(ref, () => {
         return {
@@ -189,14 +231,48 @@ function Carousel<T extends unknown = any>(
         };
     }, [autoPlay, autoPlayReverse, autoPlayInterval, prev, next]);
 
-    const Layouts = React.useMemo(() => {
-        switch (layout) {
-            case 'default':
-                return DefaultLayout;
+    const Layouts = React.useMemo<React.FC<{ index: number }>>(() => {
+        switch (mode) {
+            case 'parallax':
+                return ({ index, children }) => (
+                    <ParallaxLayout
+                        parallaxScrollingOffset={parallaxScrollingOffset}
+                        parallaxScrollingScale={parallaxScrollingScale}
+                        computedAnimResult={computedAnimResult}
+                        width={width}
+                        handlerOffsetX={offsetX}
+                        index={index}
+                        key={index}
+                        loop={loop}
+                    >
+                        {children}
+                    </ParallaxLayout>
+                );
             default:
-                return undefined;
+                return ({ index, children }) => (
+                    <CarouselItem
+                        computedAnimResult={computedAnimResult}
+                        width={width}
+                        height={height}
+                        handlerOffsetX={offsetX}
+                        index={index}
+                        key={index}
+                        loop={loop}
+                    >
+                        {children}
+                    </CarouselItem>
+                );
         }
-    }, [layout]);
+    }, [
+        loop,
+        mode,
+        computedAnimResult,
+        height,
+        offsetX,
+        parallaxScrollingOffset,
+        parallaxScrollingScale,
+        width,
+    ]);
 
     return (
         <PanGestureHandler onHandlerStateChange={animatedListScrollHandler}>
@@ -214,33 +290,9 @@ function Carousel<T extends unknown = any>(
             >
                 {data.map((item, index) => {
                     return (
-                        <CarouselItem
-                            computedAnimResult={computedAnimResult}
-                            width={width}
-                            height={height}
-                            handlerOffsetX={offsetX}
-                            index={index}
-                            key={index}
-                        >
-                            {Layouts ? (
-                                <Layouts
-                                    parallaxScrollingOffset={
-                                        parallaxScrollingOffset
-                                    }
-                                    parallaxScrollingScale={
-                                        parallaxScrollingScale
-                                    }
-                                    computedAnimResult={computedAnimResult}
-                                    width={width}
-                                    handlerOffsetX={offsetX}
-                                    index={index}
-                                >
-                                    {renderItem(item, index)}
-                                </Layouts>
-                            ) : (
-                                renderItem(item, index)
-                            )}
-                        </CarouselItem>
+                        <Layouts index={index} key={index}>
+                            {renderItem(item, index)}
+                        </Layouts>
                     );
                 })}
             </Animated.View>

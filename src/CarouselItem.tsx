@@ -5,6 +5,7 @@ import type { IComputedAnimResult } from './useComputedAnim';
 import { useOffsetX } from './useOffsetX';
 
 export const CarouselItem: React.FC<{
+    loop?: boolean;
     index: number;
     handlerOffsetX: Animated.SharedValue<number>;
     width: number;
@@ -18,8 +19,15 @@ export const CarouselItem: React.FC<{
         width,
         height = '100%',
         computedAnimResult,
+        loop,
     } = props;
-    const x = useOffsetX({ handlerOffsetX, index, width, computedAnimResult });
+    const x = useOffsetX({
+        handlerOffsetX,
+        index,
+        width,
+        computedAnimResult,
+        loop,
+    });
     const offsetXStyle = useAnimatedStyle(() => {
         return {
             transform: [{ translateX: x.value - index * width }],
