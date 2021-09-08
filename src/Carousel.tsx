@@ -135,7 +135,7 @@ function Carousel<T extends unknown = any>(
     const offsetX = useDerivedValue(() => {
         const x = handlerOffsetX.value % computedAnimResult.WL;
         return isNaN(x) ? 0 : x;
-    }, []);
+    }, [computedAnimResult]);
 
     const animatedListScrollHandler =
         useAnimatedGestureHandler<PanGestureHandlerGestureEvent>(
@@ -153,7 +153,7 @@ function Carousel<T extends unknown = any>(
                     handlerOffsetX.value = Math.max(
                         Math.min(
                             ctx.startContentOffsetX +
-                                Math.round(e.translationX),
+                            Math.round(e.translationX),
                             0
                         ),
                         -(data.length - 1) * width
@@ -207,7 +207,7 @@ function Carousel<T extends unknown = any>(
                     }
                 },
             },
-            [loop]
+            [loop, data]
         );
 
     React.useImperativeHandle(ref, () => {
