@@ -25,10 +25,10 @@ export default function App() {
                     mode="parallax"
                     width={width}
                     data={[
-                        { color: 'red' },
-                        { color: 'purple' },
-                        { color: 'blue' },
-                        { color: 'yellow' },
+                        // { color: 'red' },
+                        // { color: 'purple' },
+                        // { color: 'blue' },
+                        // { color: 'yellow' },
                     ]}
                     parallaxScrollingScale={0.8}
                     onSnapToItem={(index) => {

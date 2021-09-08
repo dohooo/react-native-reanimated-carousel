@@ -6,6 +6,7 @@ import { useSharedValue } from 'react-native-reanimated';
 interface IOpts {
     width: number;
     handlerOffsetX: Animated.SharedValue<number>;
+    disable?: boolean;
 }
 
 export interface ICarouselController {
@@ -15,7 +16,7 @@ export interface ICarouselController {
 
 export function useCarouselController(opts: IOpts): ICarouselController {
     const lock = useSharedValue<boolean>(false);
-    const { width, handlerOffsetX } = opts;
+    const { width, handlerOffsetX, disable = false } = opts;
 
     const closeLock = React.useCallback(
         (isFinished: boolean) => {
@@ -31,6 +32,7 @@ export function useCarouselController(opts: IOpts): ICarouselController {
 
     const next = React.useCallback(
         (callback?: (isFinished: boolean) => void) => {
+            if (disable) return;
             if (lock.value) return;
             openLock();
             handlerOffsetX.value = _withTiming(
@@ -41,11 +43,12 @@ export function useCarouselController(opts: IOpts): ICarouselController {
                 }
             );
         },
-        [width, openLock, closeLock, lock, handlerOffsetX]
+        [width, openLock, closeLock, lock, handlerOffsetX, disable]
     );
 
     const prev = React.useCallback(
         (callback?: (isFinished: boolean) => void) => {
+            if (disable) return;
             if (lock.value) return;
             openLock();
             handlerOffsetX.value = _withTiming(
@@ -56,7 +59,7 @@ export function useCarouselController(opts: IOpts): ICarouselController {
                 }
             );
         },
-        [width, openLock, closeLock, lock, handlerOffsetX]
+        [width, openLock, closeLock, lock, handlerOffsetX, disable]
     );
 
     return {

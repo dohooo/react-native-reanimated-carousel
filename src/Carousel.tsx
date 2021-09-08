@@ -136,17 +136,25 @@ function Carousel<T extends unknown = any>(
     } = props;
     const handlerOffsetX = useSharedValue<number>(0);
     const data = React.useMemo<T[]>(() => {
+        if (!loop) return _data;
+
         if (_data.length === 1) {
             return [_data[0], _data[0], _data[0]];
         }
+
         if (_data.length === 2) {
             return [_data[0], _data[1], _data[0], _data[1]];
         }
+
         return _data;
-    }, [_data]);
+    }, [_data, loop]);
 
     const computedAnimResult = useComputedAnim(width, data.length);
-    const carouselController = useCarouselController({ width, handlerOffsetX });
+    const carouselController = useCarouselController({
+        width,
+        handlerOffsetX,
+        disable: !data.length,
+    });
     useLoop({
         autoPlay,
         autoPlayInterval,
@@ -166,8 +174,20 @@ function Carousel<T extends unknown = any>(
 
     useAnimatedReaction(
         () => index.value,
-        (i) => onSnapToItem && runOnJS(onSnapToItem)(i),
-        [onSnapToItem]
+        (i) => {
+            if (loop) {
+                switch (_data.length) {
+                    case 1:
+                        i = 0;
+                        break;
+                    case 2:
+                        i = i % 2;
+                        break;
+                }
+                onSnapToItem && runOnJS(onSnapToItem)(i);
+            }
+        },
+        [onSnapToItem, loop, _data]
     );
 
     const callComputedIndex = React.useCallback(
