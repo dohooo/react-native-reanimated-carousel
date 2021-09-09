@@ -13,7 +13,6 @@ import Animated, {
     withTiming,
 } from 'react-native-reanimated';
 import { CarouselItem } from './CarouselItem';
-import { fillNum } from './fillNum';
 import type { TMode } from './layouts';
 import { ParallaxLayout } from './layouts/index';
 import { useCarouselController } from './useCarouselController';
@@ -21,20 +20,8 @@ import { useComputedAnim } from './useComputedAnim';
 import { useLoop } from './useLoop';
 import { useComputedIndex } from './useComputedIndex';
 
-export const _withTiming = (
-    num: number,
-    callback?: (isFinished: boolean) => void
-) => {
-    'worklet';
-    return withTiming(
-        num,
-        {
-            duration: 250,
-        },
-        (isFinished) => {
-            !!callback && runOnJS(callback)(isFinished);
-        }
-    );
+export const timingConfig = {
+    duration: 250,
 };
 
 export interface ICarouselProps<T extends unknown> {
@@ -211,53 +198,69 @@ function Carousel<T extends unknown = any>(
         useAnimatedGestureHandler<PanGestureHandlerGestureEvent>(
             {
                 onStart: (_, ctx: any) => {
+                    if (ctx.lock) return;
                     ctx.startContentOffsetX = handlerOffsetX.value;
+                    ctx.currentContentOffsetX = handlerOffsetX.value;
                 },
                 onActive: (e, ctx: any) => {
+                    if (ctx.lock) return;
+                    /**
+                     * `onActive` and `onEnd` return different values of translationX！So that creates a bias！TAT
+                     * */
+                    ctx.translationX = e.translationX;
                     if (loop) {
                         handlerOffsetX.value =
-                            ctx.startContentOffsetX +
-                            Math.round(e.translationX);
+                            ctx.currentContentOffsetX + e.translationX;
                         return;
                     }
                     handlerOffsetX.value = Math.max(
-                        Math.min(
-                            ctx.startContentOffsetX +
-                                Math.round(e.translationX),
-                            0
-                        ),
+                        Math.min(ctx.currentContentOffsetX + e.translationX, 0),
                         -(data.length - 1) * width
                     );
                 },
-                onEnd: (e) => {
-                    const intTranslationX = Math.round(e.translationX);
-                    const sub = Math.abs(intTranslationX);
+                onEnd: (e, ctx: any) => {
+                    if (ctx.lock) {
+                        return;
+                    }
+                    const translationX = ctx.translationX;
 
                     function _withTimingCallback(num: number) {
-                        return _withTiming(num, callComputedIndex);
+                        ctx.lock = true;
+                        return withTiming(num, timingConfig, (isFinished) => {
+                            if (isFinished) {
+                                ctx.lock = false;
+                            }
+                            runOnJS(callComputedIndex)(isFinished);
+                        });
                     }
 
-                    if (intTranslationX > 0) {
+                    if (translationX > 0) {
+                        /**
+                         * If not loop no , longer scroll when sliding to the start.
+                         * */
                         if (!loop && handlerOffsetX.value >= 0) {
                             return;
                         }
 
-                        if (sub > width / 2) {
+                        if (
+                            Math.abs(translationX) + Math.abs(e.velocityX) >
+                            width / 2
+                        ) {
                             handlerOffsetX.value = _withTimingCallback(
-                                fillNum(
-                                    width,
-                                    handlerOffsetX.value + (width - sub)
-                                )
+                                handlerOffsetX.value + width - translationX
                             );
                         } else {
                             handlerOffsetX.value = _withTimingCallback(
-                                fillNum(width, handlerOffsetX.value - sub)
+                                handlerOffsetX.value - translationX
                             );
                         }
                         return;
                     }
 
-                    if (intTranslationX < 0) {
+                    if (translationX < 0) {
+                        /**
+                         * If not loop , no longer scroll when sliding to the end.
+                         * */
                         if (
                             !loop &&
                             handlerOffsetX.value <= -(data.length - 1) * width
@@ -265,16 +268,16 @@ function Carousel<T extends unknown = any>(
                             return;
                         }
 
-                        if (sub > width / 2) {
+                        if (
+                            Math.abs(translationX) + Math.abs(e.velocityX) >
+                            width / 2
+                        ) {
                             handlerOffsetX.value = _withTimingCallback(
-                                fillNum(
-                                    width,
-                                    handlerOffsetX.value - (width - sub)
-                                )
+                                handlerOffsetX.value - width - translationX
                             );
                         } else {
                             handlerOffsetX.value = _withTimingCallback(
-                                fillNum(width, handlerOffsetX.value + sub)
+                                handlerOffsetX.value - translationX
                             );
                         }
                         return;

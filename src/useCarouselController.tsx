@@ -1,7 +1,7 @@
 import React from 'react';
-import { _withTiming } from './Carousel';
+import { timingConfig } from './Carousel';
 import type Animated from 'react-native-reanimated';
-import { useSharedValue } from 'react-native-reanimated';
+import { useSharedValue, withTiming } from 'react-native-reanimated';
 
 interface IOpts {
     width: number;
@@ -35,8 +35,9 @@ export function useCarouselController(opts: IOpts): ICarouselController {
             if (disable) return;
             if (lock.value) return;
             openLock();
-            handlerOffsetX.value = _withTiming(
+            handlerOffsetX.value = withTiming(
                 handlerOffsetX.value - width,
+                timingConfig,
                 (isFinished: boolean) => {
                     callback?.(isFinished);
                     closeLock(isFinished);
@@ -51,8 +52,9 @@ export function useCarouselController(opts: IOpts): ICarouselController {
             if (disable) return;
             if (lock.value) return;
             openLock();
-            handlerOffsetX.value = _withTiming(
+            handlerOffsetX.value = withTiming(
                 handlerOffsetX.value + width,
+                timingConfig,
                 (isFinished: boolean) => {
                     callback?.(isFinished);
                     closeLock(isFinished);
