@@ -1,11 +1,13 @@
 import React from 'react';
-import { timingConfig } from './Carousel';
 import type Animated from 'react-native-reanimated';
-import { useSharedValue, withTiming } from 'react-native-reanimated';
+import { runOnJS, withTiming } from 'react-native-reanimated';
+import type { ILockController } from './useLock';
 
 interface IOpts {
     width: number;
     handlerOffsetX: Animated.SharedValue<number>;
+    lockController: ILockController;
+    timingConfig: Animated.WithTimingConfig;
     disable?: boolean;
 }
 
@@ -15,53 +17,69 @@ export interface ICarouselController {
 }
 
 export function useCarouselController(opts: IOpts): ICarouselController {
-    const lock = useSharedValue<boolean>(false);
-    const { width, handlerOffsetX, disable = false } = opts;
+    const {
+        width,
+        handlerOffsetX,
+        timingConfig,
+        lockController,
+        disable = false,
+    } = opts;
 
     const closeLock = React.useCallback(
         (isFinished: boolean) => {
             if (isFinished) {
-                lock.value = false;
+                lockController.unLock();
             }
         },
-        [lock]
+        [lockController]
     );
-    const openLock = React.useCallback(() => {
-        lock.value = true;
-    }, [lock]);
 
     const next = React.useCallback(
         (callback?: (isFinished: boolean) => void) => {
             if (disable) return;
-            if (lock.value) return;
-            openLock();
+            if (lockController.isLock()) return;
+            lockController.lock();
             handlerOffsetX.value = withTiming(
                 handlerOffsetX.value - width,
                 timingConfig,
                 (isFinished: boolean) => {
-                    callback?.(isFinished);
-                    closeLock(isFinished);
+                    !!callback && runOnJS(callback)(isFinished);
+                    runOnJS(closeLock)(isFinished);
                 }
             );
         },
-        [width, openLock, closeLock, lock, handlerOffsetX, disable]
+        [
+            width,
+            lockController,
+            timingConfig,
+            closeLock,
+            handlerOffsetX,
+            disable,
+        ]
     );
 
     const prev = React.useCallback(
         (callback?: (isFinished: boolean) => void) => {
             if (disable) return;
-            if (lock.value) return;
-            openLock();
+            if (lockController.isLock()) return;
+            lockController.lock();
             handlerOffsetX.value = withTiming(
                 handlerOffsetX.value + width,
                 timingConfig,
                 (isFinished: boolean) => {
-                    callback?.(isFinished);
-                    closeLock(isFinished);
+                    !!callback && runOnJS(callback)(isFinished);
+                    runOnJS(closeLock)(isFinished);
                 }
             );
         },
-        [width, openLock, closeLock, lock, handlerOffsetX, disable]
+        [
+            width,
+            lockController,
+            timingConfig,
+            closeLock,
+            handlerOffsetX,
+            disable,
+        ]
     );
 
     return {

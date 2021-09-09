@@ -21,6 +21,7 @@ export default function App() {
         >
             <View style={{ height: 300 }}>
                 <Carousel<{ color: string }>
+                    timingConfig={{ duration: 1000 }}
                     ref={r}
                     mode="parallax"
                     width={width}

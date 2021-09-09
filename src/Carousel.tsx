@@ -17,10 +17,11 @@ import type { TMode } from './layouts';
 import { ParallaxLayout } from './layouts/index';
 import { useCarouselController } from './useCarouselController';
 import { useComputedAnim } from './useComputedAnim';
-import { useLoop } from './useLoop';
+import { useAutoPlay } from './useAutoPlay';
 import { useComputedIndex } from './useComputedIndex';
+import { useLockController } from './useLock';
 
-export const timingConfig = {
+const defaultTimingConfig: Animated.WithTimingConfig = {
     duration: 250,
 };
 
@@ -85,6 +86,10 @@ export interface ICarouselProps<T extends unknown> {
      * Callback fired when navigating to an item
      */
     onSnapToItem?: (index: number) => void;
+    /**
+     * Timing config of translation animated
+     */
+    timingConfig?: Animated.WithTimingConfig;
 }
 
 export interface ICarouselInstance {
@@ -120,7 +125,9 @@ function Carousel<T extends unknown = any>(
         parallaxScrollingScale,
         onSnapToItem,
         style,
+        timingConfig = defaultTimingConfig,
     } = props;
+    const lockController = useLockController();
     const handlerOffsetX = useSharedValue<number>(0);
     const data = React.useMemo<T[]>(() => {
         if (!loop) return _data;
@@ -140,13 +147,16 @@ function Carousel<T extends unknown = any>(
     const carouselController = useCarouselController({
         width,
         handlerOffsetX,
+        lockController,
+        timingConfig,
         disable: !data.length,
     });
-    useLoop({
+    useAutoPlay({
         autoPlay,
         autoPlayInterval,
         autoPlayReverse,
         carouselController,
+        lockController,
     });
     const { index, computedIndex } = useComputedIndex({
         length: data.length,
@@ -198,12 +208,12 @@ function Carousel<T extends unknown = any>(
         useAnimatedGestureHandler<PanGestureHandlerGestureEvent>(
             {
                 onStart: (_, ctx: any) => {
-                    if (ctx.lock) return;
+                    if (lockController.isLock()) return;
                     ctx.startContentOffsetX = handlerOffsetX.value;
                     ctx.currentContentOffsetX = handlerOffsetX.value;
                 },
                 onActive: (e, ctx: any) => {
-                    if (ctx.lock) return;
+                    if (lockController.isLock()) return;
                     /**
                      * `onActive` and `onEnd` return different values of translationX！So that creates a bias！TAT
                      * */
@@ -219,16 +229,14 @@ function Carousel<T extends unknown = any>(
                     );
                 },
                 onEnd: (e, ctx: any) => {
-                    if (ctx.lock) {
-                        return;
-                    }
+                    if (lockController.isLock()) return;
                     const translationX = ctx.translationX;
 
                     function _withTimingCallback(num: number) {
-                        ctx.lock = true;
+                        lockController.lock();
                         return withTiming(num, timingConfig, (isFinished) => {
                             if (isFinished) {
-                                ctx.lock = false;
+                                lockController.unLock();
                             }
                             runOnJS(callComputedIndex)(isFinished);
                         });
@@ -284,7 +292,7 @@ function Carousel<T extends unknown = any>(
                     }
                 },
             },
-            [loop, data]
+            [loop, data, lockController]
         );
 
     React.useImperativeHandle(ref, () => {

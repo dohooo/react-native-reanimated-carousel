@@ -52,20 +52,21 @@ import Carousel from "react-native-reanimated-carousel";
 
 ## Props
 
-| name                    | required | default | types                                       | description                                                                    |
-| ----------------------- | -------- | ------- | ------------------------------------------- | ------------------------------------------------------------------------------ |
-| data                    | true     |         | T[]                                         | Carousel items data set                                                        |
-| width                   | true     |         | number                                      | Specified carousel container width                                             |
-| renderItem              | true     |         | (data: T, index: number) => React.ReactNode | Render carousel item                                                           |
-| autoPlay                | false    | false   | boolean                                     | Auto play                                                                      |
-| autoPlayReverse         | false    | false   | boolean                                     | Auto play reverse playback                                                     |
-| autoPlayInterval        | false    | 1000    | autoPlayInterval                            | Auto play playback interval                                                    |
-| mode                    | false    | defalut | 'default'\|'parallax'                       | Carousel Animated transitions                                                  |
-| loop                    | false    | true    | boolean                                     | Carousel loop playback                                                         |
-| parallaxScrollingOffset | false    | 100     | number                                      | When use 'default' Layout props,this prop can be control prev/next item offset |
-| parallaxScrollingScale  | false    | 0.8     | number                                      | When use 'default' Layout props,this prop can be control prev/next item scale  |
-| style                   | false    | {}      | ViewStyle                                   | Carousel container style                                                       |
-| height                  | false    | '100%'  | undefined \| string \| number               | Specified carousel container height                                            |
+| name                    | required | default         | types                                       | description                                                                    |
+| ----------------------- | -------- | --------------- | ------------------------------------------- | ------------------------------------------------------------------------------ |
+| data                    | true     |                 | T[]                                         | Carousel items data set                                                        |
+| width                   | true     |                 | number                                      | Specified carousel container width                                             |
+| renderItem              | true     |                 | (data: T, index: number) => React.ReactNode | Render carousel item                                                           |
+| autoPlay                | false    | false           | boolean                                     | Auto play                                                                      |
+| autoPlayReverse         | false    | false           | boolean                                     | Auto play reverse playback                                                     |
+| autoPlayInterval        | false    | 1000            | autoPlayInterval                            | Auto play playback interval                                                    |
+| mode                    | false    | defalut         | 'default'\|'parallax'                       | Carousel Animated transitions                                                  |
+| loop                    | false    | true            | boolean                                     | Carousel loop playback                                                         |
+| parallaxScrollingOffset | false    | 100             | number                                      | When use 'default' Layout props,this prop can be control prev/next item offset |
+| parallaxScrollingScale  | false    | 0.8             | number                                      | When use 'default' Layout props,this prop can be control prev/next item scale  |
+| style                   | false    | {}              | ViewStyle                                   | Carousel container style                                                       |
+| height                  | false    | '100%'          | undefined \| string \| number               | Specified carousel container height                                            |
+| timingConfig            | false    | {duration: 250} | Animated.WithTimingConfig                   | Timing config of translation animated                                          |
 
 ## Ref
 
