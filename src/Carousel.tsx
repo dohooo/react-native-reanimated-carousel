@@ -150,6 +150,8 @@ function Carousel<T extends unknown = any>(
         lockController,
         timingConfig,
         disable: !data.length,
+        onNext: (isFinished) => isFinished && callComputedIndex(),
+        onPrev: (isFinished) => isFinished && callComputedIndex(),
     });
     useAutoPlay({
         autoPlay,
@@ -193,12 +195,12 @@ function Carousel<T extends unknown = any>(
     );
 
     const next = React.useCallback(() => {
-        return carouselController.next(callComputedIndex);
-    }, [carouselController, callComputedIndex]);
+        return carouselController.next();
+    }, [carouselController]);
 
     const prev = React.useCallback(() => {
-        return carouselController.prev(callComputedIndex);
-    }, [carouselController, callComputedIndex]);
+        return carouselController.prev();
+    }, [carouselController]);
 
     const getCurrentIndex = React.useCallback(() => {
         return index.value;

@@ -9,11 +9,13 @@ interface IOpts {
     lockController: ILockController;
     timingConfig: Animated.WithTimingConfig;
     disable?: boolean;
+    onPrev?: (isFinished: boolean) => void;
+    onNext?: (isFinished: boolean) => void;
 }
 
 export interface ICarouselController {
-    prev: (callback?: (isFinished: boolean) => void) => void;
-    next: (callback?: (isFinished: boolean) => void) => void;
+    prev: () => void;
+    next: () => void;
 }
 
 export function useCarouselController(opts: IOpts): ICarouselController {
@@ -23,6 +25,8 @@ export function useCarouselController(opts: IOpts): ICarouselController {
         timingConfig,
         lockController,
         disable = false,
+        onPrev,
+        onNext,
     } = opts;
 
     const closeLock = React.useCallback(
@@ -34,53 +38,49 @@ export function useCarouselController(opts: IOpts): ICarouselController {
         [lockController]
     );
 
-    const next = React.useCallback(
-        (callback?: (isFinished: boolean) => void) => {
-            if (disable) return;
-            if (lockController.isLock()) return;
-            lockController.lock();
-            handlerOffsetX.value = withTiming(
-                handlerOffsetX.value - width,
-                timingConfig,
-                (isFinished: boolean) => {
-                    !!callback && runOnJS(callback)(isFinished);
-                    runOnJS(closeLock)(isFinished);
-                }
-            );
-        },
-        [
-            width,
-            lockController,
+    const next = React.useCallback(() => {
+        if (disable) return;
+        if (lockController.isLock()) return;
+        lockController.lock();
+        handlerOffsetX.value = withTiming(
+            handlerOffsetX.value - width,
             timingConfig,
-            closeLock,
-            handlerOffsetX,
-            disable,
-        ]
-    );
+            (isFinished: boolean) => {
+                !!onNext && runOnJS(onNext)(isFinished);
+                runOnJS(closeLock)(isFinished);
+            }
+        );
+    }, [
+        onNext,
+        width,
+        lockController,
+        timingConfig,
+        closeLock,
+        handlerOffsetX,
+        disable,
+    ]);
 
-    const prev = React.useCallback(
-        (callback?: (isFinished: boolean) => void) => {
-            if (disable) return;
-            if (lockController.isLock()) return;
-            lockController.lock();
-            handlerOffsetX.value = withTiming(
-                handlerOffsetX.value + width,
-                timingConfig,
-                (isFinished: boolean) => {
-                    !!callback && runOnJS(callback)(isFinished);
-                    runOnJS(closeLock)(isFinished);
-                }
-            );
-        },
-        [
-            width,
-            lockController,
+    const prev = React.useCallback(() => {
+        if (disable) return;
+        if (lockController.isLock()) return;
+        lockController.lock();
+        handlerOffsetX.value = withTiming(
+            handlerOffsetX.value + width,
             timingConfig,
-            closeLock,
-            handlerOffsetX,
-            disable,
-        ]
-    );
+            (isFinished: boolean) => {
+                !!onPrev && runOnJS(onPrev)(isFinished);
+                runOnJS(closeLock)(isFinished);
+            }
+        );
+    }, [
+        onPrev,
+        width,
+        lockController,
+        timingConfig,
+        closeLock,
+        handlerOffsetX,
+        disable,
+    ]);
 
     return {
         next,
