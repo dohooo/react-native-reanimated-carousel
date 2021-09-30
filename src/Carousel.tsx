@@ -188,7 +188,7 @@ function Carousel<T extends unknown = any>(
     );
 
     const callComputedIndex = React.useCallback(
-        (isFinished: boolean) => isFinished && computedIndex?.(),
+        () => computedIndex?.(),
         [computedIndex]
     );
 
@@ -211,9 +211,10 @@ function Carousel<T extends unknown = any>(
                     if (lockController.isLock()) return;
                     ctx.startContentOffsetX = handlerOffsetX.value;
                     ctx.currentContentOffsetX = handlerOffsetX.value;
+                    ctx.start = true;
                 },
                 onActive: (e, ctx: any) => {
-                    if (lockController.isLock()) return;
+                    if (lockController.isLock() || !ctx.start) return;
                     /**
                      * `onActive` and `onEnd` return different values of translationX！So that creates a bias！TAT
                      * */
@@ -229,16 +230,15 @@ function Carousel<T extends unknown = any>(
                     );
                 },
                 onEnd: (e, ctx: any) => {
-                    if (lockController.isLock()) return;
+                    if (lockController.isLock() || !ctx.start) return;
                     const translationX = ctx.translationX;
-
                     function _withTimingCallback(num: number) {
-                        lockController.lock();
                         return withTiming(num, timingConfig, (isFinished) => {
                             if (isFinished) {
+                                ctx.start = false;
                                 lockController.unLock();
+                                runOnJS(callComputedIndex)();
                             }
-                            runOnJS(callComputedIndex)(isFinished);
                         });
                     }
 
@@ -249,7 +249,7 @@ function Carousel<T extends unknown = any>(
                         if (!loop && handlerOffsetX.value >= 0) {
                             return;
                         }
-
+                        lockController.lock();
                         if (
                             Math.abs(translationX) + Math.abs(e.velocityX) >
                             width / 2
@@ -275,7 +275,7 @@ function Carousel<T extends unknown = any>(
                         ) {
                             return;
                         }
-
+                        lockController.lock();
                         if (
                             Math.abs(translationX) + Math.abs(e.velocityX) >
                             width / 2
@@ -306,29 +306,29 @@ function Carousel<T extends unknown = any>(
     const Layouts = React.useMemo<React.FC<{ index: number }>>(() => {
         switch (mode) {
             case 'parallax':
-                return ({ index, children }) => (
+                return ({ index: i, children }) => (
                     <ParallaxLayout
                         parallaxScrollingOffset={parallaxScrollingOffset}
                         parallaxScrollingScale={parallaxScrollingScale}
                         computedAnimResult={computedAnimResult}
                         width={width}
                         handlerOffsetX={offsetX}
-                        index={index}
-                        key={index}
+                        index={i}
+                        key={i}
                         loop={loop}
                     >
                         {children}
                     </ParallaxLayout>
                 );
             default:
-                return ({ index, children }) => (
+                return ({ index: i, children }) => (
                     <CarouselItem
                         computedAnimResult={computedAnimResult}
                         width={width}
                         height={height}
                         handlerOffsetX={offsetX}
-                        index={index}
-                        key={index}
+                        index={i}
+                        key={i}
                         loop={loop}
                     >
                         {children}
@@ -360,10 +360,10 @@ function Carousel<T extends unknown = any>(
                     style,
                 ]}
             >
-                {data.map((item, index) => {
+                {data.map((item, i) => {
                     return (
-                        <Layouts index={index} key={index}>
-                            {renderItem(item, index)}
+                        <Layouts index={i} key={i}>
+                            {renderItem(item, i)}
                         </Layouts>
                     );
                 })}

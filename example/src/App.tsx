@@ -21,7 +21,8 @@ export default function App() {
         >
             <View style={{ height: 300 }}>
                 <Carousel<{ color: string }>
-                    timingConfig={{ duration: 1000 }}
+                    timingConfig={{ duration: 500 }}
+                    autoPlayInterval={2000}
                     ref={r}
                     mode="parallax"
                     width={width}
@@ -58,7 +59,9 @@ export default function App() {
                                             alignItems: 'center',
                                         }}
                                     >
-                                        <Text>{index}</Text>
+                                        <Text style={{ fontSize: 80 }}>
+                                            {index}
+                                        </Text>
                                     </View>
                                 </TouchableWithoutFeedback>
                             </View>
