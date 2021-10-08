@@ -1,5 +1,13 @@
 # react-native-reanimated-carousel
 
+![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS-brightgreen.svg?style=flat-square&colorB=191A17)
+[![npm](https://img.shields.io/npm/v/react-native-reanimated-carousel.svg?style=flat-square)](https://www.npmjs.com/package/react-native-reanimated-carousel)
+[![npm](https://img.shields.io/npm/dm/react-native-reanimated-carousel.svg?style=flat-square&colorB=007ec6)](https://www.npmjs.com/package/react-native-reanimated-carousel)
+[![github issues](https://img.shields.io/github/issues/zwh1666258377/react-native-reanimated-carousel.svg?style=flat-square)](https://github.com/zwh1666258377/react-native-reanimated-carousel/issues)
+[![github closed issues](https://img.shields.io/github/issues-closed/zwh1666258377/react-native-reanimated-carousel.svg?style=flat-square&colorB=44cc11)](https://github.com/zwh1666258377/react-native-reanimated-carousel/issues?q=is%3Aissue+is%3Aclosed)
+
+-----
+
 <p align="center">
   <img width="300" src="./assets/example-01.gif">
 </p>
@@ -27,7 +35,7 @@ npm install react-native-reanimated-carousel
 ```
 
 Now we need to install [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler) and [`react-native-reanimated(>=2.0.0)`](https://github.com/kmagiera/react-native-reanimated).
-Don't use Expo to install reanimated it not supported `Reanimated(v2)`
+If use EXPO managed workflow please ensure that the version is greater than  41.Because the old version not suport `Reanimated(v2)`
 
 ## Usage
 
