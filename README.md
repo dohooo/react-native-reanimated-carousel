@@ -20,6 +20,10 @@
 
 > The common RN infinite scroll component. It's common to get stuck on a fast slide. Wait for the next element to appear. This component will not have similar problems. That's why this library was created.
 
+## 🎉🎉🎉
+
+At present, it only meets the needs of my work. Welcome to raise PR/ISSUES.
+
 ## Installation
 
 Open a Terminal in the project root and run:
