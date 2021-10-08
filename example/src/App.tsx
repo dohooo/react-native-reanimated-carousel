@@ -34,6 +34,7 @@ export default function App() {
                     mode="parallax"
                     width={width}
                     data={data}
+                    loop={false}
                     parallaxScrollingScale={0.8}
                     onSnapToItem={(index) => {
                         console.log('current index:', index);

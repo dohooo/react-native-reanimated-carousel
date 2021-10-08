@@ -193,8 +193,9 @@ function Carousel<T extends unknown = any>(
                         i = i % 2;
                         break;
                 }
-                onSnapToItem && runOnJS(onSnapToItem)(i);
             }
+
+            onSnapToItem && runOnJS(onSnapToItem)(i);
         },
         [onSnapToItem, loop, _data]
     );
