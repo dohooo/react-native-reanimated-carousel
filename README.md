@@ -84,6 +84,7 @@ import Carousel from "react-native-reanimated-carousel";
 | style                   | false    | {}              | ViewStyle                                   | Carousel container style                                                       |
 | height                  | false    | '100%'          | undefined \| string \| number               | Specified carousel container height                                            |
 | timingConfig            | false    | {duration: 250} | Animated.WithTimingConfig                   | Timing config of translation animated                                          |
+| onSnapToItem            | false    |                 | (index: number) => void                     | Callback fired when navigating to an item                                          |
 
 ## Ref
 
