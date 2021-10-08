@@ -1,11 +1,14 @@
 # react-native-reanimated-carousel
 
-<img src="./assets/example-01.gif" style='margin:0 auto;width:300px;display:block'/>
+<p align="center">
+  <img width="300" src="./assets/example-01.gif">
+</p>
 
 <br/>
-<h2 style="text-align:center;">Simple carousel component.</h2>
-<h2 style="text-align:center;">Fully implemented using Reanimated 2.</h2>
-<h2 style="text-align:center;">Infinitely scrolling, very smooth.</h2>
+
+<h3 align="center">Simple carousel component!</h3>
+<h3 align="center">Infinitely scrolling very smooth!</h3>
+<h3 align="center">Fully implemented using Reanimated 2!</h3>
 
 > The common RN infinite scroll component. It's common to get stuck on a fast slide. Wait for the next element to appear. This component will not have similar problems. That's why this library was created.
 
