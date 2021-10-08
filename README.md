@@ -41,7 +41,7 @@ npm install react-native-reanimated-carousel
 Now we need to install [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler) and [`react-native-reanimated(>=2.0.0)`](https://github.com/kmagiera/react-native-reanimated).
 
 ## EXPO
-If use EXPO managed workflow please ensure that the version is greater than  41.Because the old version not suport `Reanimated(v2)`
+If use EXPO managed workflow please ensure that the version is greater than  41.Because the old version not support `Reanimated(v2)`
 
 ## Usage
 
