@@ -22,7 +22,7 @@
 
 ## 🎉🎉🎉
 
-At present, it only meets the needs of my work. Welcome to raise PR/ISSUES.
+At present, it only meets the needs of my work. Welcome to raise PR/ISSUES.[Try it with snack](https://snack.expo.dev/@zhaodonghao586/simple-carousel)
 
 ## Installation
 
