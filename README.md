@@ -77,6 +77,7 @@ import Carousel from "react-native-reanimated-carousel";
 | --------------- | ---------- | ---------------------- |
 | prev            | ()=>void   | Play the last one      |
 | loop            | ()=>void   | Play the next one      |
+| goToIndex | (index: number, animated?: boolean) => void | Go to index |
 | getCurrentIndex | ()=>number | Get current item index |
 
 ## Contributing

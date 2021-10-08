@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
-import { Button, Dimensions, Text, View } from 'react-native';
+import { Alert, Button, Dimensions, Text, TextInput, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { ICarouselInstance } from '../../src/Carousel';
 
@@ -8,9 +8,16 @@ import Carousel from '../../src/index';
 
 const { width } = Dimensions.get('window');
 
-export default function App() {
-    const r = React.useRef<ICarouselInstance | null>(null);
+const data = [
+    { color: 'red' },
+    { color: 'purple' },
+    { color: 'blue' },
+    { color: 'yellow' },
+];
 
+export default function App() {
+    const [index, setIndex] = React.useState<string>('');
+    const r = React.useRef<ICarouselInstance | null>(null);
     return (
         <View
             style={{
@@ -26,12 +33,7 @@ export default function App() {
                     ref={r}
                     mode="parallax"
                     width={width}
-                    data={[
-                        { color: 'red' },
-                        { color: 'purple' },
-                        { color: 'blue' },
-                        { color: 'yellow' },
-                    ]}
+                    data={data}
                     parallaxScrollingScale={0.8}
                     onSnapToItem={(index) => {
                         console.log('current index:', index);
@@ -79,6 +81,24 @@ export default function App() {
                 title="next"
                 onPress={() => {
                     r.current.next();
+                }}
+            />
+            <TextInput
+                placeholder={'Set go to index'}
+                placeholderTextColor="white"
+                style={{ color: 'white' }}
+                value={index}
+                onChangeText={setIndex}
+            />
+            <Button
+                title="GoTo"
+                onPress={() => {
+                    const idx = Number(index);
+                    if (idx < 0 || idx >= data.length) {
+                        Alert.alert('invalid index');
+                        return;
+                    }
+                    r.current.goToIndex(idx, true);
                 }}
             />
         </View>

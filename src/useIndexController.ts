@@ -1,11 +1,16 @@
 import * as React from 'react';
 import Animated, { useSharedValue } from 'react-native-reanimated';
 
-export function useComputedIndex(opts: {
+export interface IIndexController {
+    index: Animated.SharedValue<number>;
+    computedIndex: () => void;
+}
+
+export function useIndexController(opts: {
     handlerOffsetX: Animated.SharedValue<number>;
     length: number;
     width: number;
-}) {
+}): IIndexController {
     const { length, width, handlerOffsetX } = opts;
     const index = useSharedValue<number>(0);
 

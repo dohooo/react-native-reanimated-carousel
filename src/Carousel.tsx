@@ -18,7 +18,7 @@ import { ParallaxLayout } from './layouts/index';
 import { useCarouselController } from './useCarouselController';
 import { useComputedAnim } from './useComputedAnim';
 import { useAutoPlay } from './useAutoPlay';
-import { useComputedIndex } from './useComputedIndex';
+import { useIndexController } from './useIndexController';
 import { useLockController } from './useLock';
 
 const defaultTimingConfig: Animated.WithTimingConfig = {
@@ -105,6 +105,10 @@ export interface ICarouselInstance {
      * Get current item index
      */
     getCurrentIndex: () => number;
+    /**
+     * Go to index
+     */
+    goToIndex: (index: number, animated?: boolean) => void;
 }
 
 function Carousel<T extends unknown = any>(
@@ -144,15 +148,31 @@ function Carousel<T extends unknown = any>(
     }, [_data, loop]);
 
     const computedAnimResult = useComputedAnim(width, data.length);
+
+    const indexController = useIndexController({
+        length: data.length,
+        handlerOffsetX,
+        width,
+    });
+
     const carouselController = useCarouselController({
         width,
         handlerOffsetX,
+        indexController,
         lockController,
         timingConfig,
         disable: !data.length,
         onNext: (isFinished) => isFinished && callComputedIndex(),
         onPrev: (isFinished) => isFinished && callComputedIndex(),
     });
+
+    const { index, computedIndex } = indexController;
+
+    const offsetX = useDerivedValue(() => {
+        const x = handlerOffsetX.value % computedAnimResult.WL;
+        return isNaN(x) ? 0 : x;
+    }, [computedAnimResult]);
+
     useAutoPlay({
         autoPlay,
         autoPlayInterval,
@@ -160,16 +180,6 @@ function Carousel<T extends unknown = any>(
         carouselController,
         lockController,
     });
-    const { index, computedIndex } = useComputedIndex({
-        length: data.length,
-        handlerOffsetX,
-        width,
-    });
-
-    const offsetX = useDerivedValue(() => {
-        const x = handlerOffsetX.value % computedAnimResult.WL;
-        return isNaN(x) ? 0 : x;
-    }, [computedAnimResult]);
 
     useAnimatedReaction(
         () => index.value,
@@ -205,6 +215,13 @@ function Carousel<T extends unknown = any>(
     const getCurrentIndex = React.useCallback(() => {
         return index.value;
     }, [index]);
+
+    const goToIndex = React.useCallback(
+        (i: number, animated?: boolean) => {
+            carouselController.to(i, animated);
+        },
+        [carouselController]
+    );
 
     const animatedListScrollHandler =
         useAnimatedGestureHandler<PanGestureHandlerGestureEvent>(
@@ -302,6 +319,7 @@ function Carousel<T extends unknown = any>(
             next,
             prev,
             getCurrentIndex,
+            goToIndex,
         };
     });
 
