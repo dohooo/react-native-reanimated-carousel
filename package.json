@@ -36,13 +36,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/zwh1666258377/react-native-reanimated-carousel",
-  "author": "Doho <zhaodonghao586@outlook.com> (https://github.com/zwh1666258377)",
+  "repository": "https://github.com/dohooo/react-native-reanimated-carousel",
+  "author": "Doho <zhaodonghao586@outlook.com> (https://github.com/dohooo)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zwh1666258377/react-native-reanimated-carousel/issues"
+    "url": "https://github.com/dohooo/react-native-reanimated-carousel/issues"
   },
-  "homepage": "https://github.com/zwh1666258377/react-native-reanimated-carousel#readme",
+  "homepage": "https://github.com/dohooo/react-native-reanimated-carousel#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
