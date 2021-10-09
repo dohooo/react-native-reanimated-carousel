@@ -5,14 +5,15 @@ import type { IIndexController } from './useIndexController';
 import type { ILockController } from './useLock';
 
 interface IOpts {
+    loop: boolean;
     width: number;
     handlerOffsetX: Animated.SharedValue<number>;
     lockController: ILockController;
     indexController: IIndexController;
     timingConfig: Animated.WithTimingConfig;
     disable?: boolean;
-    onPrev?: (isFinished: boolean) => void;
-    onNext?: (isFinished: boolean) => void;
+    onScrollBegin?: () => void;
+    onScrollEnd?: () => void;
 }
 
 export interface ICarouselController {
@@ -24,69 +25,82 @@ export interface ICarouselController {
 export function useCarouselController(opts: IOpts): ICarouselController {
     const {
         width,
+        loop,
         handlerOffsetX,
         timingConfig,
         lockController,
         indexController,
         disable = false,
-        onPrev,
-        onNext,
     } = opts;
 
     const canSliding = React.useCallback(() => {
         return !disable && !lockController.isLock();
     }, [lockController, disable]);
 
-    const closeLock = React.useCallback(
-        (isFinished: boolean) => {
-            if (isFinished) {
-                lockController.unLock();
-            }
-        },
-        [lockController]
-    );
+    const onScrollEnd = React.useCallback(() => {
+        lockController.unLock();
+        opts.onScrollEnd?.();
+    }, [lockController, opts]);
+
+    const onScrollBegin = React.useCallback(() => {
+        opts.onScrollBegin?.();
+        lockController.lock();
+    }, [lockController, opts]);
 
     const next = React.useCallback(() => {
-        if (!canSliding()) return;
-        lockController.lock();
+        if (
+            !canSliding() ||
+            (!loop &&
+                indexController.index.value === indexController.length - 1)
+        )
+            return;
+
+        onScrollBegin?.();
+
         handlerOffsetX.value = withTiming(
             handlerOffsetX.value - width,
             timingConfig,
             (isFinished: boolean) => {
-                !!onNext && runOnJS(onNext)(isFinished);
-                runOnJS(closeLock)(isFinished);
+                if (isFinished) {
+                    runOnJS(onScrollEnd)();
+                }
             }
         );
     }, [
-        onNext,
-        closeLock,
+        onScrollEnd,
         canSliding,
+        onScrollBegin,
         width,
         timingConfig,
         handlerOffsetX,
-        lockController,
+        indexController,
+        loop,
     ]);
 
     const prev = React.useCallback(() => {
-        if (!canSliding()) return;
+        if (!canSliding() || (!loop && indexController.index.value === 0))
+            return;
 
-        lockController.lock();
+        onScrollBegin?.();
+
         handlerOffsetX.value = withTiming(
             handlerOffsetX.value + width,
             timingConfig,
             (isFinished: boolean) => {
-                !!onPrev && runOnJS(onPrev)(isFinished);
-                runOnJS(closeLock)(isFinished);
+                if (isFinished) {
+                    runOnJS(onScrollEnd)();
+                }
             }
         );
     }, [
-        onPrev,
-        closeLock,
+        onScrollEnd,
         canSliding,
+        onScrollBegin,
         width,
         timingConfig,
         handlerOffsetX,
-        lockController,
+        indexController,
+        loop,
     ]);
 
     const to = React.useCallback(
@@ -94,7 +108,7 @@ export function useCarouselController(opts: IOpts): ICarouselController {
             if (index === indexController.index.value) return;
             if (!canSliding()) return;
 
-            lockController.lock();
+            onScrollBegin?.();
 
             const offset =
                 handlerOffsetX.value +
@@ -106,22 +120,24 @@ export function useCarouselController(opts: IOpts): ICarouselController {
                     timingConfig,
                     (isFinished: boolean) => {
                         indexController.index.value = index;
-                        runOnJS(closeLock)(isFinished);
+                        if (isFinished) {
+                            runOnJS(onScrollEnd)();
+                        }
                     }
                 );
             } else {
                 handlerOffsetX.value = offset;
                 indexController.index.value = index;
-                runOnJS(closeLock)(true);
+                runOnJS(onScrollEnd)();
             }
         },
         [
             canSliding,
-            closeLock,
+            onScrollBegin,
+            onScrollEnd,
             width,
             timingConfig,
             indexController,
-            lockController,
             handlerOffsetX,
         ]
     );

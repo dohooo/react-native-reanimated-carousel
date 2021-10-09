@@ -28,18 +28,30 @@ export default function App() {
         >
             <View style={{ height: 300 }}>
                 <Carousel<{ color: string }>
+                    onScrollBegin={() => {
+                        console.log('scroll start');
+                    }}
+                    onScrollEnd={(pre, current) => {
+                        console.log(
+                            'scroll end',
+                            'pre:',
+                            pre,
+                            'current:',
+                            current
+                        );
+                    }}
                     timingConfig={{ duration: 500 }}
                     autoPlayInterval={2000}
                     ref={r}
                     mode="parallax"
                     width={width}
                     data={data}
-                    loop={false}
+                    // loop={false}
                     parallaxScrollingScale={0.8}
-                    onSnapToItem={(index) => {
-                        console.log('current index:', index);
+                    onSnapToItem={(i) => {
+                        console.log('current index:', i);
                     }}
-                    renderItem={({ color }, index) => {
+                    renderItem={({ color }, i) => {
                         return (
                             <View
                                 style={{
@@ -63,7 +75,7 @@ export default function App() {
                                         }}
                                     >
                                         <Text style={{ fontSize: 80 }}>
-                                            {index}
+                                            {i}
                                         </Text>
                                     </View>
                                 </TouchableWithoutFeedback>

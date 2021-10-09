@@ -7,7 +7,6 @@ import {
 import Animated, {
     runOnJS,
     useAnimatedGestureHandler,
-    useAnimatedReaction,
     useDerivedValue,
     useSharedValue,
     withTiming,
@@ -90,6 +89,14 @@ export interface ICarouselProps<T extends unknown> {
      * Timing config of translation animated
      */
     timingConfig?: Animated.WithTimingConfig;
+    /**
+     * On scroll begin
+     */
+    onScrollBegin?: () => void;
+    /**
+     * On scroll end
+     */
+    onScrollEnd?: (previous: number, current: number) => void;
 }
 
 export interface ICarouselInstance {
@@ -127,6 +134,7 @@ function Carousel<T extends unknown = any>(
         autoPlayInterval,
         parallaxScrollingOffset,
         parallaxScrollingScale,
+        onScrollBegin = () => {},
         onSnapToItem,
         style,
         timingConfig = defaultTimingConfig,
@@ -150,23 +158,33 @@ function Carousel<T extends unknown = any>(
     const computedAnimResult = useComputedAnim(width, data.length);
 
     const indexController = useIndexController({
+        originalLength: _data.length,
         length: data.length,
         handlerOffsetX,
         width,
+        loop,
+        onChange: (i) => onSnapToItem && runOnJS(onSnapToItem)(i),
     });
 
+    const { index, sharedPreIndex, sharedIndex, computedIndex } =
+        indexController;
+
+    const onScrollEnd = React.useCallback(() => {
+        computedIndex();
+        props.onScrollEnd?.(sharedPreIndex.current, sharedIndex.current);
+    }, [sharedPreIndex, sharedIndex, computedIndex, props]);
+
     const carouselController = useCarouselController({
+        loop,
         width,
         handlerOffsetX,
         indexController,
         lockController,
         timingConfig,
         disable: !data.length,
-        onNext: (isFinished) => isFinished && callComputedIndex(),
-        onPrev: (isFinished) => isFinished && callComputedIndex(),
+        onScrollBegin: () => runOnJS(onScrollBegin)(),
+        onScrollEnd: () => runOnJS(onScrollEnd)(),
     });
-
-    const { index, computedIndex } = indexController;
 
     const offsetX = useDerivedValue(() => {
         const x = handlerOffsetX.value % computedAnimResult.WL;
@@ -180,30 +198,6 @@ function Carousel<T extends unknown = any>(
         carouselController,
         lockController,
     });
-
-    useAnimatedReaction(
-        () => index.value,
-        (i) => {
-            if (loop) {
-                switch (_data.length) {
-                    case 1:
-                        i = 0;
-                        break;
-                    case 2:
-                        i = i % 2;
-                        break;
-                }
-            }
-
-            onSnapToItem && runOnJS(onSnapToItem)(i);
-        },
-        [onSnapToItem, loop, _data]
-    );
-
-    const callComputedIndex = React.useCallback(
-        () => computedIndex?.(),
-        [computedIndex]
-    );
 
     const next = React.useCallback(() => {
         return carouselController.next();
@@ -229,6 +223,7 @@ function Carousel<T extends unknown = any>(
             {
                 onStart: (_, ctx: any) => {
                     if (lockController.isLock()) return;
+                    runOnJS(onScrollBegin)();
                     ctx.startContentOffsetX = handlerOffsetX.value;
                     ctx.currentContentOffsetX = handlerOffsetX.value;
                     ctx.start = true;
@@ -257,7 +252,7 @@ function Carousel<T extends unknown = any>(
                             if (isFinished) {
                                 ctx.start = false;
                                 lockController.unLock();
-                                runOnJS(callComputedIndex)();
+                                runOnJS(onScrollEnd)();
                             }
                         });
                     }
@@ -312,7 +307,7 @@ function Carousel<T extends unknown = any>(
                     }
                 },
             },
-            [loop, data, lockController]
+            [loop, data, lockController, onScrollBegin, onScrollEnd]
         );
 
     React.useImperativeHandle(ref, () => {
