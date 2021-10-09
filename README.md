@@ -6,8 +6,6 @@
 [![github issues](https://img.shields.io/github/issues/zwh1666258377/react-native-reanimated-carousel.svg?style=flat-square)](https://github.com/zwh1666258377/react-native-reanimated-carousel/issues)
 [![github closed issues](https://img.shields.io/github/issues-closed/zwh1666258377/react-native-reanimated-carousel.svg?style=flat-square&colorB=44cc11)](https://github.com/zwh1666258377/react-native-reanimated-carousel/issues?q=is%3Aissue+is%3Aclosed)
 
------
-
 <p align="center">
   <img width="300" src="./assets/example-01.gif">
 </p>
@@ -24,6 +22,7 @@
 
 At present, it only meets the needs of my work. Welcome to raise PR/ISSUES.[Try it with snack](https://snack.expo.dev/@zhaodonghao586/simple-carousel)
 
+-----
 ## Installation
 
 Open a Terminal in the project root and run:
@@ -94,6 +93,13 @@ import Carousel from "react-native-reanimated-carousel";
 | loop            | ()=>void   | Play the next one      |
 | goToIndex | (index: number, animated?: boolean) => void | Go to index |
 | getCurrentIndex | ()=>number | Get current item index |
+
+## Example
+
+```shell
+yarn example -- ios
+yarn example -- android
+```
 
 ## Contributing
 
