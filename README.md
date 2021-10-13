@@ -1,3 +1,5 @@
+English | [简体中文](./README.zh-CN.md)
+
 # react-native-reanimated-carousel
 <img src="assets/0057BCEB-C948-47DC-8650-29CCBC6C1F8B.jpeg" width="100%"/>  
 
@@ -81,8 +83,8 @@ import Carousel from "react-native-reanimated-carousel";
 | autoPlayInterval        | ❌       | 1000            | autoPlayInterval                            | Auto play playback interval                                                    |
 | mode                    | ❌       | defalut         | 'default'\|'parallax'                       | Carousel Animated transitions                                                  |
 | loop                    | ❌       | true            | boolean                                     | Carousel loop playback                                                         |
-| parallaxScrollingOffset | ❌       | 100             | number                                      | When use 'default' Layout props,this prop can be control prev/next item offset |
-| parallaxScrollingScale  | ❌       | 0.8             | number                                      | When use 'default' Layout props,this prop can be control prev/next item scale  |
+| parallaxScrollingOffset | ❌       | 100             | number                                      | When use 'parallax' Layout props,this prop can be control prev/next item offset |
+| parallaxScrollingScale  | ❌       | 0.8             | number                                      | When use 'parallax' Layout props,this prop can be control prev/next item scale  |
 | style                   | ❌       | {}              | ViewStyle                                   | Carousel container style                                                       |
 | height                  | ❌       | '100%'          | undefined \| string \| number               | Specified carousel container height                                            |
 | timingConfig            | ❌       | {duration: 250} | Animated.WithTimingConfig                   | Timing config of translation animated                                          |
