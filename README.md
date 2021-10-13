@@ -15,15 +15,11 @@ English | [简体中文](./README.zh-CN.md)
 
 <br/>
 
-<h3 align="center">Simple carousel component!</h3>
-<h3 align="center">Infinitely scrolling very smooth!</h3>
-<h3 align="center">Fully implemented using Reanimated 2!</h3>
+### 🎉 **Simple、Infinitely scrolling very smooth、Fully implemented using Reanimated 2!**
 
 > The common RN infinite scroll component. It's common to get stuck on a fast slide. Wait for the next element to appear. This component will not have similar problems. That's why this library was created.
 
-## 🎉🎉🎉
-
-At present, it only meets the needs of my work. Welcome to raise PR/ISSUES.[Try it with snack](https://snack.expo.dev/@zhaodonghao586/simple-carousel)
+> At present, it only meets the needs of my work. Welcome to raise PR/ISSUES.[Try it with snack](https://snack.expo.dev/@zhaodonghao586/simple-carousel)
 
 ---
 
