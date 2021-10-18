@@ -11,16 +11,33 @@
 [![github closed issues](https://img.shields.io/github/issues-closed/dohooo/react-native-reanimated-carousel.svg?style=flat-square&colorB=44cc11)](https://github.com/dohooo/react-native-reanimated-carousel/issues?q=is%3Aissue+is%3Aclosed)
 
 <p align="center">
-  <img width="300" src="./assets/example-01.gif">
+  <img src="assets/normal.gif" width="300"/>  
 </p>
 
 <br/>
 
-### 🎉 **易用、无限滚动、完全使用 Reanimated2 实现**
+## 原因
+🎉 **易用、无限滚动、完全使用 Reanimated2 实现**
 
 > 常见的无限滚动轮播图，在快速滑动时会出现卡住的情况，这是因为实现方式而导致的问题。这个组件用了不同的方式来实现，解决了这个问题，这就是创建这个库的原因。
 
 > 目前他只满足了我工作上的需要，欢迎大家的 ISSUES/PR。[在 SNACK 上尝试](https://snack.expo.dev/@zhaodonghao586/simple-carousel)
+
+
+<p align="center">
+  使用react-native-snap-carousel快速滑动，当到连接处时可以看清楚的看到卡顿。(gif 4.6mb)
+</p>
+<p align="center">
+  <img src="assets/react-native-snap-carousel.gif" width="50%"/>
+</p>
+
+<p align="center">
+  使用react-native-reanimated-carousel对比,每秒滚动十张依然顺畅链接，无限滚动。这里使用了gif无法很清晰的看出。（gif 83mb）
+</p>
+<p align="center">
+  <img src="assets/fast.gif" width="50%"/>
+</p>
+
 
 ---
 
