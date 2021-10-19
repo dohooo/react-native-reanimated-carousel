@@ -101,7 +101,10 @@ export interface ICarouselProps<T extends unknown> {
     /**
      * PanGestureHandler props
      */
-    handlerProps?: Omit<PanGestureHandlerProps, 'onHandlerStateChange'>;
+    panGestureHandlerProps?: Omit<
+        Partial<PanGestureHandlerProps>,
+        'onHandlerStateChange'
+    >;
 }
 
 export interface ICarouselInstance {
@@ -143,7 +146,7 @@ function Carousel<T extends unknown = any>(
         onSnapToItem,
         style,
         timingConfig = defaultTimingConfig,
-        handlerProps,
+        panGestureHandlerProps = {},
     } = props;
     const lockController = useLockController();
     const handlerOffsetX = useSharedValue<number>(0);
@@ -370,8 +373,8 @@ function Carousel<T extends unknown = any>(
 
     return (
         <PanGestureHandler
+            {...panGestureHandlerProps}
             onHandlerStateChange={animatedListScrollHandler}
-            {...handlerProps}
         >
             <Animated.View
                 style={[

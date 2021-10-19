@@ -86,24 +86,25 @@ import Carousel from "react-native-reanimated-carousel";
 
 ## Props
 
-| name                    | required | default         | types                                       | description                                                                     |
-| ----------------------- | -------- | --------------- | ------------------------------------------- | ------------------------------------------------------------------------------- |
-| data                    | ✅       |                 | T[]                                         | Carousel items data set                                                         |
-| width                   | ✅       |                 | number                                      | Specified carousel container width                                              |
-| renderItem              | ✅       |                 | (data: T, index: number) => React.ReactNode | Render carousel item                                                            |
-| autoPlay                | ❌       | false           | boolean                                     | Auto play                                                                       |
-| autoPlayReverse         | ❌       | false           | boolean                                     | Auto play reverse playback                                                      |
-| autoPlayInterval        | ❌       | 1000            | autoPlayInterval                            | Auto play playback interval                                                     |
-| mode                    | ❌       | defalut         | 'default'\|'parallax'                       | Carousel Animated transitions                                                   |
-| loop                    | ❌       | true            | boolean                                     | Carousel loop playback                                                          |
-| parallaxScrollingOffset | ❌       | 100             | number                                      | When use 'parallax' Layout props,this prop can be control prev/next item offset |
-| parallaxScrollingScale  | ❌       | 0.8             | number                                      | When use 'parallax' Layout props,this prop can be control prev/next item scale  |
-| style                   | ❌       | {}              | ViewStyle                                   | Carousel container style                                                        |
-| height                  | ❌       | '100%'          | undefined \| string \| number               | Specified carousel container height                                             |
-| timingConfig            | ❌       | {duration: 250} | Animated.WithTimingConfig                   | Timing config of translation animated                                           |
-| onSnapToItem            | ❌       |                 | (index: number) => void                     | Callback fired when navigating to an item                                       |
-| onScrollBegin           | ❌       |                 | () => void                                  | Callback fired when scroll begin                                                |
-| onScrollEnd             | ❌       |                 | (previous: number, current: number) => void | Callback fired when scroll end                                                  |
+| name                    | required | default         | types                                                          | description                                                                     |
+| ----------------------- | -------- | --------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| data                    | ✅       |                 | T[]                                                            | Carousel items data set                                                         |
+| width                   | ✅       |                 | number                                                         | Specified carousel container width                                              |
+| renderItem              | ✅       |                 | (data: T, index: number) => React.ReactNode                    | Render carousel item                                                            |
+| autoPlay                | ❌       | false           | boolean                                                        | Auto play                                                                       |
+| autoPlayReverse         | ❌       | false           | boolean                                                        | Auto play reverse playback                                                      |
+| autoPlayInterval        | ❌       | 1000            | autoPlayInterval                                               | Auto play playback interval                                                     |
+| mode                    | ❌       | defalut         | 'default'\|'parallax'                                          | Carousel Animated transitions                                                   |
+| loop                    | ❌       | true            | boolean                                                        | Carousel loop playback                                                          |
+| parallaxScrollingOffset | ❌       | 100             | number                                                         | When use 'parallax' Layout props,this prop can be control prev/next item offset |
+| parallaxScrollingScale  | ❌       | 0.8             | number                                                         | When use 'parallax' Layout props,this prop can be control prev/next item scale  |
+| style                   | ❌       | {}              | ViewStyle                                                      | Carousel container style                                                        |
+| height                  | ❌       | '100%'          | undefined \| string \| number                                  | Specified carousel container height                                             |
+| timingConfig            | ❌       | {duration: 250} | Animated.WithTimingConfig                                      | Timing config of translation animated                                           |
+| onSnapToItem            | ❌       |                 | (index: number) => void                                        | Callback fired when navigating to an item                                       |
+| onScrollBegin           | ❌       |                 | () => void                                                     | Callback fired when scroll begin                                                |
+| onScrollEnd             | ❌       |                 | (previous: number, current: number) => void                    | Callback fired when scroll end                                                  |
+| panGestureHandlerProps  | ❌       | {}              | Omit<Partial\<PanGestureHandlerProps\>,'onHandlerStateChange'> | PanGestureHandler props                                                         |
 
 ## Ref
 
