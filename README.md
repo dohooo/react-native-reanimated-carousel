@@ -1,4 +1,4 @@
-English | [简体中文](./README.zh-CN.md)
+English | [简体 中文](./README.zh-CN.md)
 
 # react-native-reanimated-carousel
 
