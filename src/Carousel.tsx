@@ -2,6 +2,7 @@ import React from 'react';
 import type { FlexStyle, ViewStyle } from 'react-native';
 import {
     PanGestureHandler,
+    PanGestureHandlerProps,
     PanGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler';
 import Animated, {
@@ -97,6 +98,10 @@ export interface ICarouselProps<T extends unknown> {
      * On scroll end
      */
     onScrollEnd?: (previous: number, current: number) => void;
+    /**
+     * PanGestureHandler props
+     */
+    handlerProps?: Omit<PanGestureHandlerProps, 'onHandlerStateChange'>;
 }
 
 export interface ICarouselInstance {
@@ -138,6 +143,7 @@ function Carousel<T extends unknown = any>(
         onSnapToItem,
         style,
         timingConfig = defaultTimingConfig,
+        handlerProps,
     } = props;
     const lockController = useLockController();
     const handlerOffsetX = useSharedValue<number>(0);
@@ -363,7 +369,10 @@ function Carousel<T extends unknown = any>(
     ]);
 
     return (
-        <PanGestureHandler onHandlerStateChange={animatedListScrollHandler}>
+        <PanGestureHandler
+            onHandlerStateChange={animatedListScrollHandler}
+            {...handlerProps}
+        >
             <Animated.View
                 style={[
                     // eslint-disable-next-line react-native/no-inline-styles
