@@ -1,9 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
 import { Dimensions, Image, ImageSourcePropType, View } from 'react-native';
-import { ICarouselInstance } from '../../src/Carousel';
-
 import Carousel from '../../src/index';
+import type { ICarouselInstance } from '../../src/Carousel';
 
 const { width } = Dimensions.get('window');
 
