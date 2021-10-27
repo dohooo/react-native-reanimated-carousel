@@ -142,7 +142,6 @@ function Carousel<T extends unknown = any>(
         autoPlayInterval,
         parallaxScrollingOffset,
         parallaxScrollingScale,
-        onScrollBegin = () => {},
         onSnapToItem,
         style,
         timingConfig = defaultTimingConfig,
@@ -175,14 +174,6 @@ function Carousel<T extends unknown = any>(
         onChange: (i) => onSnapToItem && runOnJS(onSnapToItem)(i),
     });
 
-    const { index, sharedPreIndex, sharedIndex, computedIndex } =
-        indexController;
-
-    const onScrollEnd = React.useCallback(() => {
-        computedIndex();
-        props.onScrollEnd?.(sharedPreIndex.current, sharedIndex.current);
-    }, [sharedPreIndex, sharedIndex, computedIndex, props]);
-
     const carouselController = useCarouselController({
         loop,
         width,
@@ -195,18 +186,31 @@ function Carousel<T extends unknown = any>(
         onScrollEnd: () => runOnJS(onScrollEnd)(),
     });
 
-    const offsetX = useDerivedValue(() => {
-        const x = handlerOffsetX.value % computedAnimResult.WL;
-        return isNaN(x) ? 0 : x;
-    }, [computedAnimResult]);
-
-    useAutoPlay({
+    const { run, pause } = useAutoPlay({
         autoPlay,
         autoPlayInterval,
         autoPlayReverse,
         carouselController,
-        lockController,
     });
+
+    const { index, sharedPreIndex, sharedIndex, computedIndex } =
+        indexController;
+
+    const onScrollBegin = React.useCallback(() => {
+        pause();
+        props.onScrollBegin?.();
+    }, [pause, props]);
+
+    const onScrollEnd = React.useCallback(() => {
+        run();
+        computedIndex();
+        props.onScrollEnd?.(sharedPreIndex.current, sharedIndex.current);
+    }, [sharedPreIndex, sharedIndex, computedIndex, props, run]);
+
+    const offsetX = useDerivedValue(() => {
+        const x = handlerOffsetX.value % computedAnimResult.WL;
+        return isNaN(x) ? 0 : x;
+    }, [computedAnimResult]);
 
     const next = React.useCallback(() => {
         return carouselController.next();
@@ -232,6 +236,7 @@ function Carousel<T extends unknown = any>(
             {
                 onStart: (_, ctx: any) => {
                     if (lockController.isLock()) return;
+                    runOnJS(pause)();
                     runOnJS(onScrollBegin)();
                     ctx.startContentOffsetX = handlerOffsetX.value;
                     ctx.currentContentOffsetX = handlerOffsetX.value;

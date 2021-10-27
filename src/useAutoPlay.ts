@@ -1,41 +1,44 @@
 import * as React from 'react';
 import type { ICarouselController } from './useCarouselController';
-import type { ILockController } from './useLock';
 
 export function useAutoPlay(opts: {
     autoPlay?: boolean;
     autoPlayInterval?: number;
     autoPlayReverse?: boolean;
     carouselController: ICarouselController;
-    lockController: ILockController;
 }) {
     const {
         autoPlay = false,
         autoPlayReverse = false,
         autoPlayInterval = 1000,
         carouselController,
-        lockController,
     } = opts;
+
     const timer = React.useRef<NodeJS.Timer>();
-    React.useEffect(() => {
-        if (timer.current) {
-            clearInterval(timer.current);
-        }
-        if (autoPlay && !lockController.isLock()) {
+
+    const run = React.useCallback(() => {
+        if (autoPlay) {
             timer.current = setInterval(() => {
                 autoPlayReverse
                     ? carouselController.prev()
                     : carouselController.next();
             }, autoPlayInterval);
         }
+    }, [autoPlay, autoPlayReverse, carouselController, autoPlayInterval]);
+
+    const pause = React.useCallback(() => {
+        timer.current && clearInterval(timer.current);
+    }, []);
+
+    React.useEffect(() => {
+        run();
         return () => {
             !!timer.current && clearInterval(timer.current);
         };
-    }, [
-        autoPlay,
-        autoPlayReverse,
-        autoPlayInterval,
-        carouselController,
-        lockController,
-    ]);
+    }, [run, timer]);
+
+    return {
+        run,
+        pause,
+    };
 }
