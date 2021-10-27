@@ -10,7 +10,7 @@ export function useAutoPlay(opts: {
     const {
         autoPlay = false,
         autoPlayReverse = false,
-        autoPlayInterval = 1000,
+        autoPlayInterval,
         carouselController,
     } = opts;
 

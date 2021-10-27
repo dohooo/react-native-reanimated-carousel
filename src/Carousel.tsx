@@ -133,13 +133,12 @@ function Carousel<T extends unknown = any>(
     const {
         height = '100%',
         data: _data = [],
-        width,
         loop = true,
         mode = 'default',
         renderItem,
         autoPlay,
         autoPlayReverse,
-        autoPlayInterval,
+        autoPlayInterval = 1000,
         parallaxScrollingOffset,
         parallaxScrollingScale,
         onSnapToItem,
@@ -147,6 +146,17 @@ function Carousel<T extends unknown = any>(
         timingConfig = defaultTimingConfig,
         panGestureHandlerProps = {},
     } = props;
+
+    if (
+        typeof timingConfig.duration === 'number' &&
+        timingConfig.duration > autoPlayInterval
+    ) {
+        throw Error(
+            'The during time of animation  must less than autoplay interval.'
+        );
+    }
+
+    const width = Math.round(props.width);
     const lockController = useLockController();
     const handlerOffsetX = useSharedValue<number>(0);
     const data = React.useMemo<T[]>(() => {
