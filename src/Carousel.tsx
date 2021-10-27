@@ -392,16 +392,14 @@ function Carousel<T extends unknown = any>(
             onHandlerStateChange={animatedListScrollHandler}
         >
             <Animated.View
-                style={[
-                    // eslint-disable-next-line react-native/no-inline-styles
-                    {
-                        width,
-                        height,
-                        flexDirection: 'row',
-                        position: 'relative',
-                    },
-                    style,
-                ]}
+                // eslint-disable-next-line react-native/no-inline-styles
+                style={{
+                    ...style,
+                    width,
+                    height,
+                    flexDirection: 'row',
+                    position: 'relative',
+                }}
             >
                 {data.map((item, i) => {
                     return (
