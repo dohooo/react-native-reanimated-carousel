@@ -42,7 +42,7 @@ export function useIndexController(opts: {
 
     const computedIndex = React.useCallback(() => {
         sharedPreIndex.current = sharedIndex.current;
-        const toInt = (handlerOffsetX.value / width) % length;
+        const toInt = Math.round((handlerOffsetX.value / width) % length);
         const i =
             handlerOffsetX.value <= 0
                 ? Math.abs(toInt)
