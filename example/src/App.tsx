@@ -26,7 +26,6 @@ export default function App() {
             <View style={{ height: 300 }}>
                 <Carousel<ImageSourcePropType>
                     autoPlay
-                    timingConfig={{ duration: 500 }}
                     autoPlayInterval={2000}
                     ref={r}
                     width={width}
@@ -48,7 +47,6 @@ export default function App() {
             <View style={{ height: 300 }}>
                 <Carousel<ImageSourcePropType>
                     autoPlay
-                    timingConfig={{ duration: 500 }}
                     autoPlayInterval={2000}
                     ref={r}
                     mode="parallax"
