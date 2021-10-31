@@ -1,22 +1,23 @@
 export interface IComputedAnimResult {
     MAX: number;
     MIN: number;
-    WL: number;
-    LENGTH: number;
+    TOTAL_WIDTH: number;
+    HALF_WIDTH: number;
 }
 
 export function useComputedAnim(
     width: number,
-    LENGTH: number
+    ITEM_LENGTH: number
 ): IComputedAnimResult {
-    const MAX = (LENGTH - 2) * width;
+    const MAX = (ITEM_LENGTH - 2) * width;
     const MIN = -MAX;
-    const WL = width * LENGTH;
+    const TOTAL_WIDTH = width * ITEM_LENGTH;
+    const HALF_WIDTH = 0.5 * width;
 
     return {
         MAX,
         MIN,
-        WL,
-        LENGTH,
+        TOTAL_WIDTH,
+        HALF_WIDTH,
     };
 }

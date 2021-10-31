@@ -16,6 +16,13 @@
 
 <br/>
 
+## 正式版来了！
+`v1`已经诞生，现在轮播图的滚动将会更加自然，并且修复了0.x版本中出现的各种bug，此库将会持续维护，放心使用！ [快来体验](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🎉🎉🎉
+
+更新：
+- 重构了部分逻辑，滑动动画更加流畅、自然
+- timingConfig -> springConfig （此配置不再支持对`duration`属性的配置）
+
 ## 原因
 
 🎉 **易用、无限滚动、完全使用 Reanimated2 实现**

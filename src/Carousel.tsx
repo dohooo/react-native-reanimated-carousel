@@ -6,11 +6,12 @@ import {
     PanGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler';
 import Animated, {
+    cancelAnimation,
     runOnJS,
     useAnimatedGestureHandler,
     useDerivedValue,
     useSharedValue,
-    withTiming,
+    withSpring,
 } from 'react-native-reanimated';
 import { CarouselItem } from './CarouselItem';
 import type { TMode } from './layouts';
@@ -19,12 +20,10 @@ import { useCarouselController } from './useCarouselController';
 import { useComputedAnim } from './useComputedAnim';
 import { useAutoPlay } from './useAutoPlay';
 import { useIndexController } from './useIndexController';
-import { useLockController } from './useLock';
 
-const defaultTimingConfig: Animated.WithTimingConfig = {
-    duration: 250,
+const defaultSpringConfig: Animated.WithSpringConfig = {
+    damping: 100,
 };
-
 export interface ICarouselProps<T extends unknown> {
     ref?: React.Ref<ICarouselInstance>;
     /**
@@ -87,9 +86,9 @@ export interface ICarouselProps<T extends unknown> {
      */
     onSnapToItem?: (index: number) => void;
     /**
-     * Timing config of translation animated
+     * Sping config of translation animated
      */
-    timingConfig?: Animated.WithTimingConfig;
+    springConfig?: Animated.WithSpringConfig;
     /**
      * On scroll begin
      */
@@ -143,21 +142,14 @@ function Carousel<T extends unknown = any>(
         parallaxScrollingScale,
         onSnapToItem,
         style,
-        timingConfig = defaultTimingConfig,
         panGestureHandlerProps = {},
     } = props;
 
-    if (
-        typeof timingConfig.duration === 'number' &&
-        timingConfig.duration > autoPlayInterval
-    ) {
-        throw Error(
-            'The during time of animation  must less than autoplay interval.'
-        );
-    }
-
+    const timingConfig = {
+        ...defaultSpringConfig,
+        ...props.springConfig,
+    };
     const width = Math.round(props.width);
-    const lockController = useLockController();
     const handlerOffsetX = useSharedValue<number>(0);
     const data = React.useMemo<T[]>(() => {
         if (!loop) return _data;
@@ -189,8 +181,6 @@ function Carousel<T extends unknown = any>(
         width,
         handlerOffsetX,
         indexController,
-        lockController,
-        timingConfig,
         disable: !data.length,
         onScrollBegin: () => runOnJS(onScrollBegin)(),
         onScrollEnd: () => runOnJS(onScrollEnd)(),
@@ -218,7 +208,7 @@ function Carousel<T extends unknown = any>(
     }, [sharedPreIndex, sharedIndex, computedIndex, props, run]);
 
     const offsetX = useDerivedValue(() => {
-        const x = handlerOffsetX.value % computedAnimResult.WL;
+        const x = handlerOffsetX.value % computedAnimResult.TOTAL_WIDTH;
         return isNaN(x) ? 0 : x;
     }, [computedAnimResult]);
 
@@ -245,93 +235,75 @@ function Carousel<T extends unknown = any>(
         useAnimatedGestureHandler<PanGestureHandlerGestureEvent>(
             {
                 onStart: (_, ctx: any) => {
-                    if (lockController.isLock()) return;
                     runOnJS(pause)();
                     runOnJS(onScrollBegin)();
-                    ctx.startContentOffsetX = handlerOffsetX.value;
+                    cancelAnimation(handlerOffsetX);
                     ctx.currentContentOffsetX = handlerOffsetX.value;
                     ctx.start = true;
                 },
                 onActive: (e, ctx: any) => {
-                    if (lockController.isLock() || !ctx.start) return;
-                    /**
-                     * `onActive` and `onEnd` return different values of translationX！So that creates a bias！TAT
-                     * */
-                    ctx.translationX = e.translationX;
-                    if (loop) {
+                    const { translationX } = e;
+                    if (
+                        !loop &&
+                        (handlerOffsetX.value >= 0 ||
+                            handlerOffsetX.value <= -(data.length - 1) * width)
+                    ) {
                         handlerOffsetX.value =
-                            ctx.currentContentOffsetX + e.translationX;
+                            ctx.currentContentOffsetX + translationX / 2;
                         return;
                     }
-                    handlerOffsetX.value = Math.max(
-                        Math.min(ctx.currentContentOffsetX + e.translationX, 0),
-                        -(data.length - 1) * width
+                    handlerOffsetX.value =
+                        ctx.currentContentOffsetX + translationX;
+                },
+                onEnd: (e) => {
+                    function _withAnimationCallback(num: number) {
+                        return withSpring(
+                            num,
+                            {
+                                ...timingConfig,
+                                velocity: e.velocityX,
+                            },
+                            (isFinished) => {
+                                if (isFinished) {
+                                    runOnJS(onScrollEnd)();
+                                }
+                            }
+                        );
+                    }
+
+                    const page = Math.round(handlerOffsetX.value / width);
+                    const velocityPage = Math.round(
+                        (handlerOffsetX.value + e.velocityX) / width
+                    );
+                    const pageWithVelocity = Math.min(
+                        page + 1,
+                        Math.max(page - 1, velocityPage)
+                    );
+
+                    if (loop) {
+                        handlerOffsetX.value = _withAnimationCallback(
+                            pageWithVelocity * width
+                        );
+                        return;
+                    }
+                    if (handlerOffsetX.value >= 0) {
+                        handlerOffsetX.value = _withAnimationCallback(0);
+                        return;
+                    }
+
+                    if (handlerOffsetX.value <= -(data.length - 1) * width) {
+                        handlerOffsetX.value = _withAnimationCallback(
+                            -(data.length - 1) * width
+                        );
+                        return;
+                    }
+
+                    handlerOffsetX.value = _withAnimationCallback(
+                        pageWithVelocity * width
                     );
                 },
-                onEnd: (e, ctx: any) => {
-                    if (lockController.isLock() || !ctx.start) return;
-                    const translationX = ctx.translationX;
-                    function _withTimingCallback(num: number) {
-                        return withTiming(num, timingConfig, (isFinished) => {
-                            if (isFinished) {
-                                ctx.start = false;
-                                lockController.unLock();
-                                runOnJS(onScrollEnd)();
-                            }
-                        });
-                    }
-
-                    if (translationX > 0) {
-                        /**
-                         * If not loop no , longer scroll when sliding to the start.
-                         * */
-                        if (!loop && handlerOffsetX.value >= 0) {
-                            return;
-                        }
-                        lockController.lock();
-                        if (
-                            Math.abs(translationX) + Math.abs(e.velocityX) >
-                            width / 2
-                        ) {
-                            handlerOffsetX.value = _withTimingCallback(
-                                handlerOffsetX.value + width - translationX
-                            );
-                        } else {
-                            handlerOffsetX.value = _withTimingCallback(
-                                handlerOffsetX.value - translationX
-                            );
-                        }
-                        return;
-                    }
-
-                    if (translationX < 0) {
-                        /**
-                         * If not loop , no longer scroll when sliding to the end.
-                         * */
-                        if (
-                            !loop &&
-                            handlerOffsetX.value <= -(data.length - 1) * width
-                        ) {
-                            return;
-                        }
-                        lockController.lock();
-                        if (
-                            Math.abs(translationX) + Math.abs(e.velocityX) >
-                            width / 2
-                        ) {
-                            handlerOffsetX.value = _withTimingCallback(
-                                handlerOffsetX.value - width - translationX
-                            );
-                        } else {
-                            handlerOffsetX.value = _withTimingCallback(
-                                handlerOffsetX.value - translationX
-                            );
-                        }
-                        return;
-                    }
-                },
             },
-            [loop, data, lockController, onScrollBegin, onScrollEnd]
+            [loop, data, onScrollBegin, onScrollEnd]
         );
 
     React.useImperativeHandle(ref, () => {
