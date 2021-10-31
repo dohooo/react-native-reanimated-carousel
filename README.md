@@ -22,6 +22,7 @@ English | [简体中文](./README.zh-CN.md)
 Updates：
 - Reconstructed some logic, sliding animation more smooth, natural
 - timingConfig -> springConfig （The configuration of the 'duration' property is no longer supported by this configuration）
+- [...](https://github.com/dohooo/react-native-reanimated-carousel/releases/tag/v1.0.0)
 
 
 ## Reason
