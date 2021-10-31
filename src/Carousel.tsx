@@ -22,7 +22,7 @@ import { useAutoPlay } from './useAutoPlay';
 import { useIndexController } from './useIndexController';
 
 const defaultSpringConfig: Animated.WithSpringConfig = {
-    damping: 40,
+    damping: 100,
 };
 export interface ICarouselProps<T extends unknown> {
     ref?: React.Ref<ICarouselInstance>;
