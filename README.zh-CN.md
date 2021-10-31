@@ -22,6 +22,7 @@
 更新：
 - 重构了部分逻辑，滑动动画更加流畅、自然
 - timingConfig -> springConfig （此配置不再支持对`duration`属性的配置）
+- [...](https://github.com/dohooo/react-native-reanimated-carousel/releases/tag/v1.0.0)
 
 ## 原因
 
