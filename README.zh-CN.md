@@ -21,7 +21,7 @@
 
 更新：
 - 重构了部分逻辑，滑动动画更加流畅、自然
-- timingProps -> springConfig （此配置不再支持对`duration`属性的配置）
+- timingConfig -> springConfig （此配置不再支持对`duration`属性的配置）
 
 ## 原因
 
