@@ -108,7 +108,7 @@ import Carousel from "react-native-reanimated-carousel";
 | parallaxScrollingScale  | ❌       | 0.8             | number                                                         | 当使用 mode=`parallax`,这个属性可以控制两侧图片的缩放比例               |
 | style                   | ❌       | {}              | ViewStyle                                                      | 轮播图容器样式                                                          |
 | height                  | ❌       | '100%'          | undefined \| string \| number                                  | 指定轮播图容器高度                                                      |
-| timingConfig            | ❌       | {duration: 250} | Animated.WithTimingConfig                                      | 配置动画效果                                                            |
+| springConfig            | ❌       | {damping: 100}  | Animated.WithSpringConfig                                      | 配置动画效果                                                            |
 | onSnapToItem            | ❌       |                 | (index: number) => void                                        | 切换至另一张轮播图时触发                                                |
 | onScrollBegin           | ❌       |                 | () => void                                                     | 切换动画开始时触发                                                      |
 | onScrollEnd             | ❌       |                 | (previous: number, current: number) => void                    | 切换动画结束时触发                                                      |
