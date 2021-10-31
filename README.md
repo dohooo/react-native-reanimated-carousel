@@ -109,7 +109,7 @@ import Carousel from "react-native-reanimated-carousel";
 | parallaxScrollingScale  | ❌       | 0.8             | number                                                         | When use 'parallax' Layout props,this prop can be control prev/next item scale  |
 | style                   | ❌       | {}              | ViewStyle                                                      | Carousel container style                                                        |
 | height                  | ❌       | '100%'          | undefined \| string \| number                                  | Specified carousel container height                                             |
-| timingConfig            | ❌       | {duration: 250} | Animated.WithTimingConfig                                      | Timing config of translation animated                                           |
+| springConfig            | ❌       | {damping: 100}  | Animated.WithSpringConfig                                      | Spring config of translation animated                                           |
 | onSnapToItem            | ❌       |                 | (index: number) => void                                        | Callback fired when navigating to an item                                       |
 | onScrollBegin           | ❌       |                 | () => void                                                     | Callback fired when scroll begin                                                |
 | onScrollEnd             | ❌       |                 | (previous: number, current: number) => void                    | Callback fired when scroll end                                                  |
