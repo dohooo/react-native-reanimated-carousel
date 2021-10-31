@@ -21,7 +21,7 @@ English | [简体中文](./README.zh-CN.md)
 
 Updates：
 - Reconstructed some logic, sliding animation more smooth, natural
-- timingProps -> springConfig （The configuration of the 'duration' property is no longer supported by this configuration）
+- timingConfig -> springConfig （The configuration of the 'duration' property is no longer supported by this configuration）
 
 
 ## Reason
