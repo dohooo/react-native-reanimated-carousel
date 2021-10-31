@@ -48,8 +48,8 @@ export const useOffsetX = (opts: IOpts) => {
 
             return interpolate(
                 Math.round(handlerOffsetX.value),
-                inputRange,
-                outputRange,
+                inputRange.map(Math.round),
+                outputRange.map(Math.round),
                 Extrapolate.CLAMP
             );
         }

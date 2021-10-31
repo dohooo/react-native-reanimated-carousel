@@ -25,15 +25,10 @@ export default function App() {
         >
             <View style={{ height: 300 }}>
                 <Carousel<ImageSourcePropType>
-                    autoPlay
-                    autoPlayInterval={2000}
                     ref={r}
                     width={width}
                     data={data}
                     parallaxScrollingScale={0.8}
-                    onSnapToItem={(i) => {
-                        console.log('current index:', i);
-                    }}
                     renderItem={(source) => (
                         <View style={{ flex: 1 }}>
                             <Image
@@ -46,16 +41,11 @@ export default function App() {
             </View>
             <View style={{ height: 300 }}>
                 <Carousel<ImageSourcePropType>
-                    autoPlay
-                    autoPlayInterval={2000}
                     ref={r}
                     mode="parallax"
                     width={width}
                     data={data}
                     parallaxScrollingScale={0.8}
-                    onSnapToItem={(i) => {
-                        console.log('current index:', i);
-                    }}
                     renderItem={(source) => (
                         <View style={{ flex: 1 }}>
                             <Image
