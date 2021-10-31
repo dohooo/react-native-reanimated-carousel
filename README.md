@@ -16,6 +16,14 @@ English | [简体中文](./README.zh-CN.md)
 
 <br/>
 
+## Here comes the official edition！
+`v1` has been born, now the carousel will be more natural, and fixed various bugs in the 0.x version, this library will continue to maintain, rest assured to use! [come and experience](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🎉🎉🎉
+
+Updates：
+- Reconstructed some logic, sliding animation more smooth, natural
+- timingProps -> springConfig （The configuration of the 'duration' property is no longer supported by this configuration）
+
+
 ## Reason
 
 🎉 **Simple、Infinitely scrolling very smooth、Fully implemented using Reanimated 2!**
