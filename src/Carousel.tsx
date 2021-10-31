@@ -208,7 +208,7 @@ function Carousel<T extends unknown = any>(
     }, [sharedPreIndex, sharedIndex, computedIndex, props, run]);
 
     const offsetX = useDerivedValue(() => {
-        const x = handlerOffsetX.value % computedAnimResult.WL;
+        const x = handlerOffsetX.value % computedAnimResult.TOTAL_WIDTH;
         return isNaN(x) ? 0 : x;
     }, [computedAnimResult]);
 

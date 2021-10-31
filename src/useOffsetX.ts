@@ -15,31 +15,39 @@ interface IOpts {
 
 export const useOffsetX = (opts: IOpts) => {
     const { handlerOffsetX, index, width, computedAnimResult, loop } = opts;
-    const { MAX, WL, MIN, LENGTH } = computedAnimResult;
     const x = useDerivedValue(() => {
+        const { MAX, MIN, TOTAL_WIDTH, HALF_WIDTH } = computedAnimResult;
         if (loop) {
-            const Wi = width * index;
-            const startPos = Wi > MAX ? MAX - Wi : Wi < MIN ? MIN - Wi : Wi;
+            const defaultPos = width * index;
+            const startPos =
+                defaultPos > MAX
+                    ? MAX - defaultPos
+                    : defaultPos < MIN
+                    ? MIN - defaultPos
+                    : defaultPos;
+
             const inputRange = [
-                -WL,
-                -((LENGTH - 2) * width + width / 2) - startPos - 1,
-                -((LENGTH - 2) * width + width / 2) - startPos,
+                -TOTAL_WIDTH,
+                -(MAX + HALF_WIDTH) - startPos - 1,
+                -(MAX + HALF_WIDTH) - startPos,
                 0,
-                (LENGTH - 2) * width + width / 2 - startPos,
-                (LENGTH - 2) * width + width / 2 - startPos + 1,
-                WL,
+                MAX + HALF_WIDTH - startPos,
+                MAX + HALF_WIDTH - startPos + 1,
+                TOTAL_WIDTH,
             ];
+
             const outputRange = [
                 startPos,
                 1.5 * width - 1,
-                -((LENGTH - 2) * width + width / 2),
+                -(MAX + HALF_WIDTH),
                 startPos,
-                (LENGTH - 2) * width + width / 2,
+                MAX + HALF_WIDTH,
                 -(1.5 * width - 1),
                 startPos,
             ];
+
             return interpolate(
-                handlerOffsetX.value,
+                Math.round(handlerOffsetX.value),
                 inputRange,
                 outputRange,
                 Extrapolate.CLAMP
@@ -48,6 +56,6 @@ export const useOffsetX = (opts: IOpts) => {
 
         const startPos = width * index;
         return handlerOffsetX.value + startPos;
-    }, [loop]);
+    }, [loop, computedAnimResult]);
     return x;
 };
