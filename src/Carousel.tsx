@@ -259,10 +259,9 @@ function Carousel<T extends unknown = any>(
                     function _withAnimationCallback(num: number) {
                         return withSpring(
                             num,
-                            {
-                                ...timingConfig,
+                            Object.assign({}, timingConfig, {
                                 velocity: e.velocityX,
-                            },
+                            }),
                             (isFinished) => {
                                 if (isFinished) {
                                     runOnJS(onScrollEnd)();
