@@ -114,6 +114,10 @@ import Carousel from "react-native-reanimated-carousel";
 | onScrollBegin           | ❌       |                 | () => void                                                     | Callback fired when scroll begin                                                |
 | onScrollEnd             | ❌       |                 | (previous: number, current: number) => void                    | Callback fired when scroll end                                                  |
 | panGestureHandlerProps  | ❌       | {}              | Omit<Partial\<PanGestureHandlerProps\>,'onHandlerStateChange'> | PanGestureHandler props                                                         |
+| onProgressChange  | ❌       |               | onProgressChange?: (offsetProgress: number,absoluteProgress: number) => void | On progress change. `offsetProgress`:Total of offset distance (0 390 780 ...); `absoluteProgress`:Convert to index (0 1 2 ...)                                                          |
+
+
+    
 
 ## Ref
 

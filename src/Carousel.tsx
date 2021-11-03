@@ -9,6 +9,7 @@ import Animated, {
     cancelAnimation,
     runOnJS,
     useAnimatedGestureHandler,
+    useAnimatedReaction,
     useDerivedValue,
     useSharedValue,
     withSpring,
@@ -82,13 +83,20 @@ export interface ICarouselProps<T extends unknown> {
      */
     parallaxScrollingScale?: number;
     /**
-     * Callback fired when navigating to an item
-     */
-    onSnapToItem?: (index: number) => void;
-    /**
      * Sping config of translation animated
      */
     springConfig?: Animated.WithSpringConfig;
+    /**
+     * PanGestureHandler props
+     */
+    panGestureHandlerProps?: Omit<
+        Partial<PanGestureHandlerProps>,
+        'onHandlerStateChange'
+    >;
+    /**
+     * Callback fired when navigating to an item
+     */
+    onSnapToItem?: (index: number) => void;
     /**
      * On scroll begin
      */
@@ -98,12 +106,14 @@ export interface ICarouselProps<T extends unknown> {
      */
     onScrollEnd?: (previous: number, current: number) => void;
     /**
-     * PanGestureHandler props
+     * On progress change
+     * @param offsetProgress Total of offset distance (0 390 780 ...)
+     * @param absoluteProgress Convert to index (0 1 2 ...)
      */
-    panGestureHandlerProps?: Omit<
-        Partial<PanGestureHandlerProps>,
-        'onHandlerStateChange'
-    >;
+    onProgressChange?: (
+        offsetProgress: number,
+        absoluteProgress: number
+    ) => void;
 }
 
 export interface ICarouselInstance {
@@ -134,15 +144,16 @@ function Carousel<T extends unknown = any>(
         data: _data = [],
         loop = true,
         mode = 'default',
-        renderItem,
         autoPlay,
         autoPlayReverse,
         autoPlayInterval = 1000,
         parallaxScrollingOffset,
         parallaxScrollingScale,
-        onSnapToItem,
         style,
         panGestureHandlerProps = {},
+        renderItem,
+        onSnapToItem,
+        onProgressChange,
     } = props;
 
     const timingConfig = {
@@ -211,6 +222,19 @@ function Carousel<T extends unknown = any>(
         const x = handlerOffsetX.value % computedAnimResult.TOTAL_WIDTH;
         return isNaN(x) ? 0 : x;
     }, [computedAnimResult]);
+
+    useAnimatedReaction(
+        () => offsetX.value,
+        (value) => {
+            let absoluteProgress = Math.abs(value / width);
+            if (value > 0) {
+                absoluteProgress = data.length - absoluteProgress;
+            }
+            !!onProgressChange &&
+                runOnJS(onProgressChange)(value, absoluteProgress);
+        },
+        [onProgressChange, data]
+    );
 
     const next = React.useCallback(() => {
         return carouselController.next();
@@ -305,14 +329,16 @@ function Carousel<T extends unknown = any>(
             [loop, data, onScrollBegin, onScrollEnd]
         );
 
-    React.useImperativeHandle(ref, () => {
-        return {
+    React.useImperativeHandle(
+        ref,
+        () => ({
             next,
             prev,
             getCurrentIndex,
             goToIndex,
-        };
-    });
+        }),
+        [getCurrentIndex, goToIndex, next, prev]
+    );
 
     const Layouts = React.useMemo<React.FC<{ index: number }>>(() => {
         switch (mode) {

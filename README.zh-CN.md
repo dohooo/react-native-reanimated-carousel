@@ -113,6 +113,7 @@ import Carousel from "react-native-reanimated-carousel";
 | onScrollBegin           | ❌       |                 | () => void                                                     | 切换动画开始时触发                                                      |
 | onScrollEnd             | ❌       |                 | (previous: number, current: number) => void                    | 切换动画结束时触发                                                      |
 | panGestureHandlerProps  | ❌       | {}              | Omit<Partial\<PanGestureHandlerProps\>,'onHandlerStateChange'> | PanGestureHandler props                                                 |
+| onProgressChange  | ❌       |               | onProgressChange?: (offsetProgress: number,absoluteProgress: number) => void | 当滚动进度发生变化时触发 `offsetProgress`:总的偏移值 (0 390 780 ...); `absoluteProgress`:转化为index的进度变化 (0 1 2 ...)                                                          |
 
 ## Ref
 
