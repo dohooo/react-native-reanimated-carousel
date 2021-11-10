@@ -32,6 +32,7 @@ export default function App() {
         >
             <View style={{ height: 300 }}>
                 <Carousel<ImageSourcePropType>
+                    defaultIndex={1}
                     ref={r}
                     width={width}
                     data={data}

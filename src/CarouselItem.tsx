@@ -1,8 +1,8 @@
 import React from 'react';
 import { FlexStyle, View } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import type { IComputedAnimResult } from './useComputedAnim';
-import { useOffsetX } from './useOffsetX';
+import type { IComputedAnimResult } from './hooks/useComputedAnim';
+import { useOffsetX } from './hooks/useOffsetX';
 
 export const CarouselItem: React.FC<{
     loop?: boolean;

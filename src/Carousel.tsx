@@ -17,10 +17,11 @@ import Animated, {
 import { CarouselItem } from './CarouselItem';
 import type { TMode } from './layouts';
 import { ParallaxLayout } from './layouts/index';
-import { useCarouselController } from './useCarouselController';
-import { useComputedAnim } from './useComputedAnim';
-import { useAutoPlay } from './useAutoPlay';
-import { useIndexController } from './useIndexController';
+import { useCarouselController } from './hooks/useCarouselController';
+import { useComputedAnim } from './hooks/useComputedAnim';
+import { useAutoPlay } from './hooks/useAutoPlay';
+import { useIndexController } from './hooks/useIndexController';
+import { usePropsErrorBoundary } from './hooks/usePropsErrorBoundary';
 
 const defaultSpringConfig: Animated.WithSpringConfig = {
     damping: 100,
@@ -38,10 +39,6 @@ export interface ICarouselProps<T extends unknown> {
      */
     mode?: TMode;
     /**
-     * Render carousel item.
-     */
-    renderItem: (data: T, index: number) => React.ReactNode;
-    /**
      * Specified carousel container width.
      */
     width: number;
@@ -54,6 +51,11 @@ export interface ICarouselProps<T extends unknown> {
      * Carousel items data set.
      */
     data: T[];
+    /**
+     * Default index
+     * @default 0
+     */
+    defaultIndex?: number;
     /**
      * Auto play
      */
@@ -93,6 +95,10 @@ export interface ICarouselProps<T extends unknown> {
         Partial<PanGestureHandlerProps>,
         'onHandlerStateChange'
     >;
+    /**
+     * Render carousel item.
+     */
+    renderItem: (data: T, index: number) => React.ReactNode;
     /**
      * Callback fired when navigating to an item
      */
@@ -140,6 +146,7 @@ function Carousel<T extends unknown = any>(
     ref: React.Ref<ICarouselInstance>
 ) {
     const {
+        defaultIndex = 0,
         height = '100%',
         data: _data = [],
         loop = true,
@@ -156,12 +163,32 @@ function Carousel<T extends unknown = any>(
         onProgressChange,
     } = props;
 
+    usePropsErrorBoundary({
+        ...props,
+        defaultIndex,
+        height,
+        data: _data,
+        loop,
+        mode,
+        autoPlay,
+        autoPlayReverse,
+        autoPlayInterval,
+        parallaxScrollingOffset,
+        parallaxScrollingScale,
+        style,
+        panGestureHandlerProps,
+        // @ts-ignore
+        renderItem,
+        onSnapToItem,
+        onProgressChange,
+    });
+
     const timingConfig = {
         ...defaultSpringConfig,
         ...props.springConfig,
     };
     const width = Math.round(props.width);
-    const handlerOffsetX = useSharedValue<number>(0);
+    const handlerOffsetX = useSharedValue<number>(defaultIndex * width);
     const data = React.useMemo<T[]>(() => {
         if (!loop) return _data;
 

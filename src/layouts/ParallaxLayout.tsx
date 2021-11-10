@@ -6,8 +6,8 @@ import Animated, {
     interpolate,
     useAnimatedStyle,
 } from 'react-native-reanimated';
-import type { IComputedAnimResult } from 'src/useComputedAnim';
-import { useOffsetX } from '../useOffsetX';
+import type { IComputedAnimResult } from 'src/hooks/useComputedAnim';
+import { useOffsetX } from '../hooks/useOffsetX';
 
 export const ParallaxLayout: React.FC<{
     loop?: boolean;

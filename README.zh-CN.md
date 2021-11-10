@@ -17,12 +17,14 @@
 <br/>
 
 ## 正式版来了！
-`v1`已经诞生，现在轮播图的滚动将会更加自然，并且修复了0.x版本中出现的各种bug，此库将会持续维护，放心使用！ [快来体验](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🎉🎉🎉
+
+`v1`已经诞生，现在轮播图的滚动将会更加自然，并且修复了 0.x 版本中出现的各种 bug，此库将会持续维护，放心使用！ [快来体验](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🎉🎉🎉
 
 更新：
-- 重构了部分逻辑，滑动动画更加流畅、自然
-- timingConfig -> springConfig （此配置不再支持对`duration`属性的配置）
-- [...](https://github.com/dohooo/react-native-reanimated-carousel/releases/tag/v1.0.0)
+
+-   重构了部分逻辑，滑动动画更加流畅、自然
+-   timingConfig -> springConfig （此配置不再支持对`duration`属性的配置）
+-   [...](https://github.com/dohooo/react-native-reanimated-carousel/releases/tag/v1.0.0)
 
 ## 原因
 
@@ -71,49 +73,50 @@ npm install react-native-reanimated-carousel
 ## 使用
 
 ```typescript
-import Carousel from "react-native-reanimated-carousel";
+import Carousel from 'react-native-reanimated-carousel';
 
 // ...
 
 <Carousel<{ color: string }>
-  width={width}
-  data={[{ color: "red" }, { color: "purple" }, { color: "yellow" }]}
-  renderItem={({ color }) => {
-    return (
-      <View
-        style={{
-          backgroundColor: color,
-          justifyContent: "center",
-          flex: 1,
-        }}
-      />
-    );
-  }}
+    width={width}
+    data={[{ color: 'red' }, { color: 'purple' }, { color: 'yellow' }]}
+    renderItem={({ color }) => {
+        return (
+            <View
+                style={{
+                    backgroundColor: color,
+                    justifyContent: 'center',
+                    flex: 1,
+                }}
+            />
+        );
+    }}
 />;
 ```
 
 ## Props
 
-| name                    | required | default         | types                                                          | description                                                             |
-| ----------------------- | -------- | --------------- | -------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| data                    | ✅       |                 | T[]                                                            | 即将渲染的数据集合                                                      |
-| width                   | ✅       |                 | number                                                         | 轮播图容器的宽度                                                        |
-| renderItem              | ✅       |                 | (data: T, index: number) => React.ReactNode                    | 渲染元素的方法                                                          |
-| autoPlay                | ❌       | false           | boolean                                                        | 是否自动播放                                                            |
-| autoPlayReverse         | ❌       | false           | boolean                                                        | 是否倒序自动播放                                                        |
-| autoPlayInterval        | ❌       | 1000            | autoPlayInterval                                               | 自动播放的间隔                                                          |
-| mode                    | ❌       | defalut         | 'default'\|'parallax'                                          | 轮播图播放模式，`default`为默认无任何 UI 效果，演示图片使用的`parallax` |
-| loop                    | ❌       | true            | boolean                                                        | 是否循环播放                                                            |
-| parallaxScrollingOffset | ❌       | 100             | number                                                         | 当使用 mode=`parallax`,这个属性可以控制两侧图片离中间元素的距离         |
-| parallaxScrollingScale  | ❌       | 0.8             | number                                                         | 当使用 mode=`parallax`,这个属性可以控制两侧图片的缩放比例               |
-| style                   | ❌       | {}              | ViewStyle                                                      | 轮播图容器样式                                                          |
-| height                  | ❌       | '100%'          | undefined \| string \| number                                  | 指定轮播图容器高度                                                      |
-| springConfig            | ❌       | {damping: 100}  | Animated.WithSpringConfig                                      | 配置动画效果                                                            |
-| onSnapToItem            | ❌       |                 | (index: number) => void                                        | 切换至另一张轮播图时触发                                                |
-| onScrollBegin           | ❌       |                 | () => void                                                     | 切换动画开始时触发                                                      |
-| onScrollEnd             | ❌       |                 | (previous: number, current: number) => void                    | 切换动画结束时触发                                                      |
-| panGestureHandlerProps  | ❌       | {}              | Omit<Partial\<PanGestureHandlerProps\>,'onHandlerStateChange'> | PanGestureHandler props                                                 |
-| onProgressChange  | ❌       |               | onProgressChange?: (offsetProgress: number,absoluteProgress: number) => void | 当滚动进度发生变化时触发 `offsetProgress`:总的偏移值 (0 390 780 ...); `absoluteProgress`:转化为index的进度变化 (0 1 2 ...)                                                          |
+| name                    | required | default        | types                                                                        | description                                                                                                                  |
+| ----------------------- | -------- | -------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| data                    | ✅       |                | T[]                                                                          | 即将渲染的数据集合                                                                                                           |
+| width                   | ✅       |                | number                                                                       | 轮播图容器的宽度                                                                                                             |
+| renderItem              | ✅       |                | (data: T, index: number) => React.ReactNode                                  | 渲染元素的方法                                                                                                               |
+| defaultIndex            | ❌       | 0              | number                                                                       | 默认 index                                                                                                                   |
+| autoPlay                | ❌       | false          | boolean                                                                      | 是否自动播放                                                                                                                 |
+| autoPlayReverse         | ❌       | false          | boolean                                                                      | 是否倒序自动播放                                                                                                             |
+| autoPlayInterval        | ❌       | 1000           | autoPlayInterval                                                             | 自动播放的间隔                                                                                                               |
+| mode                    | ❌       | defalut        | 'default'\|'parallax'                                                        | 轮播图播放模式，`default`为默认无任何 UI 效果，演示图片使用的`parallax`                                                      |
+| loop                    | ❌       | true           | boolean                                                                      | 是否循环播放                                                                                                                 |
+| parallaxScrollingOffset | ❌       | 100            | number                                                                       | 当使用 mode=`parallax`,这个属性可以控制两侧图片离中间元素的距离                                                              |
+| parallaxScrollingScale  | ❌       | 0.8            | number                                                                       | 当使用 mode=`parallax`,这个属性可以控制两侧图片的缩放比例                                                                    |
+| style                   | ❌       | {}             | ViewStyle                                                                    | 轮播图容器样式                                                                                                               |
+| height                  | ❌       | '100%'         | undefined \| string \| number                                                | 指定轮播图容器高度                                                                                                           |
+| springConfig            | ❌       | {damping: 100} | Animated.WithSpringConfig                                                    | 配置动画效果                                                                                                                 |
+| onSnapToItem            | ❌       |                | (index: number) => void                                                      | 切换至另一张轮播图时触发                                                                                                     |
+| onScrollBegin           | ❌       |                | () => void                                                                   | 切换动画开始时触发                                                                                                           |
+| onScrollEnd             | ❌       |                | (previous: number, current: number) => void                                  | 切换动画结束时触发                                                                                                           |
+| panGestureHandlerProps  | ❌       | {}             | Omit<Partial\<PanGestureHandlerProps\>,'onHandlerStateChange'>               | PanGestureHandler props                                                                                                      |
+| onProgressChange        | ❌       |                | onProgressChange?: (offsetProgress: number,absoluteProgress: number) => void | 当滚动进度发生变化时触发 `offsetProgress`:总的偏移值 (0 390 780 ...); `absoluteProgress`:转化为 index 的进度变化 (0 1 2 ...) |
 
 ## Ref
 
