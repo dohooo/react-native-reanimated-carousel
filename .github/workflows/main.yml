@@ -25,7 +25,7 @@ jobs:
           git config --global user.name robot
           git add .
           git commit -m "chore: i am still alive" -a
-		
+
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
