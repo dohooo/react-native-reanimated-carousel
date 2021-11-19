@@ -18,7 +18,22 @@ jobs:
 
       - name: update
         run: node scripts/i-am-still-alive.js 
-        
+
+      - name: commit
+        run: |
+          git config --global user.email zhaodonghao586@outlook.com
+          git config --global user.name robot
+          git add .
+          git commit -m "chore: i am still alive" -a
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: update
+        run: node scripts/i-am-still-alive.js 
+
       - name: commit
         run: |
           git config --global user.email zhaodonghao586@outlook.com
