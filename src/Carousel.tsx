@@ -188,7 +188,8 @@ function Carousel<T extends unknown = any>(
         ...props.springConfig,
     };
     const width = Math.round(props.width);
-    const handlerOffsetX = useSharedValue<number>(defaultIndex * width);
+    const defaultHandlerOffsetX = -Math.abs(defaultIndex * width);
+    const handlerOffsetX = useSharedValue<number>(defaultHandlerOffsetX);
     const data = React.useMemo<T[]>(() => {
         if (!loop) return _data;
 
