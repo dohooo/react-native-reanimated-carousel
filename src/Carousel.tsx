@@ -188,7 +188,8 @@ function Carousel<T extends unknown = any>(
         ...props.springConfig,
     };
     const width = Math.round(props.width);
-    const handlerOffsetX = useSharedValue<number>(defaultIndex * width);
+    const defaultHandlerOffsetX = -Math.abs(defaultIndex * width);
+    const handlerOffsetX = useSharedValue<number>(defaultHandlerOffsetX);
     const data = React.useMemo<T[]>(() => {
         if (!loop) return _data;
 
@@ -247,8 +248,12 @@ function Carousel<T extends unknown = any>(
 
     const offsetX = useDerivedValue(() => {
         const x = handlerOffsetX.value % computedAnimResult.TOTAL_WIDTH;
+
+        if (!loop) {
+            return handlerOffsetX.value;
+        }
         return isNaN(x) ? 0 : x;
-    }, [computedAnimResult]);
+    }, [computedAnimResult, loop]);
 
     useAnimatedReaction(
         () => offsetX.value,
@@ -322,13 +327,22 @@ function Carousel<T extends unknown = any>(
                     }
 
                     const page = Math.round(handlerOffsetX.value / width);
+
                     const velocityPage = Math.round(
                         (handlerOffsetX.value + e.velocityX) / width
                     );
-                    const pageWithVelocity = Math.min(
+
+                    let pageWithVelocity = Math.min(
                         page + 1,
                         Math.max(page - 1, velocityPage)
                     );
+
+                    if (!loop) {
+                        pageWithVelocity = Math.max(
+                            -(data.length - 1),
+                            Math.min(0, pageWithVelocity)
+                        );
+                    }
 
                     if (loop) {
                         handlerOffsetX.value = _withAnimationCallback(
@@ -367,48 +381,52 @@ function Carousel<T extends unknown = any>(
         [getCurrentIndex, goToIndex, next, prev]
     );
 
-    const Layouts = React.useMemo<React.FC<{ index: number }>>(() => {
-        switch (mode) {
-            case 'parallax':
-                return ({ index: i, children }) => (
-                    <ParallaxLayout
-                        parallaxScrollingOffset={parallaxScrollingOffset}
-                        parallaxScrollingScale={parallaxScrollingScale}
-                        computedAnimResult={computedAnimResult}
-                        width={width}
-                        handlerOffsetX={offsetX}
-                        index={i}
-                        key={i}
-                        loop={loop}
-                    >
-                        {children}
-                    </ParallaxLayout>
-                );
-            default:
-                return ({ index: i, children }) => (
-                    <CarouselItem
-                        computedAnimResult={computedAnimResult}
-                        width={width}
-                        height={height}
-                        handlerOffsetX={offsetX}
-                        index={i}
-                        key={i}
-                        loop={loop}
-                    >
-                        {children}
-                    </CarouselItem>
-                );
-        }
-    }, [
-        loop,
-        mode,
-        computedAnimResult,
-        height,
-        offsetX,
-        parallaxScrollingOffset,
-        parallaxScrollingScale,
-        width,
-    ]);
+    const renderLayout = React.useCallback(
+        (item: T, i: number) => {
+            switch (mode) {
+                case 'parallax':
+                    return (
+                        <ParallaxLayout
+                            parallaxScrollingOffset={parallaxScrollingOffset}
+                            parallaxScrollingScale={parallaxScrollingScale}
+                            computedAnimResult={computedAnimResult}
+                            width={width}
+                            handlerOffsetX={offsetX}
+                            index={i}
+                            key={i}
+                            loop={loop}
+                        >
+                            {renderItem(item, i)}
+                        </ParallaxLayout>
+                    );
+                default:
+                    return (
+                        <CarouselItem
+                            computedAnimResult={computedAnimResult}
+                            width={width}
+                            height={height}
+                            handlerOffsetX={offsetX}
+                            index={i}
+                            key={i}
+                            loop={loop}
+                        >
+                            {renderItem(item, i)}
+                        </CarouselItem>
+                    );
+            }
+        },
+        [
+            loop,
+            mode,
+            computedAnimResult,
+            height,
+            offsetX,
+            parallaxScrollingOffset,
+            parallaxScrollingScale,
+            width,
+            renderItem,
+        ]
+    );
 
     return (
         <PanGestureHandler
@@ -425,13 +443,7 @@ function Carousel<T extends unknown = any>(
                     position: 'relative',
                 }}
             >
-                {data.map((item, i) => {
-                    return (
-                        <Layouts index={i} key={i}>
-                            {renderItem(item, i)}
-                        </Layouts>
-                    );
-                })}
+                {data.map(renderLayout)}
             </Animated.View>
         </PanGestureHandler>
     );
