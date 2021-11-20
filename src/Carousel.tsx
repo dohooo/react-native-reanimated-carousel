@@ -248,8 +248,12 @@ function Carousel<T extends unknown = any>(
 
     const offsetX = useDerivedValue(() => {
         const x = handlerOffsetX.value % computedAnimResult.TOTAL_WIDTH;
+
+        if (!loop) {
+            return handlerOffsetX.value;
+        }
         return isNaN(x) ? 0 : x;
-    }, [computedAnimResult]);
+    }, [computedAnimResult, loop]);
 
     useAnimatedReaction(
         () => offsetX.value,
@@ -323,13 +327,22 @@ function Carousel<T extends unknown = any>(
                     }
 
                     const page = Math.round(handlerOffsetX.value / width);
+
                     const velocityPage = Math.round(
                         (handlerOffsetX.value + e.velocityX) / width
                     );
-                    const pageWithVelocity = Math.min(
+
+                    let pageWithVelocity = Math.min(
                         page + 1,
                         Math.max(page - 1, velocityPage)
                     );
+
+                    if (!loop) {
+                        pageWithVelocity = Math.max(
+                            -(data.length - 1),
+                            Math.min(0, pageWithVelocity)
+                        );
+                    }
 
                     if (loop) {
                         handlerOffsetX.value = _withAnimationCallback(
