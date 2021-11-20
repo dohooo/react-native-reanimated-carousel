@@ -1,6 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
-import { Dimensions, Image, ImageSourcePropType, View } from 'react-native';
+import {
+    Button,
+    Dimensions,
+    Image,
+    ImageSourcePropType,
+    View,
+} from 'react-native';
 import Carousel from '../../src/index';
 import type { ICarouselInstance } from '../../src/Carousel';
 import Animated, {
@@ -10,7 +16,7 @@ import Animated, {
     useSharedValue,
 } from 'react-native-reanimated';
 
-const { width } = Dimensions.get('window');
+const window = Dimensions.get('window');
 
 const data: ImageSourcePropType[] = [
     require('../assets/carousel-0.jpg'),
@@ -30,11 +36,11 @@ export default function App() {
                 paddingTop: 100,
             }}
         >
-            <View style={{ height: 300 }}>
+            <View style={{ height: 240 }}>
                 <Carousel<ImageSourcePropType>
                     defaultIndex={1}
                     ref={r}
-                    width={width}
+                    width={window.width}
                     data={data}
                     parallaxScrollingScale={0.8}
                     renderItem={(source) => (
@@ -50,13 +56,13 @@ export default function App() {
                     )}
                 />
             </View>
-            <View style={{ height: 300 }}>
+            <View style={{ height: 240 }}>
                 <Carousel<ImageSourcePropType>
                     onProgressChange={(_, absoluteProgress) => {
                         progressValue.value = absoluteProgress;
                     }}
                     mode="parallax"
-                    width={width}
+                    width={window.width}
                     data={data}
                     parallaxScrollingScale={0.8}
                     renderItem={(source) => (
@@ -92,6 +98,16 @@ export default function App() {
                         })}
                     </View>
                 )}
+                <View
+                    style={{
+                        marginTop: 24,
+                        flexDirection: 'row',
+                        justifyContent: 'space-evenly',
+                    }}
+                >
+                    <Button title="Prev" onPress={() => r.current?.prev()} />
+                    <Button title="Next" onPress={() => r.current?.next()} />
+                </View>
             </View>
         </View>
     );

@@ -54,8 +54,10 @@ export function useCarouselController(opts: IOpts): ICarouselController {
 
         onScrollBegin?.();
 
+        const currentPage = Math.round(handlerOffsetX.value / width);
+
         handlerOffsetX.value = withTiming(
-            handlerOffsetX.value - width,
+            (currentPage - 1) * width,
             defaultTimingConfig,
             (isFinished: boolean) => {
                 if (isFinished) {
@@ -79,8 +81,10 @@ export function useCarouselController(opts: IOpts): ICarouselController {
 
         onScrollBegin?.();
 
+        const currentPage = Math.round(handlerOffsetX.value / width);
+
         handlerOffsetX.value = withTiming(
-            handlerOffsetX.value + width,
+            (currentPage + 1) * width,
             defaultTimingConfig,
             (isFinished: boolean) => {
                 if (isFinished) {
