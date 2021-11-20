@@ -27,6 +27,7 @@ const data: ImageSourcePropType[] = [
 export default function App() {
     const progressValue = useSharedValue<number>(0);
     const r = React.useRef<ICarouselInstance | null>(null);
+
     return (
         <View
             style={{
@@ -54,6 +55,26 @@ export default function App() {
                             />
                         </View>
                     )}
+                />
+            </View>
+            <View
+                style={{
+                    marginTop: 24,
+                    flexDirection: 'row',
+                    justifyContent: 'space-evenly',
+                }}
+            >
+                <Button
+                    title="Prev"
+                    onPress={() => {
+                        r.current?.prev();
+                    }}
+                />
+                <Button
+                    title="Next"
+                    onPress={() => {
+                        r.current?.next();
+                    }}
                 />
             </View>
             <View style={{ height: 240 }}>
@@ -98,16 +119,6 @@ export default function App() {
                         })}
                     </View>
                 )}
-                <View
-                    style={{
-                        marginTop: 24,
-                        flexDirection: 'row',
-                        justifyContent: 'space-evenly',
-                    }}
-                >
-                    <Button title="Prev" onPress={() => r.current?.prev()} />
-                    <Button title="Next" onPress={() => r.current?.next()} />
-                </View>
             </View>
         </View>
     );
