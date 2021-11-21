@@ -28,7 +28,7 @@
 
 ## 原因
 
-🎉 **易用、无限滚动、完全使用 Reanimated2 实现**
+🎉 **完全解决了`react-native-snap-carousel`的[这个问题](https://github.com/meliorence/react-native-snap-carousel/issues/632)! 易用、无限滚动、完全使用 Reanimated2 实现**
 
 > 常见的无限滚动轮播图，在快速滑动时会出现卡住的情况，这是因为实现方式而导致的问题。这个组件用了不同的方式来实现，解决了这个问题，这就是创建这个库的原因。
 
