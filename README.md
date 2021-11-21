@@ -28,7 +28,7 @@ Updates：
 
 ## Reason
 
-🎉 **Simple、Infinitely scrolling very smooth、Fully implemented using Reanimated 2!**
+🎉 **It completely solves [this problem](https://github.com/meliorence/react-native-snap-carousel/issues/632) for `react-native-snap-carousel`! Simple、Infinitely scrolling very smooth、Fully implemented using Reanimated 2!**
 
 > The common RN infinite scroll component. It's common to get stuck on a fast slide. Wait for the next element to appear. This component will not have similar problems. That's why this library was created.
 
