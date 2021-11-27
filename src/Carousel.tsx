@@ -431,7 +431,7 @@ function Carousel<T extends unknown = any>(
     return (
         <PanGestureHandler
             {...panGestureHandlerProps}
-            onHandlerStateChange={animatedListScrollHandler}
+            onGestureEvent={animatedListScrollHandler}
         >
             <Animated.View
                 // eslint-disable-next-line react-native/no-inline-styles
