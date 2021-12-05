@@ -18,7 +18,6 @@ import { CarouselItem } from './CarouselItem';
 import type { TMode } from './layouts';
 import { ParallaxLayout } from './layouts/index';
 import { useCarouselController } from './hooks/useCarouselController';
-import { useComputedAnim } from './hooks/useComputedAnim';
 import { useAutoPlay } from './hooks/useAutoPlay';
 import { useIndexController } from './hooks/useIndexController';
 import { usePropsErrorBoundary } from './hooks/usePropsErrorBoundary';
@@ -204,8 +203,6 @@ function Carousel<T extends unknown = any>(
         return _data;
     }, [_data, loop]);
 
-    const computedAnimResult = useComputedAnim(width, data.length);
-
     const indexController = useIndexController({
         originalLength: _data.length,
         length: data.length,
@@ -247,13 +244,14 @@ function Carousel<T extends unknown = any>(
     }, [sharedPreIndex, sharedIndex, computedIndex, props, run]);
 
     const offsetX = useDerivedValue(() => {
-        const x = handlerOffsetX.value % computedAnimResult.TOTAL_WIDTH;
+        const totalWidth = width * data.length;
+        const x = handlerOffsetX.value % totalWidth;
 
         if (!loop) {
             return handlerOffsetX.value;
         }
         return isNaN(x) ? 0 : x;
-    }, [computedAnimResult, loop]);
+    }, [loop, width, data]);
 
     useAnimatedReaction(
         () => offsetX.value,
@@ -389,7 +387,7 @@ function Carousel<T extends unknown = any>(
                         <ParallaxLayout
                             parallaxScrollingOffset={parallaxScrollingOffset}
                             parallaxScrollingScale={parallaxScrollingScale}
-                            computedAnimResult={computedAnimResult}
+                            data={data}
                             width={width}
                             handlerOffsetX={offsetX}
                             index={i}
@@ -402,7 +400,7 @@ function Carousel<T extends unknown = any>(
                 default:
                     return (
                         <CarouselItem
-                            computedAnimResult={computedAnimResult}
+                            data={data}
                             width={width}
                             height={height}
                             handlerOffsetX={offsetX}
@@ -418,7 +416,7 @@ function Carousel<T extends unknown = any>(
         [
             loop,
             mode,
-            computedAnimResult,
+            data,
             height,
             offsetX,
             parallaxScrollingOffset,
