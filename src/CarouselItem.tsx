@@ -1,7 +1,6 @@
 import React from 'react';
 import { FlexStyle, View } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import type { IComputedAnimResult } from './hooks/useComputedAnim';
 import { useOffsetX } from './hooks/useOffsetX';
 
 export const CarouselItem: React.FC<{
@@ -9,8 +8,8 @@ export const CarouselItem: React.FC<{
     index: number;
     handlerOffsetX: Animated.SharedValue<number>;
     width: number;
+    data: unknown[];
     height?: FlexStyle['height'];
-    computedAnimResult: IComputedAnimResult;
 }> = (props) => {
     const {
         handlerOffsetX,
@@ -18,16 +17,18 @@ export const CarouselItem: React.FC<{
         children,
         width,
         height = '100%',
-        computedAnimResult,
         loop,
+        data,
     } = props;
+
     const x = useOffsetX({
         handlerOffsetX,
         index,
         width,
-        computedAnimResult,
+        data,
         loop,
     });
+
     const offsetXStyle = useAnimatedStyle(() => {
         return {
             transform: [{ translateX: x.value - index * width }],

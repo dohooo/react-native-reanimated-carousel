@@ -3,37 +3,46 @@ import Animated, {
     interpolate,
     useDerivedValue,
 } from 'react-native-reanimated';
-import type { IComputedAnimResult } from './useComputedAnim';
 
 interface IOpts {
     index: number;
     width: number;
-    computedAnimResult: IComputedAnimResult;
     handlerOffsetX: Animated.SharedValue<number>;
+    data: unknown[];
+    type?: 'positive' | 'negative';
+    viewCount?: number;
     loop?: boolean;
 }
 
 export const useOffsetX = (opts: IOpts) => {
-    const { handlerOffsetX, index, width, computedAnimResult, loop } = opts;
-    const x = useDerivedValue(() => {
-        const { ITEM_LENGTH } = computedAnimResult;
-        const VALID_LENGTH = ITEM_LENGTH - 1;
-        const TOTAL_WIDTH = width * ITEM_LENGTH;
-        const HALF_WIDTH = 0.5 * width;
+    const {
+        handlerOffsetX,
+        index,
+        width,
+        loop,
+        data,
+        type = 'positive',
+        viewCount = 1,
+    } = opts;
+    const ITEM_LENGTH = data.length;
+    const VALID_LENGTH = ITEM_LENGTH - 1;
+    const TOTAL_WIDTH = width * ITEM_LENGTH;
+    const HALF_WIDTH = 0.5 * width;
 
+    const x = useDerivedValue(() => {
+        const defaultPos = width * index;
         if (loop) {
             function getDefaultPos(
-                type: 'positive' | 'negative' = 'positive',
-                _length: number
+                _type: 'positive' | 'negative',
+                _count: number
             ) {
-                const defaultPos = width * index;
-                let length = null;
-                if (type === 'positive') {
-                    length = _length;
+                let boundary = null;
+
+                if (_type === 'positive') {
+                    boundary = _count * width;
                 } else {
-                    length = VALID_LENGTH - _length;
+                    boundary = (VALID_LENGTH - _count) * width;
                 }
-                const boundary = length * width;
 
                 if (defaultPos > boundary) {
                     return boundary - defaultPos;
@@ -41,11 +50,9 @@ export const useOffsetX = (opts: IOpts) => {
                 return defaultPos;
             }
 
-            const ccc = 2;
-            const startPos = getDefaultPos('positive', ccc);
-
-            const MAX = ccc * width;
-            const MIN = -((VALID_LENGTH - ccc) * width);
+            const startPos = getDefaultPos(type, viewCount);
+            const MAX = viewCount * width;
+            const MIN = -((VALID_LENGTH - viewCount) * width);
 
             const inputRange = [
                 -TOTAL_WIDTH,
@@ -59,11 +66,11 @@ export const useOffsetX = (opts: IOpts) => {
 
             const outputRange = [
                 startPos,
-                ccc * width + HALF_WIDTH - 1,
+                MAX + HALF_WIDTH - 1,
                 MIN - HALF_WIDTH,
                 startPos,
                 MAX + HALF_WIDTH,
-                -((VALID_LENGTH - ccc) * width) - HALF_WIDTH + 1,
+                MIN - HALF_WIDTH + 1,
                 startPos,
             ];
 
@@ -75,8 +82,8 @@ export const useOffsetX = (opts: IOpts) => {
             );
         }
 
-        const startPos = width * index;
-        return handlerOffsetX.value + startPos;
-    }, [loop, computedAnimResult]);
+        return handlerOffsetX.value + defaultPos;
+    }, [loop, data, viewCount, type]);
+
     return x;
 };
