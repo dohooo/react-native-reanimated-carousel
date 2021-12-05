@@ -35,24 +35,36 @@ export const useOffsetX = (opts: IOpts) => {
             function getDefaultPos(
                 _type: 'positive' | 'negative',
                 _count: number
-            ) {
-                let boundary = null;
+            ): {
+                MAX: number;
+                MIN: number;
+                startPos: number;
+            } {
+                let MAX = null;
+                let MIN = null;
+
+                let startPos: number = defaultPos;
 
                 if (_type === 'positive') {
-                    boundary = _count * width;
+                    MAX = _count * width;
+                    MIN = -(VALID_LENGTH - _count) * width;
                 } else {
-                    boundary = (VALID_LENGTH - _count) * width;
+                    MAX = (VALID_LENGTH - _count) * width;
+                    MIN = -_count * width;
                 }
 
-                if (defaultPos > boundary) {
-                    return boundary - defaultPos;
+                if (defaultPos > MAX) {
+                    startPos = MAX - defaultPos;
                 }
-                return defaultPos;
+
+                return {
+                    startPos,
+                    MAX,
+                    MIN,
+                };
             }
 
-            const startPos = getDefaultPos(type, viewCount);
-            const MAX = viewCount * width;
-            const MIN = -((VALID_LENGTH - viewCount) * width);
+            const { startPos, MAX, MIN } = getDefaultPos(type, viewCount);
 
             const inputRange = [
                 -TOTAL_WIDTH,
