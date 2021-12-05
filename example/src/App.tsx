@@ -17,6 +17,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 const window = Dimensions.get('window');
+const PAGE_WIDTH = 300;
 
 const data: ImageSourcePropType[] = [
     require('../assets/carousel-0.jpg'),
@@ -25,8 +26,8 @@ const data: ImageSourcePropType[] = [
 ];
 
 export default function App() {
-    const progressValue = useSharedValue<number>(0);
     const r = React.useRef<ICarouselInstance | null>(null);
+    const progressValue = useSharedValue<number>(0);
 
     return (
         <View
@@ -37,25 +38,26 @@ export default function App() {
                 paddingTop: 100,
             }}
         >
-            <View style={{ height: 240 }}>
-                <Carousel<ImageSourcePropType>
-                    defaultIndex={1}
+            <View style={{ width: PAGE_WIDTH, height: 240 }}>
+                <Carousel
+                    defaultIndex={0}
                     ref={r}
-                    width={window.width}
-                    data={data}
+                    width={PAGE_WIDTH}
                     parallaxScrollingScale={0.8}
-                    renderItem={(source) => (
-                        <View style={{ flex: 1 }}>
+                >
+                    {data.map((source, index) => {
+                        return (
                             <Image
+                                key={index}
                                 source={source}
                                 style={{
                                     width: '100%',
                                     height: '100%',
                                 }}
                             />
-                        </View>
-                    )}
-                />
+                        );
+                    })}
+                </Carousel>
             </View>
             <View
                 style={{
@@ -77,27 +79,33 @@ export default function App() {
                     }}
                 />
             </View>
-            <View style={{ height: 240 }}>
-                <Carousel<ImageSourcePropType>
+            <View
+                style={{
+                    height: 240,
+                    alignItems: 'center',
+                }}
+            >
+                <Carousel
                     onProgressChange={(_, absoluteProgress) => {
                         progressValue.value = absoluteProgress;
                     }}
                     mode="parallax"
                     width={window.width}
-                    data={data}
                     parallaxScrollingScale={0.8}
-                    renderItem={(source) => (
-                        <View style={{ flex: 1 }}>
+                >
+                    {data.map((source, i) => {
+                        return (
                             <Image
+                                key={i}
                                 source={source}
                                 style={{
                                     width: '100%',
                                     height: '100%',
                                 }}
                             />
-                        </View>
-                    )}
-                />
+                        );
+                    })}
+                </Carousel>
                 {!!progressValue && (
                     <View
                         style={{

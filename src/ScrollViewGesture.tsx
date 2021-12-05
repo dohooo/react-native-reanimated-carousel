@@ -3,13 +3,13 @@ import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import {
     PanGestureHandler,
     PanGestureHandlerGestureEvent,
+    PanGestureHandlerProps,
 } from 'react-native-gesture-handler';
 import Animated, {
     cancelAnimation,
     runOnJS,
     useAnimatedGestureHandler,
     useAnimatedReaction,
-    useAnimatedStyle,
     useDerivedValue,
     useSharedValue,
     withDecay,
@@ -23,24 +23,34 @@ type GestureContext = {
 
 interface Props {
     style?: StyleProp<ViewStyle>;
-    contentContainerStyle?: StyleProp<ViewStyle>;
-    horizontal?: boolean;
     infinite?: boolean;
-    onScroll?: (offset: Animated.SharedValue<number>) => void;
-    offset?: Animated.SharedValue<number>;
-    translate?: Animated.SharedValue<number>;
     pagingEnabled?: boolean;
+    horizontal?: boolean;
+    panGestureHandlerProps?: Omit<
+        Partial<PanGestureHandlerProps>,
+        'onHandlerStateChange'
+    >;
+    onScrollBegin?: () => void;
+    onScrollEnd?: () => void;
+
+    translation: Animated.SharedValue<number>;
+    totalWidth: number;
+    width: number;
+    count: number;
 }
 
 const IScrollViewGesture: React.FC<Props> = (props) => {
     const {
-        style,
-        contentContainerStyle,
-        horizontal,
         infinite,
-        onScroll,
-        offset,
+        horizontal,
+        translation,
         pagingEnabled,
+        panGestureHandlerProps = {},
+        onScrollBegin,
+        onScrollEnd,
+        totalWidth,
+        width,
+        count,
     } = props;
 
     const isHorizontal = useDerivedValue(
@@ -48,51 +58,49 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
         [horizontal]
     );
     const touching = useSharedValue(false);
-    const scrollEndDirection = useSharedValue(0);
+    const scrollEndTranslation = useSharedValue(0);
     const scrollEndVelocity = useSharedValue(0);
 
-    const cLength = useSharedValue(0);
-    const svLength = useSharedValue(0);
-    const panOffset = useSharedValue(0);
-    const scrollOffset = useDerivedValue(
-        () => -panOffset.value,
-        [panOffset.value]
-    );
-    const maxLength = useDerivedValue(
-        () => cLength.value - svLength.value,
-        [cLength.value, svLength.value]
-    );
-    const singlePageLength = useSharedValue(0);
-    const pageCount = React.Children.count(props.children);
+    const cLength = totalWidth;
+    const svLength = width;
+    const maxLength = cLength - svLength;
 
-    const endWithSpring = React.useCallback((toValue: number) => {
-        'worklet';
-        return withSpring(toValue, {
-            damping: 100,
-        });
-    }, []);
+    const endWithSpring = React.useCallback(
+        (toValue: number) => {
+            'worklet';
+            return withSpring(
+                toValue,
+                {
+                    damping: 100,
+                },
+                (isFinished) => {
+                    if (isFinished) {
+                        onScrollEnd && runOnJS(onScrollEnd)();
+                    }
+                }
+            );
+        },
+        [onScrollEnd]
+    );
 
     const withPaging = React.useCallback(() => {
         'worklet';
-        const page = Math.round(-panOffset.value / svLength.value);
+        const page = Math.round(-translation.value / svLength);
         const velocityPage = Math.round(
-            -(panOffset.value + scrollEndVelocity.value) / svLength.value
+            -(translation.value + scrollEndVelocity.value) / svLength
         );
-        const pageWithVelocity = Math.min(
-            page + 1,
-            Math.max(page - 1, velocityPage)
-        );
-        const finalPage = Math.min(
-            pageCount - 1,
-            Math.max(0, pageWithVelocity)
-        );
-        panOffset.value = endWithSpring(-finalPage * svLength.value);
+        let finalPage = Math.min(page + 1, Math.max(page - 1, velocityPage));
+        if (!infinite) {
+            finalPage = Math.min(count - 1, Math.max(0, finalPage));
+        }
+        translation.value = endWithSpring(-finalPage * svLength);
     }, [
+        infinite,
         endWithSpring,
-        panOffset,
-        scrollEndVelocity.value,
-        svLength.value,
-        pageCount,
+        translation,
+        scrollEndVelocity,
+        svLength,
+        count,
     ]);
 
     const resetBoundary = React.useCallback(() => {
@@ -100,61 +108,61 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
         const onFinish = (isFinished: boolean) => {
             if (isFinished) {
                 touching.value = false;
+                onScrollEnd && runOnJS(onScrollEnd)();
             }
         };
         const activeDecay = () => {
             touching.value = true;
-            panOffset.value = withDecay(
+            translation.value = withDecay(
                 { velocity: scrollEndVelocity.value },
                 onFinish
             );
         };
 
-        if (touching.value || infinite) {
+        if (touching.value) {
             return;
         }
 
-        if (scrollOffset.value < 0) {
-            if (scrollEndDirection.value < 0) {
+        if (translation.value > 0) {
+            if (scrollEndTranslation.value < 0) {
                 activeDecay();
-            } else {
-                panOffset.value = endWithSpring(0);
+                return;
+            }
+            if (!infinite) {
+                translation.value = endWithSpring(0);
+                return;
             }
         }
 
-        if (scrollOffset.value > maxLength.value) {
-            if (scrollEndDirection.value > 0) {
+        if (translation.value < -maxLength) {
+            if (scrollEndTranslation.value > 0) {
                 activeDecay();
-            } else {
-                panOffset.value = endWithSpring(-maxLength.value);
+                return;
+            }
+            if (!infinite) {
+                translation.value = endWithSpring(-maxLength);
+                return;
             }
         }
     }, [
         infinite,
         touching,
-        scrollOffset,
         endWithSpring,
-        maxLength.value,
-        panOffset,
-        scrollEndDirection,
+        maxLength,
+        translation,
+        scrollEndTranslation,
         scrollEndVelocity,
+        onScrollEnd,
     ]);
 
     useAnimatedReaction(
-        () => scrollOffset.value,
-        (v) => {
-            if (offset) {
-                offset.value = v;
-            }
-            if (onScroll) {
-                runOnJS(onScroll)(scrollOffset);
-            }
-
+        () => translation.value,
+        () => {
             if (!pagingEnabled) {
                 resetBoundary();
             }
         },
-        [maxLength.value, touching.value, scrollOffset, pagingEnabled]
+        [maxLength, pagingEnabled]
     );
 
     const panGestureEventHandler = useAnimatedGestureHandler<
@@ -164,61 +172,58 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
         {
             onStart: (_, ctx) => {
                 touching.value = true;
-                cancelAnimation(panOffset);
-                ctx.max = cLength.value - svLength.value;
-                ctx.panOffset = panOffset.value;
+                cancelAnimation(translation);
+                onScrollBegin && runOnJS(onScrollBegin)();
+                ctx.max = cLength - svLength;
+                ctx.panOffset = translation.value;
             },
             onActive: (e, ctx) => {
                 touching.value = true;
                 const { translationX, translationY } = e;
-                let translate = isHorizontal.value
+                let panTranslation = isHorizontal.value
                     ? translationX
                     : translationY;
 
-                if (panOffset.value > 0 || panOffset.value < -ctx.max) {
-                    translate = translate * 0.5;
+                if (
+                    !infinite &&
+                    (translation.value > 0 || translation.value < -ctx.max)
+                ) {
+                    panTranslation = panTranslation * 0.5;
                 }
-                panOffset.value = ctx.panOffset + translate;
 
-                if (props.translate) {
-                    props.translate.value = translate;
-                }
+                translation.value = ctx.panOffset + panTranslation;
             },
             onEnd: (e) => {
                 const { velocityX, velocityY, translationX, translationY } = e;
                 scrollEndVelocity.value = isHorizontal.value
                     ? velocityX
                     : velocityY;
-                scrollEndDirection.value = isHorizontal.value
+                scrollEndTranslation.value = isHorizontal.value
                     ? translationX
                     : translationY;
 
                 if (pagingEnabled) {
                     withPaging();
-                } else {
-                    panOffset.value = withDecay({
-                        velocity: scrollEndVelocity.value,
-                    });
+                    return;
                 }
+                translation.value = withDecay(
+                    {
+                        velocity: scrollEndVelocity.value,
+                    },
+                    (isFinished) => {
+                        if (isFinished) {
+                            onScrollEnd && runOnJS(onScrollEnd)();
+                        }
+                    }
+                );
 
                 if (!infinite) {
                     touching.value = false;
                 }
             },
         },
-        [pagingEnabled, isHorizontal.value, infinite]
+        [pagingEnabled, isHorizontal.value, infinite, cLength, svLength]
     );
-
-    const animatedStyle = useAnimatedStyle(() => {
-        if (isHorizontal.value) {
-            return {
-                transform: [{ translateX: panOffset.value }],
-            };
-        }
-        return {
-            transform: [{ translateY: panOffset.value }],
-        };
-    }, [isHorizontal.value]);
 
     const directionStyle = React.useMemo(() => {
         return horizontal ? styles.contentHorizontal : styles.contentVertical;
@@ -226,33 +231,11 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
 
     return (
         <Animated.View style={[styles.container, directionStyle]}>
-            <PanGestureHandler onGestureEvent={panGestureEventHandler}>
-                <Animated.View
-                    style={[style, styles.container, directionStyle]}
-                    onLayout={(e) => {
-                        const { width, height } = e.nativeEvent.layout;
-                        const len = horizontal ? width : height;
-                        svLength.value = len;
-                    }}
-                >
-                    <Animated.View
-                        style={[
-                            styles.content,
-                            contentContainerStyle,
-                            animatedStyle,
-                            directionStyle,
-                        ]}
-                        onLayout={(e) => {
-                            const { width, height } = e.nativeEvent.layout;
-                            const len = horizontal ? width : height;
-                            cLength.value = len;
-                            singlePageLength.value =
-                                len / React.Children.count(props.children);
-                        }}
-                    >
-                        {props.children}
-                    </Animated.View>
-                </Animated.View>
+            <PanGestureHandler
+                {...panGestureHandlerProps}
+                onGestureEvent={panGestureEventHandler}
+            >
+                {props.children}
             </PanGestureHandler>
         </Animated.View>
     );
@@ -262,12 +245,7 @@ export const ScrollViewGesture = IScrollViewGesture;
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fff',
         overflow: 'hidden',
-    },
-    content: {
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
     },
     contentVertical: {
         flexDirection: 'column',

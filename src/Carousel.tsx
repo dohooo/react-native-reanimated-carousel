@@ -1,18 +1,11 @@
-import React from 'react';
+import React, { PropsWithChildren, ReactNode } from 'react';
 import type { FlexStyle, ViewStyle } from 'react-native';
-import {
-    PanGestureHandler,
-    PanGestureHandlerProps,
-    PanGestureHandlerGestureEvent,
-} from 'react-native-gesture-handler';
+import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
 import Animated, {
-    cancelAnimation,
     runOnJS,
-    useAnimatedGestureHandler,
     useAnimatedReaction,
     useDerivedValue,
     useSharedValue,
-    withSpring,
 } from 'react-native-reanimated';
 import { CarouselItem } from './CarouselItem';
 import type { TMode } from './layouts';
@@ -22,11 +15,9 @@ import { useComputedAnim } from './hooks/useComputedAnim';
 import { useAutoPlay } from './hooks/useAutoPlay';
 import { useIndexController } from './hooks/useIndexController';
 import { usePropsErrorBoundary } from './hooks/usePropsErrorBoundary';
+import { ScrollViewGesture } from './ScrollViewGesture';
 
-const defaultSpringConfig: Animated.WithSpringConfig = {
-    damping: 100,
-};
-export interface ICarouselProps<T extends unknown> {
+export interface ICarouselProps {
     ref?: React.Ref<ICarouselInstance>;
     /**
      * Carousel loop playback.
@@ -50,7 +41,7 @@ export interface ICarouselProps<T extends unknown> {
     /**
      * Carousel items data set.
      */
-    data: T[];
+    // data?: T[];
     /**
      * Default index
      * @default 0
@@ -98,7 +89,7 @@ export interface ICarouselProps<T extends unknown> {
     /**
      * Render carousel item.
      */
-    renderItem: (data: T, index: number) => React.ReactNode;
+    // renderItem?: (data: T, index: number) => React.ReactNode;
     /**
      * Callback fired when navigating to an item
      */
@@ -141,14 +132,13 @@ export interface ICarouselInstance {
     goToIndex: (index: number, animated?: boolean) => void;
 }
 
-function Carousel<T extends unknown = any>(
-    props: ICarouselProps<T>,
+function Carousel(
+    props: PropsWithChildren<ICarouselProps>,
     ref: React.Ref<ICarouselInstance>
 ) {
     const {
         defaultIndex = 0,
         height = '100%',
-        data: _data = [],
         loop = true,
         mode = 'default',
         autoPlay,
@@ -158,16 +148,16 @@ function Carousel<T extends unknown = any>(
         parallaxScrollingScale,
         style,
         panGestureHandlerProps = {},
-        renderItem,
         onSnapToItem,
         onProgressChange,
     } = props;
+
+    const childrenCount = React.Children.count(props.children);
 
     usePropsErrorBoundary({
         ...props,
         defaultIndex,
         height,
-        data: _data,
         loop,
         mode,
         autoPlay,
@@ -178,37 +168,34 @@ function Carousel<T extends unknown = any>(
         style,
         panGestureHandlerProps,
         // @ts-ignore
-        renderItem,
         onSnapToItem,
         onProgressChange,
+        viewCount: childrenCount,
     });
 
-    const timingConfig = {
-        ...defaultSpringConfig,
-        ...props.springConfig,
-    };
     const width = Math.round(props.width);
     const defaultHandlerOffsetX = -Math.abs(defaultIndex * width);
     const handlerOffsetX = useSharedValue<number>(defaultHandlerOffsetX);
-    const data = React.useMemo<T[]>(() => {
-        if (!loop) return _data;
+    const childrens = React.useMemo<ReactNode[]>(() => {
+        const arr = React.Children.toArray(props.children);
+        if (!loop) return arr;
 
-        if (_data.length === 1) {
-            return [_data[0], _data[0], _data[0]];
+        if (arr.length === 1) {
+            return [arr[0], arr[0], arr[0]];
         }
 
-        if (_data.length === 2) {
-            return [_data[0], _data[1], _data[0], _data[1]];
+        if (arr.length === 2) {
+            return [arr[0], arr[1], arr[0], arr[1]];
         }
 
-        return _data;
-    }, [_data, loop]);
+        return arr;
+    }, [props.children, loop]);
 
-    const computedAnimResult = useComputedAnim(width, data.length);
+    const computedAnimResult = useComputedAnim(width, childrens.length);
 
     const indexController = useIndexController({
-        originalLength: _data.length,
-        length: data.length,
+        originalLength: childrens.length,
+        length: childrens.length,
         handlerOffsetX,
         width,
         loop,
@@ -220,7 +207,7 @@ function Carousel<T extends unknown = any>(
         width,
         handlerOffsetX,
         indexController,
-        disable: !data.length,
+        disable: false,
         onScrollBegin: () => runOnJS(onScrollBegin)(),
         onScrollEnd: () => runOnJS(onScrollEnd)(),
     });
@@ -260,12 +247,12 @@ function Carousel<T extends unknown = any>(
         (value) => {
             let absoluteProgress = Math.abs(value / width);
             if (value > 0) {
-                absoluteProgress = data.length - absoluteProgress;
+                absoluteProgress = childrenCount - absoluteProgress;
             }
             !!onProgressChange &&
                 runOnJS(onProgressChange)(value, absoluteProgress);
         },
-        [onProgressChange, data]
+        [onProgressChange, props.children]
     );
 
     const next = React.useCallback(() => {
@@ -287,89 +274,6 @@ function Carousel<T extends unknown = any>(
         [carouselController]
     );
 
-    const animatedListScrollHandler =
-        useAnimatedGestureHandler<PanGestureHandlerGestureEvent>(
-            {
-                onStart: (_, ctx: any) => {
-                    runOnJS(pause)();
-                    runOnJS(onScrollBegin)();
-                    cancelAnimation(handlerOffsetX);
-                    ctx.currentContentOffsetX = handlerOffsetX.value;
-                    ctx.start = true;
-                },
-                onActive: (e, ctx: any) => {
-                    const { translationX } = e;
-                    if (
-                        !loop &&
-                        (handlerOffsetX.value >= 0 ||
-                            handlerOffsetX.value <= -(data.length - 1) * width)
-                    ) {
-                        handlerOffsetX.value =
-                            ctx.currentContentOffsetX + translationX / 2;
-                        return;
-                    }
-                    handlerOffsetX.value =
-                        ctx.currentContentOffsetX + translationX;
-                },
-                onEnd: (e) => {
-                    function _withAnimationCallback(num: number) {
-                        return withSpring(
-                            num,
-                            Object.assign({}, timingConfig, {
-                                velocity: e.velocityX,
-                            }),
-                            (isFinished) => {
-                                if (isFinished) {
-                                    runOnJS(onScrollEnd)();
-                                }
-                            }
-                        );
-                    }
-
-                    const page = Math.round(handlerOffsetX.value / width);
-
-                    const velocityPage = Math.round(
-                        (handlerOffsetX.value + e.velocityX) / width
-                    );
-
-                    let pageWithVelocity = Math.min(
-                        page + 1,
-                        Math.max(page - 1, velocityPage)
-                    );
-
-                    if (!loop) {
-                        pageWithVelocity = Math.max(
-                            -(data.length - 1),
-                            Math.min(0, pageWithVelocity)
-                        );
-                    }
-
-                    if (loop) {
-                        handlerOffsetX.value = _withAnimationCallback(
-                            pageWithVelocity * width
-                        );
-                        return;
-                    }
-                    if (handlerOffsetX.value >= 0) {
-                        handlerOffsetX.value = _withAnimationCallback(0);
-                        return;
-                    }
-
-                    if (handlerOffsetX.value <= -(data.length - 1) * width) {
-                        handlerOffsetX.value = _withAnimationCallback(
-                            -(data.length - 1) * width
-                        );
-                        return;
-                    }
-
-                    handlerOffsetX.value = _withAnimationCallback(
-                        pageWithVelocity * width
-                    );
-                },
-            },
-            [loop, data, onScrollBegin, onScrollEnd]
-        );
-
     React.useImperativeHandle(
         ref,
         () => ({
@@ -382,7 +286,7 @@ function Carousel<T extends unknown = any>(
     );
 
     const renderLayout = React.useCallback(
-        (item: T, i: number) => {
+        (children: ReactNode, i: number) => {
             switch (mode) {
                 case 'parallax':
                     return (
@@ -396,7 +300,7 @@ function Carousel<T extends unknown = any>(
                             key={i}
                             loop={loop}
                         >
-                            {renderItem(item, i)}
+                            {children}
                         </ParallaxLayout>
                     );
                 default:
@@ -410,7 +314,7 @@ function Carousel<T extends unknown = any>(
                             key={i}
                             loop={loop}
                         >
-                            {renderItem(item, i)}
+                            {children}
                         </CarouselItem>
                     );
             }
@@ -424,14 +328,19 @@ function Carousel<T extends unknown = any>(
             parallaxScrollingOffset,
             parallaxScrollingScale,
             width,
-            renderItem,
         ]
     );
 
     return (
-        <PanGestureHandler
-            {...panGestureHandlerProps}
-            onGestureEvent={animatedListScrollHandler}
+        <ScrollViewGesture
+            pagingEnabled
+            horizontal
+            infinite={loop}
+            translation={handlerOffsetX}
+            style={style}
+            totalWidth={computedAnimResult.TOTAL_WIDTH}
+            width={width}
+            count={childrenCount}
         >
             <Animated.View
                 // eslint-disable-next-line react-native/no-inline-styles
@@ -443,9 +352,9 @@ function Carousel<T extends unknown = any>(
                     position: 'relative',
                 }}
             >
-                {data.map(renderLayout)}
+                {childrens.map(renderLayout)}
             </Animated.View>
-        </PanGestureHandler>
+        </ScrollViewGesture>
     );
 }
 

@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { TextInput, Button, StyleSheet, Text, View } from 'react-native';
 import Animated, {
-    Extrapolate,
-    interpolate,
-    useAnimatedStyle,
+    runOnJS,
+    useAnimatedReaction,
     useSharedValue,
 } from 'react-native-reanimated';
 import { ScrollViewGesture } from '../../src/ScrollViewGesture';
@@ -23,12 +22,25 @@ const titles = [
 ];
 
 export default function App() {
-    const inputRef = React.useRef<TextInput>(null);
     const [horizontal, setHorizontal] = React.useState(true);
     const [infinite, setInfinite] = React.useState(false);
 
-    const offset = useSharedValue(0);
-    const translate = useSharedValue(0);
+    const panTranslation = useSharedValue(0);
+
+    const inputRef = React.useRef<TextInput>(null);
+    const updateInputText = React.useCallback((text: string) => {
+        inputRef.current?.setNativeProps({
+            text,
+        });
+    }, []);
+
+    useAnimatedReaction(
+        () => panTranslation.value,
+        (v) => {
+            runOnJS(updateInputText)(`offset: ${v.toFixed(2)}`);
+        },
+        [panTranslation.value, inputRef.current]
+    );
 
     return (
         <View style={styles.screen}>
@@ -41,26 +53,17 @@ export default function App() {
                 style={[styles.info]}
             />
             <ScrollViewGesture
-                // infinite
                 pagingEnabled
                 horizontal={horizontal}
                 style={styles.scrollview}
-                onScroll={(scroll) => {
-                    inputRef.current?.setNativeProps({
-                        text: `offset: ${scroll.value.toFixed(2)}`,
-                    });
-                }}
-                offset={offset}
-                translate={translate}
+                translation={panTranslation}
+                totalWidth={titles.length * PAGE_WIDTH}
+                width={PAGE_WIDTH}
+                count={titles.length}
             >
                 {titles.map((title, index) => {
                     return (
-                        <Page
-                            horizontal={horizontal}
-                            key={index}
-                            index={index}
-                            offset={offset}
-                        >
+                        <Page key={index} index={index}>
                             <Text style={styles.title}>{title}</Text>
                         </Page>
                     );
@@ -74,69 +77,20 @@ export default function App() {
 }
 
 const Page: React.FC<{
-    horizontal: boolean;
-    offset: Animated.SharedValue<number>;
     index: number;
 }> = (props) => {
-    const { children, offset, index, horizontal } = props;
-
-    const animatedStyle = useAnimatedStyle(() => {
-        const scale = interpolate(
-            offset.value,
-            [
-                (index - 1) * PAGE_WIDTH,
-                index * PAGE_WIDTH,
-                (index + 1) * PAGE_WIDTH,
-            ],
-            [0.9, 1, 1]
-        );
-
-        const opacity = interpolate(
-            offset.value,
-            [
-                (index - 4) * PAGE_WIDTH,
-                (index - 3) * PAGE_WIDTH,
-                index * PAGE_WIDTH,
-                (index + 1) * PAGE_WIDTH,
-                (index + 4) * PAGE_WIDTH,
-            ],
-            [0, 0.9, 1, 0.9, 0],
-            Extrapolate.EXTEND
-        );
-
-        const translate = interpolate(
-            offset.value,
-            [
-                (index - 1) * PAGE_WIDTH,
-                index * PAGE_WIDTH,
-                (index + 1) * PAGE_WIDTH,
-            ],
-            [-PAGE_WIDTH * 0.94, 0, 0]
-        );
-
-        const translateStyle = horizontal
-            ? { translateX: translate }
-            : { translateY: translate };
-
-        return {
-            transform: [translateStyle, { scale }],
-            zIndex: -index,
-            opacity,
-        };
-    }, [offset.value, index, horizontal]);
+    const { children, index } = props;
 
     return (
-        <Animated.View style={[styles.page, animatedStyle]}>
-            <Animated.View
-                style={[
-                    styles.innerPage,
-                    {
-                        backgroundColor: `rgba(${255 - index * 30},240,120,1)`,
-                    },
-                ]}
-            >
-                {children}
-            </Animated.View>
+        <Animated.View
+            style={[
+                styles.innerPage,
+                {
+                    backgroundColor: `rgba(${255 - index * 30},240,120,1)`,
+                },
+            ]}
+        >
+            {children}
         </Animated.View>
     );
 };
