@@ -16,20 +16,41 @@ interface IOpts {
 export const useOffsetX = (opts: IOpts) => {
     const { handlerOffsetX, index, width, computedAnimResult, loop } = opts;
     const x = useDerivedValue(() => {
-        const { MAX, MIN, TOTAL_WIDTH, HALF_WIDTH } = computedAnimResult;
+        const { ITEM_LENGTH } = computedAnimResult;
+        const VALID_LENGTH = ITEM_LENGTH - 1;
+        const TOTAL_WIDTH = width * ITEM_LENGTH;
+        const HALF_WIDTH = 0.5 * width;
+
         if (loop) {
-            const defaultPos = width * index;
-            const startPos =
-                defaultPos > MAX
-                    ? MAX - defaultPos
-                    : defaultPos < MIN
-                    ? MIN - defaultPos
-                    : defaultPos;
+            function getDefaultPos(
+                type: 'positive' | 'negative' = 'positive',
+                _length: number
+            ) {
+                const defaultPos = width * index;
+                let length = null;
+                if (type === 'positive') {
+                    length = _length;
+                } else {
+                    length = VALID_LENGTH - _length;
+                }
+                const boundary = length * width;
+
+                if (defaultPos > boundary) {
+                    return boundary - defaultPos;
+                }
+                return defaultPos;
+            }
+
+            const ccc = 2;
+            const startPos = getDefaultPos('positive', ccc);
+
+            const MAX = ccc * width;
+            const MIN = -((VALID_LENGTH - ccc) * width);
 
             const inputRange = [
                 -TOTAL_WIDTH,
-                -(MAX + HALF_WIDTH) - startPos - 1,
-                -(MAX + HALF_WIDTH) - startPos,
+                MIN - HALF_WIDTH - startPos - 1,
+                MIN - HALF_WIDTH - startPos,
                 0,
                 MAX + HALF_WIDTH - startPos,
                 MAX + HALF_WIDTH - startPos + 1,
@@ -38,11 +59,11 @@ export const useOffsetX = (opts: IOpts) => {
 
             const outputRange = [
                 startPos,
-                1.5 * width - 1,
-                -(MAX + HALF_WIDTH),
+                ccc * width + HALF_WIDTH - 1,
+                MIN - HALF_WIDTH,
                 startPos,
                 MAX + HALF_WIDTH,
-                -(1.5 * width - 1),
+                -((VALID_LENGTH - ccc) * width) - HALF_WIDTH + 1,
                 startPos,
             ];
 

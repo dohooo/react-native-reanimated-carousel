@@ -22,6 +22,7 @@ const data: ImageSourcePropType[] = [
     require('../assets/carousel-0.jpg'),
     require('../assets/carousel-1.jpg'),
     require('../assets/carousel-2.jpg'),
+    require('../assets/carousel-1.jpg'),
 ];
 
 export default function App() {
@@ -37,11 +38,18 @@ export default function App() {
                 paddingTop: 100,
             }}
         >
-            <View style={{ height: 240 }}>
+            <View
+                style={{
+                    height: 240,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    transform: [{ scale: 0.8 }],
+                }}
+            >
                 <Carousel<ImageSourcePropType>
-                    defaultIndex={1}
                     ref={r}
-                    width={window.width}
+                    style={{ borderColor: 'red', borderWidth: 1 }}
+                    width={window.width / 4}
                     data={data}
                     parallaxScrollingScale={0.8}
                     renderItem={(source) => (
@@ -78,7 +86,7 @@ export default function App() {
                 />
             </View>
             <View style={{ height: 240 }}>
-                <Carousel<ImageSourcePropType>
+                {/* <Carousel<ImageSourcePropType>
                     onProgressChange={(_, absoluteProgress) => {
                         progressValue.value = absoluteProgress;
                     }}
@@ -97,7 +105,7 @@ export default function App() {
                             />
                         </View>
                     )}
-                />
+                /> */}
                 {!!progressValue && (
                     <View
                         style={{
