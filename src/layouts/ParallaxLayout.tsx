@@ -6,7 +6,6 @@ import Animated, {
     interpolate,
     useAnimatedStyle,
 } from 'react-native-reanimated';
-import type { IComputedAnimResult } from 'src/hooks/useComputedAnim';
 import { useOffsetX } from '../hooks/useOffsetX';
 
 export const ParallaxLayout: React.FC<{
@@ -16,7 +15,7 @@ export const ParallaxLayout: React.FC<{
     handlerOffsetX: Animated.SharedValue<number>;
     index: number;
     width: number;
-    computedAnimResult: IComputedAnimResult;
+    data: unknown[];
 }> = (props) => {
     const {
         handlerOffsetX,
@@ -25,15 +24,15 @@ export const ParallaxLayout: React.FC<{
         index,
         width,
         loop,
+        data,
         children,
-        computedAnimResult,
     } = props;
 
     const x = useOffsetX({
         handlerOffsetX,
         index,
         width,
-        computedAnimResult,
+        data,
         loop,
     });
 
