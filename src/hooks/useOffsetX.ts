@@ -22,7 +22,7 @@ export const useOffsetX = (opts: IOpts) => {
         loop,
         data,
         type = 'positive',
-        viewCount = 1,
+        viewCount = Math.round((data.length - 1) / 2),
     } = opts;
     const ITEM_LENGTH = data.length;
     const VALID_LENGTH = ITEM_LENGTH - 1;
