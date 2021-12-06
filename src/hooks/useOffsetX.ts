@@ -30,41 +30,17 @@ export const useOffsetX = (opts: IOpts) => {
     const HALF_WIDTH = 0.5 * width;
 
     const x = useDerivedValue(() => {
-        const defaultPos = width * index;
         if (loop) {
-            function getDefaultPos(
-                _type: 'positive' | 'negative',
-                _count: number
-            ): {
-                MAX: number;
-                MIN: number;
-                startPos: number;
-            } {
-                let MAX = null;
-                let MIN = null;
+            const postiveCount =
+                type === 'positive' ? viewCount : VALID_LENGTH - viewCount;
 
-                let startPos: number = defaultPos;
-
-                if (_type === 'positive') {
-                    MAX = _count * width;
-                    MIN = -(VALID_LENGTH - _count) * width;
-                } else {
-                    MAX = (VALID_LENGTH - _count) * width;
-                    MIN = -_count * width;
-                }
-
-                if (defaultPos > MAX) {
-                    startPos = MAX - defaultPos;
-                }
-
-                return {
-                    startPos,
-                    MAX,
-                    MIN,
-                };
+            let startPos = width * index;
+            if (index > postiveCount) {
+                startPos = (index - ITEM_LENGTH) * width;
             }
 
-            const { startPos, MAX, MIN } = getDefaultPos(type, viewCount);
+            const MAX = postiveCount * width;
+            const MIN = -((VALID_LENGTH - postiveCount) * width);
 
             const inputRange = [
                 -TOTAL_WIDTH,
@@ -94,7 +70,7 @@ export const useOffsetX = (opts: IOpts) => {
             );
         }
 
-        return handlerOffsetX.value + defaultPos;
+        return handlerOffsetX.value + width * index;
     }, [loop, data, viewCount, type]);
 
     return x;
