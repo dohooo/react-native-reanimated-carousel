@@ -31,16 +31,16 @@ export const useOffsetX = (opts: IOpts) => {
 
     const x = useDerivedValue(() => {
         if (loop) {
-            const postiveCount =
+            const positiveCount =
                 type === 'positive' ? viewCount : VALID_LENGTH - viewCount;
 
             let startPos = width * index;
-            if (index > postiveCount) {
+            if (index > positiveCount) {
                 startPos = (index - ITEM_LENGTH) * width;
             }
 
-            const MAX = postiveCount * width;
-            const MIN = -((VALID_LENGTH - postiveCount) * width);
+            const MAX = positiveCount * width;
+            const MIN = -((VALID_LENGTH - positiveCount) * width);
 
             const inputRange = [
                 -TOTAL_WIDTH,
