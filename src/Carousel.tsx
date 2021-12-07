@@ -21,6 +21,7 @@ import { useCarouselController } from './hooks/useCarouselController';
 import { useAutoPlay } from './hooks/useAutoPlay';
 import { useIndexController } from './hooks/useIndexController';
 import { usePropsErrorBoundary } from './hooks/usePropsErrorBoundary';
+import { useVisibleRanges } from './hooks/useVisibleRanges';
 
 const defaultSpringConfig: Animated.WithSpringConfig = {
     damping: 100,
@@ -379,6 +380,12 @@ function Carousel<T extends unknown = any>(
         [getCurrentIndex, goToIndex, next, prev]
     );
 
+    const visibleRanges = useVisibleRanges({
+        total: data.length,
+        viewSize: width,
+        translation: handlerOffsetX,
+    });
+
     const renderLayout = React.useCallback(
         (item: T, i: number) => {
             switch (mode) {
@@ -393,6 +400,7 @@ function Carousel<T extends unknown = any>(
                             index={i}
                             key={i}
                             loop={loop}
+                            visibleRanges={visibleRanges}
                         >
                             {renderItem(item, i)}
                         </ParallaxLayout>
@@ -407,6 +415,7 @@ function Carousel<T extends unknown = any>(
                             index={i}
                             key={i}
                             loop={loop}
+                            visibleRanges={visibleRanges}
                         >
                             {renderItem(item, i)}
                         </CarouselItem>
@@ -423,6 +432,7 @@ function Carousel<T extends unknown = any>(
             parallaxScrollingScale,
             width,
             renderItem,
+            visibleRanges,
         ]
     );
 
