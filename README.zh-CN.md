@@ -115,7 +115,8 @@ import Carousel from 'react-native-reanimated-carousel';
 | onSnapToItem            | ❌       |                | (index: number) => void                                                      | 切换至另一张轮播图时触发                                                                                                     |
 | onScrollBegin           | ❌       |                | () => void                                                                   | 切换动画开始时触发                                                                                                           |
 | onScrollEnd             | ❌       |                | (previous: number, current: number) => void                                  | 切换动画结束时触发                                                                                                           |
-| panGestureHandlerProps  | ❌       | {}             | Omit<Partial\<PanGestureHandlerProps\>,'onHandlerStateChange'>               | PanGestureHandler props                                                                                                      |
+| panGestureHandlerProps  | ❌       | {}             | Omit<Partial\<PanGestureHandlerProps\>,'onHandlerStateChange'>               | PanGestureHandler props              
+| windowSize              | ❌       | 0              | number                                                                       | 能响应平移手势事件的最大item数量，0表示所有元素都会先响应                                                                                        |
 | onProgressChange        | ❌       |                | onProgressChange?: (offsetProgress: number,absoluteProgress: number) => void | 当滚动进度发生变化时触发 `offsetProgress`:总的偏移值 (0 390 780 ...); `absoluteProgress`:转化为 index 的进度变化 (0 1 2 ...) |
 
 ## Ref
