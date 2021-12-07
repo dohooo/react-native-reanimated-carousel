@@ -21,6 +21,7 @@ import { useCarouselController } from './hooks/useCarouselController';
 import { useAutoPlay } from './hooks/useAutoPlay';
 import { useIndexController } from './hooks/useIndexController';
 import { usePropsErrorBoundary } from './hooks/usePropsErrorBoundary';
+import { useVisibleRanges } from './hooks/useVisibleRanges';
 
 const defaultSpringConfig: Animated.WithSpringConfig = {
     damping: 100,
@@ -95,6 +96,13 @@ export interface ICarouselProps<T extends unknown> {
         'onHandlerStateChange'
     >;
     /**
+     * Determines the maximum number of items will respond to pan gesture events,
+     * windowSize={11} will active visible item plus up to 5 items above and 5 below the viewpor,
+     * Reducing this number will reduce the calculation of the animation value and may improve performance.
+     * @default 0 all items will respond to pan gesture events.
+     */
+    windowSize?: number;
+    /**
      * Render carousel item.
      */
     renderItem: (data: T, index: number) => React.ReactNode;
@@ -160,6 +168,7 @@ function Carousel<T extends unknown = any>(
         renderItem,
         onSnapToItem,
         onProgressChange,
+        windowSize,
     } = props;
 
     usePropsErrorBoundary({
@@ -379,6 +388,13 @@ function Carousel<T extends unknown = any>(
         [getCurrentIndex, goToIndex, next, prev]
     );
 
+    const visibleRanges = useVisibleRanges({
+        total: data.length,
+        viewSize: width,
+        translation: handlerOffsetX,
+        windowSize,
+    });
+
     const renderLayout = React.useCallback(
         (item: T, i: number) => {
             switch (mode) {
@@ -393,6 +409,7 @@ function Carousel<T extends unknown = any>(
                             index={i}
                             key={i}
                             loop={loop}
+                            visibleRanges={visibleRanges}
                         >
                             {renderItem(item, i)}
                         </ParallaxLayout>
@@ -407,6 +424,7 @@ function Carousel<T extends unknown = any>(
                             index={i}
                             key={i}
                             loop={loop}
+                            visibleRanges={visibleRanges}
                         >
                             {renderItem(item, i)}
                         </CarouselItem>
@@ -423,6 +441,7 @@ function Carousel<T extends unknown = any>(
             parallaxScrollingScale,
             width,
             renderItem,
+            visibleRanges,
         ]
     );
 

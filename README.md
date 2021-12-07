@@ -16,23 +16,15 @@ English | [简体中文](./README.zh-CN.md)
 
 <br/>
 
-## Here comes the official edition！
+## ReactNative community's best use of the carousel component! 🎉🎉🎉
 
-`v1` has been born, now the carousel will be more natural, and fixed various bugs in the 0.x version, this library will continue to maintain, rest assured to use! [come and experience](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🎉🎉🎉
-
-Updates：
-
--   Reconstructed some logic, sliding animation more smooth, natural
--   timingConfig -> springConfig （The configuration of the 'duration' property is no longer supported by this configuration）
--   [...](https://github.com/dohooo/react-native-reanimated-carousel/releases/tag/v1.0.0)
+- It completely solves this [problem](https://github.com/meliorence/react-native-snap-carousel/issues/632) for `react-native-snap-carousel`!  More styles and apis in development...
+- **Simple**、**Infinitely scrolling very smooth**、**Fully implemented using Reanimated 2!**
 
 ## Reason
 
-🎉 **It completely solves [this problem](https://github.com/meliorence/react-native-snap-carousel/issues/632) for `react-native-snap-carousel`! Simple、Infinitely scrolling very smooth、Fully implemented using Reanimated 2!**
+The common RN infinite scroll component. It's common to get stuck on a fast slide. Wait for the next element to appear. This component will not have similar problems. That's why this library was created.[Try it with SNACK](https://snack.expo.dev/@zhaodonghao586/simple-carousel)
 
-> The common RN infinite scroll component. It's common to get stuck on a fast slide. Wait for the next element to appear. This component will not have similar problems. That's why this library was created.
-
-> At present, it only meets the needs of my work. Welcome to raise PR/ISSUES.[Try it with snack](https://snack.expo.dev/@zhaodonghao586/simple-carousel)
 
 <p align="center">
   Use react-native-snap-carousel for quick swiping,you can see caton clearly when you reach the junction.(gif 4.6mb)
@@ -72,27 +64,20 @@ If use EXPO managed workflow please ensure that the version is greater than 41.B
 
 ## Usage
 
-```typescript
+```tsx
 import Carousel from 'react-native-reanimated-carousel';
 
-// ...
-
 <Carousel<{ color: string }>
-    width={width}
+    width={ width }
     data={[{ color: 'red' }, { color: 'purple' }, { color: 'yellow' }]}
     renderItem={({ color }) => {
-        return (
-            <View
-                style={{
-                    backgroundColor: color,
-                    justifyContent: 'center',
-                    flex: 1,
-                }}
-            />
-        );
+        return <View style={{ backgroundColor: color, flex: 1}}/>
     }}
 />;
 ```
+
+## Optimizing
+- When rendering a large number of elements, you can use the 'windowSize' property to control how many items of the current element are rendered. The default is full rendering. After testing without this property, frames will drop when rendering 200 empty views. After setting this property, rendering 1000 empty views is still smooth. (The specific number depends on the phone model tested)
 
 ## Props
 
@@ -116,6 +101,7 @@ import Carousel from 'react-native-reanimated-carousel';
 | onScrollBegin           | ❌       |                | () => void                                                                   | Callback fired when scroll begin                                                                                               |
 | onScrollEnd             | ❌       |                | (previous: number, current: number) => void                                  | Callback fired when scroll end                                                                                                 |
 | panGestureHandlerProps  | ❌       | {}             | Omit<Partial\<PanGestureHandlerProps\>,'onHandlerStateChange'>               | PanGestureHandler props                                                                                                        |
+| windowSize              | ❌       | 0              | number                                                                       | The maximum number of items that can respond to pan gesture events, `0` means all items will respond to pan gesture events
 | onProgressChange        | ❌       |                | onProgressChange?: (offsetProgress: number,absoluteProgress: number) => void | On progress change. `offsetProgress`:Total of offset distance (0 390 780 ...); `absoluteProgress`:Convert to index (0 1 2 ...) |
 
 ## Ref

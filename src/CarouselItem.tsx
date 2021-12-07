@@ -2,6 +2,7 @@ import React from 'react';
 import { FlexStyle, View } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { useOffsetX } from './hooks/useOffsetX';
+import type { IVisibleRanges } from './hooks/useVisibleRanges';
 
 export const CarouselItem: React.FC<{
     loop?: boolean;
@@ -10,6 +11,7 @@ export const CarouselItem: React.FC<{
     width: number;
     data: unknown[];
     height?: FlexStyle['height'];
+    visibleRanges: IVisibleRanges;
 }> = (props) => {
     const {
         handlerOffsetX,
@@ -19,15 +21,19 @@ export const CarouselItem: React.FC<{
         height = '100%',
         loop,
         data,
+        visibleRanges,
     } = props;
 
-    const x = useOffsetX({
-        handlerOffsetX,
-        index,
-        width,
-        data,
-        loop,
-    });
+    const x = useOffsetX(
+        {
+            handlerOffsetX,
+            index,
+            width,
+            data,
+            loop,
+        },
+        visibleRanges
+    );
 
     const offsetXStyle = useAnimatedStyle(() => {
         return {

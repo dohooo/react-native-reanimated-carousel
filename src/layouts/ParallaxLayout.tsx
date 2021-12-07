@@ -7,6 +7,7 @@ import Animated, {
     useAnimatedStyle,
 } from 'react-native-reanimated';
 import { useOffsetX } from '../hooks/useOffsetX';
+import type { IVisibleRanges } from '../hooks/useVisibleRanges';
 
 export const ParallaxLayout: React.FC<{
     loop?: boolean;
@@ -16,6 +17,7 @@ export const ParallaxLayout: React.FC<{
     index: number;
     width: number;
     data: unknown[];
+    visibleRanges: IVisibleRanges;
 }> = (props) => {
     const {
         handlerOffsetX,
@@ -26,15 +28,19 @@ export const ParallaxLayout: React.FC<{
         loop,
         data,
         children,
+        visibleRanges,
     } = props;
 
-    const x = useOffsetX({
-        handlerOffsetX,
-        index,
-        width,
-        data,
-        loop,
-    });
+    const x = useOffsetX(
+        {
+            handlerOffsetX,
+            index,
+            width,
+            data,
+            loop,
+        },
+        visibleRanges
+    );
 
     const offsetXStyle = useAnimatedStyle(() => {
         const baseTranslateX = x.value - index * width;

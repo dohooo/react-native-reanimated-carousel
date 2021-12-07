@@ -3,6 +3,7 @@ import Animated, {
     interpolate,
     useDerivedValue,
 } from 'react-native-reanimated';
+import type { IVisibleRanges } from './useVisibleRanges';
 
 interface IOpts {
     index: number;
@@ -14,7 +15,7 @@ interface IOpts {
     loop?: boolean;
 }
 
-export const useOffsetX = (opts: IOpts) => {
+export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
     const {
         handlerOffsetX,
         index,
@@ -30,6 +31,13 @@ export const useOffsetX = (opts: IOpts) => {
     const HALF_WIDTH = 0.5 * width;
 
     const x = useDerivedValue(() => {
+        const { negativeRange, positiveRange } = visibleRanges.value;
+        if (
+            (index < negativeRange[0] || index > negativeRange[1]) &&
+            (index < positiveRange[0] || index > positiveRange[1])
+        ) {
+            return Number.MAX_SAFE_INTEGER;
+        }
         if (loop) {
             const positiveCount =
                 type === 'positive' ? viewCount : VALID_LENGTH - viewCount;
@@ -71,7 +79,7 @@ export const useOffsetX = (opts: IOpts) => {
         }
 
         return handlerOffsetX.value + width * index;
-    }, [loop, data, viewCount, type]);
+    }, [loop, data, viewCount, type, visibleRanges]);
 
     return x;
 };
