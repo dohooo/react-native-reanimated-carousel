@@ -16,23 +16,17 @@
 
 <br/>
 
-## 正式版来了！
+## ReactNative社区最好用的轮播图组件! 🎉🎉🎉
 
-`v1`已经诞生，现在轮播图的滚动将会更加自然，并且修复了 0.x 版本中出现的各种 bug，此库将会持续维护，放心使用！ [快来体验](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🎉🎉🎉
+- 完全解决了`react-native-snap-carousel`的[问题](https://github.com/meliorence/react-native-snap-carousel/issues/632)!  更多样式与API正在开发中...
+- **易用**、**无限滚动**、**完全使用 Reanimated2 实现**    
 
-更新：
 
--   重构了部分逻辑，滑动动画更加流畅、自然
--   timingConfig -> springConfig （此配置不再支持对`duration`属性的配置）
--   [...](https://github.com/dohooo/react-native-reanimated-carousel/releases/tag/v1.0.0)
 
+  
 ## 原因
+常见的无限滚动轮播图，在快速滑动时会出现卡住的情况，这是因为实现方式而导致的问题。这个组件用了不同的方式来实现，解决了这个问题，这就是创建这个库的原因。[在 SNACK 上尝试](https://snack.expo.dev/@zhaodonghao586/simple-carousel)
 
-🎉 **完全解决了`react-native-snap-carousel`的[这个问题](https://github.com/meliorence/react-native-snap-carousel/issues/632)! 易用、无限滚动、完全使用 Reanimated2 实现**
-
-> 常见的无限滚动轮播图，在快速滑动时会出现卡住的情况，这是因为实现方式而导致的问题。这个组件用了不同的方式来实现，解决了这个问题，这就是创建这个库的原因。
-
-> 目前他只满足了我工作上的需要，欢迎大家的 ISSUES/PR。[在 SNACK 上尝试](https://snack.expo.dev/@zhaodonghao586/simple-carousel)
 
 <p align="center">
   使用react-native-snap-carousel快速滑动，当到连接处时可以看清楚的看到卡顿。(gif 4.6mb)
@@ -72,27 +66,21 @@ npm install react-native-reanimated-carousel
 
 ## 使用
 
-```typescript
+```tsx
 import Carousel from 'react-native-reanimated-carousel';
 
-// ...
-
 <Carousel<{ color: string }>
-    width={width}
+    width={ width }
     data={[{ color: 'red' }, { color: 'purple' }, { color: 'yellow' }]}
     renderItem={({ color }) => {
-        return (
-            <View
-                style={{
-                    backgroundColor: color,
-                    justifyContent: 'center',
-                    flex: 1,
-                }}
-            />
-        );
+        return <View style={{ backgroundColor: color, flex: 1}}/>
     }}
 />;
 ```
+
+## 优化
+- 当渲染大量元素时，可使用`windowSize`属性，来控制当前元素的两侧渲染数量，默认为全量渲染。经测试不加此属性，渲染200个空view时会出现掉帧情况，设置此属性后渲染1000个空view依旧流畅。（具体数量与测试的手机型号相关）
+
 
 ## Props
 
