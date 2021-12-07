@@ -76,8 +76,8 @@ import Carousel from 'react-native-reanimated-carousel';
 />;
 ```
 
-## Optimize
-- When rendering a large number of elements, you can use the 'windowSize' property to control how many sides of the current element are rendered. The default is full rendering. After testing without this property, frames will drop when rendering 200 empty views. After setting this property, rendering 1000 empty views is still smooth. (The specific number depends on the phone model tested)
+## Optimizing
+- When rendering a large number of elements, you can use the 'windowSize' property to control how many items of the current element are rendered. The default is full rendering. After testing without this property, frames will drop when rendering 200 empty views. After setting this property, rendering 1000 empty views is still smooth. (The specific number depends on the phone model tested)
 
 ## Props
 
