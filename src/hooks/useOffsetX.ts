@@ -31,12 +31,10 @@ export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
     const HALF_WIDTH = 0.5 * width;
 
     const x = useDerivedValue(() => {
-        function inRange(i: number, range: number[]) {
-            return i >= range[0] && i <= range[1];
-        }
+        const { negativeRange, positiveRange } = visibleRanges.value;
         if (
-            !inRange(index, visibleRanges.value.negativeRange) &&
-            !inRange(index, visibleRanges.value.positiveRange)
+            (index < negativeRange[0] || index > negativeRange[1]) &&
+            (index < positiveRange[0] || index > positiveRange[1])
         ) {
             return Number.MAX_SAFE_INTEGER;
         }
