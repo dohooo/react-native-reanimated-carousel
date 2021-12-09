@@ -18,14 +18,12 @@ English | [简体中文](./README.zh-CN.md)
 
 ## ReactNative community's best use of the carousel component! 🎉🎉🎉
 
-- It completely solves this [problem](https://github.com/meliorence/react-native-snap-carousel/issues/632) for `react-native-snap-carousel`!  More styles and apis in development...
+- It completely solves this [problem](https://github.com/meliorence/react-native-snap-carousel/issues/632) for `react-native-snap-carousel`!  More styles and apis in development... [Try it](https://snack.expo.dev/@zhaodonghao586/simple-carousel)
 - **Simple**、**Infinitely scrolling very smooth**、**Fully implemented using Reanimated 2!**
 
 ## Reason
-
-The common RN infinite scroll component. It's common to get stuck on a fast slide. Wait for the next element to appear. This component will not have similar problems. That's why this library was created.[Try it with SNACK](https://snack.expo.dev/@zhaodonghao586/simple-carousel)
-
-
+<details>
+<summary>The common RN infinite scroll component. It get stuck on a fast slide. Wait for the next element to appear. This component will not have similar problems.Because using a completely different approach so the best performance is achieved.That's why this library was created.</summary>
 <p align="center">
   Use react-native-snap-carousel for quick swiping,you can see caton clearly when you reach the junction.(gif 4.6mb)
 </p>
@@ -39,6 +37,7 @@ The common RN infinite scroll component. It's common to get stuck on a fast slid
 <p align="center">
   <img src="assets/fast.gif" width="50%"/>
 </p>
+</details>
 
 ---
 
