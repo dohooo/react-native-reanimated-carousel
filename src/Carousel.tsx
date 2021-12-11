@@ -88,7 +88,7 @@ function Carousel<T>(
         width,
         handlerOffsetX,
         indexController,
-        disable: false,
+        disable: !data.length,
         onScrollBegin: () => runOnJS(onScrollBegin)(),
         onScrollEnd: () => runOnJS(onScrollEnd)(),
     });
