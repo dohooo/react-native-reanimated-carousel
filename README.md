@@ -18,13 +18,12 @@ English | [简体中文](./README.zh-CN.md)
 
 ## ReactNative community's best use of the carousel component! 🎉🎉🎉
 
-- It completely solves this [problem](https://github.com/meliorence/react-native-snap-carousel/issues/632) for `react-native-snap-carousel`!  More styles and apis in development...
-- **Simple**、**Infinitely scrolling very smooth**、**Fully implemented using Reanimated 2!**
+-   It completely solves this [problem](https://github.com/meliorence/react-native-snap-carousel/issues/632) for `react-native-snap-carousel`! More styles and apis in development...
+-   **Simple**、**Infinitely scrolling very smooth**、**Fully implemented using Reanimated 2!**
 
 ## Reason
 
 The common RN infinite scroll component. It's common to get stuck on a fast slide. Wait for the next element to appear. This component will not have similar problems. That's why this library was created.[Try it with SNACK](https://snack.expo.dev/@zhaodonghao586/simple-carousel)
-
 
 <p align="center">
   Use react-native-snap-carousel for quick swiping,you can see caton clearly when you reach the junction.(gif 4.6mb)
@@ -68,41 +67,41 @@ If use EXPO managed workflow please ensure that the version is greater than 41.B
 import Carousel from 'react-native-reanimated-carousel';
 
 <Carousel<{ color: string }>
-    width={ width }
+    width={width}
     data={[{ color: 'red' }, { color: 'purple' }, { color: 'yellow' }]}
     renderItem={({ color }) => {
-        return <View style={{ backgroundColor: color, flex: 1}}/>
+        return <View style={{ backgroundColor: color, flex: 1 }} />;
     }}
 />;
 ```
 
 ## Optimizing
-- When rendering a large number of elements, you can use the 'windowSize' property to control how many items of the current element are rendered. The default is full rendering. After testing without this property, frames will drop when rendering 200 empty views. After setting this property, rendering 1000 empty views is still smooth. (The specific number depends on the phone model tested)
+
+-   When rendering a large number of elements, you can use the 'windowSize' property to control how many items of the current element are rendered. The default is full rendering. After testing without this property, frames will drop when rendering 200 empty views. After setting this property, rendering 1000 empty views is still smooth. (The specific number depends on the phone model tested)
 
 ## Props
 
-| name                    | required | default        | types                                                                        | description                                                                                                                    |
-| ----------------------- | -------- | -------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| data                    | ✅       |                | T[]                                                                          | Carousel items data set                                                                                                        |
-| width                   | ✅       |                | number                                                                       | Specified carousel container width                                                                                             |
-| renderItem              | ✅       |                | (data: T, index: number) => React.ReactNode                                  | Render carousel item                                                                                                           |
-| defaultIndex            | ❌       | 0              | number                                                                       | Default index                                                                                                                  |
-| autoPlay                | ❌       | false          | boolean                                                                      | Auto play                                                                                                                      |
-| autoPlayReverse         | ❌       | false          | boolean                                                                      | Auto play reverse playback                                                                                                     |
-| autoPlayInterval        | ❌       | 1000           | autoPlayInterval                                                             | Auto play playback interval                                                                                                    |
-| mode                    | ❌       | defalut        | 'default'\|'parallax'                                                        | Carousel Animated transitions                                                                                                  |
-| loop                    | ❌       | true           | boolean                                                                      | Carousel loop playback                                                                                                         |
-| parallaxScrollingOffset | ❌       | 100            | number                                                                       | When use 'parallax' Layout props,this prop can be control prev/next item offset                                                |
-| parallaxScrollingScale  | ❌       | 0.8            | number                                                                       | When use 'parallax' Layout props,this prop can be control prev/next item scale                                                 |
-| style                   | ❌       | {}             | ViewStyle                                                                    | Carousel container style                                                                                                       |
-| height                  | ❌       | '100%'         | undefined \| string \| number                                                | Specified carousel container height                                                                                            |
-| springConfig            | ❌       | {damping: 100} | Animated.WithSpringConfig                                                    | Spring config of translation animated                                                                                          |
-| onSnapToItem            | ❌       |                | (index: number) => void                                                      | Callback fired when navigating to an item                                                                                      |
-| onScrollBegin           | ❌       |                | () => void                                                                   | Callback fired when scroll begin                                                                                               |
-| onScrollEnd             | ❌       |                | (previous: number, current: number) => void                                  | Callback fired when scroll end                                                                                                 |
-| panGestureHandlerProps  | ❌       | {}             | Omit<Partial\<PanGestureHandlerProps\>,'onHandlerStateChange'>               | PanGestureHandler props                                                                                                        |
-| windowSize              | ❌       | 0              | number                                                                       | The maximum number of items that can respond to pan gesture events, `0` means all items will respond to pan gesture events
-| onProgressChange        | ❌       |                | onProgressChange?: (offsetProgress: number,absoluteProgress: number) => void | On progress change. `offsetProgress`:Total of offset distance (0 390 780 ...); `absoluteProgress`:Convert to index (0 1 2 ...) |
+| name                    | required | default | types                                                                        | description                                                                                                                    |
+| ----------------------- | -------- | ------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| data                    | ✅       |         | T[]                                                                          | Carousel items data set                                                                                                        |
+| width                   | ✅       |         | number                                                                       | Specified carousel container width                                                                                             |
+| renderItem              | ✅       |         | (data: T, index: number) => React.ReactNode                                  | Render carousel item                                                                                                           |
+| defaultIndex            | ❌       | 0       | number                                                                       | Default index                                                                                                                  |
+| autoPlay                | ❌       | false   | boolean                                                                      | Auto play                                                                                                                      |
+| autoPlayReverse         | ❌       | false   | boolean                                                                      | Auto play reverse playback                                                                                                     |
+| autoPlayInterval        | ❌       | 1000    | autoPlayInterval                                                             | Auto play playback interval                                                                                                    |
+| mode                    | ❌       | defalut | 'default'\|'parallax'                                                        | Carousel Animated transitions                                                                                                  |
+| loop                    | ❌       | true    | boolean                                                                      | Carousel loop playback                                                                                                         |
+| parallaxScrollingOffset | ❌       | 100     | number                                                                       | When use 'parallax' Layout props,this prop can be control prev/next item offset                                                |
+| parallaxScrollingScale  | ❌       | 0.8     | number                                                                       | When use 'parallax' Layout props,this prop can be control prev/next item scale                                                 |
+| style                   | ❌       | {}      | ViewStyle                                                                    | Carousel container style                                                                                                       |
+| height                  | ❌       | '100%'  | undefined \| string \| number                                                | Specified carousel container height                                                                                            |
+| onSnapToItem            | ❌       |         | (index: number) => void                                                      | Callback fired when navigating to an item                                                                                      |
+| onScrollBegin           | ❌       |         | () => void                                                                   | Callback fired when scroll begin                                                                                               |
+| onScrollEnd             | ❌       |         | (previous: number, current: number) => void                                  | Callback fired when scroll end                                                                                                 |
+| panGestureHandlerProps  | ❌       | {}      | Omit<Partial\<PanGestureHandlerProps\>,'onHandlerStateChange'>               | PanGestureHandler props                                                                                                        |
+| windowSize              | ❌       | 0       | number                                                                       | The maximum number of items that can respond to pan gesture events, `0` means all items will respond to pan gesture events     |
+| onProgressChange        | ❌       |         | onProgressChange?: (offsetProgress: number,absoluteProgress: number) => void | On progress change. `offsetProgress`:Total of offset distance (0 390 780 ...); `absoluteProgress`:Convert to index (0 1 2 ...) |
 
 ## Ref
 

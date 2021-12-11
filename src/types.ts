@@ -1,6 +1,5 @@
 import type { FlexStyle, ViewStyle } from 'react-native';
 import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
-import type Animated from 'react-native-reanimated';
 import type { TMode } from './layouts';
 
 export interface ICarouselProps<T = any> {
@@ -61,10 +60,6 @@ export interface ICarouselProps<T = any> {
      * @default 0.8
      */
     parallaxScrollingScale?: number;
-    /**
-     * Sping config of translation animated
-     */
-    springConfig?: Animated.WithSpringConfig;
     /**
      * PanGestureHandler props
      */
