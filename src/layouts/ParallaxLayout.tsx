@@ -1,5 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
+import { View } from 'react-native';
 import Animated, {
     Extrapolate,
     interpolate,
@@ -90,7 +91,7 @@ export const ParallaxLayout: React.FC<{
                 offsetXStyle,
             ]}
         >
-            {children}
+            <View style={{ width: '100%', height: '100%' }}>{children}</View>
         </Animated.View>
     );
 };

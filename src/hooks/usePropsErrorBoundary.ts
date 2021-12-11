@@ -1,5 +1,5 @@
 import React from 'react';
-import type { ICarouselProps } from 'src/Carousel';
+import type { ICarouselProps } from 'src/types';
 
 export function usePropsErrorBoundary(
     props: ICarouselProps & { viewCount: number }
