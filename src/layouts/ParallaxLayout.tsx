@@ -65,6 +65,7 @@ export const ParallaxLayout: React.FC<{
             [parallaxScrollingOffset, 0, -parallaxScrollingOffset],
             Extrapolate.CLAMP
         );
+
         return {
             transform: [
                 {
@@ -84,11 +85,13 @@ export const ParallaxLayout: React.FC<{
                     width: `${parallaxScrollingScale * 100}%`,
                     height: `${parallaxScrollingScale * 100}%`,
                     alignSelf: 'center',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                 },
                 offsetXStyle,
             ]}
         >
-            <View style={{ flex: 1 }}>{children}</View>
+            <View style={{ width: '100%', height: '100%' }}>{children}</View>
         </Animated.View>
     );
 };

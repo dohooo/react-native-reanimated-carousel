@@ -1,11 +1,13 @@
 import React from 'react';
-import type { ICarouselProps } from 'src/Carousel';
+import type { ICarouselProps } from 'src/types';
 
-export function usePropsErrorBoundary(props: ICarouselProps<unknown>) {
+export function usePropsErrorBoundary(
+    props: ICarouselProps & { viewCount: number }
+) {
     React.useEffect(() => {
-        const { defaultIndex, data } = props;
-        if (typeof defaultIndex === 'number' && data?.length > 0) {
-            if (defaultIndex < 0 || defaultIndex >= data.length) {
+        const { defaultIndex, viewCount } = props;
+        if (typeof defaultIndex === 'number' && viewCount > 0) {
+            if (defaultIndex < 0 || defaultIndex >= viewCount) {
                 throw Error(
                     'DefaultIndex must be in the range of data length.'
                 );

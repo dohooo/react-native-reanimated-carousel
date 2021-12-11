@@ -8,16 +8,16 @@ import {
     View,
 } from 'react-native';
 import Carousel from '../../src/index';
-import type { ICarouselInstance } from '../../src/Carousel';
+import type { ICarouselInstance } from '../../src/types';
 import Animated, {
     Extrapolate,
     interpolate,
     useAnimatedStyle,
     useSharedValue,
 } from 'react-native-reanimated';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const window = Dimensions.get('window');
+const PAGE_WIDTH = window.width;
 
 const data: ImageSourcePropType[] = [
     require('../assets/carousel-0.jpg'),
@@ -26,9 +26,8 @@ const data: ImageSourcePropType[] = [
 ];
 
 export default function App() {
+    const r = React.useRef<ICarouselInstance | null>(null);
     const progressValue = useSharedValue<number>(0);
-    const defaultCarouselRef = React.useRef<ICarouselInstance | null>(null);
-    const parallaxCarouselRef = React.useRef<ICarouselInstance | null>(null);
 
     return (
         <View
@@ -36,30 +35,28 @@ export default function App() {
                 flex: 1,
                 alignItems: 'center',
                 backgroundColor: 'black',
-                paddingTop: 50,
+                paddingTop: 100,
             }}
         >
-            <View
-                style={{
-                    height: 240,
-                }}
-            >
-                <Carousel<ImageSourcePropType>
-                    ref={defaultCarouselRef}
-                    width={window.width}
-                    data={data}
+            <View style={{ width: PAGE_WIDTH, height: 240 }}>
+                <Carousel
+                    defaultIndex={0}
+                    ref={r}
+                    width={PAGE_WIDTH}
                     parallaxScrollingScale={0.8}
-                    renderItem={(source) => (
-                        <View style={{ flex: 1 }}>
+                    data={data}
+                    renderItem={(source, index) => {
+                        return (
                             <Image
+                                key={index}
                                 source={source}
                                 style={{
                                     width: '100%',
                                     height: '100%',
                                 }}
                             />
-                        </View>
-                    )}
+                        );
+                    }}
                 />
             </View>
             <View
@@ -72,38 +69,42 @@ export default function App() {
                 <Button
                     title="Prev"
                     onPress={() => {
-                        defaultCarouselRef.current?.prev();
+                        r.current?.prev();
                     }}
                 />
                 <Button
                     title="Next"
                     onPress={() => {
-                        defaultCarouselRef.current?.next();
+                        r.current?.next();
                     }}
                 />
             </View>
-            <View style={{ height: 240 }}>
-                <Carousel<ImageSourcePropType>
+            <View
+                style={{
+                    height: 240,
+                    alignItems: 'center',
+                }}
+            >
+                <Carousel
                     onProgressChange={(_, absoluteProgress) => {
                         progressValue.value = absoluteProgress;
                     }}
                     mode="parallax"
                     width={window.width}
-                    data={data}
-                    ref={parallaxCarouselRef}
                     parallaxScrollingScale={0.8}
-                    renderItem={(source) => (
-                        <View style={{ flex: 1 }}>
+                    data={data}
+                    renderItem={(source, i) => {
+                        return (
                             <Image
+                                key={i}
                                 source={source}
                                 style={{
                                     width: '100%',
                                     height: '100%',
-                                    borderRadius: 15,
                                 }}
                             />
-                        </View>
-                    )}
+                        );
+                    }}
                 />
                 {!!progressValue && (
                     <View
@@ -121,12 +122,6 @@ export default function App() {
                                     index={index}
                                     key={index}
                                     length={data.length}
-                                    onPress={() => {
-                                        parallaxCarouselRef.current?.goToIndex(
-                                            index,
-                                            true
-                                        );
-                                    }}
                                 />
                             );
                         })}
@@ -141,9 +136,8 @@ const PaginationItem: React.FC<{
     index: number;
     length: number;
     animValue: Animated.SharedValue<number>;
-    onPress?: () => void;
 }> = (props) => {
-    const { onPress, animValue, index, length } = props;
+    const { animValue, index, length } = props;
     const width = 20;
 
     const animStyle = useAnimatedStyle(() => {
@@ -168,32 +162,22 @@ const PaginationItem: React.FC<{
             ],
         };
     }, [animValue, index, length]);
-
     return (
-        <TouchableWithoutFeedback
-            containerStyle={{ flex: 1 }}
-            onPress={onPress}
+        <View
+            style={{
+                backgroundColor: 'white',
+                width,
+                height: width,
+                borderRadius: 50,
+                overflow: 'hidden',
+            }}
         >
-            <View
-                style={{
-                    backgroundColor: 'white',
-                    width,
-                    height: width,
-                    borderRadius: 50,
-                    overflow: 'hidden',
-                }}
-            >
-                <Animated.View
-                    style={[
-                        {
-                            borderRadius: 50,
-                            backgroundColor: 'tomato',
-                            flex: 1,
-                        },
-                        animStyle,
-                    ]}
-                />
-            </View>
-        </TouchableWithoutFeedback>
+            <Animated.View
+                style={[
+                    { borderRadius: 50, backgroundColor: 'tomato', flex: 1 },
+                    animStyle,
+                ]}
+            />
+        </View>
     );
 };
