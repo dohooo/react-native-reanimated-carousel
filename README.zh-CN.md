@@ -18,14 +18,13 @@
 
 ## ReactNative 社区最好用的轮播图组件! 🎉🎉🎉
 
--   完全解决了`react-native-snap-carousel`的[问题](https://github.com/meliorence/react-native-snap-carousel/issues/632)! 更多样式与 API 正在开发中...
--   **易用**、**无限滚动**、**完全使用 Reanimated2 实现**
+- 完全解决了`react-native-snap-carousel`的[问题](https://github.com/meliorence/react-native-snap-carousel/issues/632)!  更多样式与API正在开发中...[试一下](https://snack.expo.dev/@zhaodonghao586/simple-carousel)
+- **易用**、**无限滚动**、**完全使用 Reanimated2 实现**    
 
 ## 原因
-
-常见的无限滚动轮播图，在快速滑动时会出现卡住的情况，这是因为实现方式而导致的问题。这个组件用了不同的方式来实现，解决了这个问题，这就是创建这个库的原因。[在 SNACK 上尝试](https://snack.expo.dev/@zhaodonghao586/simple-carousel)
-
-<p align="center">
+<details>
+  <summary>常见的无限滚动轮播图，在快速滑动时会出现卡住的情况，这是因为实现方式而导致的问题。所以这个组件用了完全不同的方式来实现，并获得了最佳的性能也解决了这个问题，这就是创建这个库的原因。</summary>
+  <p align="center">
   使用react-native-snap-carousel快速滑动，当到连接处时可以看清楚的看到卡顿。(gif 4.6mb)
 </p>
 <p align="center">
@@ -38,6 +37,7 @@
 <p align="center">
   <img src="assets/fast.gif" width="50%"/>
 </p>
+</details>
 
 ---
 
