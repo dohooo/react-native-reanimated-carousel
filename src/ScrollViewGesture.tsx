@@ -25,7 +25,7 @@ interface Props {
     style?: StyleProp<ViewStyle>;
     infinite?: boolean;
     pagingEnabled?: boolean;
-    horizontal?: boolean;
+    vertical?: boolean;
     panGestureHandlerProps?: Omit<
         Partial<PanGestureHandlerProps>,
         'onHandlerStateChange'
@@ -41,8 +41,9 @@ interface Props {
 
 const IScrollViewGesture: React.FC<Props> = (props) => {
     const {
+        style,
         infinite,
-        horizontal,
+        vertical,
         translation,
         pagingEnabled,
         panGestureHandlerProps = {},
@@ -53,10 +54,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
         count,
     } = props;
 
-    const isHorizontal = useDerivedValue(
-        () => (horizontal === false ? false : true),
-        [horizontal]
-    );
+    const isHorizontal = useDerivedValue(() => !vertical, [vertical]);
     const touching = useSharedValue(false);
     const scrollEndTranslation = useSharedValue(0);
     const scrollEndVelocity = useSharedValue(0);
@@ -226,11 +224,11 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
     );
 
     const directionStyle = React.useMemo(() => {
-        return horizontal ? styles.contentHorizontal : styles.contentVertical;
-    }, [horizontal]);
+        return vertical ? styles.contentHorizontal : styles.contentVertical;
+    }, [vertical]);
 
     return (
-        <Animated.View style={[styles.container, directionStyle]}>
+        <Animated.View style={[styles.container, directionStyle, style]}>
             <PanGestureHandler
                 {...panGestureHandlerProps}
                 onGestureEvent={panGestureEventHandler}
@@ -245,6 +243,7 @@ export const ScrollViewGesture = IScrollViewGesture;
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         overflow: 'hidden',
     },
     contentVertical: {

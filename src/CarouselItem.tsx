@@ -1,16 +1,17 @@
 import React from 'react';
 import { FlexStyle, View } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import type { IComputedAnimResult } from './hooks/useComputedAnim';
 import { useOffsetX } from './hooks/useOffsetX';
+import type { IVisibleRanges } from './hooks/useVisibleRanges';
 
 export const CarouselItem: React.FC<{
     loop?: boolean;
     index: number;
     handlerOffsetX: Animated.SharedValue<number>;
     width: number;
+    data: unknown[];
     height?: FlexStyle['height'];
-    computedAnimResult: IComputedAnimResult;
+    visibleRanges: IVisibleRanges;
 }> = (props) => {
     const {
         handlerOffsetX,
@@ -18,16 +19,22 @@ export const CarouselItem: React.FC<{
         children,
         width,
         height = '100%',
-        computedAnimResult,
         loop,
+        data,
+        visibleRanges,
     } = props;
-    const x = useOffsetX({
-        handlerOffsetX,
-        index,
-        width,
-        computedAnimResult,
-        loop,
-    });
+
+    const x = useOffsetX(
+        {
+            handlerOffsetX,
+            index,
+            width,
+            data,
+            loop,
+        },
+        visibleRanges
+    );
+
     const offsetXStyle = useAnimatedStyle(() => {
         return {
             transform: [{ translateX: x.value - index * width }],

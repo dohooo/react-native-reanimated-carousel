@@ -5,6 +5,8 @@ import {
     Dimensions,
     Image,
     ImageSourcePropType,
+    StyleSheet,
+    Text,
     View,
 } from 'react-native';
 import Carousel from '../../src/index';
@@ -15,9 +17,9 @@ import Animated, {
     useAnimatedStyle,
     useSharedValue,
 } from 'react-native-reanimated';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const window = Dimensions.get('window');
-const PAGE_WIDTH = 300;
 
 const data: ImageSourcePropType[] = [
     require('../assets/carousel-0.jpg'),
@@ -26,38 +28,38 @@ const data: ImageSourcePropType[] = [
 ];
 
 export default function App() {
-    const r = React.useRef<ICarouselInstance | null>(null);
     const progressValue = useSharedValue<number>(0);
+    const defaultCarouselRef = React.useRef<ICarouselInstance | null>(null);
+    const parallaxCarouselRef = React.useRef<ICarouselInstance | null>(null);
 
     return (
         <View
             style={{
                 flex: 1,
                 alignItems: 'center',
-                backgroundColor: 'black',
-                paddingTop: 100,
+                paddingTop: 50,
             }}
         >
-            <View style={{ width: PAGE_WIDTH, height: 240 }}>
+            <View
+                style={{
+                    height: 240,
+                }}
+            >
                 <Carousel
-                    defaultIndex={0}
-                    ref={r}
-                    width={PAGE_WIDTH}
+                    ref={defaultCarouselRef}
+                    width={window.width}
+                    data={data}
                     parallaxScrollingScale={0.8}
-                >
-                    {data.map((source, index) => {
-                        return (
-                            <Image
-                                key={index}
-                                source={source}
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                }}
-                            />
-                        );
-                    })}
-                </Carousel>
+                    renderItem={(source) => (
+                        <Image
+                            source={source}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                            }}
+                        />
+                    )}
+                />
             </View>
             <View
                 style={{
@@ -69,43 +71,33 @@ export default function App() {
                 <Button
                     title="Prev"
                     onPress={() => {
-                        r.current?.prev();
+                        defaultCarouselRef.current?.prev();
                     }}
                 />
                 <Button
                     title="Next"
                     onPress={() => {
-                        r.current?.next();
+                        defaultCarouselRef.current?.next();
                     }}
                 />
             </View>
-            <View
-                style={{
-                    height: 240,
-                    alignItems: 'center',
-                }}
-            >
+            <View style={{ height: 300 }}>
                 <Carousel
                     onProgressChange={(_, absoluteProgress) => {
                         progressValue.value = absoluteProgress;
                     }}
                     mode="parallax"
                     width={window.width}
-                    parallaxScrollingScale={0.8}
-                >
-                    {data.map((source, i) => {
-                        return (
-                            <Image
-                                key={i}
-                                source={source}
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                }}
-                            />
-                        );
-                    })}
-                </Carousel>
+                    data={titles}
+                    ref={parallaxCarouselRef}
+                    parallaxScrollingScale={0.9}
+                    parallaxScrollingOffset={100}
+                    renderItem={(title, index) => (
+                        <Page key={index} index={index}>
+                            <Text style={styles.title}>{title}</Text>
+                        </Page>
+                    )}
+                />
                 {!!progressValue && (
                     <View
                         style={{
@@ -113,6 +105,7 @@ export default function App() {
                             justifyContent: 'space-between',
                             width: 100,
                             alignSelf: 'center',
+                            backgroundColor: '#0000001a',
                         }}
                     >
                         {data.map((_, index) => {
@@ -122,6 +115,12 @@ export default function App() {
                                     index={index}
                                     key={index}
                                     length={data.length}
+                                    onPress={() => {
+                                        parallaxCarouselRef.current?.goToIndex(
+                                            index,
+                                            true
+                                        );
+                                    }}
                                 />
                             );
                         })}
@@ -132,12 +131,32 @@ export default function App() {
     );
 }
 
+const Page: React.FC<{
+    index: number;
+}> = (props) => {
+    const { children, index } = props;
+
+    return (
+        <Animated.View
+            style={[
+                styles.innerPage,
+                {
+                    backgroundColor: `rgba(${255 - index * 30},240,120,1)`,
+                },
+            ]}
+        >
+            {children}
+        </Animated.View>
+    );
+};
+
 const PaginationItem: React.FC<{
     index: number;
     length: number;
     animValue: Animated.SharedValue<number>;
+    onPress?: () => void;
 }> = (props) => {
-    const { animValue, index, length } = props;
+    const { onPress, animValue, index, length } = props;
     const width = 20;
 
     const animStyle = useAnimatedStyle(() => {
@@ -162,22 +181,68 @@ const PaginationItem: React.FC<{
             ],
         };
     }, [animValue, index, length]);
+
     return (
-        <View
-            style={{
-                backgroundColor: 'white',
-                width,
-                height: width,
-                borderRadius: 50,
-                overflow: 'hidden',
-            }}
+        <TouchableWithoutFeedback
+            containerStyle={{ flex: 1 }}
+            onPress={onPress}
         >
-            <Animated.View
-                style={[
-                    { borderRadius: 50, backgroundColor: 'tomato', flex: 1 },
-                    animStyle,
-                ]}
-            />
-        </View>
+            <View
+                style={{
+                    backgroundColor: 'white',
+                    width,
+                    height: width,
+                    borderRadius: 50,
+                    overflow: 'hidden',
+                }}
+            >
+                <Animated.View
+                    style={[
+                        {
+                            borderRadius: 50,
+                            backgroundColor: 'tomato',
+                            flex: 1,
+                        },
+                        animStyle,
+                    ]}
+                />
+            </View>
+        </TouchableWithoutFeedback>
     );
 };
+
+const styles = StyleSheet.create({
+    innerPage: {
+        width: window.width * 0.7,
+        height: 280 * 0.7,
+        backgroundColor: 'skyblue',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 5 },
+        shadowRadius: 5,
+        shadowOpacity: 0.15,
+        padding: 16,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#000000aa',
+    },
+});
+
+const titles = [
+    'Arkansas',
+    'feed',
+    'Representative',
+    'District',
+    'withdrawal',
+    'Avon',
+    'parse',
+    'Strategist',
+    'Implementation',
+    'USB',
+    'Norwegian',
+    'optimizing',
+];

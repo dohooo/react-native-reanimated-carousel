@@ -3,33 +3,57 @@ import Animated, {
     interpolate,
     useDerivedValue,
 } from 'react-native-reanimated';
-import type { IComputedAnimResult } from './useComputedAnim';
+import type { IVisibleRanges } from './useVisibleRanges';
 
 interface IOpts {
     index: number;
     width: number;
-    computedAnimResult: IComputedAnimResult;
     handlerOffsetX: Animated.SharedValue<number>;
+    data: unknown[];
+    type?: 'positive' | 'negative';
+    viewCount?: number;
     loop?: boolean;
 }
 
-export const useOffsetX = (opts: IOpts) => {
-    const { handlerOffsetX, index, width, computedAnimResult, loop } = opts;
+export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
+    const {
+        handlerOffsetX,
+        index,
+        width,
+        loop,
+        data,
+        type = 'positive',
+        viewCount = Math.round((data.length - 1) / 2),
+    } = opts;
+    const ITEM_LENGTH = data.length;
+    const VALID_LENGTH = ITEM_LENGTH - 1;
+    const TOTAL_WIDTH = width * ITEM_LENGTH;
+    const HALF_WIDTH = 0.5 * width;
+
     const x = useDerivedValue(() => {
-        const { MAX, MIN, TOTAL_WIDTH, HALF_WIDTH } = computedAnimResult;
+        const { negativeRange, positiveRange } = visibleRanges.value;
+        if (
+            (index < negativeRange[0] || index > negativeRange[1]) &&
+            (index < positiveRange[0] || index > positiveRange[1])
+        ) {
+            return Number.MAX_SAFE_INTEGER;
+        }
         if (loop) {
-            const defaultPos = width * index;
-            const startPos =
-                defaultPos > MAX
-                    ? MAX - defaultPos
-                    : defaultPos < MIN
-                    ? MIN - defaultPos
-                    : defaultPos;
+            const positiveCount =
+                type === 'positive' ? viewCount : VALID_LENGTH - viewCount;
+
+            let startPos = width * index;
+            if (index > positiveCount) {
+                startPos = (index - ITEM_LENGTH) * width;
+            }
+
+            const MAX = positiveCount * width;
+            const MIN = -((VALID_LENGTH - positiveCount) * width);
 
             const inputRange = [
                 -TOTAL_WIDTH,
-                -(MAX + HALF_WIDTH) - startPos - 1,
-                -(MAX + HALF_WIDTH) - startPos,
+                MIN - HALF_WIDTH - startPos - 1,
+                MIN - HALF_WIDTH - startPos,
                 0,
                 MAX + HALF_WIDTH - startPos,
                 MAX + HALF_WIDTH - startPos + 1,
@@ -38,11 +62,11 @@ export const useOffsetX = (opts: IOpts) => {
 
             const outputRange = [
                 startPos,
-                1.5 * width - 1,
-                -(MAX + HALF_WIDTH),
+                MAX + HALF_WIDTH - 1,
+                MIN - HALF_WIDTH,
                 startPos,
                 MAX + HALF_WIDTH,
-                -(1.5 * width - 1),
+                MIN - HALF_WIDTH + 1,
                 startPos,
             ];
 
@@ -54,8 +78,8 @@ export const useOffsetX = (opts: IOpts) => {
             );
         }
 
-        const startPos = width * index;
-        return handlerOffsetX.value + startPos;
-    }, [loop, computedAnimResult]);
+        return handlerOffsetX.value + width * index;
+    }, [loop, data, viewCount, type, visibleRanges]);
+
     return x;
 };

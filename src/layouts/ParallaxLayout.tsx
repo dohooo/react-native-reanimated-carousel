@@ -5,8 +5,8 @@ import Animated, {
     interpolate,
     useAnimatedStyle,
 } from 'react-native-reanimated';
-import type { IComputedAnimResult } from 'src/hooks/useComputedAnim';
 import { useOffsetX } from '../hooks/useOffsetX';
+import type { IVisibleRanges } from '../hooks/useVisibleRanges';
 
 export const ParallaxLayout: React.FC<{
     loop?: boolean;
@@ -15,7 +15,8 @@ export const ParallaxLayout: React.FC<{
     handlerOffsetX: Animated.SharedValue<number>;
     index: number;
     width: number;
-    computedAnimResult: IComputedAnimResult;
+    data: unknown[];
+    visibleRanges: IVisibleRanges;
 }> = (props) => {
     const {
         handlerOffsetX,
@@ -24,17 +25,21 @@ export const ParallaxLayout: React.FC<{
         index,
         width,
         loop,
+        data,
         children,
-        computedAnimResult,
+        visibleRanges,
     } = props;
 
-    const x = useOffsetX({
-        handlerOffsetX,
-        index,
-        width,
-        computedAnimResult,
-        loop,
-    });
+    const x = useOffsetX(
+        {
+            handlerOffsetX,
+            index,
+            width,
+            data,
+            loop,
+        },
+        visibleRanges
+    );
 
     const offsetXStyle = useAnimatedStyle(() => {
         const baseTranslateX = x.value - index * width;
@@ -59,6 +64,7 @@ export const ParallaxLayout: React.FC<{
             [parallaxScrollingOffset, 0, -parallaxScrollingOffset],
             Extrapolate.CLAMP
         );
+
         return {
             transform: [
                 {
@@ -78,6 +84,8 @@ export const ParallaxLayout: React.FC<{
                     width: `${parallaxScrollingScale * 100}%`,
                     height: `${parallaxScrollingScale * 100}%`,
                     alignSelf: 'center',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                 },
                 offsetXStyle,
             ]}
