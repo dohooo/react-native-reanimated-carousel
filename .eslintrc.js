@@ -12,5 +12,6 @@ module.exports = {
                 useTabs: false,
             },
         ],
+        'react-native/no-inline-styles': 0,
     },
 };

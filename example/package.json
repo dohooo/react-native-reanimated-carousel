@@ -12,12 +12,18 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-navigation/core": "^6.1.0",
+    "@react-navigation/native": "^6.0.6",
+    "@react-navigation/native-stack": "^6.2.5",
     "babel-loader": "^8.2.3",
     "expo": "^41.0.0",
     "expo-splash-screen": "~0.10.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "0.63.4",
+    "react-native-safe-area-context": "3.2.0",
+    "react-native-screens": "~3.0.0",
+    "react-native-ui-lib": "^6.5.4",
     "react-native-unimodules": "~0.13.3",
     "react-native-web": "~0.13.12"
   },

@@ -235,7 +235,6 @@ function Carousel<T>(
             count={data.length}
         >
             <Animated.View
-                // eslint-disable-next-line react-native/no-inline-styles
                 style={{
                     ...style,
                     width,
