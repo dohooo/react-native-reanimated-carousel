@@ -1,4 +1,4 @@
-import type { FlexStyle, ViewStyle } from 'react-native';
+import type { ViewStyle } from 'react-native';
 import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
 import type { TMode } from './layouts';
 
@@ -17,12 +17,12 @@ export interface ICarouselProps<T = any> {
     /**
      * Specified carousel container width.
      */
-    width: number;
+    width?: number;
     /**
      * Specified carousel container height.
      * @default '100%'
      */
-    height?: FlexStyle['height'];
+    height?: number;
     /**
      * Carousel items data set.
      */
@@ -74,6 +74,10 @@ export interface ICarouselProps<T = any> {
      * @default 0 all items will respond to pan gesture events.
      */
     windowSize?: number;
+    /**
+     * Layout items vertically instead of horizontally
+     */
+    vertical?: boolean;
     /**
      * Render carousel item.
      */
