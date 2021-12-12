@@ -15,10 +15,10 @@ export function useIndexController(opts: {
     // the length before fill data
     originalLength: number;
     length: number;
-    width: number;
+    size: number;
     onChange: (index: number) => void;
 }): IIndexController {
-    const { originalLength, length, width, loop, handlerOffsetX, onChange } =
+    const { originalLength, length, size, loop, handlerOffsetX, onChange } =
         opts;
     const index = useSharedValue<number>(0);
     // The Index displayed to the user
@@ -42,7 +42,7 @@ export function useIndexController(opts: {
 
     const computedIndex = React.useCallback(() => {
         sharedPreIndex.current = sharedIndex.current;
-        const toInt = (handlerOffsetX.value / width) % length;
+        const toInt = (handlerOffsetX.value / size) % length;
         const i =
             handlerOffsetX.value <= 0
                 ? Math.abs(toInt)
@@ -56,7 +56,7 @@ export function useIndexController(opts: {
         handlerOffsetX,
         sharedPreIndex,
         index,
-        width,
+        size,
         sharedIndex,
         convertToSharedIndex,
         onChange,

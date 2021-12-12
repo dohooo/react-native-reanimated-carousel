@@ -1,8 +1,31 @@
-import type { FlexStyle, ViewStyle } from 'react-native';
+import type { ViewStyle } from 'react-native';
 import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
 import type { TMode } from './layouts';
 
-export interface ICarouselProps<T = any> {
+interface IHorizontalModeProps {
+    /**
+     * Layout items vertically instead of horizontally
+     */
+    vertical?: false;
+    /**
+     * Specified carousel container width.
+     */
+    width: number;
+}
+
+interface IVerticalModeProps {
+    /**
+     * Layout items vertically instead of horizontally
+     */
+    vertical: true;
+    /**
+     * Specified carousel container height.
+     * @default '100%'
+     */
+    height: number;
+}
+
+export type TCarouselProps<T = any> = {
     ref?: React.Ref<ICarouselInstance>;
     /**
      * Carousel loop playback.
@@ -14,15 +37,6 @@ export interface ICarouselProps<T = any> {
      * @default 'default'
      */
     mode?: TMode;
-    /**
-     * Specified carousel container width.
-     */
-    width: number;
-    /**
-     * Specified carousel container height.
-     * @default '100%'
-     */
-    height?: FlexStyle['height'];
     /**
      * Carousel items data set.
      */
@@ -99,7 +113,7 @@ export interface ICarouselProps<T = any> {
         offsetProgress: number,
         absoluteProgress: number
     ) => void;
-}
+} & (IHorizontalModeProps | IVerticalModeProps);
 
 export interface ICarouselInstance {
     /**
