@@ -50,9 +50,9 @@ function Carousel<T>(
         panGestureHandlerProps,
     });
 
-    const width: number = props.vertical ? 0 : Math.round(props.width || 0);
-    const height: number = props.vertical ? Math.round(props.height || 0) : 0;
-    const size: number = vertical ? height : width;
+    const width = props.vertical ? 0 : Math.round(props.width || 0);
+    const height = props.vertical ? Math.round(props.height || 0) : 0;
+    const size = vertical ? height : width;
 
     const layoutStyle = React.useMemo(() => {
         return {
