@@ -34,9 +34,8 @@ interface Props {
     onScrollEnd?: () => void;
 
     translation: Animated.SharedValue<number>;
-    totalWidth: number;
-    width: number;
-    count: number;
+    size: number;
+    max: number;
 }
 
 const IScrollViewGesture: React.FC<Props> = (props) => {
@@ -49,19 +48,14 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
         panGestureHandlerProps = {},
         onScrollBegin,
         onScrollEnd,
-        totalWidth,
-        width,
-        count,
+        size,
+        max,
     } = props;
 
     const isHorizontal = useDerivedValue(() => !vertical, [vertical]);
     const touching = useSharedValue(false);
     const scrollEndTranslation = useSharedValue(0);
     const scrollEndVelocity = useSharedValue(0);
-
-    const cLength = totalWidth;
-    const svLength = width;
-    const maxLength = cLength - svLength;
 
     const endWithSpring = React.useCallback(
         (toValue: number) => {
@@ -83,23 +77,16 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
 
     const withPaging = React.useCallback(() => {
         'worklet';
-        const page = Math.round(-translation.value / svLength);
+        const page = Math.round(-translation.value / size);
         const velocityPage = Math.round(
-            -(translation.value + scrollEndVelocity.value) / svLength
+            -(translation.value + scrollEndVelocity.value) / size
         );
         let finalPage = Math.min(page + 1, Math.max(page - 1, velocityPage));
         if (!infinite) {
-            finalPage = Math.min(count - 1, Math.max(0, finalPage));
+            finalPage = Math.min(max - 1, Math.max(0, finalPage));
         }
-        translation.value = endWithSpring(-finalPage * svLength);
-    }, [
-        infinite,
-        endWithSpring,
-        translation,
-        scrollEndVelocity,
-        svLength,
-        count,
-    ]);
+        translation.value = endWithSpring(-finalPage * size);
+    }, [infinite, endWithSpring, translation, scrollEndVelocity, size, max]);
 
     const resetBoundary = React.useCallback(() => {
         'worklet';
@@ -132,13 +119,13 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
             }
         }
 
-        if (translation.value < -maxLength) {
+        if (translation.value < -(max - size)) {
             if (scrollEndTranslation.value > 0) {
                 activeDecay();
                 return;
             }
             if (!infinite) {
-                translation.value = endWithSpring(-maxLength);
+                translation.value = endWithSpring(-(max - size));
                 return;
             }
         }
@@ -146,11 +133,12 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
         infinite,
         touching,
         endWithSpring,
-        maxLength,
         translation,
         scrollEndTranslation,
         scrollEndVelocity,
         onScrollEnd,
+        max,
+        size,
     ]);
 
     useAnimatedReaction(
@@ -160,7 +148,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                 resetBoundary();
             }
         },
-        [maxLength, pagingEnabled]
+        [pagingEnabled]
     );
 
     const panGestureEventHandler = useAnimatedGestureHandler<
@@ -172,7 +160,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                 touching.value = true;
                 cancelAnimation(translation);
                 onScrollBegin && runOnJS(onScrollBegin)();
-                ctx.max = cLength - svLength;
+                ctx.max = max - size;
                 ctx.panOffset = translation.value;
             },
             onActive: (e, ctx) => {
@@ -220,7 +208,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                 }
             },
         },
-        [pagingEnabled, isHorizontal.value, infinite, cLength, svLength]
+        [pagingEnabled, isHorizontal.value, infinite, max, size]
     );
 
     const directionStyle = React.useMemo(() => {

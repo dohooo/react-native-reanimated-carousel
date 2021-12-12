@@ -1,12 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
-import {
-    Button,
-    Dimensions,
-    Image,
-    ImageSourcePropType,
-    View,
-} from 'react-native';
+import { Button, Image, ImageSourcePropType, View } from 'react-native';
 import Carousel from '../../src/index';
 import type { ICarouselInstance } from '../../src/types';
 import Animated, {
@@ -15,9 +9,6 @@ import Animated, {
     useAnimatedStyle,
     useSharedValue,
 } from 'react-native-reanimated';
-
-const window = Dimensions.get('window');
-const PAGE_WIDTH = window.width;
 
 const data: ImageSourcePropType[] = [
     require('../assets/carousel-0.jpg'),
@@ -38,27 +29,27 @@ export default function App() {
                 paddingTop: 100,
             }}
         >
-            <View style={{ width: PAGE_WIDTH, height: 240 }}>
-                <Carousel
-                    defaultIndex={0}
-                    ref={r}
-                    width={PAGE_WIDTH}
-                    parallaxScrollingScale={0.8}
-                    data={data}
-                    renderItem={(source, index) => {
-                        return (
-                            <Image
-                                key={index}
-                                source={source}
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                }}
-                            />
-                        );
-                    }}
-                />
-            </View>
+            <Carousel
+                style={{ height: 240 }}
+                defaultIndex={0}
+                ref={r}
+                vertical
+                height={240}
+                parallaxScrollingScale={0.8}
+                data={data}
+                renderItem={(source, index) => {
+                    return (
+                        <Image
+                            key={index}
+                            source={source}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                            }}
+                        />
+                    );
+                }}
+            />
             <View
                 style={{
                     marginTop: 24,
@@ -79,55 +70,51 @@ export default function App() {
                     }}
                 />
             </View>
-            <View
-                style={{
-                    height: 240,
-                    alignItems: 'center',
+            <Carousel
+                style={{ height: 240 }}
+                onProgressChange={(_, absoluteProgress) => {
+                    progressValue.value = absoluteProgress;
                 }}
-            >
-                <Carousel
-                    onProgressChange={(_, absoluteProgress) => {
-                        progressValue.value = absoluteProgress;
+                vertical
+                mode="parallax"
+                height={240}
+                parallaxScrollingScale={0.8}
+                data={data}
+                renderItem={(source, i) => {
+                    return (
+                        <Image
+                            key={i}
+                            source={source}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                            }}
+                        />
+                    );
+                }}
+            />
+            {!!progressValue && (
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        width: 100,
+                        alignSelf: 'center',
+                        marginTop: 8,
                     }}
-                    mode="parallax"
-                    width={window.width}
-                    parallaxScrollingScale={0.8}
-                    data={data}
-                    renderItem={(source, i) => {
+                >
+                    {data.map((_, index) => {
                         return (
-                            <Image
-                                key={i}
-                                source={source}
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                }}
+                            <PaginationItem
+                                animValue={progressValue}
+                                index={index}
+                                key={index}
+                                length={data.length}
                             />
                         );
-                    }}
-                />
-                {!!progressValue && (
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            width: 100,
-                            alignSelf: 'center',
-                        }}
-                    >
-                        {data.map((_, index) => {
-                            return (
-                                <PaginationItem
-                                    animValue={progressValue}
-                                    index={index}
-                                    key={index}
-                                    length={data.length}
-                                />
-                            );
-                        })}
-                    </View>
-                )}
-            </View>
+                    })}
+                </View>
+            )}
         </View>
     );
 }

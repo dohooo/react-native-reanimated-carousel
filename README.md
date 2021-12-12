@@ -102,6 +102,7 @@ import Carousel from 'react-native-reanimated-carousel';
 | panGestureHandlerProps  | ❌       | {}      | Omit<Partial\<PanGestureHandlerProps\>,'onHandlerStateChange'>               | PanGestureHandler props                                                                                                        |
 | windowSize              | ❌       | 0       | number                                                                       | The maximum number of items that can respond to pan gesture events, `0` means all items will respond to pan gesture events     |
 | onProgressChange        | ❌       |         | onProgressChange?: (offsetProgress: number,absoluteProgress: number) => void | On progress change. `offsetProgress`:Total of offset distance (0 390 780 ...); `absoluteProgress`:Convert to index (0 1 2 ...) |
+| vertical                | ❌       | false       | boolean                                                                       | Layout items vertically instead of horizontally     |
 
 ## Ref
 

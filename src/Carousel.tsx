@@ -13,15 +13,15 @@ import { useIndexController } from './hooks/useIndexController';
 import { usePropsErrorBoundary } from './hooks/usePropsErrorBoundary';
 import { ScrollViewGesture } from './ScrollViewGesture';
 import { useVisibleRanges } from './hooks/useVisibleRanges';
-import type { ICarouselInstance, ICarouselProps } from './types';
+import type { ICarouselInstance, TCarouselProps } from './types';
+import { StyleSheet, View } from 'react-native';
 
 function Carousel<T>(
-    props: PropsWithChildren<ICarouselProps<T>>,
+    props: PropsWithChildren<TCarouselProps<T>>,
     ref: React.Ref<ICarouselInstance>
 ) {
     const {
         defaultIndex = 0,
-        height = '100%',
         data: _data = [],
         loop = true,
         mode = 'default',
@@ -30,35 +30,37 @@ function Carousel<T>(
         autoPlayInterval = 1000,
         parallaxScrollingOffset,
         parallaxScrollingScale,
-        style,
+        style = {},
         panGestureHandlerProps = {},
         renderItem,
         onSnapToItem,
         onProgressChange,
         windowSize,
+        vertical,
     } = props;
 
     usePropsErrorBoundary({
         ...props,
-        defaultIndex,
-        height,
-        loop,
+        data: _data,
         mode,
-        autoPlay,
-        autoPlayReverse,
-        autoPlayInterval,
-        parallaxScrollingOffset,
-        parallaxScrollingScale,
+        loop,
         style,
+        defaultIndex,
+        autoPlayInterval,
         panGestureHandlerProps,
-        // @ts-ignore
-        onSnapToItem,
-        onProgressChange,
-        viewCount: _data.length,
     });
 
-    const width = Math.round(props.width);
-    const defaultHandlerOffsetX = -Math.abs(defaultIndex * width);
+    const width = props.vertical ? 0 : Math.round(props.width || 0);
+    const height = props.vertical ? Math.round(props.height || 0) : 0;
+    const size = vertical ? height : width;
+
+    const layoutStyle = React.useMemo(() => {
+        return {
+            width: !vertical ? width : '100%',
+            height: vertical ? height : '100%',
+        };
+    }, [vertical, width, height]);
+    const defaultHandlerOffsetX = -Math.abs(defaultIndex * size);
     const handlerOffsetX = useSharedValue<number>(defaultHandlerOffsetX);
     const data = React.useMemo<T[]>(() => {
         if (!loop) return _data;
@@ -78,14 +80,14 @@ function Carousel<T>(
         originalLength: data.length,
         length: data.length,
         handlerOffsetX,
-        width,
+        size,
         loop,
         onChange: (i) => onSnapToItem && runOnJS(onSnapToItem)(i),
     });
 
     const carouselController = useCarouselController({
         loop,
-        width,
+        size,
         handlerOffsetX,
         indexController,
         disable: !data.length,
@@ -115,19 +117,19 @@ function Carousel<T>(
     }, [sharedPreIndex, sharedIndex, computedIndex, props, run]);
 
     const offsetX = useDerivedValue(() => {
-        const totalWidth = width * data.length;
-        const x = handlerOffsetX.value % totalWidth;
+        const totalSize = size * data.length;
+        const x = handlerOffsetX.value % totalSize;
 
         if (!loop) {
             return handlerOffsetX.value;
         }
         return isNaN(x) ? 0 : x;
-    }, [loop, width, data]);
+    }, [loop, size, data]);
 
     useAnimatedReaction(
         () => offsetX.value,
         (value) => {
-            let absoluteProgress = Math.abs(value / width);
+            let absoluteProgress = Math.abs(value / size);
             if (value > 0) {
                 absoluteProgress = data.length - absoluteProgress;
             }
@@ -169,7 +171,7 @@ function Carousel<T>(
 
     const visibleRanges = useVisibleRanges({
         total: data.length,
-        viewSize: width,
+        viewSize: size,
         translation: handlerOffsetX,
         windowSize,
     });
@@ -184,11 +186,13 @@ function Carousel<T>(
                             parallaxScrollingScale={parallaxScrollingScale}
                             data={data}
                             width={width}
+                            height={height}
                             handlerOffsetX={offsetX}
                             index={i}
                             key={i}
                             loop={loop}
                             visibleRanges={visibleRanges}
+                            vertical={vertical}
                         >
                             {renderItem(item, i)}
                         </ParallaxLayout>
@@ -204,6 +208,7 @@ function Carousel<T>(
                             key={i}
                             loop={loop}
                             visibleRanges={visibleRanges}
+                            vertical={vertical}
                         >
                             {renderItem(item, i)}
                         </CarouselItem>
@@ -214,40 +219,56 @@ function Carousel<T>(
             loop,
             mode,
             data,
-            height,
             offsetX,
             parallaxScrollingOffset,
             parallaxScrollingScale,
-            width,
             renderItem,
             visibleRanges,
+            vertical,
+            width,
+            height,
         ]
     );
 
     return (
-        <ScrollViewGesture
-            pagingEnabled
-            infinite={loop}
-            translation={handlerOffsetX}
-            style={style}
-            totalWidth={data.length * width}
-            width={width}
-            count={data.length}
-        >
-            <Animated.View
-                // eslint-disable-next-line react-native/no-inline-styles
-                style={{
-                    ...style,
-                    width,
-                    height,
-                    flexDirection: 'row',
-                    position: 'relative',
-                }}
+        <View style={[styles.container, layoutStyle, style]}>
+            <ScrollViewGesture
+                pagingEnabled
+                vertical={vertical}
+                infinite={loop}
+                translation={handlerOffsetX}
+                style={style}
+                max={data.length * size}
+                size={size}
+                panGestureHandlerProps={panGestureHandlerProps}
             >
-                {data.map(renderLayout)}
-            </Animated.View>
-        </ScrollViewGesture>
+                <Animated.View
+                    style={[
+                        styles.container,
+                        layoutStyle,
+                        style,
+                        vertical
+                            ? styles.itemsVertical
+                            : styles.itemsHorizontal,
+                    ]}
+                >
+                    {data.map(renderLayout)}
+                </Animated.View>
+            </ScrollViewGesture>
+        </View>
     );
 }
 
 export default React.forwardRef(Carousel) as typeof Carousel;
+
+const styles = StyleSheet.create({
+    container: {
+        overflow: 'hidden',
+    },
+    itemsHorizontal: {
+        flexDirection: 'row',
+    },
+    itemsVertical: {
+        flexDirection: 'column',
+    },
+});

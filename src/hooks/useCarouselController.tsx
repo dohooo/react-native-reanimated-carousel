@@ -9,7 +9,7 @@ const defaultTimingConfig: Animated.WithTimingConfig = {
 
 interface IOpts {
     loop: boolean;
-    width: number;
+    size: number;
     handlerOffsetX: Animated.SharedValue<number>;
     indexController: IIndexController;
     disable?: boolean;
@@ -25,7 +25,7 @@ export interface ICarouselController {
 
 export function useCarouselController(opts: IOpts): ICarouselController {
     const {
-        width,
+        size,
         loop,
         handlerOffsetX,
         indexController,
@@ -54,10 +54,10 @@ export function useCarouselController(opts: IOpts): ICarouselController {
 
         onScrollBegin?.();
 
-        const currentPage = Math.round(handlerOffsetX.value / width);
+        const currentPage = Math.round(handlerOffsetX.value / size);
 
         handlerOffsetX.value = withTiming(
-            (currentPage - 1) * width,
+            (currentPage - 1) * size,
             defaultTimingConfig,
             (isFinished: boolean) => {
                 if (isFinished) {
@@ -69,7 +69,7 @@ export function useCarouselController(opts: IOpts): ICarouselController {
         onScrollEnd,
         canSliding,
         onScrollBegin,
-        width,
+        size,
         handlerOffsetX,
         indexController,
         loop,
@@ -81,10 +81,10 @@ export function useCarouselController(opts: IOpts): ICarouselController {
 
         onScrollBegin?.();
 
-        const currentPage = Math.round(handlerOffsetX.value / width);
+        const currentPage = Math.round(handlerOffsetX.value / size);
 
         handlerOffsetX.value = withTiming(
-            (currentPage + 1) * width,
+            (currentPage + 1) * size,
             defaultTimingConfig,
             (isFinished: boolean) => {
                 if (isFinished) {
@@ -96,7 +96,7 @@ export function useCarouselController(opts: IOpts): ICarouselController {
         onScrollEnd,
         canSliding,
         onScrollBegin,
-        width,
+        size,
         handlerOffsetX,
         indexController,
         loop,
@@ -111,7 +111,7 @@ export function useCarouselController(opts: IOpts): ICarouselController {
 
             const offset =
                 handlerOffsetX.value +
-                (indexController.index.value - index) * width;
+                (indexController.index.value - index) * size;
 
             if (animated) {
                 handlerOffsetX.value = withTiming(
@@ -134,7 +134,7 @@ export function useCarouselController(opts: IOpts): ICarouselController {
             canSliding,
             onScrollBegin,
             onScrollEnd,
-            width,
+            size,
             indexController,
             handlerOffsetX,
         ]
