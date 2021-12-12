@@ -1,4 +1,4 @@
-export type { ICarouselProps, ICarouselInstance } from './types';
+export type { TCarouselProps, ICarouselInstance } from './types';
 import Carousel from './Carousel';
 
 export default Carousel;

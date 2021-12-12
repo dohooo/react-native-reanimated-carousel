@@ -1,12 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
-import {
-    Button,
-    Dimensions,
-    Image,
-    ImageSourcePropType,
-    View,
-} from 'react-native';
+import { Button, Image, ImageSourcePropType, View } from 'react-native';
 import Carousel from '../../src/index';
 import type { ICarouselInstance } from '../../src/types';
 import Animated, {
@@ -15,9 +9,6 @@ import Animated, {
     useAnimatedStyle,
     useSharedValue,
 } from 'react-native-reanimated';
-
-const window = Dimensions.get('window');
-const PAGE_WIDTH = window.width;
 
 const data: ImageSourcePropType[] = [
     require('../assets/carousel-0.jpg'),
@@ -42,7 +33,8 @@ export default function App() {
                 style={{ height: 240 }}
                 defaultIndex={0}
                 ref={r}
-                width={PAGE_WIDTH}
+                vertical
+                height={240}
                 parallaxScrollingScale={0.8}
                 data={data}
                 renderItem={(source, index) => {
@@ -83,8 +75,9 @@ export default function App() {
                 onProgressChange={(_, absoluteProgress) => {
                     progressValue.value = absoluteProgress;
                 }}
+                vertical
                 mode="parallax"
-                width={window.width}
+                height={240}
                 parallaxScrollingScale={0.8}
                 data={data}
                 renderItem={(source, i) => {

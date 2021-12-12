@@ -13,11 +13,11 @@ import { useIndexController } from './hooks/useIndexController';
 import { usePropsErrorBoundary } from './hooks/usePropsErrorBoundary';
 import { ScrollViewGesture } from './ScrollViewGesture';
 import { useVisibleRanges } from './hooks/useVisibleRanges';
-import type { ICarouselInstance, ICarouselProps } from './types';
+import type { ICarouselInstance, TCarouselProps } from './types';
 import { StyleSheet, View } from 'react-native';
 
 function Carousel<T>(
-    props: PropsWithChildren<ICarouselProps<T>>,
+    props: PropsWithChildren<TCarouselProps<T>>,
     ref: React.Ref<ICarouselInstance>
 ) {
     const {
@@ -41,21 +41,19 @@ function Carousel<T>(
 
     usePropsErrorBoundary({
         ...props,
-        viewCount: _data.length,
+        data: _data,
+        mode,
+        loop,
+        style,
+        defaultIndex,
+        autoPlayInterval,
+        panGestureHandlerProps,
     });
 
-    const width = React.useMemo(
-        () => Math.round(props.width || 0),
-        [props.width]
-    );
-    const height = React.useMemo(
-        () => Math.round(props.height || 0),
-        [props.height]
-    );
-    const size = React.useMemo(
-        () => (vertical ? height : width),
-        [width, height, vertical]
-    );
+    const width: number = props.vertical ? 0 : Math.round(props.width || 0);
+    const height: number = props.vertical ? Math.round(props.height || 0) : 0;
+    const size: number = vertical ? height : width;
+
     const layoutStyle = React.useMemo(() => {
         return {
             width: !vertical ? width : '100%',
@@ -126,7 +124,7 @@ function Carousel<T>(
             return handlerOffsetX.value;
         }
         return isNaN(x) ? 0 : x;
-    }, [loop, width, data]);
+    }, [loop, size, data]);
 
     useAnimatedReaction(
         () => offsetX.value,
