@@ -127,6 +127,8 @@ export interface ICarouselProps<T extends unknown> {
         offsetProgress: number,
         absoluteProgress: number
     ) => void;
+
+    children?: React.ReactNode;
 }
 
 export interface ICarouselInstance {
@@ -169,6 +171,7 @@ function Carousel<T extends unknown = any>(
         onSnapToItem,
         onProgressChange,
         windowSize,
+        children,
     } = props;
 
     usePropsErrorBoundary({
@@ -461,6 +464,7 @@ function Carousel<T extends unknown = any>(
                 }}
             >
                 {data.map(renderLayout)}
+                {children}
             </Animated.View>
         </PanGestureHandler>
     );

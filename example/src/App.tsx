@@ -26,6 +26,7 @@ const data: ImageSourcePropType[] = [
 ];
 
 export default function App() {
+    const currentValue = useSharedValue<number>(0);
     const progressValue = useSharedValue<number>(0);
     const defaultCarouselRef = React.useRef<ICarouselInstance | null>(null);
     const parallaxCarouselRef = React.useRef<ICarouselInstance | null>(null);
@@ -45,9 +46,13 @@ export default function App() {
                 }}
             >
                 <Carousel<ImageSourcePropType>
+                    onProgressChange={(_, absoluteProgress) => {
+                        currentValue.value = absoluteProgress;
+                    }}
                     ref={defaultCarouselRef}
                     width={window.width}
                     data={data}
+                    style={{ alignItems: 'center', justifyContent: 'center' }}
                     parallaxScrollingScale={0.8}
                     renderItem={(source) => (
                         <View style={{ flex: 1 }}>
@@ -60,7 +65,39 @@ export default function App() {
                             />
                         </View>
                     )}
-                />
+                >
+                    {!!currentValue && (
+                        <View
+                            style={{
+                                position: 'absolute',
+                                bottom: 5,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                width: 100,
+                                alignSelf: 'center',
+                            }}
+                        >
+                            {data.map((_, index) => {
+                                return (
+                                    <PaginationItem
+                                        animValue={currentValue}
+                                        index={index}
+                                        key={index}
+                                        height={5}
+                                        type="rectangle"
+                                        length={data.length}
+                                        onPress={() => {
+                                            defaultCarouselRef.current?.goToIndex(
+                                                index,
+                                                true
+                                            );
+                                        }}
+                                    />
+                                );
+                            })}
+                        </View>
+                    )}
+                </Carousel>
             </View>
             <View
                 style={{
@@ -120,6 +157,7 @@ export default function App() {
                                     animValue={progressValue}
                                     index={index}
                                     key={index}
+                                    type="circle"
                                     length={data.length}
                                     onPress={() => {
                                         parallaxCarouselRef.current?.goToIndex(
@@ -140,10 +178,12 @@ export default function App() {
 const PaginationItem: React.FC<{
     index: number;
     length: number;
+    height?: number;
     animValue: Animated.SharedValue<number>;
+    type: 'circle' | 'rectangle';
     onPress?: () => void;
 }> = (props) => {
-    const { onPress, animValue, index, length } = props;
+    const { onPress, animValue, index, length, type, height = 20 } = props;
     const width = 20;
 
     const animStyle = useAnimatedStyle(() => {
@@ -178,15 +218,14 @@ const PaginationItem: React.FC<{
                 style={{
                     backgroundColor: 'white',
                     width,
-                    height: width,
-                    borderRadius: 50,
+                    height,
+                    borderRadius: type === 'circle' ? 50 : 0,
                     overflow: 'hidden',
                 }}
             >
                 <Animated.View
                     style={[
                         {
-                            borderRadius: 50,
                             backgroundColor: 'tomato',
                             flex: 1,
                         },
