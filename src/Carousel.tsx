@@ -37,6 +37,8 @@ function Carousel<T>(
         onProgressChange,
         windowSize,
         vertical,
+        onScrollBegin,
+        onScrollEnd,
     } = props;
 
     usePropsErrorBoundary({
@@ -90,8 +92,8 @@ function Carousel<T>(
         handlerOffsetX,
         indexController,
         disable: !data.length,
-        onScrollBegin: () => runOnJS(onScrollBegin)(),
-        onScrollEnd: () => runOnJS(onScrollEnd)(),
+        onScrollBegin: () => runOnJS(_onScrollBegin)(),
+        onScrollEnd: () => runOnJS(_onScrollEnd)(),
     });
 
     const { run, pause } = useAutoPlay({
@@ -104,16 +106,24 @@ function Carousel<T>(
     const { index, sharedPreIndex, sharedIndex, computedIndex } =
         indexController;
 
-    const onScrollBegin = React.useCallback(() => {
-        pause();
-        props.onScrollBegin?.();
-    }, [pause, props]);
+    const _onScrollBegin = React.useCallback(() => {
+        onScrollBegin?.();
+    }, [onScrollBegin]);
 
-    const onScrollEnd = React.useCallback(() => {
-        run();
+    const scrollViewGestureOnScrollBegin = React.useCallback(() => {
+        pause();
+        _onScrollBegin();
+    }, [_onScrollBegin, pause]);
+
+    const _onScrollEnd = React.useCallback(() => {
         computedIndex();
-        props.onScrollEnd?.(sharedPreIndex.current, sharedIndex.current);
-    }, [sharedPreIndex, sharedIndex, computedIndex, props, run]);
+        onScrollEnd?.(sharedPreIndex.current, sharedIndex.current);
+    }, [sharedPreIndex, sharedIndex, computedIndex, onScrollEnd]);
+
+    const scrollViewGestureOnScrollEnd = React.useCallback(() => {
+        run();
+        _onScrollEnd();
+    }, [_onScrollEnd, run]);
 
     const offsetX = useDerivedValue(() => {
         const totalSize = size * data.length;
@@ -240,6 +250,8 @@ function Carousel<T>(
                 max={data.length * size}
                 size={size}
                 panGestureHandlerProps={panGestureHandlerProps}
+                onScrollBegin={scrollViewGestureOnScrollBegin}
+                onScrollEnd={scrollViewGestureOnScrollEnd}
             >
                 <Animated.View
                     style={[
