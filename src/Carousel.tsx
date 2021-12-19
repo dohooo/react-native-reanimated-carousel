@@ -50,18 +50,17 @@ function Carousel<T>(
         panGestureHandlerProps,
     });
 
-    const width = props.vertical ? 0 : Math.round(props.width || 0);
-    const height = props.vertical ? Math.round(props.height || 0) : 0;
+    const width = Math.round(props.width || 0);
+    const height = Math.round(props.height || 0);
     const size = vertical ? height : width;
-
-    const layoutStyle = React.useMemo(() => {
-        return {
-            width: !vertical ? width : '100%',
-            height: vertical ? height : '100%',
-        };
-    }, [vertical, width, height]);
+    const layoutStyle = { width: width || '100%', height: height || '100%' };
     const defaultHandlerOffsetX = -Math.abs(defaultIndex * size);
     const handlerOffsetX = useSharedValue<number>(defaultHandlerOffsetX);
+
+    React.useEffect(() => {
+        handlerOffsetX.value = 0;
+    }, [vertical, handlerOffsetX]);
+
     const data = React.useMemo<T[]>(() => {
         if (!loop) return _data;
 

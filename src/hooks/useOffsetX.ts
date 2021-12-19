@@ -79,7 +79,7 @@ export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
         }
 
         return handlerOffsetX.value + size * index;
-    }, [loop, data, viewCount, type, visibleRanges]);
+    }, [loop, data, viewCount, type, size, visibleRanges]);
 
     return x;
 };

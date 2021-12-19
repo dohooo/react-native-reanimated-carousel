@@ -23,7 +23,6 @@ const Index = () => {
                         key={index}
                         onPress={() => navigation.navigate(name)}
                         style={{
-                            // justifyContent: 'center',
                             alignItems: 'center',
                             borderColor: Colors.grey60,
                             borderBottomWidth: 1,

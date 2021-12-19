@@ -21,9 +21,8 @@ function App() {
                 initialRouteName="Home"
                 screenOptions={{
                     contentStyle: {
-                        backgroundColor: 'white',
                         flex: 1,
-                        alignItems: 'center',
+                        backgroundColor: 'white',
                         paddingTop: 100,
                     },
                 }}

@@ -11,7 +11,10 @@
 [![github closed issues](https://img.shields.io/github/issues-closed/dohooo/react-native-reanimated-carousel.svg?style=flat-square&colorB=44cc11)](https://github.com/dohooo/react-native-reanimated-carousel/issues?q=is%3Aissue+is%3Aclosed)
 
 <p align="center">
-  <img src="assets/normal.gif" width="300"/>  
+  <img src="assets/normal-horizontal.gif" width="300"/>  
+  <img src="assets/normal-vertical.gif" width="300"/>  
+  <img src="assets/parallax-horizontal.gif" width="300"/>  
+  <img src="assets/parallax-vertical.gif" width="300"/>  
 </p>
 
 <br/>
@@ -32,10 +35,10 @@
 </p>
 
 <p align="center">
-  使用react-native-reanimated-carousel对比,每秒滚动十张依然顺畅链接，无限滚动。这里使用了gif无法很清晰的看出。（gif 83mb）
+  使用react-native-reanimated-carousel对比,每秒滚动十张依然顺畅链接，无限滚动。这里使用了gif无法很清晰的看出。
 </p>
 <p align="center">
-  <img src="assets/fast.gif" width="50%"/>
+  <img src="assets/normal-fast.gif" width="50%"/>
 </p>
 </details>
 

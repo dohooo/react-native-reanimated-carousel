@@ -11,6 +11,7 @@ interface IHorizontalModeProps {
      * Specified carousel container width.
      */
     width: number;
+    height?: number;
 }
 
 interface IVerticalModeProps {
@@ -23,6 +24,7 @@ interface IVerticalModeProps {
      * @default '100%'
      */
     height: number;
+    width?: number;
 }
 
 export type TCarouselProps<T = any> = {

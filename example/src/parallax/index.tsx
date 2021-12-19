@@ -8,12 +8,25 @@ import Animated, {
     useSharedValue,
 } from 'react-native-reanimated';
 import { CAROUSEL_ITEMS } from '../contant';
+import SButton from '../components/SButton';
 
 const window = Dimensions.get('window');
+const PAGE_WIDTH = window.width;
 
 function Index() {
+    const [isVertical, setIsVertical] = React.useState(false);
     const progressValue = useSharedValue<number>(0);
-
+    const baseOptions = isVertical
+        ? ({
+              vertical: true,
+              width: PAGE_WIDTH,
+              height: PAGE_WIDTH / 2,
+          } as const)
+        : ({
+              vertical: false,
+              width: PAGE_WIDTH,
+              height: PAGE_WIDTH / 2,
+          } as const);
     return (
         <View
             style={{
@@ -22,11 +35,14 @@ function Index() {
             }}
         >
             <Carousel
-                onProgressChange={(_, absoluteProgress) => {
-                    progressValue.value = absoluteProgress;
-                }}
+                {...baseOptions}
+                loop
+                autoPlay
+                autoPlayInterval={1000}
+                onProgressChange={(_, absoluteProgress) =>
+                    (progressValue.value = absoluteProgress)
+                }
                 mode="parallax"
-                width={window.width}
                 parallaxScrollingScale={0.8}
                 data={CAROUSEL_ITEMS}
                 renderItem={(backgroundColor) => (
@@ -36,6 +52,10 @@ function Index() {
                             justifyContent: 'center',
                             alignItems: 'center',
                             backgroundColor,
+                            borderRadius: 10,
+                            shadowColor: 'black',
+                            shadowOpacity: 0.2,
+                            shadowRadius: 10,
                         }}
                     />
                 )}
@@ -43,10 +63,13 @@ function Index() {
             {!!progressValue && (
                 <View
                     style={{
-                        flexDirection: 'row',
+                        flexDirection: isVertical ? 'column' : 'row',
                         justifyContent: 'space-between',
-                        width: 100,
+                        width: isVertical ? 10 : 100,
                         alignSelf: 'center',
+                        position: 'absolute',
+                        right: isVertical ? 10 : undefined,
+                        top: isVertical ? 40 : 185,
                     }}
                 >
                     {CAROUSEL_ITEMS.map((backgroundColor, index) => {
@@ -56,12 +79,20 @@ function Index() {
                                 animValue={progressValue}
                                 index={index}
                                 key={index}
+                                isRotate={isVertical}
                                 length={CAROUSEL_ITEMS.length}
                             />
                         );
                     })}
                 </View>
             )}
+            <SButton
+                onPress={() => {
+                    setIsVertical(!isVertical);
+                }}
+            >
+                {isVertical ? 'Set horizontal' : 'Set Vertical'}
+            </SButton>
         </View>
     );
 }
@@ -71,9 +102,10 @@ const PaginationItem: React.FC<{
     backgroundColor: string;
     length: number;
     animValue: Animated.SharedValue<number>;
+    isRotate?: boolean;
 }> = (props) => {
-    const { animValue, index, length, backgroundColor } = props;
-    const width = 20;
+    const { animValue, index, length, backgroundColor, isRotate } = props;
+    const width = 10;
 
     const animStyle = useAnimatedStyle(() => {
         let inputRange = [index - 1, index, index + 1];
@@ -105,11 +137,20 @@ const PaginationItem: React.FC<{
                 height: width,
                 borderRadius: 50,
                 overflow: 'hidden',
+                transform: [
+                    {
+                        rotateZ: isRotate ? '90deg' : '0deg',
+                    },
+                ],
             }}
         >
             <Animated.View
                 style={[
-                    { borderRadius: 50, backgroundColor, flex: 1 },
+                    {
+                        borderRadius: 50,
+                        backgroundColor,
+                        flex: 1,
+                    },
                     animStyle,
                 ]}
             />
