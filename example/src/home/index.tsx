@@ -1,8 +1,14 @@
 import * as React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    ScrollView,
+    TouchableHighlight,
+} from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import type { RootStackParamList } from '../index';
-import { Colors, ListItem } from 'react-native-ui-lib';
+import { Colors } from 'react-native-ui-lib';
 
 const LayoutsPage: Array<Record<'name', keyof RootStackParamList>> = [
     {
@@ -11,29 +17,45 @@ const LayoutsPage: Array<Record<'name', keyof RootStackParamList>> = [
     {
         name: 'Parallax',
     },
+    {
+        name: 'Complex',
+    },
+    {
+        name: 'SnapCarouselComplex',
+    },
 ];
 
 const Index = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     return (
-        <View style={StyleSheet.absoluteFill}>
+        <ScrollView style={{ flex: 1 }}>
             {LayoutsPage.map(({ name }, index) => {
                 return (
-                    <ListItem
+                    <TouchableHighlight
                         key={index}
                         onPress={() => navigation.navigate(name)}
-                        style={{
-                            alignItems: 'center',
-                            borderColor: Colors.grey60,
-                            borderBottomWidth: 1,
-                        }}
                     >
-                        <Text>{name}</Text>
-                    </ListItem>
+                        <View style={styles.listItem}>
+                            <Text style={styles.text}>{name}</Text>
+                        </View>
+                    </TouchableHighlight>
                 );
             })}
-        </View>
+        </ScrollView>
     );
 };
 
 export default Index;
+
+const styles = StyleSheet.create({
+    listItem: {
+        alignItems: 'center',
+        borderColor: Colors.grey60,
+        borderBottomWidth: 0.5,
+        padding: 16,
+        backgroundColor: '#fff',
+    },
+    text: {
+        fontSize: 16,
+    },
+});
