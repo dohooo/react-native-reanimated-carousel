@@ -26,6 +26,7 @@ function App() {
                 screenOptions={{
                     contentStyle: {
                         flex: 1,
+                        backgroundColor: 'white',
                     },
                 }}
             >
