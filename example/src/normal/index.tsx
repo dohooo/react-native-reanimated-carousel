@@ -10,6 +10,7 @@ const PAGE_WIDTH = window.width;
 
 function Index() {
     const [isVertical, setIsVertical] = React.useState(false);
+    const [isFast, setIsFast] = React.useState(false);
 
     const baseOptions = isVertical
         ? ({
@@ -29,7 +30,7 @@ function Index() {
                 {...baseOptions}
                 loop
                 autoPlay
-                autoPlayInterval={1000}
+                autoPlayInterval={isFast ? 100 : 1000}
                 data={CAROUSEL_ITEMS}
                 renderItem={(backgroundColor) => (
                     <View
@@ -48,6 +49,13 @@ function Index() {
                 }}
             >
                 {isVertical ? 'Set horizontal' : 'Set Vertical'}
+            </SButton>
+            <SButton
+                onPress={() => {
+                    setIsFast(!isFast);
+                }}
+            >
+                {isFast ? 'NORMAL' : 'FAST'}
             </SButton>
         </View>
     );
