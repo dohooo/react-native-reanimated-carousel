@@ -60,8 +60,8 @@ function Carousel<T>(
     const handlerOffsetX = useSharedValue<number>(defaultHandlerOffsetX);
 
     React.useEffect(() => {
-        handlerOffsetX.value = 0;
-    }, [vertical, handlerOffsetX]);
+        handlerOffsetX.value = defaultHandlerOffsetX;
+    }, [vertical, handlerOffsetX, defaultHandlerOffsetX]);
 
     const data = React.useMemo<T[]>(() => {
         if (!loop) return _data;
