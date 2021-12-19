@@ -129,5 +129,9 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "dependencies": {
+    "@types/react-native-snap-carousel": "^3.8.5",
+    "react-native-snap-carousel": "^3.9.1"
   }
 }

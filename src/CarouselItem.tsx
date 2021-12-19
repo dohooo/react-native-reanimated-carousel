@@ -1,7 +1,8 @@
 import React from 'react';
-import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import Animated, { runOnJS, useAnimatedStyle } from 'react-native-reanimated';
 import { useOffsetX } from './hooks/useOffsetX';
 import type { IVisibleRanges } from './hooks/useVisibleRanges';
+import { LazyView } from './LazyView';
 
 export const CarouselItem: React.FC<{
     loop?: boolean;
@@ -25,6 +26,8 @@ export const CarouselItem: React.FC<{
         vertical,
     } = props;
 
+    const [shouldUpdate, setShouldUpdate] = React.useState(false);
+
     const x = useOffsetX(
         {
             handlerOffsetX,
@@ -45,6 +48,27 @@ export const CarouselItem: React.FC<{
         };
     }, [vertical]);
 
+    const updateView = React.useCallback(
+        (negativeRange: number[], positiveRange: number[]) => {
+            setShouldUpdate(
+                (index >= negativeRange[0] && index <= negativeRange[1]) ||
+                    (index >= positiveRange[0] && index <= positiveRange[1])
+            );
+        },
+        [index]
+    );
+
+    Animated.useAnimatedReaction(
+        () => visibleRanges.value,
+        () => {
+            runOnJS(updateView)(
+                visibleRanges.value.negativeRange,
+                visibleRanges.value.positiveRange
+            );
+        },
+        [visibleRanges.value]
+    );
+
     return (
         <Animated.View
             style={[
@@ -55,7 +79,7 @@ export const CarouselItem: React.FC<{
                 },
             ]}
         >
-            {children}
+            <LazyView shouldUpdate={shouldUpdate}>{children}</LazyView>
         </Animated.View>
     );
 };
