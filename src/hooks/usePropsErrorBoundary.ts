@@ -1,15 +1,23 @@
 import React from 'react';
-import type { ICarouselProps } from 'src/Carousel';
+import type { TCarouselProps } from 'src/types';
 
-export function usePropsErrorBoundary(props: ICarouselProps<unknown>) {
+export function usePropsErrorBoundary(props: TCarouselProps) {
     React.useEffect(() => {
         const { defaultIndex, data } = props;
-        if (typeof defaultIndex === 'number' && data?.length > 0) {
-            if (defaultIndex < 0 || defaultIndex >= data.length) {
+
+        const viewCount = data.length;
+        if (typeof defaultIndex === 'number' && viewCount > 0) {
+            if (defaultIndex < 0 || defaultIndex >= viewCount) {
                 throw Error(
                     'DefaultIndex must be in the range of data length.'
                 );
             }
+        }
+        if (!props.vertical && !props.width) {
+            throw Error('`width` must be specified for vertical carousels.');
+        }
+        if (props.vertical && !props.height) {
+            throw Error('`height` must be specified for vertical carousels.');
         }
     }, [props]);
 }

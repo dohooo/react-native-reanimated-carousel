@@ -7,7 +7,7 @@ import type { IVisibleRanges } from './useVisibleRanges';
 
 interface IOpts {
     index: number;
-    width: number;
+    size: number;
     handlerOffsetX: Animated.SharedValue<number>;
     data: unknown[];
     type?: 'positive' | 'negative';
@@ -19,7 +19,7 @@ export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
     const {
         handlerOffsetX,
         index,
-        width,
+        size,
         loop,
         data,
         type = 'positive',
@@ -27,8 +27,8 @@ export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
     } = opts;
     const ITEM_LENGTH = data.length;
     const VALID_LENGTH = ITEM_LENGTH - 1;
-    const TOTAL_WIDTH = width * ITEM_LENGTH;
-    const HALF_WIDTH = 0.5 * width;
+    const TOTAL_WIDTH = size * ITEM_LENGTH;
+    const HALF_WIDTH = 0.5 * size;
 
     const x = useDerivedValue(() => {
         const { negativeRange, positiveRange } = visibleRanges.value;
@@ -42,13 +42,13 @@ export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
             const positiveCount =
                 type === 'positive' ? viewCount : VALID_LENGTH - viewCount;
 
-            let startPos = width * index;
+            let startPos = size * index;
             if (index > positiveCount) {
-                startPos = (index - ITEM_LENGTH) * width;
+                startPos = (index - ITEM_LENGTH) * size;
             }
 
-            const MAX = positiveCount * width;
-            const MIN = -((VALID_LENGTH - positiveCount) * width);
+            const MAX = positiveCount * size;
+            const MIN = -((VALID_LENGTH - positiveCount) * size);
 
             const inputRange = [
                 -TOTAL_WIDTH,
@@ -78,8 +78,8 @@ export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
             );
         }
 
-        return handlerOffsetX.value + width * index;
-    }, [loop, data, viewCount, type, visibleRanges]);
+        return handlerOffsetX.value + size * index;
+    }, [loop, data, viewCount, type, size, visibleRanges]);
 
     return x;
 };
