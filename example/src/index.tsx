@@ -17,7 +17,17 @@ export type RootStackParamList = {
 function App() {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="Home">
+            <Stack.Navigator
+                initialRouteName="Home"
+                screenOptions={{
+                    contentStyle: {
+                        backgroundColor: 'white',
+                        flex: 1,
+                        alignItems: 'center',
+                        paddingTop: 100,
+                    },
+                }}
+            >
                 <Stack.Screen name="Home" component={Home} />
                 <Stack.Screen name="Normal" component={NormalComponent} />
                 <Stack.Screen name="Parallax" component={ParallaxComponent} />

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dimensions, Text, View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import Carousel from '../../../src/index';
 import Animated, {
     Extrapolate,
@@ -7,23 +7,9 @@ import Animated, {
     useAnimatedStyle,
     useSharedValue,
 } from 'react-native-reanimated';
+import { CAROUSEL_ITEMS } from '../contant';
 
 const window = Dimensions.get('window');
-
-interface DataItem {
-    text: string;
-    backgroundColor: string;
-}
-
-const data: DataItem[] = [
-    { text: 'Walter, Wintheiser and Von', backgroundColor: '#ffbb96' },
-    { text: 'Herman, Dicki and Wintheiser', backgroundColor: '#ff9c6e' },
-    { text: 'Wiza, Borer and Muller', backgroundColor: '#ff7a45' },
-    { text: 'Kulas Group', backgroundColor: '#fa541c' },
-    { text: 'Rowe, Gerhold and Corkery', backgroundColor: '#d4380d' },
-    { text: 'Lang - Doyle', backgroundColor: '#ad2102' },
-    { text: "Anderson, Leuschke and O'Keefe", backgroundColor: '#871400' },
-];
 
 function Index() {
     const progressValue = useSharedValue<number>(0);
@@ -31,73 +17,62 @@ function Index() {
     return (
         <View
             style={{
-                flex: 1,
+                height: 240,
                 alignItems: 'center',
-                backgroundColor: '#f1f1f1',
-                paddingTop: 100,
             }}
         >
-            <View
-                style={{
-                    height: 240,
-                    alignItems: 'center',
+            <Carousel
+                onProgressChange={(_, absoluteProgress) => {
+                    progressValue.value = absoluteProgress;
                 }}
-            >
-                <Carousel
-                    onProgressChange={(_, absoluteProgress) => {
-                        progressValue.value = absoluteProgress;
-                    }}
-                    mode="parallax"
-                    width={window.width}
-                    parallaxScrollingScale={0.8}
-                    data={data}
-                    renderItem={({ backgroundColor, text }) => (
-                        <View
-                            style={{
-                                flex: 1,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                backgroundColor,
-                            }}
-                        >
-                            <Text style={{ color: 'white', fontSize: 20 }}>
-                                {text}
-                            </Text>
-                        </View>
-                    )}
-                />
-                {!!progressValue && (
+                mode="parallax"
+                width={window.width}
+                parallaxScrollingScale={0.8}
+                data={CAROUSEL_ITEMS}
+                renderItem={(backgroundColor) => (
                     <View
                         style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            width: 100,
-                            alignSelf: 'center',
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor,
                         }}
-                    >
-                        {data.map((_, index) => {
-                            return (
-                                <PaginationItem
-                                    animValue={progressValue}
-                                    index={index}
-                                    key={index}
-                                    length={data.length}
-                                />
-                            );
-                        })}
-                    </View>
+                    />
                 )}
-            </View>
+            />
+            {!!progressValue && (
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        width: 100,
+                        alignSelf: 'center',
+                    }}
+                >
+                    {CAROUSEL_ITEMS.map((backgroundColor, index) => {
+                        return (
+                            <PaginationItem
+                                backgroundColor={backgroundColor}
+                                animValue={progressValue}
+                                index={index}
+                                key={index}
+                                length={CAROUSEL_ITEMS.length}
+                            />
+                        );
+                    })}
+                </View>
+            )}
         </View>
     );
 }
 
 const PaginationItem: React.FC<{
     index: number;
+    backgroundColor: string;
     length: number;
     animValue: Animated.SharedValue<number>;
 }> = (props) => {
-    const { animValue, index, length } = props;
+    const { animValue, index, length, backgroundColor } = props;
     const width = 20;
 
     const animStyle = useAnimatedStyle(() => {
@@ -134,7 +109,7 @@ const PaginationItem: React.FC<{
         >
             <Animated.View
                 style={[
-                    { borderRadius: 50, backgroundColor: 'tomato', flex: 1 },
+                    { borderRadius: 50, backgroundColor, flex: 1 },
                     animStyle,
                 ]}
             />
