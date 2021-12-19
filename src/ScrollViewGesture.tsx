@@ -58,7 +58,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
     const scrollEndVelocity = useSharedValue(0);
 
     const endWithSpring = React.useCallback(
-        (toValue: number) => {
+        (toValue: number, onFinished?: () => void) => {
             'worklet';
             return withSpring(
                 toValue,
@@ -67,26 +67,32 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                 },
                 (isFinished) => {
                     if (isFinished) {
-                        onScrollEnd && runOnJS(onScrollEnd)();
+                        onFinished?.();
                     }
                 }
             );
         },
-        [onScrollEnd]
+        []
     );
 
-    const withPaging = React.useCallback(() => {
-        'worklet';
-        const page = Math.round(-translation.value / size);
-        const velocityPage = Math.round(
-            -(translation.value + scrollEndVelocity.value) / size
-        );
-        let finalPage = Math.min(page + 1, Math.max(page - 1, velocityPage));
-        if (!infinite) {
-            finalPage = Math.min(max - 1, Math.max(0, finalPage));
-        }
-        translation.value = endWithSpring(-finalPage * size);
-    }, [infinite, endWithSpring, translation, scrollEndVelocity, size, max]);
+    const withPaging = React.useCallback(
+        (onFinished?: () => void) => {
+            'worklet';
+            const page = Math.round(-translation.value / size);
+            const velocityPage = Math.round(
+                -(translation.value + scrollEndVelocity.value) / size
+            );
+            let finalPage = Math.min(
+                page + 1,
+                Math.max(page - 1, velocityPage)
+            );
+            if (!infinite) {
+                finalPage = Math.min(max - 1, Math.max(0, finalPage));
+            }
+            translation.value = endWithSpring(-finalPage * size, onFinished);
+        },
+        [infinite, endWithSpring, translation, scrollEndVelocity, size, max]
+    );
 
     const resetBoundary = React.useCallback(() => {
         'worklet';
@@ -189,7 +195,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                     : translationY;
 
                 if (pagingEnabled) {
-                    withPaging();
+                    withPaging(() => onScrollEnd && runOnJS(onScrollEnd)());
                     return;
                 }
                 translation.value = withDecay(

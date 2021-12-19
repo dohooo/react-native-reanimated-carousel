@@ -11,7 +11,10 @@ English | [简体中文](./README.zh-CN.md)
 [![github closed issues](https://img.shields.io/github/issues-closed/dohooo/react-native-reanimated-carousel.svg?style=flat-square&colorB=44cc11)](https://github.com/dohooo/react-native-reanimated-carousel/issues?q=is%3Aissue+is%3Aclosed)
 
 <p align="center">
-  <img src="assets/normal.gif" width="300"/>  
+  <img src="assets/normal-horizontal.gif" width="300"/>  
+  <img src="assets/normal-vertical.gif" width="300"/>  
+  <img src="assets/parallax-horizontal.gif" width="300"/>  
+  <img src="assets/parallax-vertical.gif" width="300"/>  
 </p>
 
 <br/>
@@ -32,10 +35,10 @@ English | [简体中文](./README.zh-CN.md)
 </p>
 
 <p align="center">
-  Compared with react-native-reanimated-carousel,The actual test was ten slides per second, but it didn't show up very well in gif.（gif 83mb）
+  Compared with react-native-reanimated-carousel,The actual test was ten slides per second, but it didn't show up very well in gif.
 </p>
 <p align="center">
-  <img src="assets/fast.gif" width="50%"/>
+  <img src="assets/normal-fast.gif" width="50%"/>
 </p>
 </details>
 

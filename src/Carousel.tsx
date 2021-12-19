@@ -37,6 +37,8 @@ function Carousel<T>(
         onProgressChange,
         windowSize,
         vertical,
+        onScrollBegin,
+        onScrollEnd,
     } = props;
 
     usePropsErrorBoundary({
@@ -50,18 +52,17 @@ function Carousel<T>(
         panGestureHandlerProps,
     });
 
-    const width = props.vertical ? 0 : Math.round(props.width || 0);
-    const height = props.vertical ? Math.round(props.height || 0) : 0;
+    const width = Math.round(props.width || 0);
+    const height = Math.round(props.height || 0);
     const size = vertical ? height : width;
-
-    const layoutStyle = React.useMemo(() => {
-        return {
-            width: !vertical ? width : '100%',
-            height: vertical ? height : '100%',
-        };
-    }, [vertical, width, height]);
+    const layoutStyle = { width: width || '100%', height: height || '100%' };
     const defaultHandlerOffsetX = -Math.abs(defaultIndex * size);
     const handlerOffsetX = useSharedValue<number>(defaultHandlerOffsetX);
+
+    React.useEffect(() => {
+        handlerOffsetX.value = defaultHandlerOffsetX;
+    }, [vertical, handlerOffsetX, defaultHandlerOffsetX]);
+
     const data = React.useMemo<T[]>(() => {
         if (!loop) return _data;
 
@@ -91,8 +92,8 @@ function Carousel<T>(
         handlerOffsetX,
         indexController,
         disable: !data.length,
-        onScrollBegin: () => runOnJS(onScrollBegin)(),
-        onScrollEnd: () => runOnJS(onScrollEnd)(),
+        onScrollBegin: () => runOnJS(_onScrollBegin)(),
+        onScrollEnd: () => runOnJS(_onScrollEnd)(),
     });
 
     const { run, pause } = useAutoPlay({
@@ -105,16 +106,24 @@ function Carousel<T>(
     const { index, sharedPreIndex, sharedIndex, computedIndex } =
         indexController;
 
-    const onScrollBegin = React.useCallback(() => {
-        pause();
-        props.onScrollBegin?.();
-    }, [pause, props]);
+    const _onScrollBegin = React.useCallback(() => {
+        onScrollBegin?.();
+    }, [onScrollBegin]);
 
-    const onScrollEnd = React.useCallback(() => {
-        run();
+    const scrollViewGestureOnScrollBegin = React.useCallback(() => {
+        pause();
+        _onScrollBegin();
+    }, [_onScrollBegin, pause]);
+
+    const _onScrollEnd = React.useCallback(() => {
         computedIndex();
-        props.onScrollEnd?.(sharedPreIndex.current, sharedIndex.current);
-    }, [sharedPreIndex, sharedIndex, computedIndex, props, run]);
+        onScrollEnd?.(sharedPreIndex.current, sharedIndex.current);
+    }, [sharedPreIndex, sharedIndex, computedIndex, onScrollEnd]);
+
+    const scrollViewGestureOnScrollEnd = React.useCallback(() => {
+        run();
+        _onScrollEnd();
+    }, [_onScrollEnd, run]);
 
     const offsetX = useDerivedValue(() => {
         const totalSize = size * data.length;
@@ -241,6 +250,8 @@ function Carousel<T>(
                 max={data.length * size}
                 size={size}
                 panGestureHandlerProps={panGestureHandlerProps}
+                onScrollBegin={scrollViewGestureOnScrollBegin}
+                onScrollEnd={scrollViewGestureOnScrollEnd}
             >
                 <Animated.View
                     style={[
