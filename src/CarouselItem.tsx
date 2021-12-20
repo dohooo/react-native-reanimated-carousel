@@ -1,5 +1,9 @@
 import React from 'react';
-import Animated, { runOnJS, useAnimatedStyle } from 'react-native-reanimated';
+import Animated, {
+    runOnJS,
+    useAnimatedReaction,
+    useAnimatedStyle,
+} from 'react-native-reanimated';
 import { useOffsetX } from './hooks/useOffsetX';
 import type { IVisibleRanges } from './hooks/useVisibleRanges';
 import { LazyView } from './LazyView';
@@ -58,7 +62,7 @@ export const CarouselItem: React.FC<{
         [index]
     );
 
-    Animated.useAnimatedReaction(
+    useAnimatedReaction(
         () => visibleRanges.value,
         () => {
             runOnJS(updateView)(

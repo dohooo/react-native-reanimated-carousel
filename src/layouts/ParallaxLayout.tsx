@@ -4,6 +4,7 @@ import Animated, {
     Extrapolate,
     interpolate,
     runOnJS,
+    useAnimatedReaction,
     useAnimatedStyle,
 } from 'react-native-reanimated';
 import { useOffsetX } from '../hooks/useOffsetX';
@@ -124,7 +125,7 @@ export const ParallaxLayout: React.FC<{
         [index]
     );
 
-    Animated.useAnimatedReaction(
+    useAnimatedReaction(
         () => visibleRanges.value,
         () => {
             runOnJS(updateView)(
