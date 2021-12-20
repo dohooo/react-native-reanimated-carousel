@@ -6,7 +6,7 @@ import Animated, {
     useSharedValue,
 } from 'react-native-reanimated';
 import { CarouselItem } from './CarouselItem';
-import { ParallaxLayout } from './layouts/index';
+import { ParallaxLayout, StackLayout } from './layouts/index';
 import { useCarouselController } from './hooks/useCarouselController';
 import { useAutoPlay } from './hooks/useAutoPlay';
 import { useIndexController } from './hooks/useIndexController';
@@ -205,6 +205,22 @@ function Carousel<T>(
                         >
                             {renderItem(item, i)}
                         </ParallaxLayout>
+                    );
+                case 'stack':
+                    return (
+                        <StackLayout
+                            data={data}
+                            width={width}
+                            height={height}
+                            handlerOffsetX={offsetX}
+                            index={i}
+                            key={i}
+                            loop={loop}
+                            visibleRanges={visibleRanges}
+                            vertical={vertical}
+                        >
+                            {renderItem(item, i)}
+                        </StackLayout>
                     );
                 default:
                     return (
