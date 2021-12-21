@@ -10,7 +10,7 @@
 [![github issues](https://img.shields.io/github/issues/dohooo/react-native-reanimated-carousel.svg?style=flat-square)](https://github.com/dohooo/react-native-reanimated-carousel/issues)
 [![github closed issues](https://img.shields.io/github/issues-closed/dohooo/react-native-reanimated-carousel.svg?style=flat-square&colorB=44cc11)](https://github.com/dohooo/react-native-reanimated-carousel/issues?q=is%3Aissue+is%3Aclosed)
 
-> 点击图片，查看代码。🍺🍺🍺
+> 点击图片，查看demo。🍺
 <p align="center">
   <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/normal/index.tsx">
     <img src="assets/normal-horizontal.gif" width="300"/>  
