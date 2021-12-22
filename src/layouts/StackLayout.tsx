@@ -1,12 +1,12 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, {
-    Extrapolate,
     interpolate,
     runOnJS,
     useAnimatedReaction,
     useAnimatedStyle,
 } from 'react-native-reanimated';
+import { log } from '../utils/log';
 import { useOffsetX } from '../hooks/useOffsetX';
 import type { IVisibleRanges } from '../hooks/useVisibleRanges';
 import { LazyView } from '../LazyView';
@@ -55,15 +55,16 @@ export const StackLayout: React.FC<{
 
     const offsetXStyle = useAnimatedStyle(() => {
         const startPosition = (x.value - index * width) / width;
-
+        runOnJS(log)(-x.value, ',', startPosition, `【${index}】`);
         return {
-            left: interpolate(
-                startPosition,
-                [-(index + 1), -index, 0],
-                [-width, 0, 0],
-                Extrapolate.CLAMP
-            ),
             transform: [
+                {
+                    translateX: interpolate(
+                        startPosition,
+                        [-(index + 1), -index, 0],
+                        [-width, 0, 0]
+                    ),
+                },
                 {
                     scale: interpolate(
                         startPosition,

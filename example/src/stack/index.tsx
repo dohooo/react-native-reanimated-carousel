@@ -15,10 +15,17 @@ function Index() {
             }}
         >
             <Carousel
+                style={{
+                    height: PAGE_WIDTH,
+                    width: PAGE_WIDTH,
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                    borderWidth: 1,
+                    borderColor: 'red',
+                }}
                 mode="stack"
-                width={PAGE_WIDTH}
-                height={PAGE_WIDTH / 2}
-                style={{ borderWidth: 1, borderColor: 'red' }}
+                width={100}
+                height={100}
                 data={CAROUSEL_ITEMS}
                 renderItem={(backgroundColor) => (
                     <View
@@ -27,6 +34,7 @@ function Index() {
                             justifyContent: 'center',
                             alignItems: 'center',
                             backgroundColor,
+                            borderRadius: 20,
                         }}
                     />
                 )}
