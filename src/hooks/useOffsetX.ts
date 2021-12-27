@@ -52,11 +52,11 @@ export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
 
             const inputRange = [
                 -TOTAL_WIDTH,
-                MIN - HALF_WIDTH - startPos - 1,
+                MIN - HALF_WIDTH - startPos - Number.MIN_VALUE,
                 MIN - HALF_WIDTH - startPos,
                 0,
                 MAX + HALF_WIDTH - startPos,
-                MAX + HALF_WIDTH - startPos + 1,
+                MAX + HALF_WIDTH - startPos + Number.MIN_VALUE,
                 TOTAL_WIDTH,
             ];
 
