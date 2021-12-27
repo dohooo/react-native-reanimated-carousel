@@ -14,6 +14,7 @@ import Animated, {
     useSharedValue,
     withDecay,
     withSpring,
+    withTiming,
 } from 'react-native-reanimated';
 
 type GestureContext = {
@@ -183,7 +184,9 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                     panTranslation = panTranslation * 0.5;
                 }
 
-                translation.value = ctx.panOffset + panTranslation;
+                translation.value = withTiming(ctx.panOffset + panTranslation, {
+                    duration: 0,
+                });
             },
             onEnd: (e) => {
                 const { velocityX, velocityY, translationX, translationY } = e;
