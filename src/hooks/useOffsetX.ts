@@ -62,18 +62,18 @@ export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
 
             const outputRange = [
                 startPos,
-                MAX + HALF_WIDTH - 1,
+                MAX + HALF_WIDTH - Number.MIN_VALUE,
                 MIN - HALF_WIDTH,
                 startPos,
                 MAX + HALF_WIDTH,
-                MIN - HALF_WIDTH + 1,
+                MIN - HALF_WIDTH + Number.MIN_VALUE,
                 startPos,
             ];
 
             return interpolate(
-                Math.round(handlerOffsetX.value),
-                inputRange.map(Math.round),
-                outputRange.map(Math.round),
+                handlerOffsetX.value,
+                inputRange,
+                outputRange,
                 Extrapolate.CLAMP
             );
         }

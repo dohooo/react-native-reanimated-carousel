@@ -20,12 +20,10 @@ function Index() {
                     width: PAGE_WIDTH,
                     alignSelf: 'center',
                     justifyContent: 'center',
-                    borderWidth: 1,
-                    borderColor: 'red',
                 }}
                 mode="stack"
-                width={100}
-                height={100}
+                width={PAGE_WIDTH / 2}
+                height={PAGE_WIDTH / 2}
                 data={CAROUSEL_ITEMS}
                 renderItem={(backgroundColor) => (
                     <View

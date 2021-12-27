@@ -1,15 +1,20 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import Animated, {
     interpolate,
     runOnJS,
     useAnimatedReaction,
     useAnimatedStyle,
+    useSharedValue,
+    withTiming,
 } from 'react-native-reanimated';
 import { log } from '../utils/log';
 import { useOffsetX } from '../hooks/useOffsetX';
 import type { IVisibleRanges } from '../hooks/useVisibleRanges';
 import { LazyView } from '../LazyView';
+
+const window = Dimensions.get('window');
+const PAGE_WIDTH = window.width;
 
 export const StackLayout: React.FC<{
     loop?: boolean;
@@ -22,7 +27,6 @@ export const StackLayout: React.FC<{
     vertical?: boolean;
 }> = (props) => {
     const {
-        handlerOffsetX,
         index,
         width,
         height,
@@ -33,12 +37,19 @@ export const StackLayout: React.FC<{
         vertical,
     } = props;
 
+    const handlerOffsetX = useSharedValue(0);
+
+    useAnimatedReaction(
+        () => props.handlerOffsetX.value,
+        (value) => {
+            handlerOffsetX.value = withTiming(value, { duration: 0 });
+        },
+        []
+    );
+
     const [shouldUpdate, setShouldUpdate] = React.useState(false);
 
-    const size = React.useMemo(
-        () => (vertical ? height : width),
-        [vertical, width, height]
-    );
+    const size = vertical ? height : width;
 
     const x = useOffsetX(
         {
@@ -54,7 +65,7 @@ export const StackLayout: React.FC<{
     );
 
     const offsetXStyle = useAnimatedStyle(() => {
-        const startPosition = (x.value - index * width) / width;
+        const startPosition = (x.value - index * size) / size;
         runOnJS(log)(-x.value, ',', startPosition, `【${index}】`);
         return {
             transform: [
@@ -62,7 +73,7 @@ export const StackLayout: React.FC<{
                     translateX: interpolate(
                         startPosition,
                         [-(index + 1), -index, 0],
-                        [-width, 0, 0]
+                        [-(PAGE_WIDTH - size) * 2, 0, 0]
                     ),
                 },
                 {
@@ -70,10 +81,10 @@ export const StackLayout: React.FC<{
                         startPosition,
                         [-(index + 1), -index, 0, data.length - index],
                         [
-                            0.7,
-                            0.7,
-                            0.7 - index * 0.1,
-                            0.7 - (data.length - index) * 0.1,
+                            1,
+                            1,
+                            1 - index * 0.09,
+                            1 - (data.length - index) * 0.09,
                         ]
                     ),
                 },
@@ -81,14 +92,19 @@ export const StackLayout: React.FC<{
                     rotateZ: `${interpolate(
                         startPosition,
                         [-(index + 1), -index, 0],
-                        [-45, 0, 0]
+                        [-135, 0, 0]
                     )}deg`,
                 },
                 {
                     translateY: interpolate(
                         startPosition,
                         [-(index + 1), -index, 0, data.length - index],
-                        [0, 0, index * 40, (data.length - index) * 40]
+                        [
+                            0,
+                            0,
+                            index * size * 0.12,
+                            (data.length - index) * size * 0.12,
+                        ]
                     ),
                 },
             ],
