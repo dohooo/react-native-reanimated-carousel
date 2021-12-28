@@ -35,7 +35,7 @@ interface Props {
 
     translation: Animated.SharedValue<number>;
     size: number;
-    max: number;
+    maxPage: number;
 }
 
 const IScrollViewGesture: React.FC<Props> = (props) => {
@@ -49,7 +49,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
         onScrollBegin,
         onScrollEnd,
         size,
-        max,
+        maxPage,
     } = props;
 
     const isHorizontal = useDerivedValue(() => !vertical, [vertical]);
@@ -87,11 +87,11 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                 Math.max(page - 1, velocityPage)
             );
             if (!infinite) {
-                finalPage = Math.min(max - 1, Math.max(0, finalPage));
+                finalPage = Math.min(maxPage - 1, Math.max(0, finalPage));
             }
             translation.value = endWithSpring(-finalPage * size, onFinished);
         },
-        [infinite, endWithSpring, translation, scrollEndVelocity, size, max]
+        [infinite, endWithSpring, translation, scrollEndVelocity, size, maxPage]
     );
 
     const resetBoundary = React.useCallback(() => {
@@ -125,13 +125,13 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
             }
         }
 
-        if (translation.value < -(max - size)) {
+        if (translation.value < -((maxPage - 1) * size)) {
             if (scrollEndTranslation.value > 0) {
                 activeDecay();
                 return;
             }
             if (!infinite) {
-                translation.value = endWithSpring(-(max - size));
+                translation.value = endWithSpring(-((maxPage - 1) * size));
                 return;
             }
         }
@@ -143,7 +143,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
         scrollEndTranslation,
         scrollEndVelocity,
         onScrollEnd,
-        max,
+        maxPage,
         size,
     ]);
 
@@ -166,7 +166,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                 touching.value = true;
                 cancelAnimation(translation);
                 onScrollBegin && runOnJS(onScrollBegin)();
-                ctx.max = max - size;
+                ctx.max = (maxPage - 1) * size;
                 ctx.panOffset = translation.value;
             },
             onActive: (e, ctx) => {
@@ -214,7 +214,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                 }
             },
         },
-        [pagingEnabled, isHorizontal.value, infinite, max, size]
+        [pagingEnabled, isHorizontal.value, infinite, maxPage, size]
     );
 
     const directionStyle = React.useMemo(() => {
