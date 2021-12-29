@@ -5,10 +5,7 @@ import Animated, {
     runOnJS,
     useAnimatedReaction,
     useAnimatedStyle,
-    useSharedValue,
-    withTiming,
 } from 'react-native-reanimated';
-import { log } from '../utils/log';
 import { useOffsetX } from '../hooks/useOffsetX';
 import type { IVisibleRanges } from '../hooks/useVisibleRanges';
 import { LazyView } from '../LazyView';
@@ -35,17 +32,8 @@ export const StackLayout: React.FC<{
         children,
         visibleRanges,
         vertical,
+        handlerOffsetX,
     } = props;
-
-    const handlerOffsetX = useSharedValue(0);
-
-    useAnimatedReaction(
-        () => props.handlerOffsetX.value,
-        (value) => {
-            handlerOffsetX.value = withTiming(value, { duration: 0 });
-        },
-        []
-    );
 
     const [shouldUpdate, setShouldUpdate] = React.useState(false);
 
@@ -66,7 +54,7 @@ export const StackLayout: React.FC<{
 
     const offsetXStyle = useAnimatedStyle(() => {
         const startPosition = (x.value - index * size) / size;
-        runOnJS(log)(-x.value, ',', startPosition, `【${index}】`);
+
         return {
             transform: [
                 {
@@ -79,7 +67,7 @@ export const StackLayout: React.FC<{
                 {
                     scale: interpolate(
                         startPosition,
-                        [-(index + 1), -index, 0, data.length - index],
+                        [-index - 1, -index, 0, data.length - index],
                         [
                             1,
                             1,
@@ -91,14 +79,14 @@ export const StackLayout: React.FC<{
                 {
                     rotateZ: `${interpolate(
                         startPosition,
-                        [-(index + 1), -index, 0],
+                        [-index - 1, -index, 0],
                         [-135, 0, 0]
                     )}deg`,
                 },
                 {
                     translateY: interpolate(
                         startPosition,
-                        [-(index + 1), -index, 0, data.length - index],
+                        [-index - 1, -index, 0, data.length - index],
                         [
                             0,
                             0,
@@ -108,7 +96,17 @@ export const StackLayout: React.FC<{
                     ),
                 },
             ],
-            zIndex: -x.value,
+            zIndex: -interpolate(
+                startPosition,
+                [-index - 1, -index - 0.5, -index, 0, data.length - index],
+                [
+                    Number.MAX_VALUE,
+                    Number.MIN_VALUE,
+                    0,
+                    index * size * 0.12,
+                    (data.length - index) * size * 0.12,
+                ]
+            ),
         };
     }, [loop, vertical]);
 
