@@ -25,10 +25,22 @@ export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
         type = 'positive',
         viewCount = Math.round((data.length - 1) / 2),
     } = opts;
+
     const ITEM_LENGTH = data.length;
     const VALID_LENGTH = ITEM_LENGTH - 1;
     const TOTAL_WIDTH = size * ITEM_LENGTH;
     const HALF_WIDTH = 0.5 * size;
+
+    const positiveCount =
+        type === 'positive' ? viewCount : VALID_LENGTH - viewCount;
+
+    let startPos = size * index;
+    if (index > positiveCount) {
+        startPos = (index - ITEM_LENGTH) * size;
+    }
+
+    const MAX = positiveCount * size;
+    const MIN = -((VALID_LENGTH - positiveCount) * size);
 
     const x = useDerivedValue(() => {
         const { negativeRange, positiveRange } = visibleRanges.value;
@@ -38,18 +50,8 @@ export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
         ) {
             return Number.MAX_SAFE_INTEGER;
         }
+
         if (loop) {
-            const positiveCount =
-                type === 'positive' ? viewCount : VALID_LENGTH - viewCount;
-
-            let startPos = size * index;
-            if (index > positiveCount) {
-                startPos = (index - ITEM_LENGTH) * size;
-            }
-
-            const MAX = positiveCount * size;
-            const MIN = -((VALID_LENGTH - positiveCount) * size);
-
             const inputRange = [
                 -TOTAL_WIDTH,
                 MIN - HALF_WIDTH - startPos - Number.MIN_VALUE,

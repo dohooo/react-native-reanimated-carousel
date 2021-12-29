@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 import Animated, {
+    Extrapolate,
     interpolate,
     runOnJS,
     useAnimatedReaction,
@@ -53,51 +54,47 @@ export const StackLayout: React.FC<{
     );
 
     const offsetXStyle = useAnimatedStyle(() => {
-        const startPosition = (x.value - index * size) / size;
+        const value = x.value / size;
+        const showLength = 3;
+        const validLength = showLength - 1;
 
         return {
             transform: [
                 {
                     translateX: interpolate(
-                        startPosition,
-                        [-(index + 1), -index, 0],
-                        [-(PAGE_WIDTH - size) * 2, 0, 0]
+                        value,
+                        [-1, 0, validLength],
+                        [-PAGE_WIDTH, 0, 0],
+                        Extrapolate.CLAMP
                     ),
                 },
                 {
                     scale: interpolate(
-                        startPosition,
-                        [-index - 1, -index, 0, data.length - index],
-                        [
-                            1,
-                            1,
-                            1 - index * 0.09,
-                            1 - (data.length - index) * 0.09,
-                        ]
+                        value,
+                        [0, validLength],
+                        [1, 1 - validLength * 0.08],
+                        Extrapolate.CLAMP
                     ),
                 },
                 {
                     rotateZ: `${interpolate(
-                        startPosition,
-                        [-index - 1, -index, 0],
-                        [-135, 0, 0]
+                        value,
+                        [-1, 0],
+                        [-135, 0],
+                        Extrapolate.CLAMP
                     )}deg`,
                 },
                 {
                     translateY: interpolate(
-                        startPosition,
-                        [-index - 1, -index, 0, data.length - index],
-                        [
-                            0,
-                            0,
-                            index * size * 0.12,
-                            (data.length - index) * size * 0.12,
-                        ]
+                        value,
+                        [0, validLength],
+                        [0, validLength * 30],
+                        Extrapolate.CLAMP
                     ),
                 },
             ],
             zIndex: -interpolate(
-                startPosition,
+                (x.value - index * size) / size,
                 [-index - 1, -index - 0.5, -index, 0, data.length - index],
                 [
                     Number.MAX_VALUE,
