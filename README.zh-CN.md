@@ -106,6 +106,7 @@ import Carousel from 'react-native-reanimated-carousel';
 | windowSize              | ❌       | 0       | number                                                                       | 能响应平移手势事件的最大 item 数量，0 表示所有元素都会先响应                                                                 |
 | onProgressChange        | ❌       |         | onProgressChange?: (offsetProgress: number,absoluteProgress: number) => void | 当滚动进度发生变化时触发 `offsetProgress`:总的偏移值 (0 390 780 ...); `absoluteProgress`:转化为 index 的进度变化 (0 1 2 ...) |
 | vertical                | ❌       | false       | boolean                                                                       | 将元素垂直布局而不是水平     |
+| animationConfig         | ❌       | { mode: 'vertical',snapDirection: 'left',moveSize: window.width,stackInterval: 30,scaleInterval: 0.08,rotateZDeg: 135} | {mode: 'vertical' \| 'horizontal';moveSize?: number;stackInterval?: number;scaleInterval?: number;rotateZDeg?: number;snapDirection?: 'left' \| 'right';} | 堆栈视图的动画样式                                                                                                   |
 
 ## Ref
 

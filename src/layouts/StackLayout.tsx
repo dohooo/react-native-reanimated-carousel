@@ -17,17 +17,13 @@ import type { IVisibleRanges } from '../hooks/useVisibleRanges';
 import { LazyView } from '../LazyView';
 
 const window = Dimensions.get('window');
-const PAGE_WIDTH = window.width;
 
-type AnimationConfig = {
+export type StackAnimationConfig = {
     mode: 'vertical' | 'horizontal';
     moveSize?: number;
     stackInterval?: number;
     scaleInterval?: number;
     rotateZDeg?: number;
-    /**
-     * @default left
-     */
     snapDirection?: 'left' | 'right';
 };
 
@@ -41,7 +37,7 @@ export const StackLayout: React.FC<{
     data: unknown[];
     visibleRanges: IVisibleRanges;
     vertical?: boolean;
-    animationConfig?: AnimationConfig;
+    animationConfig?: StackAnimationConfig;
 }> = (props) => {
     const {
         index,
@@ -60,10 +56,10 @@ export const StackLayout: React.FC<{
 
     const size = vertical ? height : width;
 
-    const animationConfig: Required<AnimationConfig> = {
+    const animationConfig: Required<StackAnimationConfig> = {
         mode: 'vertical',
-        snapDirection: 'right',
-        moveSize: PAGE_WIDTH,
+        snapDirection: 'left',
+        moveSize: window.width,
         stackInterval: 30,
         scaleInterval: 0.08,
         rotateZDeg: 135,

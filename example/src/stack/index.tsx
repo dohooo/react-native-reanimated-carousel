@@ -25,6 +25,9 @@ function Index() {
                 width={PAGE_WIDTH / 2}
                 height={PAGE_WIDTH / 2}
                 data={CAROUSEL_ITEMS}
+                animationConfig={{
+                    mode: 'horizontal',
+                }}
                 renderItem={(backgroundColor) => (
                     <View
                         style={{

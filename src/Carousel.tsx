@@ -15,6 +15,7 @@ import { ScrollViewGesture } from './ScrollViewGesture';
 import { useVisibleRanges } from './hooks/useVisibleRanges';
 import type { ICarouselInstance, TCarouselProps } from './types';
 import { StyleSheet, View } from 'react-native';
+import type { StackAnimationConfig } from './layouts/StackLayout';
 
 function Carousel<T>(
     props: PropsWithChildren<TCarouselProps<T>>,
@@ -32,14 +33,22 @@ function Carousel<T>(
         parallaxScrollingScale,
         style = {},
         panGestureHandlerProps = {},
-        renderItem,
-        onSnapToItem,
-        onProgressChange,
         windowSize,
-        vertical,
-        onScrollBegin,
+        renderItem,
         onScrollEnd,
+        onSnapToItem,
+        onScrollBegin,
+        onProgressChange,
     } = props;
+
+    let animationConfig: StackAnimationConfig | undefined;
+    let vertical: boolean | undefined = false;
+
+    if (props.mode === 'default' || props.mode === 'parallax') {
+        vertical = props.vertical;
+    } else if (props.mode === 'stack') {
+        animationConfig = props.animationConfig;
+    }
 
     usePropsErrorBoundary({
         ...props,
@@ -47,6 +56,8 @@ function Carousel<T>(
         mode,
         loop,
         style,
+        // @ts-ignore
+        vertical,
         defaultIndex,
         autoPlayInterval,
         panGestureHandlerProps,
@@ -213,6 +224,7 @@ function Carousel<T>(
                             width={width}
                             showLength={data.length - 1}
                             height={height}
+                            animationConfig={animationConfig}
                             handlerOffsetX={offsetX}
                             index={i}
                             key={i}
@@ -223,6 +235,7 @@ function Carousel<T>(
                             {renderItem(item, i)}
                         </StackLayout>
                     );
+                case 'default':
                 default:
                     return (
                         <CarouselItem
@@ -251,6 +264,7 @@ function Carousel<T>(
             renderItem,
             visibleRanges,
             vertical,
+            animationConfig,
             width,
             height,
         ]

@@ -1,8 +1,13 @@
 import type { ViewStyle } from 'react-native';
 import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
-import type { TMode } from './layouts';
+import type { StackAnimationConfig } from './layouts/StackLayout';
 
 interface IHorizontalModeProps {
+    /**
+     * Carousel Animated transitions.
+     * @default 'default'
+     */
+    mode?: 'default' | 'parallax';
     /**
      * Layout items vertically instead of horizontally
      */
@@ -16,6 +21,11 @@ interface IHorizontalModeProps {
 
 interface IVerticalModeProps {
     /**
+     * Carousel Animated transitions.
+     * @default 'default'
+     */
+    mode?: 'default' | 'parallax';
+    /**
      * Layout items vertically instead of horizontally
      */
     vertical: true;
@@ -27,6 +37,31 @@ interface IVerticalModeProps {
     width?: number;
 }
 
+interface IStackModeProps {
+    /**
+     * Carousel Animated transitions.
+     * @default 'default'
+     */
+    mode?: 'stack';
+    /**
+     * Specified carousel container height/width.
+     * @default '100%'
+     */
+    height?: number;
+    width?: number;
+    /**
+     * Stack animation style.
+     * @default
+     *     mode: 'vertical',
+     *     snapDirection: 'right',
+     *     moveSize: window.width,
+     *     stackInterval: 30,
+     *     scaleInterval: 0.08,
+     *     rotateZDeg: 135,
+     */
+    animationConfig?: StackAnimationConfig;
+}
+
 export type TCarouselProps<T = any> = {
     ref?: React.Ref<ICarouselInstance>;
     /**
@@ -34,11 +69,6 @@ export type TCarouselProps<T = any> = {
      * @default true
      */
     loop?: boolean;
-    /**
-     * Carousel Animated transitions.
-     * @default 'default'
-     */
-    mode?: TMode;
     /**
      * Carousel items data set.
      */
@@ -115,7 +145,7 @@ export type TCarouselProps<T = any> = {
         offsetProgress: number,
         absoluteProgress: number
     ) => void;
-} & (IHorizontalModeProps | IVerticalModeProps);
+} & (IHorizontalModeProps | IVerticalModeProps | IStackModeProps);
 
 export interface ICarouselInstance {
     /**
