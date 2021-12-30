@@ -211,6 +211,7 @@ function Carousel<T>(
                         <StackLayout
                             data={data}
                             width={width}
+                            showLength={data.length - 1}
                             height={height}
                             handlerOffsetX={offsetX}
                             index={i}

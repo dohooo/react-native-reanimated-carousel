@@ -1,5 +1,10 @@
 import React from 'react';
-import { Dimensions, StyleSheet } from 'react-native';
+import {
+    Dimensions,
+    StyleSheet,
+    TransformsStyle,
+    ViewStyle,
+} from 'react-native';
 import Animated, {
     Extrapolate,
     interpolate,
@@ -14,15 +19,29 @@ import { LazyView } from '../LazyView';
 const window = Dimensions.get('window');
 const PAGE_WIDTH = window.width;
 
+type AnimationConfig = {
+    mode: 'vertical' | 'horizontal';
+    moveSize?: number;
+    stackInterval?: number;
+    scaleInterval?: number;
+    rotateZDeg?: number;
+    /**
+     * @default left
+     */
+    snapDirection?: 'left' | 'right';
+};
+
 export const StackLayout: React.FC<{
     loop?: boolean;
     handlerOffsetX: Animated.SharedValue<number>;
     index: number;
     width: number;
     height: number;
+    showLength: number;
     data: unknown[];
     visibleRanges: IVisibleRanges;
     vertical?: boolean;
+    animationConfig?: AnimationConfig;
 }> = (props) => {
     const {
         index,
@@ -34,11 +53,22 @@ export const StackLayout: React.FC<{
         visibleRanges,
         vertical,
         handlerOffsetX,
+        showLength = 4,
     } = props;
 
     const [shouldUpdate, setShouldUpdate] = React.useState(false);
 
     const size = vertical ? height : width;
+
+    const animationConfig: Required<AnimationConfig> = {
+        mode: 'vertical',
+        snapDirection: 'right',
+        moveSize: PAGE_WIDTH,
+        stackInterval: 30,
+        scaleInterval: 0.08,
+        rotateZDeg: 135,
+        ...props.animationConfig,
+    };
 
     const x = useOffsetX(
         {
@@ -47,65 +77,224 @@ export const StackLayout: React.FC<{
             size,
             data,
             loop,
-            type: 'negative',
+            type:
+                animationConfig.snapDirection === 'left'
+                    ? 'negative'
+                    : 'positive',
             viewCount: 1,
         },
         visibleRanges
     );
 
+    if (showLength < 0 || showLength > data.length - 1) {
+        throw Error(
+            'The number of presentations should be 0 - (data.length - 1)'
+        );
+    }
+
     const offsetXStyle = useAnimatedStyle(() => {
         const value = x.value / size;
-        const showLength = 3;
-        const validLength = showLength - 1;
+        const VALID_LENGTH = showLength - 1;
+        const transform: TransformsStyle['transform'] = [];
 
-        return {
-            transform: [
-                {
-                    translateX: interpolate(
+        let zIndex: number;
+        let inputRange: [number, number, number];
+
+        if (animationConfig.snapDirection === 'left') {
+            inputRange = [-1, 0, VALID_LENGTH];
+
+            zIndex =
+                Math.floor(
+                    interpolate(
                         value,
-                        [-1, 0, validLength],
-                        [-PAGE_WIDTH, 0, 0],
-                        Extrapolate.CLAMP
-                    ),
-                },
-                {
-                    scale: interpolate(
+                        [-1.5, -1, -1 + Number.MIN_VALUE, 0, VALID_LENGTH],
+                        [
+                            Number.MIN_VALUE,
+                            VALID_LENGTH,
+                            VALID_LENGTH,
+                            VALID_LENGTH - 1,
+                            -1,
+                        ]
+                    ) * 10000
+                ) / 100;
+        } else if (animationConfig.snapDirection === 'right') {
+            inputRange = [-VALID_LENGTH, 0, 1];
+
+            zIndex =
+                Math.floor(
+                    interpolate(
                         value,
-                        [0, validLength],
-                        [1, 1 - validLength * 0.08],
-                        Extrapolate.CLAMP
-                    ),
-                },
-                {
-                    rotateZ: `${interpolate(
-                        value,
-                        [-1, 0],
-                        [-135, 0],
-                        Extrapolate.CLAMP
-                    )}deg`,
-                },
-                {
-                    translateY: interpolate(
-                        value,
-                        [0, validLength],
-                        [0, validLength * 30],
-                        Extrapolate.CLAMP
-                    ),
-                },
-            ],
-            zIndex: -interpolate(
-                (x.value - index * size) / size,
-                [-index - 1, -index - 0.5, -index, 0, data.length - index],
-                [
-                    Number.MAX_VALUE,
-                    Number.MIN_VALUE,
-                    0,
-                    index * size * 0.12,
-                    (data.length - index) * size * 0.12,
-                ]
-            ),
+                        [-VALID_LENGTH, 0, 1 - Number.MIN_VALUE, 1, 1.5],
+                        [
+                            1,
+                            VALID_LENGTH - 1,
+                            VALID_LENGTH,
+                            VALID_LENGTH,
+                            Number.MIN_VALUE,
+                        ]
+                    ) * 10000
+                ) / 100;
+        } else {
+            throw Error(
+                'snapDirection snapDirection must be set to either left or right'
+            );
+        }
+
+        const styles: ViewStyle = {
+            transform,
+            zIndex,
         };
-    }, [loop, vertical]);
+
+        if (animationConfig.mode === 'vertical') {
+            const {
+                snapDirection,
+                moveSize,
+                rotateZDeg,
+                stackInterval,
+                scaleInterval,
+            } = animationConfig;
+
+            let translateX: number;
+            let scale: number;
+            let rotateZ: string;
+            let translateY: number;
+
+            if (snapDirection === 'left') {
+                translateX = interpolate(
+                    value,
+                    inputRange,
+                    [-moveSize, 0, 0],
+                    Extrapolate.CLAMP
+                );
+                scale = interpolate(
+                    value,
+                    inputRange,
+                    [1, 1, 1 - VALID_LENGTH * scaleInterval],
+                    Extrapolate.CLAMP
+                );
+                rotateZ = `${interpolate(
+                    value,
+                    inputRange,
+                    [-rotateZDeg, 0, 0],
+                    Extrapolate.CLAMP
+                )}deg`;
+                translateY = interpolate(
+                    value,
+                    inputRange,
+                    [0, 0, VALID_LENGTH * stackInterval],
+                    Extrapolate.CLAMP
+                );
+            } else if (snapDirection === 'right') {
+                translateX = interpolate(
+                    value,
+                    inputRange,
+                    [0, 0, moveSize],
+                    Extrapolate.CLAMP
+                );
+                scale = interpolate(
+                    value,
+                    inputRange,
+                    [1 - VALID_LENGTH * scaleInterval, 1, 1],
+                    Extrapolate.CLAMP
+                );
+                rotateZ = `${interpolate(
+                    value,
+                    inputRange,
+                    [0, 0, rotateZDeg],
+                    Extrapolate.CLAMP
+                )}deg`;
+                translateY = interpolate(
+                    value,
+                    inputRange,
+                    [VALID_LENGTH * stackInterval, 0, 0],
+                    Extrapolate.CLAMP
+                );
+            }
+
+            transform.push(
+                {
+                    translateX: translateX!,
+                },
+                {
+                    scale: scale!,
+                },
+                {
+                    rotateZ: rotateZ!,
+                },
+                {
+                    translateY: translateY!,
+                }
+            );
+        }
+
+        if (animationConfig.mode === 'horizontal') {
+            const {
+                snapDirection,
+                moveSize,
+                rotateZDeg,
+                stackInterval,
+                scaleInterval,
+            } = animationConfig;
+
+            let translateX: number;
+            let scale: number;
+            let rotateZ: string;
+
+            if (snapDirection === 'left') {
+                translateX = interpolate(
+                    value,
+                    inputRange,
+                    [-moveSize, 0, VALID_LENGTH * stackInterval],
+                    Extrapolate.CLAMP
+                );
+                scale = interpolate(
+                    value,
+                    inputRange,
+                    [1, 1, 1 - VALID_LENGTH * scaleInterval],
+                    Extrapolate.CLAMP
+                );
+                rotateZ = `${interpolate(
+                    value,
+                    inputRange,
+                    [-rotateZDeg, 0, 0],
+                    Extrapolate.CLAMP
+                )}deg`;
+            } else if (snapDirection === 'right') {
+                translateX = interpolate(
+                    value,
+                    inputRange,
+                    [-VALID_LENGTH * stackInterval, 0, moveSize],
+                    Extrapolate.CLAMP
+                );
+                scale = interpolate(
+                    value,
+                    inputRange,
+                    [1 - VALID_LENGTH * scaleInterval, 1, 1],
+                    Extrapolate.CLAMP
+                );
+                rotateZ = `${interpolate(
+                    value,
+                    inputRange,
+                    [0, 0, rotateZDeg],
+                    Extrapolate.CLAMP
+                )}deg`;
+            }
+
+            transform.push(
+                {
+                    translateX: translateX!,
+                },
+                {
+                    scale: scale!,
+                },
+                {
+                    rotateZ: rotateZ!,
+                }
+            );
+        }
+
+        return styles;
+    }, [loop, vertical, showLength]);
 
     const updateView = React.useCallback(
         (negativeRange: number[], positiveRange: number[]) => {
