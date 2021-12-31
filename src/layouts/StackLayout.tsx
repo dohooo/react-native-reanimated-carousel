@@ -56,15 +56,18 @@ export const StackLayout: React.FC<{
 
     const size = vertical ? height : width;
 
-    const animationConfig: Required<StackAnimationConfig> = {
-        mode: 'vertical',
-        snapDirection: 'left',
-        moveSize: window.width,
-        stackInterval: 30,
-        scaleInterval: 0.08,
-        rotateZDeg: 135,
-        ...props.animationConfig,
-    };
+    const animationConfig: Required<StackAnimationConfig> = React.useMemo(
+        () => ({
+            mode: 'vertical',
+            snapDirection: 'left',
+            moveSize: window.width,
+            stackInterval: 30,
+            scaleInterval: 0.08,
+            rotateZDeg: 135,
+            ...props.animationConfig,
+        }),
+        [props.animationConfig]
+    );
 
     const x = useOffsetX(
         {
@@ -290,7 +293,7 @@ export const StackLayout: React.FC<{
         }
 
         return styles;
-    }, [loop, vertical, showLength]);
+    }, [loop, vertical, showLength, animationConfig]);
 
     const updateView = React.useCallback(
         (negativeRange: number[], positiveRange: number[]) => {
