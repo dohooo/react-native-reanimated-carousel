@@ -8,6 +8,7 @@ import ParallaxComponent from './parallax';
 import StackComponent from './stack';
 import ComplexComponent from './complex';
 import SnapCarouselComplexComponent from './snap-carousel-complex';
+import SnapCarouselLoopComponent from './snap-carousel-loop';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -18,6 +19,7 @@ export type RootStackParamList = {
     Stack: undefined;
     Complex: undefined;
     SnapCarouselComplex: undefined;
+    SnapCarouselLoop: undefined;
 };
 
 function App() {
@@ -40,6 +42,10 @@ function App() {
                 <Stack.Screen
                     name="SnapCarouselComplex"
                     component={SnapCarouselComplexComponent}
+                />
+                <Stack.Screen
+                    name="SnapCarouselLoop"
+                    component={SnapCarouselLoopComponent}
                 />
             </Stack.Navigator>
         </NavigationContainer>

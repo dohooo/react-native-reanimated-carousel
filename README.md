@@ -11,6 +11,7 @@ English | [简体中文](./README.zh-CN.md)
 [![github closed issues](https://img.shields.io/github/issues-closed/dohooo/react-native-reanimated-carousel.svg?style=flat-square&colorB=44cc11)](https://github.com/dohooo/react-native-reanimated-carousel/issues?q=is%3Aissue+is%3Aclosed)
 
 > Click on the image to see the demo. 🍺
+
 <p align="center">
   <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/normal/index.tsx">
     <img src="assets/normal-horizontal.gif" width="300"/>  
@@ -23,6 +24,18 @@ English | [简体中文](./README.zh-CN.md)
   </a>
   <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/parallax/index.tsx">
     <img src="assets/parallax-vertical.gif" width="300"/>  
+  </a>
+  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/stack/index.tsx">
+    <img src="assets/stack-horizontal-left.gif" width="300"/>  
+  </a>
+  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/stack/index.tsx">
+    <img src="assets/stack-horizontal-right.gif" width="300"/>  
+  </a>
+  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/stack/index.tsx">
+    <img src="assets/stack-vertical-left.gif" width="300"/>  
+  </a>
+  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/stack/index.tsx">
+    <img src="assets/stack-vertical-right.gif" width="300"/>  
   </a>
 </p>
 
@@ -103,7 +116,7 @@ import Carousel from 'react-native-reanimated-carousel';
 | autoPlay                | ❌       | false                                                                                                                  | boolean                                                                                                                                                   | Auto play                                                                                                                      |
 | autoPlayReverse         | ❌       | false                                                                                                                  | boolean                                                                                                                                                   | Auto play reverse playback                                                                                                     |
 | autoPlayInterval        | ❌       | 1000                                                                                                                   | autoPlayInterval                                                                                                                                          | Auto play playback interval                                                                                                    |
-| mode                    | ❌       | defalut                                                                                                                | 'default'\|'parallax'                                                                                                                                     | Carousel Animated transitions                                                                                                  |
+| mode                    | ❌       | defalut                                                                                                                | 'default'\|'stack'\|'parallax'                                                                                                                            | Carousel Animated transitions                                                                                                  |
 | loop                    | ❌       | true                                                                                                                   | boolean                                                                                                                                                   | Carousel loop playback                                                                                                         |
 | parallaxScrollingOffset | ❌       | 100                                                                                                                    | number                                                                                                                                                    | When use 'parallax' Layout props,this prop can be control prev/next item offset                                                |
 | parallaxScrollingScale  | ❌       | 0.8                                                                                                                    | number                                                                                                                                                    | When use 'parallax' Layout props,this prop can be control prev/next item scale                                                 |

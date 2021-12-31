@@ -26,6 +26,9 @@ const LayoutsPage: Array<Record<'name', keyof RootStackParamList>> = [
     {
         name: 'SnapCarouselComplex',
     },
+    {
+        name: 'SnapCarouselLoop',
+    },
 ];
 
 const Index = () => {

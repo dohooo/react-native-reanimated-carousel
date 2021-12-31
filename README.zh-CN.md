@@ -24,6 +24,18 @@
   <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/parallax/index.tsx">
     <img src="assets/parallax-vertical.gif" width="300"/>  
   </a>
+  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/stack/index.tsx">
+    <img src="assets/stack-horizontal-left.gif" width="300"/>  
+  </a>
+  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/stack/index.tsx">
+    <img src="assets/stack-horizontal-right.gif" width="300"/>  
+  </a>
+  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/stack/index.tsx">
+    <img src="assets/stack-vertical-left.gif" width="300"/>  
+  </a>
+  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/stack/index.tsx">
+    <img src="assets/stack-vertical-right.gif" width="300"/>  
+  </a>
 </p>
 
 <br/>
@@ -102,7 +114,7 @@ import Carousel from 'react-native-reanimated-carousel';
 | autoPlay                | ❌       | false   | boolean                                                                      | 是否自动播放                                                                                                                 |
 | autoPlayReverse         | ❌       | false   | boolean                                                                      | 是否倒序自动播放                                                                                                             |
 | autoPlayInterval        | ❌       | 1000    | autoPlayInterval                                                             | 自动播放的间隔                                                                                                               |
-| mode                    | ❌       | defalut | 'default'\|'parallax'                                                        | 轮播图播放模式，`default`为默认无任何 UI 效果，演示图片使用的`parallax`                                                      |
+| mode                    | ❌       | defalut | 'default'\|'stack'\|'parallax'                                                        | 轮播图播放模式                                                      |
 | loop                    | ❌       | true    | boolean                                                                      | 是否循环播放                                                                                                                 |
 | parallaxScrollingOffset | ❌       | 100     | number                                                                       | 当使用 mode=`parallax`,这个属性可以控制两侧图片离中间元素的距离                                                              |
 | parallaxScrollingScale  | ❌       | 0.8     | number                                                                       | 当使用 mode=`parallax`,这个属性可以控制两侧图片的缩放比例                                                                    |
