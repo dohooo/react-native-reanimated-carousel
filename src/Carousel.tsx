@@ -278,7 +278,7 @@ function Carousel<T>(
                 infinite={loop}
                 translation={handlerOffsetX}
                 style={style}
-                max={data.length * size}
+                maxPage={data.length}
                 size={size}
                 panGestureHandlerProps={panGestureHandlerProps}
                 onScrollBegin={scrollViewGestureOnScrollBegin}

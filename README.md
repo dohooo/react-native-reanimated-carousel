@@ -10,11 +10,20 @@ English | [简体中文](./README.zh-CN.md)
 [![github issues](https://img.shields.io/github/issues/dohooo/react-native-reanimated-carousel.svg?style=flat-square)](https://github.com/dohooo/react-native-reanimated-carousel/issues)
 [![github closed issues](https://img.shields.io/github/issues-closed/dohooo/react-native-reanimated-carousel.svg?style=flat-square&colorB=44cc11)](https://github.com/dohooo/react-native-reanimated-carousel/issues?q=is%3Aissue+is%3Aclosed)
 
+> Click on the image to see the demo. 🍺
 <p align="center">
-  <img src="assets/normal-horizontal.gif" width="300"/>  
-  <img src="assets/normal-vertical.gif" width="300"/>  
-  <img src="assets/parallax-horizontal.gif" width="300"/>  
-  <img src="assets/parallax-vertical.gif" width="300"/>  
+  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/normal/index.tsx">
+    <img src="assets/normal-horizontal.gif" width="300"/>  
+  </a>
+  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/normal/index.tsx">
+    <img src="assets/normal-vertical.gif" width="300"/>  
+  </a>
+  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/parallax/index.tsx">
+    <img src="assets/parallax-horizontal.gif" width="300"/>  
+  </a>
+  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/parallax/index.tsx">
+    <img src="assets/parallax-vertical.gif" width="300"/>  
+  </a>
 </p>
 
 <br/>
