@@ -39,6 +39,8 @@ function Carousel<T>(
         onSnapToItem,
         onScrollBegin,
         onProgressChange,
+        pagingEnabled = true,
+        enableSnap = true,
     } = props;
 
     let animationConfig: StackAnimationConfig | undefined;
@@ -273,7 +275,8 @@ function Carousel<T>(
     return (
         <View style={[styles.container, layoutStyle, style]}>
             <ScrollViewGesture
-                pagingEnabled
+                pagingEnabled={pagingEnabled}
+                enableSnap={enableSnap}
                 vertical={vertical}
                 infinite={loop}
                 translation={handlerOffsetX}

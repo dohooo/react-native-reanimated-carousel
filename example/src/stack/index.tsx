@@ -18,7 +18,7 @@ function Index() {
         'left'
     );
     const [pagingEnabled, setPagingEnabled] = React.useState<boolean>(true);
-    const [snapToItem, setSnapToItem] = React.useState<boolean>(true);
+    const [enableSnap, setEnableSnap] = React.useState<boolean>(true);
     const [loop, setLoop] = React.useState<boolean>(true);
 
     const animationConfig = React.useMemo<StackAnimationConfig>(() => {
@@ -48,6 +48,8 @@ function Index() {
                     alignSelf: 'center',
                     justifyContent: 'center',
                 }}
+                pagingEnabled={pagingEnabled}
+                enableSnap={enableSnap}
                 mode="stack"
                 autoPlay
                 autoPlayInterval={2000}
@@ -90,10 +92,10 @@ function Index() {
             </SButton>
             <SButton
                 onPress={() => {
-                    setSnapToItem(!snapToItem);
+                    setEnableSnap(!enableSnap);
                 }}
             >
-                {`snapToItem:${snapToItem}`}
+                {`enableSnap:${enableSnap}`}
             </SButton>
         </View>
     );

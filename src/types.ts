@@ -120,6 +120,8 @@ export type TCarouselProps<T = any> = {
      * @default 0 all items will respond to pan gesture events.
      */
     windowSize?: number;
+    pagingEnabled?: boolean;
+    enableSnap?: boolean;
     /**
      * Render carousel item.
      */
