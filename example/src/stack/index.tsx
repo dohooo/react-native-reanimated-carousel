@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Dimensions } from 'react-native';
 import { View } from 'react-native-ui-lib';
 import Carousel from '../../../src/index';
+import type { StackAnimationConfig } from '../../../src/layouts/StackLayout';
+import { SBImageItem } from '../components/SBImageItem';
 import SButton from '../components/SButton';
 import { CAROUSEL_ITEMS } from '../contant';
 
@@ -15,6 +17,24 @@ function Index() {
     const [snapDirection, setSnapDirection] = React.useState<'left' | 'right'>(
         'left'
     );
+    const [pagingEnabled, setPagingEnabled] = React.useState<boolean>(true);
+    const [snapToItem, setSnapToItem] = React.useState<boolean>(true);
+    const [loop, setLoop] = React.useState<boolean>(true);
+
+    const animationConfig = React.useMemo<StackAnimationConfig>(() => {
+        const basic = {
+            mode,
+            snapDirection,
+        };
+        if (mode === 'vertical') {
+            return {
+                ...basic,
+                stackInterval: 8,
+            };
+        }
+        return basic;
+    }, [mode, snapDirection]);
+
     return (
         <View
             style={{
@@ -30,25 +50,21 @@ function Index() {
                 }}
                 mode="stack"
                 autoPlay
-                width={PAGE_WIDTH / 2}
-                height={PAGE_WIDTH / 2}
+                autoPlayInterval={2000}
+                loop={loop}
+                width={280}
+                height={210}
                 data={CAROUSEL_ITEMS}
-                animationConfig={{
-                    mode,
-                    snapDirection,
-                }}
-                renderItem={(backgroundColor) => (
-                    <View
-                        style={{
-                            flex: 1,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor,
-                            borderRadius: 20,
-                        }}
-                    />
-                )}
+                animationConfig={animationConfig}
+                renderItem={() => <SBImageItem />}
             />
+            <SButton
+                onPress={() => {
+                    setLoop(!loop);
+                }}
+            >
+                {`loop:${loop}`}
+            </SButton>
             <SButton
                 onPress={() => {
                     setMode(mode === 'horizontal' ? 'vertical' : 'horizontal');
@@ -64,6 +80,20 @@ function Index() {
                 }}
             >
                 {snapDirection}
+            </SButton>
+            <SButton
+                onPress={() => {
+                    setPagingEnabled(!pagingEnabled);
+                }}
+            >
+                {`pagingEnabled:${pagingEnabled}`}
+            </SButton>
+            <SButton
+                onPress={() => {
+                    setSnapToItem(!snapToItem);
+                }}
+            >
+                {`snapToItem:${snapToItem}`}
             </SButton>
         </View>
     );

@@ -72,7 +72,7 @@ function Carousel<T>(
 
     React.useEffect(() => {
         handlerOffsetX.value = defaultHandlerOffsetX;
-    }, [vertical, handlerOffsetX, defaultHandlerOffsetX]);
+    }, [vertical, handlerOffsetX, defaultHandlerOffsetX, loop]);
 
     const data = React.useMemo<T[]>(() => {
         if (!loop) return _data;

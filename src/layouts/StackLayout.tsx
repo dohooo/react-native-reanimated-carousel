@@ -23,6 +23,7 @@ export type StackAnimationConfig = {
     moveSize?: number;
     stackInterval?: number;
     scaleInterval?: number;
+    opacityInterval?: number;
     rotateZDeg?: number;
     snapDirection?: 'left' | 'right';
 };
@@ -56,18 +57,16 @@ export const StackLayout: React.FC<{
 
     const size = vertical ? height : width;
 
-    const animationConfig: Required<StackAnimationConfig> = React.useMemo(
-        () => ({
-            mode: 'vertical',
-            snapDirection: 'left',
-            moveSize: window.width,
-            stackInterval: 30,
-            scaleInterval: 0.08,
-            rotateZDeg: 135,
-            ...props.animationConfig,
-        }),
-        [props.animationConfig]
-    );
+    const animationConfig: Required<StackAnimationConfig> = {
+        mode: 'vertical',
+        snapDirection: 'left',
+        moveSize: window.width,
+        stackInterval: 18,
+        scaleInterval: 0.04,
+        opacityInterval: 0.1,
+        rotateZDeg: 30,
+        ...props.animationConfig,
+    };
 
     const x = useOffsetX(
         {
@@ -92,12 +91,23 @@ export const StackLayout: React.FC<{
     }
 
     const offsetXStyle = useAnimatedStyle(() => {
-        const value = x.value / size;
+        function easeInOutCubic(v: number): number {
+            return v < 0.5 ? 4 * v * v * v : 1 - Math.pow(-2 * v + 2, 3) / 2;
+        }
+        let value = x.value / size;
+        const page = Math.floor(Math.abs(value));
+        const diff = Math.abs(value) % 1;
+        value =
+            value < 0
+                ? -(page + easeInOutCubic(diff))
+                : page + easeInOutCubic(diff);
+
         const VALID_LENGTH = showLength - 1;
         const transform: TransformsStyle['transform'] = [];
 
         let zIndex: number;
         let inputRange: [number, number, number];
+        let opacity: number;
 
         if (animationConfig.snapDirection === 'left') {
             inputRange = [-1, 0, VALID_LENGTH];
@@ -116,6 +126,17 @@ export const StackLayout: React.FC<{
                         ]
                     ) * 10000
                 ) / 100;
+
+            opacity = interpolate(
+                value,
+                [-1, 0, VALID_LENGTH - 1, VALID_LENGTH],
+                [
+                    0.25,
+                    1,
+                    1 - (VALID_LENGTH - 1) * animationConfig.opacityInterval,
+                    0.25,
+                ]
+            );
         } else if (animationConfig.snapDirection === 'right') {
             inputRange = [-VALID_LENGTH, 0, 1];
 
@@ -133,6 +154,16 @@ export const StackLayout: React.FC<{
                         ]
                     ) * 10000
                 ) / 100;
+            opacity = interpolate(
+                value,
+                [-VALID_LENGTH, 1 - VALID_LENGTH, 0, 1],
+                [
+                    0.25,
+                    1 - (VALID_LENGTH - 1) * animationConfig.opacityInterval,
+                    1,
+                    0.25,
+                ]
+            );
         } else {
             throw Error(
                 'snapDirection snapDirection must be set to either left or right'
@@ -142,6 +173,7 @@ export const StackLayout: React.FC<{
         const styles: ViewStyle = {
             transform,
             zIndex,
+            opacity,
         };
 
         if (animationConfig.mode === 'vertical') {
