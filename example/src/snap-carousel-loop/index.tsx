@@ -1,51 +1,47 @@
 import * as React from 'react';
 import { Dimensions, View } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
-import { CAROUSEL_ITEMS } from '../contant';
+import { SBImageItem } from '../components/SBImageItem';
+import SButton from '../components/SButton';
 
 const window = Dimensions.get('window');
 const PAGE_WIDTH = window.width;
 
-interface DataItem {
-    text: string;
-    backgroundColor: string;
-}
-
 function Index() {
-    const r = React.useRef<Carousel<DataItem>>(null);
+    const r = React.useRef<Carousel<number>>(null);
 
     return (
         <View
             style={{
                 flex: 1,
-                alignItems: 'center',
                 backgroundColor: '#f1f1f1',
                 paddingTop: 100,
             }}
         >
             <View style={{ width: PAGE_WIDTH, height: 240 }}>
-                <Carousel<DataItem>
+                <Carousel<number>
                     ref={r}
                     loop
                     itemWidth={PAGE_WIDTH}
                     sliderWidth={PAGE_WIDTH}
-                    // @ts-ignore
-                    data={CAROUSEL_ITEMS}
+                    data={[...new Array(6).keys()]}
                     windowSize={3}
-                    // @ts-ignore
-                    renderItem={({ item }) => (
-                        <View
-                            key={item}
-                            style={{
-                                flex: 1,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                backgroundColor: item,
-                                padding: 16,
-                            }}
-                        />
-                    )}
+                    renderItem={() => <SBImageItem />}
                 />
+            </View>
+            <View
+                style={{
+                    marginTop: 24,
+                    flexDirection: 'row',
+                    justifyContent: 'space-evenly',
+                }}
+            >
+                <SButton onPress={() => r.current?.snapToPrev()}>
+                    {'Prev'}
+                </SButton>
+                <SButton onPress={() => r.current?.snapToNext()}>
+                    {'Next'}
+                </SButton>
             </View>
         </View>
     );

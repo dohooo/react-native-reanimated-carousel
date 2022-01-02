@@ -46,7 +46,7 @@ function Carousel<T>(
     let animationConfig: StackAnimationConfig | undefined;
     let vertical: boolean | undefined = false;
 
-    if (props.mode === 'default' || props.mode === 'parallax') {
+    if (!props.mode || props.mode === 'default' || props.mode === 'parallax') {
         vertical = props.vertical;
     } else if (props.mode === 'stack') {
         animationConfig = props.animationConfig;
@@ -58,7 +58,6 @@ function Carousel<T>(
         mode,
         loop,
         style,
-        // @ts-ignore
         vertical,
         defaultIndex,
         autoPlayInterval,

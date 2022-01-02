@@ -2,38 +2,32 @@ import type { ViewStyle } from 'react-native';
 import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
 import type { StackAnimationConfig } from './layouts/StackLayout';
 
-interface IHorizontalModeProps {
+interface IDefaultModeProps {
     /**
      * Carousel Animated transitions.
      * @default 'default'
      */
-    mode?: 'default' | 'parallax';
+    mode?: 'default';
     /**
      * Layout items vertically instead of horizontally
      */
-    vertical?: false;
     /**
      * Specified carousel container width.
      */
-    width: number;
+    width?: number;
     height?: number;
 }
 
-interface IVerticalModeProps {
+interface IParallaxModeProps {
     /**
      * Carousel Animated transitions.
-     * @default 'default'
      */
-    mode?: 'default' | 'parallax';
-    /**
-     * Layout items vertically instead of horizontally
-     */
-    vertical: true;
+    mode: 'parallax';
     /**
      * Specified carousel container height.
      * @default '100%'
      */
-    height: number;
+    height?: number;
     width?: number;
 }
 
@@ -69,6 +63,10 @@ export type TCarouselProps<T = any> = {
      * @default true
      */
     loop?: boolean;
+    /**
+     * Layout items vertically instead of horizontally
+     */
+    vertical?: boolean;
     /**
      * Carousel items data set.
      */
@@ -147,7 +145,7 @@ export type TCarouselProps<T = any> = {
         offsetProgress: number,
         absoluteProgress: number
     ) => void;
-} & (IHorizontalModeProps | IVerticalModeProps | IStackModeProps);
+} & (IDefaultModeProps | IParallaxModeProps | IStackModeProps);
 
 export interface ICarouselInstance {
     /**

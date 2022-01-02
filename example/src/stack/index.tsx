@@ -5,7 +5,6 @@ import Carousel from '../../../src/index';
 import type { StackAnimationConfig } from '../../../src/layouts/StackLayout';
 import { SBImageItem } from '../components/SBImageItem';
 import SButton from '../components/SButton';
-import { CAROUSEL_ITEMS } from '../contant';
 
 const window = Dimensions.get('window');
 const PAGE_WIDTH = window.width;
@@ -51,12 +50,10 @@ function Index() {
                 pagingEnabled={pagingEnabled}
                 enableSnap={enableSnap}
                 mode="stack"
-                autoPlay
-                autoPlayInterval={2000}
                 loop={loop}
                 width={280}
                 height={210}
-                data={CAROUSEL_ITEMS}
+                data={[...new Array(6).keys()]}
                 animationConfig={animationConfig}
                 renderItem={() => <SBImageItem />}
             />
