@@ -34,7 +34,7 @@ export const StackLayout: React.FC<{
     index: number;
     width: number;
     height: number;
-    showLength: number;
+    showLength?: number;
     data: unknown[];
     visibleRanges: IVisibleRanges;
     vertical?: boolean;
@@ -50,7 +50,7 @@ export const StackLayout: React.FC<{
         visibleRanges,
         vertical,
         handlerOffsetX,
-        showLength = 4,
+        showLength = data.length - 1,
     } = props;
 
     const [shouldUpdate, setShouldUpdate] = React.useState(false);

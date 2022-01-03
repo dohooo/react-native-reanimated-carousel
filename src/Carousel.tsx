@@ -45,11 +45,13 @@ function Carousel<T>(
 
     let animationConfig: StackAnimationConfig | undefined;
     let vertical: boolean | undefined = false;
+    let showLength: number | undefined;
 
     if (!props.mode || props.mode === 'default' || props.mode === 'parallax') {
         vertical = props.vertical;
     } else if (props.mode === 'stack') {
         animationConfig = props.animationConfig;
+        showLength = props.showLength;
     }
 
     usePropsErrorBoundary({
@@ -223,7 +225,7 @@ function Carousel<T>(
                         <StackLayout
                             data={data}
                             width={width}
-                            showLength={data.length - 1}
+                            showLength={showLength}
                             height={height}
                             animationConfig={animationConfig}
                             handlerOffsetX={offsetX}
@@ -268,6 +270,7 @@ function Carousel<T>(
             animationConfig,
             width,
             height,
+            showLength,
         ]
     );
 

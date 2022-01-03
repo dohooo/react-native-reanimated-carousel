@@ -128,6 +128,9 @@ import Carousel from 'react-native-reanimated-carousel';
 | onProgressChange        | ❌       |         | onProgressChange?: (offsetProgress: number,absoluteProgress: number) => void | 当滚动进度发生变化时触发 `offsetProgress`:总的偏移值 (0 390 780 ...); `absoluteProgress`:转化为 index 的进度变化 (0 1 2 ...) |
 | vertical                | ❌       | false       | boolean                                                                       | 将元素垂直布局而不是水平     |
 | animationConfig         | ❌       | { mode: 'vertical',snapDirection: 'left',moveSize: window.width,stackInterval: 30,scaleInterval: 0.08,rotateZDeg: 135} | {mode: 'vertical' \| 'horizontal';moveSize?: number;stackInterval?: number;scaleInterval?: number;rotateZDeg?: number;snapDirection?: 'left' \| 'right';} | 堆栈视图的动画样式                                                                                                   |
+| showLength         | ❌       | data.length - 1 | number | 堆栈视图中展示元素的最大数量 |
+| pagingEnabled         | ❌       | true | boolean | 当值为 true 时，滚动条会停在滚动视图的尺寸的整数倍位置。 |
+| enableSnap         | ❌       | true | boolean | 如果启用，松开触摸会滚动到最近的元素，当 pagingEnabled=false 时有效 |
 
 ## Ref
 

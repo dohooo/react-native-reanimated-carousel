@@ -130,6 +130,9 @@ import Carousel from 'react-native-reanimated-carousel';
 | onProgressChange        | ❌       |                                                                                                                        | onProgressChange?: (offsetProgress: number,absoluteProgress: number) => void                                                                              | On progress change. `offsetProgress`:Total of offset distance (0 390 780 ...); `absoluteProgress`:Convert to index (0 1 2 ...) |
 | vertical                | ❌       | false                                                                                                                  | boolean                                                                                                                                                   | Layout items vertically instead of horizontally                                                                                |
 | animationConfig         | ❌       | { mode: 'vertical',snapDirection: 'left',moveSize: window.width,stackInterval: 30,scaleInterval: 0.08,rotateZDeg: 135} | {mode: 'vertical' \| 'horizontal';moveSize?: number;stackInterval?: number;scaleInterval?: number;rotateZDeg?: number;snapDirection?: 'left' \| 'right';} | Stack layout animation style                                                                                                   |
+| showLength         | ❌       | data.length - 1 | number | The maximum number of items will show in stack |
+| pagingEnabled         | ❌       | true | boolean | When true, the scroll view stops on multiples of the scroll view's size when scrolling |
+| enableSnap         | ❌       | true | boolean | If enabled, releasing the touch will scroll to the nearest item, valid when pagingEnabled=false |
 
 ## Ref
 

@@ -54,6 +54,10 @@ interface IStackModeProps {
      *     rotateZDeg: 135,
      */
     animationConfig?: StackAnimationConfig;
+    /**
+     * The maximum number of items will show in stack.
+     */
+    showLength?: number;
 }
 
 export type TCarouselProps<T = any> = {
@@ -118,7 +122,16 @@ export type TCarouselProps<T = any> = {
      * @default 0 all items will respond to pan gesture events.
      */
     windowSize?: number;
+    /**
+     * When true, the scroll view stops on multiples of the scroll view's size when scrolling.
+     * @default true
+     */
     pagingEnabled?: boolean;
+    /**
+     * If enabled, releasing the touch will scroll to the nearest item.
+     * valid when pagingEnabled=false
+     * @default true
+     */
     enableSnap?: boolean;
     /**
      * Render carousel item.
