@@ -24,9 +24,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#fff',
         borderRadius: 8,
-        shadowColor: 'black',
-        shadowOpacity: 0.15,
-        shadowRadius: 10,
     },
     image: {
         borderRadius: 4,
