@@ -19,6 +19,9 @@ function Index() {
     const [pagingEnabled, setPagingEnabled] = React.useState<boolean>(true);
     const [enableSnap, setEnableSnap] = React.useState<boolean>(true);
     const [loop, setLoop] = React.useState<boolean>(true);
+    const [autoPlay, setAutoPlay] = React.useState<boolean>(false);
+    const [autoPlayReverse, setAutoPlayReverse] =
+        React.useState<boolean>(false);
 
     const animationConfig = React.useMemo<StackAnimationConfig>(() => {
         const basic = {
@@ -42,7 +45,7 @@ function Index() {
         >
             <Carousel
                 style={{
-                    height: PAGE_WIDTH,
+                    height: PAGE_WIDTH * 0.8,
                     width: PAGE_WIDTH,
                     alignSelf: 'center',
                     justifyContent: 'center',
@@ -53,10 +56,26 @@ function Index() {
                 loop={loop}
                 width={280}
                 height={210}
+                autoPlay={autoPlay}
+                autoPlayReverse={autoPlayReverse}
                 data={[...new Array(6).keys()]}
                 animationConfig={animationConfig}
                 renderItem={() => <SBImageItem />}
             />
+            <SButton
+                onPress={() => {
+                    setAutoPlay(!autoPlay);
+                }}
+            >
+                {`autoPlay:${autoPlay}`}
+            </SButton>
+            <SButton
+                onPress={() => {
+                    setAutoPlayReverse(!autoPlayReverse);
+                }}
+            >
+                {`autoPlayReverse:${autoPlayReverse}`}
+            </SButton>
             <SButton
                 onPress={() => {
                     setLoop(!loop);
