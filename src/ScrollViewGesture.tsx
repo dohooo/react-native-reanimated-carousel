@@ -25,6 +25,7 @@ interface Props {
     style?: StyleProp<ViewStyle>;
     infinite?: boolean;
     pagingEnabled?: boolean;
+    enableSnap?: boolean;
     vertical?: boolean;
     panGestureHandlerProps?: Omit<
         Partial<PanGestureHandlerProps>,
@@ -44,7 +45,8 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
         infinite,
         vertical,
         translation,
-        pagingEnabled,
+        pagingEnabled = true,
+        enableSnap = true,
         panGestureHandlerProps = {},
         onScrollBegin,
         onScrollEnd,
@@ -57,7 +59,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
     const scrollEndTranslation = useSharedValue(0);
     const scrollEndVelocity = useSharedValue(0);
 
-    const endWithSpring = React.useCallback(
+    const _withSpring = React.useCallback(
         (toValue: number, onFinished?: () => void) => {
             'worklet';
             return withSpring(
@@ -75,9 +77,24 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
         []
     );
 
-    const withPaging = React.useCallback(
+    const endWithSpring = React.useCallback(
         (onFinished?: () => void) => {
             'worklet';
+            const origin = translation.value;
+            const velocity = scrollEndVelocity.value;
+            if (!pagingEnabled) {
+                if (enableSnap) {
+                    const nextPage =
+                        Math.round((origin + velocity * 0.4) / size) * size;
+                    translation.value = _withSpring(nextPage, onFinished);
+                    return;
+                }
+                translation.value = withDecay({
+                    velocity,
+                    deceleration: 0.999,
+                });
+                return;
+            }
             const page = Math.round(-translation.value / size);
             const velocityPage = Math.round(
                 -(translation.value + scrollEndVelocity.value) / size
@@ -89,9 +106,19 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
             if (!infinite) {
                 finalPage = Math.min(maxPage - 1, Math.max(0, finalPage));
             }
-            translation.value = endWithSpring(-finalPage * size, onFinished);
+
+            translation.value = _withSpring(-finalPage * size, onFinished);
         },
-        [infinite, endWithSpring, translation, scrollEndVelocity, size, maxPage]
+        [
+            infinite,
+            _withSpring,
+            translation,
+            scrollEndVelocity,
+            size,
+            maxPage,
+            pagingEnabled,
+            enableSnap,
+        ]
     );
 
     const resetBoundary = React.useCallback(() => {
@@ -120,7 +147,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                 return;
             }
             if (!infinite) {
-                translation.value = endWithSpring(0);
+                translation.value = _withSpring(0);
                 return;
             }
         }
@@ -131,14 +158,14 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                 return;
             }
             if (!infinite) {
-                translation.value = endWithSpring(-((maxPage - 1) * size));
+                translation.value = _withSpring(-((maxPage - 1) * size));
                 return;
             }
         }
     }, [
         infinite,
         touching,
-        endWithSpring,
+        _withSpring,
         translation,
         scrollEndTranslation,
         scrollEndVelocity,
@@ -194,27 +221,14 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                     ? translationX
                     : translationY;
 
-                if (pagingEnabled) {
-                    withPaging(() => onScrollEnd && runOnJS(onScrollEnd)());
-                    return;
-                }
-                translation.value = withDecay(
-                    {
-                        velocity: scrollEndVelocity.value,
-                    },
-                    (isFinished) => {
-                        if (isFinished) {
-                            onScrollEnd && runOnJS(onScrollEnd)();
-                        }
-                    }
-                );
+                endWithSpring(() => onScrollEnd && runOnJS(onScrollEnd)());
 
                 if (!infinite) {
                     touching.value = false;
                 }
             },
         },
-        [pagingEnabled, isHorizontal.value, infinite, maxPage, size]
+        [pagingEnabled, isHorizontal.value, infinite, maxPage, size, enableSnap]
     );
 
     const directionStyle = React.useMemo(() => {

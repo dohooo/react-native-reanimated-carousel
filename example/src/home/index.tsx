@@ -18,10 +18,16 @@ const LayoutsPage: Array<Record<'name', keyof RootStackParamList>> = [
         name: 'Parallax',
     },
     {
+        name: 'Stack',
+    },
+    {
         name: 'Complex',
     },
     {
         name: 'SnapCarouselComplex',
+    },
+    {
+        name: 'SnapCarouselLoop',
     },
 ];
 

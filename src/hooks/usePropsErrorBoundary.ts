@@ -13,11 +13,17 @@ export function usePropsErrorBoundary(props: TCarouselProps) {
                 );
             }
         }
-        if (!props.vertical && !props.width) {
-            throw Error('`width` must be specified for vertical carousels.');
-        }
-        if (props.vertical && !props.height) {
-            throw Error('`height` must be specified for vertical carousels.');
+        if (props.mode === 'default' || props.mode === 'parallax') {
+            if (!props.vertical && !props.width) {
+                throw Error(
+                    '`width` must be specified for vertical carousels.'
+                );
+            }
+            if (props.vertical && !props.height) {
+                throw Error(
+                    '`height` must be specified for vertical carousels.'
+                );
+            }
         }
     }, [props]);
 }

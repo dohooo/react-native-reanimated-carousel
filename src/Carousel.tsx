@@ -6,7 +6,7 @@ import Animated, {
     useSharedValue,
 } from 'react-native-reanimated';
 import { CarouselItem } from './CarouselItem';
-import { ParallaxLayout } from './layouts/index';
+import { ParallaxLayout, StackLayout } from './layouts/index';
 import { useCarouselController } from './hooks/useCarouselController';
 import { useAutoPlay } from './hooks/useAutoPlay';
 import { useIndexController } from './hooks/useIndexController';
@@ -15,6 +15,7 @@ import { ScrollViewGesture } from './ScrollViewGesture';
 import { useVisibleRanges } from './hooks/useVisibleRanges';
 import type { ICarouselInstance, TCarouselProps } from './types';
 import { StyleSheet, View } from 'react-native';
+import type { StackAnimationConfig } from './layouts/StackLayout';
 
 function Carousel<T>(
     props: PropsWithChildren<TCarouselProps<T>>,
@@ -32,14 +33,26 @@ function Carousel<T>(
         parallaxScrollingScale,
         style = {},
         panGestureHandlerProps = {},
-        renderItem,
-        onSnapToItem,
-        onProgressChange,
         windowSize,
-        vertical,
-        onScrollBegin,
+        renderItem,
         onScrollEnd,
+        onSnapToItem,
+        onScrollBegin,
+        onProgressChange,
+        pagingEnabled = true,
+        enableSnap = true,
     } = props;
+
+    let animationConfig: StackAnimationConfig | undefined;
+    let vertical: boolean | undefined = false;
+    let showLength: number | undefined;
+
+    if (!props.mode || props.mode === 'default' || props.mode === 'parallax') {
+        vertical = props.vertical;
+    } else if (props.mode === 'stack') {
+        animationConfig = props.animationConfig;
+        showLength = props.showLength;
+    }
 
     usePropsErrorBoundary({
         ...props,
@@ -47,6 +60,7 @@ function Carousel<T>(
         mode,
         loop,
         style,
+        vertical,
         defaultIndex,
         autoPlayInterval,
         panGestureHandlerProps,
@@ -61,7 +75,7 @@ function Carousel<T>(
 
     React.useEffect(() => {
         handlerOffsetX.value = defaultHandlerOffsetX;
-    }, [vertical, handlerOffsetX, defaultHandlerOffsetX]);
+    }, [vertical, handlerOffsetX, defaultHandlerOffsetX, loop]);
 
     const data = React.useMemo<T[]>(() => {
         if (!loop) return _data;
@@ -206,6 +220,25 @@ function Carousel<T>(
                             {renderItem(item, i)}
                         </ParallaxLayout>
                     );
+                case 'stack':
+                    return (
+                        <StackLayout
+                            data={data}
+                            width={width}
+                            showLength={showLength}
+                            height={height}
+                            animationConfig={animationConfig}
+                            handlerOffsetX={offsetX}
+                            index={i}
+                            key={i}
+                            loop={loop}
+                            visibleRanges={visibleRanges}
+                            vertical={vertical}
+                        >
+                            {renderItem(item, i)}
+                        </StackLayout>
+                    );
+                case 'default':
                 default:
                     return (
                         <CarouselItem
@@ -234,15 +267,18 @@ function Carousel<T>(
             renderItem,
             visibleRanges,
             vertical,
+            animationConfig,
             width,
             height,
+            showLength,
         ]
     );
 
     return (
         <View style={[styles.container, layoutStyle, style]}>
             <ScrollViewGesture
-                pagingEnabled
+                pagingEnabled={pagingEnabled}
+                enableSnap={enableSnap}
                 vertical={vertical}
                 infinite={loop}
                 translation={handlerOffsetX}

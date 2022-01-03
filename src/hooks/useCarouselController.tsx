@@ -1,11 +1,7 @@
 import React from 'react';
 import type Animated from 'react-native-reanimated';
-import { runOnJS, withTiming } from 'react-native-reanimated';
+import { runOnJS, withSpring } from 'react-native-reanimated';
 import type { IIndexController } from './useIndexController';
-
-const defaultTimingConfig: Animated.WithTimingConfig = {
-    duration: 250,
-};
 
 interface IOpts {
     loop: boolean;
@@ -44,6 +40,22 @@ export function useCarouselController(opts: IOpts): ICarouselController {
         opts.onScrollBegin?.();
     }, [opts]);
 
+    const scrollWithSpring = React.useCallback(
+        (toValue: number, callback?: () => void) => {
+            return withSpring(
+                toValue,
+                { damping: 100 },
+                (isFinished: boolean) => {
+                    callback?.();
+                    if (isFinished) {
+                        runOnJS(onScrollEnd)();
+                    }
+                }
+            );
+        },
+        [onScrollEnd]
+    );
+
     const next = React.useCallback(() => {
         if (
             !canSliding() ||
@@ -56,23 +68,15 @@ export function useCarouselController(opts: IOpts): ICarouselController {
 
         const currentPage = Math.round(handlerOffsetX.value / size);
 
-        handlerOffsetX.value = withTiming(
-            (currentPage - 1) * size,
-            defaultTimingConfig,
-            (isFinished: boolean) => {
-                if (isFinished) {
-                    runOnJS(onScrollEnd)();
-                }
-            }
-        );
+        handlerOffsetX.value = scrollWithSpring((currentPage - 1) * size);
     }, [
-        onScrollEnd,
         canSliding,
         onScrollBegin,
         size,
         handlerOffsetX,
         indexController,
         loop,
+        scrollWithSpring,
     ]);
 
     const prev = React.useCallback(() => {
@@ -83,23 +87,15 @@ export function useCarouselController(opts: IOpts): ICarouselController {
 
         const currentPage = Math.round(handlerOffsetX.value / size);
 
-        handlerOffsetX.value = withTiming(
-            (currentPage + 1) * size,
-            defaultTimingConfig,
-            (isFinished: boolean) => {
-                if (isFinished) {
-                    runOnJS(onScrollEnd)();
-                }
-            }
-        );
+        handlerOffsetX.value = scrollWithSpring((currentPage + 1) * size);
     }, [
-        onScrollEnd,
         canSliding,
         onScrollBegin,
         size,
         handlerOffsetX,
         indexController,
         loop,
+        scrollWithSpring,
     ]);
 
     const to = React.useCallback(
@@ -114,16 +110,9 @@ export function useCarouselController(opts: IOpts): ICarouselController {
                 (indexController.index.value - index) * size;
 
             if (animated) {
-                handlerOffsetX.value = withTiming(
-                    offset,
-                    defaultTimingConfig,
-                    (isFinished: boolean) => {
-                        indexController.index.value = index;
-                        if (isFinished) {
-                            runOnJS(onScrollEnd)();
-                        }
-                    }
-                );
+                handlerOffsetX.value = scrollWithSpring(offset, () => {
+                    indexController.index.value = index;
+                });
             } else {
                 handlerOffsetX.value = offset;
                 indexController.index.value = index;
@@ -137,6 +126,7 @@ export function useCarouselController(opts: IOpts): ICarouselController {
             size,
             indexController,
             handlerOffsetX,
+            scrollWithSpring,
         ]
     );
 

@@ -113,7 +113,7 @@ export const ParallaxLayout: React.FC<{
             ],
             zIndex,
         };
-    }, [loop, vertical]);
+    }, [loop, vertical, parallaxScrollingOffset]);
 
     const updateView = React.useCallback(
         (negativeRange: number[], positiveRange: number[]) => {

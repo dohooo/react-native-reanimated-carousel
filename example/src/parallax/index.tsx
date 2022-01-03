@@ -7,70 +7,73 @@ import Animated, {
     useAnimatedStyle,
     useSharedValue,
 } from 'react-native-reanimated';
-import { CAROUSEL_ITEMS } from '../contant';
 import SButton from '../components/SButton';
+import { SBImageItem } from '../components/SBImageItem';
+import { CAROUSEL_ITEMS } from '../contant';
 
 const window = Dimensions.get('window');
 const PAGE_WIDTH = window.width;
 
 function Index() {
     const [isVertical, setIsVertical] = React.useState(false);
+    const [autoPlay, setAutoPlay] = React.useState(false);
+    const [pagingEnabled, setPagingEnabled] = React.useState<boolean>(true);
+    const [enableSnap, setEnableSnap] = React.useState<boolean>(true);
+
     const progressValue = useSharedValue<number>(0);
     const baseOptions = isVertical
         ? ({
               vertical: true,
               width: PAGE_WIDTH,
-              height: PAGE_WIDTH / 2,
+              height: PAGE_WIDTH * 0.6,
           } as const)
         : ({
               vertical: false,
               width: PAGE_WIDTH,
-              height: PAGE_WIDTH / 2,
+              height: PAGE_WIDTH * 0.6,
           } as const);
     return (
         <View
             style={{
-                height: 240,
                 alignItems: 'center',
             }}
         >
             <Carousel
                 {...baseOptions}
                 loop
-                autoPlay
-                autoPlayInterval={1000}
+                pagingEnabled={pagingEnabled}
+                enableSnap={enableSnap}
+                autoPlay={autoPlay}
+                autoPlayInterval={1500}
                 onProgressChange={(_, absoluteProgress) =>
                     (progressValue.value = absoluteProgress)
                 }
                 mode="parallax"
-                parallaxScrollingScale={0.8}
+                parallaxScrollingScale={0.9}
+                parallaxScrollingOffset={50}
                 data={CAROUSEL_ITEMS}
-                renderItem={(backgroundColor) => (
-                    <View
-                        style={{
-                            flex: 1,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor,
-                            borderRadius: 10,
-                            shadowColor: 'black',
-                            shadowOpacity: 0.2,
-                            shadowRadius: 10,
-                        }}
-                    />
-                )}
+                renderItem={() => <SBImageItem />}
             />
             {!!progressValue && (
                 <View
-                    style={{
-                        flexDirection: isVertical ? 'column' : 'row',
-                        justifyContent: 'space-between',
-                        width: isVertical ? 10 : 100,
-                        alignSelf: 'center',
-                        position: 'absolute',
-                        right: isVertical ? 10 : undefined,
-                        top: isVertical ? 40 : 185,
-                    }}
+                    style={
+                        isVertical
+                            ? {
+                                  flexDirection: 'column',
+                                  justifyContent: 'space-between',
+                                  width: 10,
+                                  alignSelf: 'center',
+                                  position: 'absolute',
+                                  right: 5,
+                                  top: 40,
+                              }
+                            : {
+                                  flexDirection: 'row',
+                                  justifyContent: 'space-between',
+                                  width: 100,
+                                  alignSelf: 'center',
+                              }
+                    }
                 >
                     {CAROUSEL_ITEMS.map((backgroundColor, index) => {
                         return (
@@ -87,11 +90,28 @@ function Index() {
                 </View>
             )}
             <SButton
+                onPress={() => setAutoPlay(!autoPlay)}
+            >{`autoPlay:${autoPlay}`}</SButton>
+            <SButton
                 onPress={() => {
                     setIsVertical(!isVertical);
                 }}
             >
                 {isVertical ? 'Set horizontal' : 'Set Vertical'}
+            </SButton>
+            <SButton
+                onPress={() => {
+                    setPagingEnabled(!pagingEnabled);
+                }}
+            >
+                {`pagingEnabled:${pagingEnabled}`}
+            </SButton>
+            <SButton
+                onPress={() => {
+                    setEnableSnap(!enableSnap);
+                }}
+            >
+                {`enableSnap:${enableSnap}`}
             </SButton>
         </View>
     );

@@ -1,30 +1,63 @@
 import type { ViewStyle } from 'react-native';
 import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
-import type { TMode } from './layouts';
+import type { StackAnimationConfig } from './layouts/StackLayout';
 
-interface IHorizontalModeProps {
+interface IDefaultModeProps {
+    /**
+     * Carousel Animated transitions.
+     * @default 'default'
+     */
+    mode?: 'default';
     /**
      * Layout items vertically instead of horizontally
      */
-    vertical?: false;
     /**
      * Specified carousel container width.
      */
-    width: number;
+    width?: number;
     height?: number;
 }
 
-interface IVerticalModeProps {
+interface IParallaxModeProps {
     /**
-     * Layout items vertically instead of horizontally
+     * Carousel Animated transitions.
      */
-    vertical: true;
+    mode: 'parallax';
     /**
      * Specified carousel container height.
      * @default '100%'
      */
-    height: number;
+    height?: number;
     width?: number;
+}
+
+interface IStackModeProps {
+    /**
+     * Carousel Animated transitions.
+     * @default 'default'
+     */
+    mode?: 'stack';
+    /**
+     * Specified carousel container height/width.
+     * @default '100%'
+     */
+    height?: number;
+    width?: number;
+    /**
+     * Stack animation style.
+     * @default
+     *     mode: 'vertical',
+     *     snapDirection: 'right',
+     *     moveSize: window.width,
+     *     stackInterval: 30,
+     *     scaleInterval: 0.08,
+     *     rotateZDeg: 135,
+     */
+    animationConfig?: StackAnimationConfig;
+    /**
+     * The maximum number of items will show in stack.
+     */
+    showLength?: number;
 }
 
 export type TCarouselProps<T = any> = {
@@ -35,10 +68,9 @@ export type TCarouselProps<T = any> = {
      */
     loop?: boolean;
     /**
-     * Carousel Animated transitions.
-     * @default 'default'
+     * Layout items vertically instead of horizontally
      */
-    mode?: TMode;
+    vertical?: boolean;
     /**
      * Carousel items data set.
      */
@@ -91,6 +123,17 @@ export type TCarouselProps<T = any> = {
      */
     windowSize?: number;
     /**
+     * When true, the scroll view stops on multiples of the scroll view's size when scrolling.
+     * @default true
+     */
+    pagingEnabled?: boolean;
+    /**
+     * If enabled, releasing the touch will scroll to the nearest item.
+     * valid when pagingEnabled=false
+     * @default true
+     */
+    enableSnap?: boolean;
+    /**
      * Render carousel item.
      */
     renderItem: (data: T, index: number) => React.ReactNode;
@@ -115,7 +158,7 @@ export type TCarouselProps<T = any> = {
         offsetProgress: number,
         absoluteProgress: number
     ) => void;
-} & (IHorizontalModeProps | IVerticalModeProps);
+} & (IDefaultModeProps | IParallaxModeProps | IStackModeProps);
 
 export interface ICarouselInstance {
     /**

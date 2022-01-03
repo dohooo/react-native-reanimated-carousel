@@ -2,7 +2,7 @@
 
 # react-native-reanimated-carousel
 
-<img src="assets/0057BCEB-C948-47DC-8650-29CCBC6C1F8B.jpeg" width="100%"/>
+<img src="assets/banner-zh.jpeg" width="100%"/>
 
 ![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS-brightgreen.svg?style=flat-square&colorB=191A17)
 [![npm](https://img.shields.io/npm/v/react-native-reanimated-carousel.svg?style=flat-square)](https://www.npmjs.com/package/react-native-reanimated-carousel)
@@ -23,6 +23,18 @@
   </a>
   <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/parallax/index.tsx">
     <img src="assets/parallax-vertical.gif" width="300"/>  
+  </a>
+  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/stack/index.tsx">
+    <img src="assets/stack-horizontal-left.gif" width="300"/>  
+  </a>
+  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/stack/index.tsx">
+    <img src="assets/stack-horizontal-right.gif" width="300"/>  
+  </a>
+  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/stack/index.tsx">
+    <img src="assets/stack-vertical-left.gif" width="300"/>  
+  </a>
+  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/stack/index.tsx">
+    <img src="assets/stack-vertical-right.gif" width="300"/>  
   </a>
 </p>
 
@@ -102,7 +114,7 @@ import Carousel from 'react-native-reanimated-carousel';
 | autoPlay                | ❌       | false   | boolean                                                                      | 是否自动播放                                                                                                                 |
 | autoPlayReverse         | ❌       | false   | boolean                                                                      | 是否倒序自动播放                                                                                                             |
 | autoPlayInterval        | ❌       | 1000    | autoPlayInterval                                                             | 自动播放的间隔                                                                                                               |
-| mode                    | ❌       | defalut | 'default'\|'parallax'                                                        | 轮播图播放模式，`default`为默认无任何 UI 效果，演示图片使用的`parallax`                                                      |
+| mode                    | ❌       | defalut | 'default'\|'stack'\|'parallax'                                                        | 轮播图播放模式                                                      |
 | loop                    | ❌       | true    | boolean                                                                      | 是否循环播放                                                                                                                 |
 | parallaxScrollingOffset | ❌       | 100     | number                                                                       | 当使用 mode=`parallax`,这个属性可以控制两侧图片离中间元素的距离                                                              |
 | parallaxScrollingScale  | ❌       | 0.8     | number                                                                       | 当使用 mode=`parallax`,这个属性可以控制两侧图片的缩放比例                                                                    |
@@ -115,6 +127,10 @@ import Carousel from 'react-native-reanimated-carousel';
 | windowSize              | ❌       | 0       | number                                                                       | 能响应平移手势事件的最大 item 数量，0 表示所有元素都会先响应                                                                 |
 | onProgressChange        | ❌       |         | onProgressChange?: (offsetProgress: number,absoluteProgress: number) => void | 当滚动进度发生变化时触发 `offsetProgress`:总的偏移值 (0 390 780 ...); `absoluteProgress`:转化为 index 的进度变化 (0 1 2 ...) |
 | vertical                | ❌       | false       | boolean                                                                       | 将元素垂直布局而不是水平     |
+| animationConfig         | ❌       | { mode: 'vertical',snapDirection: 'left',moveSize: window.width,stackInterval: 30,scaleInterval: 0.08,rotateZDeg: 135} | {mode: 'vertical' \| 'horizontal';moveSize?: number;stackInterval?: number;scaleInterval?: number;rotateZDeg?: number;snapDirection?: 'left' \| 'right';} | 堆栈视图的动画样式                                                                                                   |
+| showLength         | ❌       | data.length - 1 | number | 堆栈视图中展示元素的最大数量 |
+| pagingEnabled         | ❌       | true | boolean | 当值为 true 时，滚动条会停在滚动视图的尺寸的整数倍位置。 |
+| enableSnap         | ❌       | true | boolean | 如果启用，松开触摸会滚动到最近的元素，当 pagingEnabled=false 时有效 |
 
 ## Ref
 

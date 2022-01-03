@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Dimensions } from 'react-native';
 import { View } from 'react-native-ui-lib';
 import Carousel from '../../../src/index';
+import { SBImageItem } from '../components/SBImageItem';
 import SButton from '../components/SButton';
-import { CAROUSEL_ITEMS } from '../contant';
 
 const window = Dimensions.get('window');
 const PAGE_WIDTH = window.width;
@@ -30,18 +30,9 @@ function Index() {
                 {...baseOptions}
                 loop
                 autoPlay
-                autoPlayInterval={isFast ? 100 : 1000}
-                data={CAROUSEL_ITEMS}
-                renderItem={(backgroundColor) => (
-                    <View
-                        style={{
-                            flex: 1,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor,
-                        }}
-                    />
-                )}
+                autoPlayInterval={isFast ? 100 : 1500}
+                data={[...new Array(6).keys()]}
+                renderItem={() => <SBImageItem />}
             />
             <SButton
                 onPress={() => {
