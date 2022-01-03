@@ -64,7 +64,7 @@ function Index() {
                                   width: 10,
                                   alignSelf: 'center',
                                   position: 'absolute',
-                                  right: 10,
+                                  right: 5,
                                   top: 40,
                               }
                             : {
