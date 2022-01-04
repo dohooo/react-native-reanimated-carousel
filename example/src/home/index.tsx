@@ -55,7 +55,7 @@ export default Index;
 
 const styles = StyleSheet.create({
     listItem: {
-        alignItems: 'center',
+        alignItems: 'flex-start',
         borderColor: Colors.grey60,
         borderBottomWidth: 0.5,
         padding: 16,

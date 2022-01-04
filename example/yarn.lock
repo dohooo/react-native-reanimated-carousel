@@ -1517,7 +1517,7 @@
     json5 "^1.0.1"
     write-file-atomic "^2.3.0"
 
-"@expo/metro-config@0.1.84", "@expo/metro-config@^0.1.63":
+"@expo/metro-config@0.1.84", "@expo/metro-config@^0.1.16", "@expo/metro-config@^0.1.63":
   version "0.1.84"
   resolved "https://registry.nlark.com/@expo/metro-config/download/@expo/metro-config-0.1.84.tgz#ddcc7b4f1087c29f86bc9d916933d29bacd2c726"
   integrity sha1-3cx7TxCHwp+GvJ2RaTPSm6zSxyY=
@@ -5855,6 +5855,15 @@ expo-splash-screen@~0.10.2:
   dependencies:
     "@expo/configure-splash-screen" "0.3.4"
 
+expo-updates@^0.4.1:
+  version "0.4.2"
+  resolved "https://registry.npmmirror.com/expo-updates/download/expo-updates-0.4.2.tgz#15862bc209fa3fb98d3fa16b7aac4edfcc33f182"
+  integrity sha1-FYYrwgn6P7mNP6FreqxO38wz8YI=
+  dependencies:
+    "@expo/metro-config" "^0.1.16"
+    fbemitter "^2.1.1"
+    uuid "^3.4.0"
+
 expo@^41.0.0:
   version "41.0.1"
   resolved "https://registry.npmjs.org/expo/-/expo-41.0.1.tgz#2689003212dcc948d010f86dadf055721a6314b4"
@@ -6162,6 +6171,13 @@ fecha@^4.2.0:
   version "4.2.1"
   resolved "https://registry.npm.taobao.org/fecha/download/fecha-4.2.1.tgz?cache=0&sync_timestamp=1617642874416&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ffecha%2Fdownload%2Ffecha-4.2.1.tgz#0a83ad8f86ef62a091e22bb5a039cd03d23eecce"
   integrity sha1-CoOtj4bvYqCR4iu1oDnNA9I+7M4=
+
+fiction-expo-restart@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/fiction-expo-restart/download/fiction-expo-restart-1.1.0.tgz#c8be9a5aa523c733071abd73ffd86ba506656662"
+  integrity sha1-yL6aWqUjxzMHGr1z/9hrpQZlZmI=
+  dependencies:
+    expo-updates "^0.4.1"
 
 figgy-pudding@^3.5.1:
   version "3.5.2"
