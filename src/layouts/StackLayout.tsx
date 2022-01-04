@@ -7,6 +7,7 @@ import Animated, {
     useAnimatedReaction,
     useAnimatedStyle,
 } from 'react-native-reanimated';
+import type { ComputedDirectionTypes } from 'src/types';
 import { useOffsetX } from '../hooks/useOffsetX';
 import type { IVisibleRanges } from '../hooks/useVisibleRanges';
 import { LazyView } from '../LazyView';
@@ -14,7 +15,6 @@ import { LazyView } from '../LazyView';
 const window = Dimensions.get('window');
 
 export type StackAnimationConfig = {
-    mode: 'vertical' | 'horizontal';
     moveSize?: number;
     stackInterval?: number;
     scaleInterval?: number;
@@ -23,18 +23,17 @@ export type StackAnimationConfig = {
     snapDirection?: 'left' | 'right';
 };
 
-export const StackLayout: React.FC<{
-    loop?: boolean;
-    handlerOffsetX: Animated.SharedValue<number>;
-    index: number;
-    width: number;
-    height: number;
-    showLength?: number;
-    data: unknown[];
-    visibleRanges: IVisibleRanges;
-    vertical?: boolean;
-    animationConfig?: StackAnimationConfig;
-}> = (props) => {
+export const StackLayout: React.FC<
+    ComputedDirectionTypes<{
+        loop?: boolean;
+        handlerOffsetX: Animated.SharedValue<number>;
+        index: number;
+        showLength?: number;
+        data: unknown[];
+        visibleRanges: IVisibleRanges;
+        animationConfig?: StackAnimationConfig;
+    }>
+> = (props) => {
     const {
         index,
         width,
@@ -50,10 +49,9 @@ export const StackLayout: React.FC<{
 
     const [shouldUpdate, setShouldUpdate] = React.useState(false);
 
-    const size = vertical ? height : width;
+    const size = props.vertical ? props.height : props.width;
 
     const animationConfig: Required<StackAnimationConfig> = {
-        mode: 'vertical',
         snapDirection: 'left',
         moveSize: window.width,
         stackInterval: 18,
@@ -171,7 +169,7 @@ export const StackLayout: React.FC<{
             opacity,
         };
 
-        if (animationConfig.mode === 'vertical') {
+        if (vertical) {
             const {
                 snapDirection,
                 moveSize,
@@ -251,9 +249,7 @@ export const StackLayout: React.FC<{
                     translateY: translateY!,
                 }
             );
-        }
-
-        if (animationConfig.mode === 'horizontal') {
+        } else {
             const {
                 snapDirection,
                 moveSize,
@@ -347,10 +343,9 @@ export const StackLayout: React.FC<{
         <Animated.View
             style={[
                 {
-                    width,
-                    height,
+                    width: width || '100%',
+                    height: height || '100%',
                     position: 'absolute',
-                    alignSelf: 'center',
                 },
                 offsetXStyle,
             ]}

@@ -32,6 +32,7 @@ function Index() {
               width: PAGE_WIDTH,
               height: PAGE_WIDTH * 0.6,
           } as const);
+
     return (
         <View
             style={{

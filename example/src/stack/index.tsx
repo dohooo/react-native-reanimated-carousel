@@ -1,18 +1,12 @@
 import * as React from 'react';
-import { Dimensions } from 'react-native';
 import { View } from 'react-native-ui-lib';
 import Carousel from '../../../src/index';
 import type { StackAnimationConfig } from '../../../src/layouts/StackLayout';
 import { SBImageItem } from '../components/SBImageItem';
 import SButton from '../components/SButton';
 
-const window = Dimensions.get('window');
-const PAGE_WIDTH = window.width;
-
 function Index() {
-    const [mode, setMode] = React.useState<'horizontal' | 'vertical'>(
-        'horizontal'
-    );
+    const [vertical, setVertical] = React.useState(false);
     const [snapDirection, setSnapDirection] = React.useState<'left' | 'right'>(
         'left'
     );
@@ -25,17 +19,28 @@ function Index() {
 
     const animationConfig = React.useMemo<StackAnimationConfig>(() => {
         const basic = {
-            mode,
             snapDirection,
         };
-        if (mode === 'vertical') {
+        if (vertical) {
             return {
                 ...basic,
                 stackInterval: 8,
             };
         }
         return basic;
-    }, [mode, snapDirection]);
+    }, [vertical, snapDirection]);
+
+    const baseOptions = vertical
+        ? ({
+              vertical: true,
+              width: 280,
+              height: 220,
+          } as const)
+        : ({
+              vertical: false,
+              width: 280,
+              height: 220,
+          } as const);
 
     return (
         <View
@@ -44,18 +49,17 @@ function Index() {
             }}
         >
             <Carousel
+                {...baseOptions}
                 style={{
-                    height: PAGE_WIDTH * 0.8,
-                    width: PAGE_WIDTH,
-                    alignSelf: 'center',
+                    width: '100%',
+                    height: 240,
+                    alignItems: 'center',
                     justifyContent: 'center',
                 }}
                 pagingEnabled={pagingEnabled}
                 enableSnap={enableSnap}
                 mode="stack"
                 loop={loop}
-                width={280}
-                height={210}
                 autoPlay={autoPlay}
                 autoPlayReverse={autoPlayReverse}
                 data={[...new Array(6).keys()]}
@@ -85,10 +89,10 @@ function Index() {
             </SButton>
             <SButton
                 onPress={() => {
-                    setMode(mode === 'horizontal' ? 'vertical' : 'horizontal');
+                    setVertical(!vertical);
                 }}
             >
-                {mode}
+                {`vertical:${vertical}`}
             </SButton>
             <SButton
                 onPress={() => {
