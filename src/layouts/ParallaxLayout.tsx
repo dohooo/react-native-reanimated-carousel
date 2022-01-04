@@ -1,5 +1,4 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import Animated, {
     Extrapolate,
     interpolate,
@@ -44,17 +43,6 @@ export const ParallaxLayout: React.FC<{
         [vertical, width, height]
     );
 
-    const layoutStyle = React.useMemo(() => {
-        return {
-            width: !vertical
-                ? width * parallaxScrollingScale
-                : `${100 * parallaxScrollingScale}%`,
-            height: vertical
-                ? height * parallaxScrollingScale
-                : `${100 * parallaxScrollingScale}%`,
-        };
-    }, [vertical, parallaxScrollingScale, width, height]);
-
     const x = useOffsetX(
         {
             handlerOffsetX,
@@ -67,49 +55,49 @@ export const ParallaxLayout: React.FC<{
     );
 
     const offsetXStyle = useAnimatedStyle(() => {
-        const baseTranslateX = x.value - index * size;
-        const padding = (1 - parallaxScrollingScale) * size;
-        const extraOffset = index * padding + padding / 2;
+        const value = x.value / size;
+
+        const translate = interpolate(
+            value,
+            [-1, 0, 1],
+            [
+                -size + parallaxScrollingOffset,
+                0,
+                size - parallaxScrollingOffset,
+            ],
+            Extrapolate.CLAMP
+        );
 
         const zIndex = interpolate(
-            x.value,
-            [-size, 0, size],
+            value,
+            [-1, 0, 1],
             [0, size, 0],
             Extrapolate.CLAMP
         );
-        const scale = interpolate(
-            x.value,
-            [-size, 0, size],
-            [parallaxScrollingScale, 1, parallaxScrollingScale],
-            Extrapolate.CLAMP
-        );
-        const relatedTranslateX = interpolate(
-            x.value,
-            [-size, 0, size],
-            [parallaxScrollingOffset, 0, -parallaxScrollingOffset],
-            Extrapolate.CLAMP
-        );
 
-        if (vertical) {
-            return {
-                transform: [
-                    {
-                        translateY:
-                            baseTranslateX + extraOffset + relatedTranslateX,
-                    },
-                    { scale },
-                ],
-                zIndex,
-            };
-        }
+        const scale = interpolate(
+            value,
+            [-1, 0, 1],
+            [
+                Math.pow(parallaxScrollingScale, 2),
+                parallaxScrollingScale,
+                Math.pow(parallaxScrollingScale, 2),
+            ],
+            Extrapolate.CLAMP
+        );
 
         return {
             transform: [
+                vertical
+                    ? {
+                          translateY: translate,
+                      }
+                    : {
+                          translateX: translate,
+                      },
                 {
-                    translateX:
-                        baseTranslateX + extraOffset + relatedTranslateX,
+                    scale,
                 },
-                { scale },
             ],
             zIndex,
         };
@@ -137,14 +125,18 @@ export const ParallaxLayout: React.FC<{
     );
 
     return (
-        <Animated.View style={[layoutStyle, styles.container, offsetXStyle]}>
+        <Animated.View
+            style={[
+                {
+                    width,
+                    height,
+                    position: 'absolute',
+                    alignSelf: 'center',
+                },
+                offsetXStyle,
+            ]}
+        >
             <LazyView shouldUpdate={shouldUpdate}>{children}</LazyView>
         </Animated.View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        alignSelf: 'center',
-    },
-});
