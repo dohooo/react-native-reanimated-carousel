@@ -6,22 +6,22 @@ import Animated, {
     useAnimatedReaction,
     useAnimatedStyle,
 } from 'react-native-reanimated';
+import type { ComputedDirectionTypes } from 'src/types';
 import { useOffsetX } from '../hooks/useOffsetX';
 import type { IVisibleRanges } from '../hooks/useVisibleRanges';
 import { LazyView } from '../LazyView';
 
-export const ParallaxLayout: React.FC<{
-    loop?: boolean;
-    parallaxScrollingOffset?: number;
-    parallaxScrollingScale?: number;
-    handlerOffsetX: Animated.SharedValue<number>;
-    index: number;
-    width: number;
-    height: number;
-    data: unknown[];
-    visibleRanges: IVisibleRanges;
-    vertical?: boolean;
-}> = (props) => {
+export const ParallaxLayout: React.FC<
+    ComputedDirectionTypes<{
+        loop?: boolean;
+        parallaxScrollingOffset?: number;
+        parallaxScrollingScale?: number;
+        handlerOffsetX: Animated.SharedValue<number>;
+        index: number;
+        data: unknown[];
+        visibleRanges: IVisibleRanges;
+    }>
+> = (props) => {
     const {
         handlerOffsetX,
         parallaxScrollingOffset = 100,
@@ -38,10 +38,7 @@ export const ParallaxLayout: React.FC<{
 
     const [shouldUpdate, setShouldUpdate] = React.useState(false);
 
-    const size = React.useMemo(
-        () => (vertical ? height : width),
-        [vertical, width, height]
-    );
+    const size = props.vertical ? props.height : props.width;
 
     const x = useOffsetX(
         {
@@ -128,10 +125,9 @@ export const ParallaxLayout: React.FC<{
         <Animated.View
             style={[
                 {
-                    width,
-                    height,
+                    width: width || '100%',
+                    height: height || '100%',
                     position: 'absolute',
-                    alignSelf: 'center',
                 },
                 offsetXStyle,
             ]}

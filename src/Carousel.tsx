@@ -5,8 +5,7 @@ import Animated, {
     useDerivedValue,
     useSharedValue,
 } from 'react-native-reanimated';
-import { CarouselItem } from './CarouselItem';
-import { ParallaxLayout, StackLayout } from './layouts/index';
+import { ParallaxLayout, StackLayout, NormalLayout } from './layouts/index';
 import { useCarouselController } from './hooks/useCarouselController';
 import { useAutoPlay } from './hooks/useAutoPlay';
 import { useIndexController } from './hooks/useIndexController';
@@ -39,21 +38,20 @@ function Carousel<T>(
         onSnapToItem,
         onScrollBegin,
         onProgressChange,
+        vertical = false,
         pagingEnabled = true,
         enableSnap = true,
     } = props;
 
     let animationConfig: StackAnimationConfig | undefined;
-    let vertical: boolean | undefined = false;
     let showLength: number | undefined;
 
-    if (!props.mode || props.mode === 'default' || props.mode === 'parallax') {
-        vertical = props.vertical;
-    } else if (props.mode === 'stack') {
+    if (props.mode === 'stack') {
         animationConfig = props.animationConfig;
         showLength = props.showLength;
     }
 
+    // @ts-ignore
     usePropsErrorBoundary({
         ...props,
         data: _data,
@@ -68,7 +66,7 @@ function Carousel<T>(
 
     const width = Math.round(props.width || 0);
     const height = Math.round(props.height || 0);
-    const size = vertical ? height : width;
+    const size = (vertical ? height : width) as number;
     const layoutStyle = { width: width || '100%', height: height || '100%' };
     const defaultHandlerOffsetX = -Math.abs(defaultIndex * size);
     const handlerOffsetX = useSharedValue<number>(defaultHandlerOffsetX);
@@ -205,17 +203,17 @@ function Carousel<T>(
                 case 'parallax':
                     return (
                         <ParallaxLayout
-                            parallaxScrollingOffset={parallaxScrollingOffset}
-                            parallaxScrollingScale={parallaxScrollingScale}
                             data={data}
                             width={width}
                             height={height}
+                            vertical={vertical}
+                            parallaxScrollingOffset={parallaxScrollingOffset}
+                            parallaxScrollingScale={parallaxScrollingScale}
                             handlerOffsetX={offsetX}
                             index={i}
                             key={i}
                             loop={loop}
                             visibleRanges={visibleRanges}
-                            vertical={vertical}
                         >
                             {renderItem(item, i)}
                         </ParallaxLayout>
@@ -225,15 +223,15 @@ function Carousel<T>(
                         <StackLayout
                             data={data}
                             width={width}
-                            showLength={showLength}
                             height={height}
+                            vertical={vertical}
+                            showLength={showLength}
                             animationConfig={animationConfig}
                             handlerOffsetX={offsetX}
                             index={i}
                             key={i}
                             loop={loop}
                             visibleRanges={visibleRanges}
-                            vertical={vertical}
                         >
                             {renderItem(item, i)}
                         </StackLayout>
@@ -241,19 +239,19 @@ function Carousel<T>(
                 case 'default':
                 default:
                     return (
-                        <CarouselItem
+                        <NormalLayout
                             data={data}
                             width={width}
                             height={height}
+                            vertical={vertical}
                             handlerOffsetX={offsetX}
                             index={i}
                             key={i}
                             loop={loop}
                             visibleRanges={visibleRanges}
-                            vertical={vertical}
                         >
                             {renderItem(item, i)}
-                        </CarouselItem>
+                        </NormalLayout>
                     );
             }
         },
@@ -277,14 +275,14 @@ function Carousel<T>(
     return (
         <View style={[styles.container, layoutStyle, style]}>
             <ScrollViewGesture
-                pagingEnabled={pagingEnabled}
-                enableSnap={enableSnap}
-                vertical={vertical}
-                infinite={loop}
-                translation={handlerOffsetX}
-                style={style}
-                maxPage={data.length}
                 size={size}
+                style={style}
+                infinite={loop}
+                vertical={mode !== 'stack' && vertical}
+                maxPage={data.length}
+                enableSnap={enableSnap}
+                translation={handlerOffsetX}
+                pagingEnabled={pagingEnabled}
                 panGestureHandlerProps={panGestureHandlerProps}
                 onScrollBegin={scrollViewGestureOnScrollBegin}
                 onScrollEnd={scrollViewGestureOnScrollEnd}
