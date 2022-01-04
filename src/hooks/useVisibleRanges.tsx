@@ -12,7 +12,14 @@ export function useVisibleRanges(options: {
     windowSize?: number;
     translation: Animated.SharedValue<number>;
 }): IVisibleRanges {
-    const { total, viewSize, windowSize = 0, translation } = options;
+    const {
+        total = 0,
+        viewSize,
+        translation,
+        windowSize: _windowSize = 0,
+    } = options;
+
+    const windowSize = total <= _windowSize ? total : _windowSize;
 
     const ranges = useDerivedValue(() => {
         const positiveCount = Math.round(windowSize / 2);
