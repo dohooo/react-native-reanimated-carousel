@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-    Dimensions,
-    StyleSheet,
-    TransformsStyle,
-    ViewStyle,
-} from 'react-native';
+import { Dimensions, TransformsStyle, ViewStyle } from 'react-native';
 import Animated, {
     Extrapolate,
     interpolate,
@@ -355,18 +350,12 @@ export const StackLayout: React.FC<{
                     width,
                     height,
                     position: 'absolute',
+                    alignSelf: 'center',
                 },
                 offsetXStyle,
-                styles.container,
             ]}
         >
             <LazyView shouldUpdate={shouldUpdate}>{children}</LazyView>
         </Animated.View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        alignSelf: 'center',
-    },
-});
