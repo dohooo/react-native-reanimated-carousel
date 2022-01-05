@@ -124,9 +124,9 @@ function Carousel<T>(
     }, [onScrollBegin]);
 
     const scrollViewGestureOnScrollBegin = React.useCallback(() => {
-        pause();
+        !autoPlay && pause();
         _onScrollBegin();
-    }, [_onScrollBegin, pause]);
+    }, [_onScrollBegin, pause, autoPlay]);
 
     const _onScrollEnd = React.useCallback(() => {
         computedIndex();
@@ -134,9 +134,9 @@ function Carousel<T>(
     }, [sharedPreIndex, sharedIndex, computedIndex, onScrollEnd]);
 
     const scrollViewGestureOnScrollEnd = React.useCallback(() => {
-        run();
+        autoPlay && run();
         _onScrollEnd();
-    }, [_onScrollEnd, run]);
+    }, [_onScrollEnd, run, autoPlay]);
 
     const offsetX = useDerivedValue(() => {
         const totalSize = size * data.length;
