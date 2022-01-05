@@ -24,12 +24,23 @@ export function useAutoPlay(opts: {
         if (timer.current) {
             pause();
         }
+
+        if (!autoPlay) {
+            return;
+        }
+
         timer.current = setInterval(() => {
             autoPlayReverse
                 ? carouselController.prev()
                 : carouselController.next();
         }, autoPlayInterval);
-    }, [autoPlayReverse, carouselController, autoPlayInterval, pause]);
+    }, [
+        pause,
+        autoPlay,
+        autoPlayReverse,
+        autoPlayInterval,
+        carouselController,
+    ]);
 
     React.useEffect(() => {
         if (autoPlay) {
