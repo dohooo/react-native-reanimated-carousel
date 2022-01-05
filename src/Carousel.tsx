@@ -41,6 +41,7 @@ function Carousel<T>(
         onProgressChange,
         pagingEnabled = true,
         enableSnap = true,
+        slidingSpeed = 100
     } = props;
 
     let animationConfig: StackAnimationConfig | undefined;
@@ -288,6 +289,7 @@ function Carousel<T>(
                 panGestureHandlerProps={panGestureHandlerProps}
                 onScrollBegin={scrollViewGestureOnScrollBegin}
                 onScrollEnd={scrollViewGestureOnScrollEnd}
+                slidingSpeed={slidingSpeed}
             >
                 <Animated.View
                     style={[
