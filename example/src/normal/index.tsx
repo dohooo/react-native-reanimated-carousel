@@ -11,6 +11,7 @@ const PAGE_WIDTH = window.width;
 function Index() {
     const [isVertical, setIsVertical] = React.useState(false);
     const [isFast, setIsFast] = React.useState(false);
+    const [isAutoPlay, setIsAutoPlay] = React.useState(false);
 
     const baseOptions = isVertical
         ? ({
@@ -29,7 +30,7 @@ function Index() {
             <Carousel
                 {...baseOptions}
                 loop
-                autoPlay
+                autoPlay={isAutoPlay}
                 autoPlayInterval={isFast ? 100 : 1500}
                 data={[...new Array(6).keys()]}
                 renderItem={() => <SBImageItem />}
@@ -47,6 +48,13 @@ function Index() {
                 }}
             >
                 {isFast ? 'NORMAL' : 'FAST'}
+            </SButton>
+            <SButton
+                onPress={() => {
+                    setIsAutoPlay(!isAutoPlay);
+                }}
+            >
+                AutoPlay:{`${isAutoPlay}`}
             </SButton>
         </View>
     );
