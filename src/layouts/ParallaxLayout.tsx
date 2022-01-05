@@ -62,7 +62,7 @@ export const ParallaxLayout: React.FC<
                 0,
                 size - parallaxScrollingOffset,
             ],
-            Extrapolate.CLAMP
+            Extrapolate.EXTEND
         );
 
         const zIndex = interpolate(

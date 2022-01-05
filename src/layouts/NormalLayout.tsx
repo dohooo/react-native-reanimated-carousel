@@ -53,7 +53,7 @@ export const NormalLayout: React.FC<
             value,
             [-1, 0, 1],
             [-size, 0, size],
-            Extrapolate.CLAMP
+            Extrapolate.EXTEND
         );
 
         return {
