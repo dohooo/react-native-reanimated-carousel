@@ -5,7 +5,7 @@ import { SBImageItem } from '../components/SBImageItem';
 import SButton from '../components/SButton';
 
 function Index() {
-    const [mode, setMode] = React.useState<any>('horizontal-stack');
+    const [mode, setMode] = React.useState<any>('stack');
     const [vertical, setVertical] = React.useState(false);
     const [snapDirection, setSnapDirection] = React.useState<'left' | 'right'>(
         'left'
@@ -26,6 +26,7 @@ function Index() {
                     alignItems: 'center',
                     justifyContent: 'center',
                 }}
+                vertical={mode !== 'stack' ? false : vertical}
                 width={280}
                 height={210}
                 pagingEnabled={pagingEnabled}
@@ -37,6 +38,8 @@ function Index() {
                 data={[...new Array(6).keys()]}
                 animationConfig={{
                     snapDirection,
+                    stackInterval:
+                        mode === 'stack' ? (vertical ? 8 : 18) : undefined,
                 }}
                 showLength={4}
                 renderItem={() => <SBImageItem />}
@@ -48,6 +51,13 @@ function Index() {
                     justifyContent: 'space-evenly',
                 }}
             >
+                <SButton
+                    onPress={() => {
+                        setMode('stack');
+                    }}
+                >
+                    {'stack'}
+                </SButton>
                 <SButton
                     onPress={() => {
                         setMode('horizontal-stack');
@@ -84,6 +94,7 @@ function Index() {
                     {`loop:${loop}`}
                 </SButton>
                 <SButton
+                    visible={mode === 'stack'}
                     onPress={() => {
                         setVertical(!vertical);
                     }}

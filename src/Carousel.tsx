@@ -15,7 +15,7 @@ import type { ICarouselInstance, TCarouselProps } from './types';
 import { StyleSheet, View } from 'react-native';
 import { DATA_LENGTH } from './constants';
 import { BaseLayout, IAnimationConfig } from './layouts/BaseLayout';
-import { Layouts } from './layouts';
+import { Layouts, StackLayout } from './layouts';
 
 function Carousel<T>(
     props: PropsWithChildren<TCarouselProps<T>>,
@@ -228,6 +228,24 @@ function Carousel<T>(
                         deps: [loop, vertical, parallaxScrollingOffset],
                     };
                     break;
+                case 'stack':
+                    return (
+                        <StackLayout
+                            data={data}
+                            width={width}
+                            height={height}
+                            vertical={vertical}
+                            showLength={showLength}
+                            animationConfig={animationConfig}
+                            handlerOffsetX={offsetX}
+                            index={i}
+                            key={i}
+                            loop={loop}
+                            visibleRanges={visibleRanges}
+                        >
+                            {renderItem(item, realIndex)}
+                        </StackLayout>
+                    );
                 case 'horizontal-stack':
                     config = {
                         animatedStyle: Layouts.horizontalStack({

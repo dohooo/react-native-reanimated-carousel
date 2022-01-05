@@ -54,7 +54,7 @@ type TStackModeProps = ComputedDirectionTypes<{
      * Carousel Animated transitions.
      * @default 'default'
      */
-    mode: 'horizontal-stack' | 'vertical-stack';
+    mode: 'stack' | 'horizontal-stack' | 'vertical-stack';
 }>;
 
 export type TCarouselProps<T = any> = {
