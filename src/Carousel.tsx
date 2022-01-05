@@ -15,6 +15,7 @@ import { useVisibleRanges } from './hooks/useVisibleRanges';
 import type { ICarouselInstance, TCarouselProps } from './types';
 import { StyleSheet, View } from 'react-native';
 import type { StackAnimationConfig } from './layouts/StackLayout';
+import { DATA_LENGTH } from './constants';
 
 function Carousel<T>(
     props: PropsWithChildren<TCarouselProps<T>>,
@@ -78,11 +79,11 @@ function Carousel<T>(
     const data = React.useMemo<T[]>(() => {
         if (!loop) return _data;
 
-        if (_data.length === 1) {
+        if (_data.length === DATA_LENGTH.SINGLE_ITEM) {
             return [_data[0], _data[0], _data[0]];
         }
 
-        if (_data.length === 2) {
+        if (_data.length === DATA_LENGTH.DOUBLE_ITEM) {
             return [_data[0], _data[1], _data[0], _data[1]];
         }
 
@@ -149,15 +150,27 @@ function Carousel<T>(
 
     useAnimatedReaction(
         () => offsetX.value,
-        (value) => {
+        (_value) => {
+            let value = _value;
+
+            if (_data.length === DATA_LENGTH.SINGLE_ITEM) {
+                value = value % size;
+            }
+
+            if (_data.length === DATA_LENGTH.DOUBLE_ITEM) {
+                value = value % (size * 2);
+            }
+
             let absoluteProgress = Math.abs(value / size);
+
             if (value > 0) {
                 absoluteProgress = data.length - absoluteProgress;
             }
+
             !!onProgressChange &&
                 runOnJS(onProgressChange)(value, absoluteProgress);
         },
-        [onProgressChange, props.children]
+        [onProgressChange, _data]
     );
 
     const next = React.useCallback(() => {
@@ -199,6 +212,15 @@ function Carousel<T>(
 
     const renderLayout = React.useCallback(
         (item: T, i: number) => {
+            let realIndex = i;
+            if (_data.length === DATA_LENGTH.SINGLE_ITEM) {
+                realIndex = i % 1;
+            }
+
+            if (_data.length === DATA_LENGTH.DOUBLE_ITEM) {
+                realIndex = i % 2;
+            }
+
             switch (mode) {
                 case 'parallax':
                     return (
@@ -215,7 +237,7 @@ function Carousel<T>(
                             loop={loop}
                             visibleRanges={visibleRanges}
                         >
-                            {renderItem(item, i)}
+                            {renderItem(item, realIndex)}
                         </ParallaxLayout>
                     );
                 case 'stack':
@@ -233,7 +255,7 @@ function Carousel<T>(
                             loop={loop}
                             visibleRanges={visibleRanges}
                         >
-                            {renderItem(item, i)}
+                            {renderItem(item, realIndex)}
                         </StackLayout>
                     );
                 case 'default':
@@ -250,25 +272,26 @@ function Carousel<T>(
                             loop={loop}
                             visibleRanges={visibleRanges}
                         >
-                            {renderItem(item, i)}
+                            {renderItem(item, realIndex)}
                         </NormalLayout>
                     );
             }
         },
         [
             loop,
-            mode,
             data,
+            mode,
+            width,
+            _data,
+            height,
             offsetX,
-            parallaxScrollingOffset,
-            parallaxScrollingScale,
+            vertical,
+            showLength,
             renderItem,
             visibleRanges,
-            vertical,
             animationConfig,
-            width,
-            height,
-            showLength,
+            parallaxScrollingScale,
+            parallaxScrollingOffset,
         ]
     );
 
