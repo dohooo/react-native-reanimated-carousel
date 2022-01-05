@@ -54,22 +54,7 @@ type TStackModeProps = ComputedDirectionTypes<{
      * Carousel Animated transitions.
      * @default 'default'
      */
-    mode?: 'stack';
-    /**
-     * Stack animation style.
-     * @default
-     *     mode: 'vertical',
-     *     snapDirection: 'right',
-     *     moveSize: window.width,
-     *     stackInterval: 30,
-     *     scaleInterval: 0.08,
-     *     rotateZDeg: 135,
-     */
-    animationConfig?: StackAnimationConfig;
-    /**
-     * The maximum number of items will show in stack.
-     */
-    showLength?: number;
+    mode: 'horizontal-stack' | 'vertical-stack';
 }>;
 
 export type TCarouselProps<T = any> = {
@@ -166,6 +151,21 @@ export type TCarouselProps<T = any> = {
         offsetProgress: number,
         absoluteProgress: number
     ) => void;
+    /**
+     * Stack animation style.
+     * @default
+     *     mode: 'vertical',
+     *     snapDirection: 'right',
+     *     moveSize: window.width,
+     *     stackInterval: 30,
+     *     scaleInterval: 0.08,
+     *     rotateZDeg: 135,
+     */
+    animationConfig?: StackAnimationConfig;
+    /**
+     * The maximum number of items will show in stack.
+     */
+    showLength?: number;
 } & (TDefaultModeProps | TParallaxModeProps | TStackModeProps);
 
 export interface ICarouselInstance {

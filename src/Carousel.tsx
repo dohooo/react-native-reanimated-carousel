@@ -5,7 +5,6 @@ import Animated, {
     useDerivedValue,
     useSharedValue,
 } from 'react-native-reanimated';
-import { ParallaxLayout, StackLayout, NormalLayout } from './layouts/index';
 import { useCarouselController } from './hooks/useCarouselController';
 import { useAutoPlay } from './hooks/useAutoPlay';
 import { useIndexController } from './hooks/useIndexController';
@@ -14,8 +13,9 @@ import { ScrollViewGesture } from './ScrollViewGesture';
 import { useVisibleRanges } from './hooks/useVisibleRanges';
 import type { ICarouselInstance, TCarouselProps } from './types';
 import { StyleSheet, View } from 'react-native';
-import type { StackAnimationConfig } from './layouts/StackLayout';
 import { DATA_LENGTH } from './constants';
+import { BaseLayout, IAnimationConfig } from './layouts/BaseLayout';
+import { Layouts } from './layouts';
 
 function Carousel<T>(
     props: PropsWithChildren<TCarouselProps<T>>,
@@ -42,15 +42,9 @@ function Carousel<T>(
         vertical = false,
         pagingEnabled = true,
         enableSnap = true,
+        animationConfig,
+        showLength,
     } = props;
-
-    let animationConfig: StackAnimationConfig | undefined;
-    let showLength: number | undefined;
-
-    if (props.mode === 'stack') {
-        animationConfig = props.animationConfig;
-        showLength = props.showLength;
-    }
 
     // @ts-ignore
     usePropsErrorBoundary({
@@ -221,63 +215,66 @@ function Carousel<T>(
                 realIndex = i % 2;
             }
 
+            let config: IAnimationConfig;
             switch (mode) {
                 case 'parallax':
-                    return (
-                        <ParallaxLayout
-                            data={data}
-                            width={width}
-                            height={height}
-                            vertical={vertical}
-                            parallaxScrollingOffset={parallaxScrollingOffset}
-                            parallaxScrollingScale={parallaxScrollingScale}
-                            handlerOffsetX={offsetX}
-                            index={i}
-                            key={i}
-                            loop={loop}
-                            visibleRanges={visibleRanges}
-                        >
-                            {renderItem(item, realIndex)}
-                        </ParallaxLayout>
-                    );
-                case 'stack':
-                    return (
-                        <StackLayout
-                            data={data}
-                            width={width}
-                            height={height}
-                            vertical={vertical}
-                            showLength={showLength}
-                            animationConfig={animationConfig}
-                            handlerOffsetX={offsetX}
-                            index={i}
-                            key={i}
-                            loop={loop}
-                            visibleRanges={visibleRanges}
-                        >
-                            {renderItem(item, realIndex)}
-                        </StackLayout>
-                    );
+                    config = {
+                        animatedStyle: Layouts.parallax({
+                            size,
+                            vertical,
+                            parallaxScrollingOffset,
+                            parallaxScrollingScale,
+                        }),
+                        deps: [loop, vertical, parallaxScrollingOffset],
+                    };
+                    break;
+                case 'horizontal-stack':
+                    config = {
+                        animatedStyle: Layouts.horizontalStack({
+                            size,
+                            showLength: showLength || data.length - 1,
+                            animationConfig,
+                        }),
+                        deps: [data, animationConfig],
+                    };
+                    break;
+                case 'vertical-stack':
+                    config = {
+                        animatedStyle: Layouts.verticalStack({
+                            size,
+                            showLength: showLength || data.length - 1,
+                            animationConfig,
+                        }),
+                        deps: [data, animationConfig],
+                    };
+                    break;
                 case 'default':
                 default:
-                    return (
-                        <NormalLayout
-                            data={data}
-                            width={width}
-                            height={height}
-                            vertical={vertical}
-                            handlerOffsetX={offsetX}
-                            index={i}
-                            key={i}
-                            loop={loop}
-                            visibleRanges={visibleRanges}
-                        >
-                            {renderItem(item, realIndex)}
-                        </NormalLayout>
-                    );
+                    config = {
+                        animatedStyle: Layouts.normal({ size, vertical }),
+                        deps: [vertical],
+                    };
             }
+
+            return (
+                <BaseLayout
+                    data={data}
+                    width={width}
+                    height={height}
+                    vertical={vertical}
+                    handlerOffsetX={offsetX}
+                    index={i}
+                    key={i}
+                    loop={loop}
+                    visibleRanges={visibleRanges}
+                    animationConfig={config}
+                >
+                    {renderItem(item, realIndex)}
+                </BaseLayout>
+            );
         },
         [
+            size,
             loop,
             data,
             mode,
@@ -301,7 +298,7 @@ function Carousel<T>(
                 size={size}
                 style={style}
                 infinite={loop}
-                vertical={mode !== 'stack' && vertical}
+                vertical={vertical}
                 maxPage={data.length}
                 enableSnap={enableSnap}
                 translation={handlerOffsetX}
@@ -311,6 +308,7 @@ function Carousel<T>(
                 onScrollEnd={scrollViewGestureOnScrollEnd}
             >
                 <Animated.View
+                    key={mode}
                     style={[
                         styles.container,
                         layoutStyle,
