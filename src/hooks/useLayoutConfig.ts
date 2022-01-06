@@ -17,51 +17,39 @@ export function useLayoutConfig<T>(opts: TLayoutConfigOpts<T>): TLayoutConfig {
         animationConfig,
     } = opts as Required<TLayoutConfigOpts<T>>;
 
-    const parallaxConfig = React.useMemo(
-        () =>
-            Layouts.parallax({
-                size,
-                vertical,
-                parallaxScrollingOffset,
-                parallaxScrollingScale,
-            }),
-        [size, vertical, parallaxScrollingOffset, parallaxScrollingScale]
-    );
-
-    const horizontalStackConfig = React.useMemo(
-        () =>
-            Layouts.horizontalStack({
-                size,
-                showLength: showLength || data.length - 1,
-                animationConfig,
-            }),
-        [size, data, showLength, animationConfig]
-    );
-
-    const verticalStackConfig = React.useMemo(
-        () =>
-            Layouts.verticalStack({
-                size,
-                showLength: showLength || data.length - 1,
-                animationConfig,
-            }),
-        [size, showLength, data, animationConfig]
-    );
-
-    const normalConfig = React.useMemo(
-        () => Layouts.normal({ size, vertical }),
-        [size, vertical]
-    );
-
-    switch (mode) {
-        case 'parallax':
-            return parallaxConfig;
-        case 'horizontal-stack':
-            return horizontalStackConfig;
-        case 'vertical-stack':
-            return verticalStackConfig;
-        case 'default':
-        default:
-            return normalConfig;
-    }
+    return React.useMemo(() => {
+        switch (mode) {
+            case 'parallax':
+                return Layouts.parallax({
+                    size,
+                    vertical,
+                    parallaxScrollingOffset,
+                    parallaxScrollingScale,
+                });
+            case 'horizontal-stack':
+                return Layouts.horizontalStack({
+                    size,
+                    showLength: showLength || data.length - 1,
+                    animationConfig,
+                });
+            case 'vertical-stack':
+                return Layouts.verticalStack({
+                    size,
+                    showLength: showLength || data.length - 1,
+                    animationConfig,
+                });
+            case 'default':
+            default:
+                return Layouts.normal({ size, vertical });
+        }
+    }, [
+        mode,
+        size,
+        data,
+        vertical,
+        showLength,
+        animationConfig,
+        parallaxScrollingScale,
+        parallaxScrollingOffset,
+    ]);
 }
