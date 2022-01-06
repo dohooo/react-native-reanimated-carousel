@@ -14,34 +14,36 @@ import { useVisibleRanges } from './hooks/useVisibleRanges';
 import type { ICarouselInstance, TCarouselProps } from './types';
 import { StyleSheet, View } from 'react-native';
 import { DATA_LENGTH } from './constants';
-import { BaseLayout, IAnimationConfig } from './layouts/BaseLayout';
-import { Layouts, StackLayout } from './layouts';
+import { BaseLayout } from './layouts/BaseLayout';
+import { StackLayout } from './layouts';
+import { useLayoutConfig } from './hooks/useLayoutConfig';
+import { useInitProps } from './hooks/useInitProps';
 
 function Carousel<T>(
-    props: PropsWithChildren<TCarouselProps<T>>,
+    _props: PropsWithChildren<TCarouselProps<T>>,
     ref: React.Ref<ICarouselInstance>
 ) {
+    const props = useInitProps(_props);
+
     const {
-        defaultIndex = 0,
-        data: _data = [],
-        loop = true,
-        mode = 'default',
+        defaultIndex,
+        data,
+        loop,
+        mode,
+        autoPlayInterval,
+        style,
+        panGestureHandlerProps,
+        vertical,
+        pagingEnabled,
+        enableSnap,
         autoPlay,
         autoPlayReverse,
-        autoPlayInterval = 1000,
-        parallaxScrollingOffset,
-        parallaxScrollingScale,
-        style = {},
-        panGestureHandlerProps = {},
         windowSize,
         renderItem,
         onScrollEnd,
         onSnapToItem,
         onScrollBegin,
         onProgressChange,
-        vertical = false,
-        pagingEnabled = true,
-        enableSnap = true,
         animationConfig,
         showLength,
     } = props;
@@ -49,7 +51,7 @@ function Carousel<T>(
     // @ts-ignore
     usePropsErrorBoundary({
         ...props,
-        data: _data,
+        data,
         mode,
         loop,
         style,
@@ -69,20 +71,6 @@ function Carousel<T>(
     React.useEffect(() => {
         handlerOffsetX.value = defaultHandlerOffsetX;
     }, [vertical, handlerOffsetX, defaultHandlerOffsetX, loop]);
-
-    const data = React.useMemo<T[]>(() => {
-        if (!loop) return _data;
-
-        if (_data.length === DATA_LENGTH.SINGLE_ITEM) {
-            return [_data[0], _data[0], _data[0]];
-        }
-
-        if (_data.length === DATA_LENGTH.DOUBLE_ITEM) {
-            return [_data[0], _data[1], _data[0], _data[1]];
-        }
-
-        return _data;
-    }, [_data, loop]);
 
     const indexController = useIndexController({
         originalLength: data.length,
@@ -147,11 +135,11 @@ function Carousel<T>(
         (_value) => {
             let value = _value;
 
-            if (_data.length === DATA_LENGTH.SINGLE_ITEM) {
+            if (data.length === DATA_LENGTH.SINGLE_ITEM) {
                 value = value % size;
             }
 
-            if (_data.length === DATA_LENGTH.DOUBLE_ITEM) {
+            if (data.length === DATA_LENGTH.DOUBLE_ITEM) {
                 value = value % (size * 2);
             }
 
@@ -164,7 +152,7 @@ function Carousel<T>(
             !!onProgressChange &&
                 runOnJS(onProgressChange)(value, absoluteProgress);
         },
-        [onProgressChange, _data]
+        [onProgressChange, data]
     );
 
     const next = React.useCallback(() => {
@@ -204,30 +192,20 @@ function Carousel<T>(
         windowSize,
     });
 
+    const layoutConfig = useLayoutConfig<T>({ ...props, size });
+
     const renderLayout = React.useCallback(
         (item: T, i: number) => {
             let realIndex = i;
-            if (_data.length === DATA_LENGTH.SINGLE_ITEM) {
+            if (data.length === DATA_LENGTH.SINGLE_ITEM) {
                 realIndex = i % 1;
             }
 
-            if (_data.length === DATA_LENGTH.DOUBLE_ITEM) {
+            if (data.length === DATA_LENGTH.DOUBLE_ITEM) {
                 realIndex = i % 2;
             }
 
-            let config: IAnimationConfig;
             switch (mode) {
-                case 'parallax':
-                    config = {
-                        animatedStyle: Layouts.parallax({
-                            size,
-                            vertical,
-                            parallaxScrollingOffset,
-                            parallaxScrollingScale,
-                        }),
-                        deps: [loop, vertical, parallaxScrollingOffset],
-                    };
-                    break;
                 case 'stack':
                     return (
                         <StackLayout
@@ -246,32 +224,6 @@ function Carousel<T>(
                             {renderItem(item, realIndex)}
                         </StackLayout>
                     );
-                case 'horizontal-stack':
-                    config = {
-                        animatedStyle: Layouts.horizontalStack({
-                            size,
-                            showLength: showLength || data.length - 1,
-                            animationConfig,
-                        }),
-                        deps: [data, animationConfig],
-                    };
-                    break;
-                case 'vertical-stack':
-                    config = {
-                        animatedStyle: Layouts.verticalStack({
-                            size,
-                            showLength: showLength || data.length - 1,
-                            animationConfig,
-                        }),
-                        deps: [data, animationConfig],
-                    };
-                    break;
-                case 'default':
-                default:
-                    config = {
-                        animatedStyle: Layouts.normal({ size, vertical }),
-                        deps: [vertical],
-                    };
             }
 
             return (
@@ -285,28 +237,25 @@ function Carousel<T>(
                     key={i}
                     loop={loop}
                     visibleRanges={visibleRanges}
-                    animationConfig={config}
+                    animationConfig={layoutConfig}
                 >
                     {renderItem(item, realIndex)}
                 </BaseLayout>
             );
         },
         [
-            size,
             loop,
             data,
             mode,
             width,
-            _data,
             height,
             offsetX,
             vertical,
             showLength,
             renderItem,
+            layoutConfig,
             visibleRanges,
             animationConfig,
-            parallaxScrollingScale,
-            parallaxScrollingOffset,
         ]
     );
 

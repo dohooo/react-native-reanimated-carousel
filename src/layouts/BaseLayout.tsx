@@ -1,5 +1,5 @@
 import React from 'react';
-import type { ImageStyle, TextStyle, ViewStyle } from 'react-native';
+import type { ViewStyle } from 'react-native';
 import Animated, {
     runOnJS,
     useAnimatedReaction,
@@ -10,14 +10,9 @@ import { useOffsetX } from '../hooks/useOffsetX';
 import type { IVisibleRanges } from '../hooks/useVisibleRanges';
 import { LazyView } from '../LazyView';
 
-export type IAnimationStyle = Animated.AnimatedStyleProp<
-    ViewStyle | ImageStyle | TextStyle
->;
+export type TAnimationStyle = Animated.AnimatedStyleProp<ViewStyle>;
 
-export interface IAnimationConfig {
-    animatedStyle: (value: number) => IAnimationStyle;
-    deps?: ReadonlyArray<any>;
-}
+export type TLayoutConfig = (value: number) => TAnimationStyle;
 
 export const BaseLayout: React.FC<
     ComputedDirectionTypes<{
@@ -26,7 +21,7 @@ export const BaseLayout: React.FC<
         handlerOffsetX: Animated.SharedValue<number>;
         data: unknown[];
         visibleRanges: IVisibleRanges;
-        animationConfig: IAnimationConfig;
+        animationConfig: TLayoutConfig;
     }>
 > = (props) => {
     const {
@@ -56,9 +51,10 @@ export const BaseLayout: React.FC<
         visibleRanges
     );
 
-    const _animatedStyle = useAnimatedStyle(() => {
-        return animationConfig.animatedStyle(x.value / size);
-    }, [...(animationConfig.deps || [])]);
+    const _animatedStyle = useAnimatedStyle(
+        () => animationConfig(x.value / size),
+        [animationConfig]
+    );
 
     const updateView = React.useCallback(
         (negativeRange: number[], positiveRange: number[]) => {
