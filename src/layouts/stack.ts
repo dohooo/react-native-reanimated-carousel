@@ -4,6 +4,7 @@ import { Extrapolate, interpolate } from 'react-native-reanimated';
 const screen = Dimensions.get('window');
 
 export type StackAnimationConfig = {
+    showLength?: number;
     moveSize?: number;
     stackInterval?: number;
     scaleInterval?: number;
@@ -12,16 +13,14 @@ export type StackAnimationConfig = {
     snapDirection?: 'left' | 'right';
 };
 
-export function horizontalStackLayout(opts: {
-    size: number;
-    showLength: number;
-    animationConfig?: StackAnimationConfig;
-}) {
-    const { showLength, animationConfig = {} } = opts;
+export function horizontalStackLayout(
+    animationConfig: StackAnimationConfig = {}
+) {
     return (value: number) => {
         'worklet';
 
         const {
+            showLength,
             snapDirection = 'left',
             moveSize = screen.width,
             stackInterval = 18,
@@ -50,7 +49,7 @@ export function horizontalStackLayout(opts: {
                 ? -(page + easeInOutCubic(diff))
                 : page + easeInOutCubic(diff);
 
-        const VALID_LENGTH = showLength - 1;
+        const VALID_LENGTH = showLength! - 1;
 
         const inputRange = getRange([-1, 0, VALID_LENGTH]);
 
@@ -100,16 +99,14 @@ export function horizontalStackLayout(opts: {
     };
 }
 
-export function verticalStackLayout(opts: {
-    size: number;
-    showLength: number;
-    animationConfig?: StackAnimationConfig;
-}) {
-    const { showLength, animationConfig = {} } = opts;
+export function verticalStackLayout(
+    animationConfig: StackAnimationConfig = {}
+) {
     return (value: number) => {
         'worklet';
 
         const {
+            showLength,
             snapDirection = 'left',
             moveSize = screen.width,
             stackInterval = 8,
@@ -138,7 +135,7 @@ export function verticalStackLayout(opts: {
                 ? -(page + easeInOutCubic(diff))
                 : page + easeInOutCubic(diff);
 
-        const VALID_LENGTH = showLength - 1;
+        const VALID_LENGTH = showLength! - 1;
 
         const inputRange = getRange([-1, 0, VALID_LENGTH]);
 

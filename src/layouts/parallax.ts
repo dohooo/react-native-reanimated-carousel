@@ -1,17 +1,24 @@
 import { Extrapolate, interpolate } from 'react-native-reanimated';
 
-export function parallaxLayout(opts: {
+type TBaseConfig = {
     size: number;
     vertical: boolean;
+};
+
+export type TAnimationConfig = {
     parallaxScrollingOffset?: number;
     parallaxScrollingScale?: number;
-}) {
+};
+
+export function parallaxLayout(
+    animationConfig: TAnimationConfig & TBaseConfig
+) {
     const {
         size,
         vertical,
         parallaxScrollingOffset = 100,
         parallaxScrollingScale = 0.8,
-    } = opts;
+    } = animationConfig;
 
     return (value: number) => {
         'worklet';

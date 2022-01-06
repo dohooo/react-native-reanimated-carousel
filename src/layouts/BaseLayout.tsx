@@ -6,23 +6,28 @@ import Animated, {
     useAnimatedStyle,
 } from 'react-native-reanimated';
 import type { ComputedDirectionTypes } from 'src/types';
-import { useOffsetX } from '../hooks/useOffsetX';
+import { IOpts, useOffsetX } from '../hooks/useOffsetX';
 import type { IVisibleRanges } from '../hooks/useVisibleRanges';
+import type { TCarouselProps } from '../types';
 import { LazyView } from '../LazyView';
+import type { StackAnimationConfig } from './stack';
 
-export type TAnimationStyle = Animated.AnimatedStyleProp<ViewStyle>;
-
-export type TLayoutConfig = (value: number) => TAnimationStyle;
+export type TAnimationStyle = (
+    value: number
+) => Animated.AnimatedStyleProp<ViewStyle>;
 
 export const BaseLayout: React.FC<
-    ComputedDirectionTypes<{
-        loop?: boolean;
-        index: number;
-        handlerOffsetX: Animated.SharedValue<number>;
-        data: unknown[];
-        visibleRanges: IVisibleRanges;
-        animationConfig: TLayoutConfig;
-    }>
+    ComputedDirectionTypes<
+        {
+            loop?: boolean;
+            index: number;
+            handlerOffsetX: Animated.SharedValue<number>;
+            data: unknown[];
+            visibleRanges: IVisibleRanges;
+            animationStyle: TAnimationStyle;
+            animationConfig: {};
+        } & Pick<TCarouselProps<unknown>, 'mode' | 'animationConfig'>
+    >
 > = (props) => {
     const {
         handlerOffsetX,
@@ -33,27 +38,41 @@ export const BaseLayout: React.FC<
         loop,
         data,
         visibleRanges,
-        animationConfig,
+        animationStyle,
     } = props;
 
     const [shouldUpdate, setShouldUpdate] = React.useState(false);
 
     const size = props.vertical ? props.height : props.width;
 
-    const x = useOffsetX(
-        {
+    let offsetXConfig: IOpts = {
+        handlerOffsetX,
+        index,
+        size,
+        data,
+        loop,
+    };
+
+    if (props.mode === 'horizontal-stack') {
+        const { snapDirection, showLength } =
+            props.animationConfig as StackAnimationConfig;
+
+        offsetXConfig = {
             handlerOffsetX,
             index,
             size,
             data,
             loop,
-        },
-        visibleRanges
-    );
+            type: snapDirection === 'right' ? 'negative' : 'positive',
+            viewCount: showLength,
+        };
+    }
+
+    const x = useOffsetX(offsetXConfig, visibleRanges);
 
     const _animatedStyle = useAnimatedStyle(
-        () => animationConfig(x.value / size),
-        [animationConfig]
+        () => animationStyle(x.value / size),
+        [animationStyle]
     );
 
     const updateView = React.useCallback(

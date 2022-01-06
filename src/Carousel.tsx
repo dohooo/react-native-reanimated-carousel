@@ -15,7 +15,6 @@ import type { ICarouselInstance, TCarouselProps } from './types';
 import { StyleSheet, View } from 'react-native';
 import { DATA_LENGTH } from './constants';
 import { BaseLayout } from './layouts/BaseLayout';
-import { StackLayout } from './layouts';
 import { useLayoutConfig } from './hooks/useLayoutConfig';
 import { useInitProps } from './hooks/useInitProps';
 
@@ -45,7 +44,6 @@ function Carousel<T>(
         onScrollBegin,
         onProgressChange,
         animationConfig,
-        showLength,
     } = props;
 
     // @ts-ignore
@@ -205,39 +203,20 @@ function Carousel<T>(
                 realIndex = i % 2;
             }
 
-            switch (mode) {
-                case 'stack':
-                    return (
-                        <StackLayout
-                            data={data}
-                            width={width}
-                            height={height}
-                            vertical={vertical}
-                            showLength={showLength}
-                            animationConfig={animationConfig}
-                            handlerOffsetX={offsetX}
-                            index={i}
-                            key={i}
-                            loop={loop}
-                            visibleRanges={visibleRanges}
-                        >
-                            {renderItem(item, realIndex)}
-                        </StackLayout>
-                    );
-            }
-
             return (
                 <BaseLayout
+                    key={i}
+                    index={i}
+                    mode={mode}
+                    loop={loop}
                     data={data}
                     width={width}
                     height={height}
                     vertical={vertical}
                     handlerOffsetX={offsetX}
-                    index={i}
-                    key={i}
-                    loop={loop}
                     visibleRanges={visibleRanges}
-                    animationConfig={layoutConfig}
+                    animationStyle={layoutConfig}
+                    animationConfig={animationConfig!}
                 >
                     {renderItem(item, realIndex)}
                 </BaseLayout>
@@ -251,7 +230,6 @@ function Carousel<T>(
             height,
             offsetX,
             vertical,
-            showLength,
             renderItem,
             layoutConfig,
             visibleRanges,
