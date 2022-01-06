@@ -11,6 +11,7 @@ interface IOpts {
     disable?: boolean;
     onScrollBegin?: () => void;
     onScrollEnd?: () => void;
+    slidingSpeed: number;
 }
 
 export interface ICarouselController {
@@ -26,6 +27,7 @@ export function useCarouselController(opts: IOpts): ICarouselController {
         handlerOffsetX,
         indexController,
         disable = false,
+        slidingSpeed,
     } = opts;
 
     const canSliding = React.useCallback(() => {
@@ -44,7 +46,10 @@ export function useCarouselController(opts: IOpts): ICarouselController {
         (toValue: number, callback?: () => void) => {
             return withSpring(
                 toValue,
-                { damping: 100 },
+                {
+                    damping: 100,
+                    stiffness: slidingSpeed,
+                },
                 (isFinished: boolean) => {
                     callback?.();
                     if (isFinished) {

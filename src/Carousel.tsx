@@ -108,6 +108,7 @@ function Carousel<T>(
         disable: !data.length,
         onScrollBegin: () => runOnJS(_onScrollBegin)(),
         onScrollEnd: () => runOnJS(_onScrollEnd)(),
+        slidingSpeed,
     });
 
     const { run, pause } = useAutoPlay({
