@@ -1,29 +1,31 @@
 import React from 'react';
 import Animated, {
+    Extrapolate,
+    interpolate,
     runOnJS,
     useAnimatedReaction,
     useAnimatedStyle,
 } from 'react-native-reanimated';
-import { useOffsetX } from './hooks/useOffsetX';
-import type { IVisibleRanges } from './hooks/useVisibleRanges';
-import { LazyView } from './LazyView';
+import type { ComputedDirectionTypes } from 'src/types';
+import { useOffsetX } from '../hooks/useOffsetX';
+import type { IVisibleRanges } from '../hooks/useVisibleRanges';
+import { LazyView } from '../LazyView';
 
-export const CarouselItem: React.FC<{
-    loop?: boolean;
-    index: number;
-    handlerOffsetX: Animated.SharedValue<number>;
-    width?: number;
-    height?: number;
-    data: unknown[];
-    visibleRanges: IVisibleRanges;
-    vertical?: boolean;
-}> = (props) => {
+export const NormalLayout: React.FC<
+    ComputedDirectionTypes<{
+        loop?: boolean;
+        index: number;
+        handlerOffsetX: Animated.SharedValue<number>;
+        data: unknown[];
+        visibleRanges: IVisibleRanges;
+    }>
+> = (props) => {
     const {
         handlerOffsetX,
         index,
         children,
-        width = 0,
-        height = 0,
+        width,
+        height,
         loop,
         data,
         visibleRanges,
@@ -32,11 +34,13 @@ export const CarouselItem: React.FC<{
 
     const [shouldUpdate, setShouldUpdate] = React.useState(false);
 
+    const size = props.vertical ? props.height : props.width;
+
     const x = useOffsetX(
         {
             handlerOffsetX,
             index,
-            size: vertical ? height : width,
+            size,
             data,
             loop,
         },
@@ -44,11 +48,24 @@ export const CarouselItem: React.FC<{
     );
 
     const offsetXStyle = useAnimatedStyle(() => {
-        if (vertical) {
-            return { transform: [{ translateY: x.value - index * height }] };
-        }
+        const value = x.value / size;
+        const translate = interpolate(
+            value,
+            [-1, 0, 1],
+            [-size, 0, size],
+            Extrapolate.CLAMP
+        );
+
         return {
-            transform: [{ translateX: x.value - index * width }],
+            transform: [
+                vertical
+                    ? {
+                          translateY: translate,
+                      }
+                    : {
+                          translateX: translate,
+                      },
+            ],
         };
     }, [vertical]);
 
@@ -76,11 +93,12 @@ export const CarouselItem: React.FC<{
     return (
         <Animated.View
             style={[
-                offsetXStyle,
                 {
                     width: width || '100%',
                     height: height || '100%',
+                    position: 'absolute',
                 },
+                offsetXStyle,
             ]}
         >
             <LazyView shouldUpdate={shouldUpdate}>{children}</LazyView>

@@ -5,8 +5,7 @@ import Animated, {
     useDerivedValue,
     useSharedValue,
 } from 'react-native-reanimated';
-import { CarouselItem } from './CarouselItem';
-import { ParallaxLayout, StackLayout } from './layouts/index';
+import { ParallaxLayout, StackLayout, NormalLayout } from './layouts/index';
 import { useCarouselController } from './hooks/useCarouselController';
 import { useAutoPlay } from './hooks/useAutoPlay';
 import { useIndexController } from './hooks/useIndexController';
@@ -16,6 +15,7 @@ import { useVisibleRanges } from './hooks/useVisibleRanges';
 import type { ICarouselInstance, TCarouselProps } from './types';
 import { StyleSheet, View } from 'react-native';
 import type { StackAnimationConfig } from './layouts/StackLayout';
+import { DATA_LENGTH } from './constants';
 
 function Carousel<T>(
     props: PropsWithChildren<TCarouselProps<T>>,
@@ -39,22 +39,21 @@ function Carousel<T>(
         onSnapToItem,
         onScrollBegin,
         onProgressChange,
+        vertical = false,
         pagingEnabled = true,
         enableSnap = true,
         slidingSpeed = 100
     } = props;
 
     let animationConfig: StackAnimationConfig | undefined;
-    let vertical: boolean | undefined = false;
     let showLength: number | undefined;
 
-    if (!props.mode || props.mode === 'default' || props.mode === 'parallax') {
-        vertical = props.vertical;
-    } else if (props.mode === 'stack') {
+    if (props.mode === 'stack') {
         animationConfig = props.animationConfig;
         showLength = props.showLength;
     }
 
+    // @ts-ignore
     usePropsErrorBoundary({
         ...props,
         data: _data,
@@ -69,7 +68,7 @@ function Carousel<T>(
 
     const width = Math.round(props.width || 0);
     const height = Math.round(props.height || 0);
-    const size = vertical ? height : width;
+    const size = (vertical ? height : width) as number;
     const layoutStyle = { width: width || '100%', height: height || '100%' };
     const defaultHandlerOffsetX = -Math.abs(defaultIndex * size);
     const handlerOffsetX = useSharedValue<number>(defaultHandlerOffsetX);
@@ -81,11 +80,11 @@ function Carousel<T>(
     const data = React.useMemo<T[]>(() => {
         if (!loop) return _data;
 
-        if (_data.length === 1) {
+        if (_data.length === DATA_LENGTH.SINGLE_ITEM) {
             return [_data[0], _data[0], _data[0]];
         }
 
-        if (_data.length === 2) {
+        if (_data.length === DATA_LENGTH.DOUBLE_ITEM) {
             return [_data[0], _data[1], _data[0], _data[1]];
         }
 
@@ -152,15 +151,27 @@ function Carousel<T>(
 
     useAnimatedReaction(
         () => offsetX.value,
-        (value) => {
+        (_value) => {
+            let value = _value;
+
+            if (_data.length === DATA_LENGTH.SINGLE_ITEM) {
+                value = value % size;
+            }
+
+            if (_data.length === DATA_LENGTH.DOUBLE_ITEM) {
+                value = value % (size * 2);
+            }
+
             let absoluteProgress = Math.abs(value / size);
+
             if (value > 0) {
                 absoluteProgress = data.length - absoluteProgress;
             }
+
             !!onProgressChange &&
                 runOnJS(onProgressChange)(value, absoluteProgress);
         },
-        [onProgressChange, props.children]
+        [onProgressChange, _data]
     );
 
     const next = React.useCallback(() => {
@@ -202,23 +213,32 @@ function Carousel<T>(
 
     const renderLayout = React.useCallback(
         (item: T, i: number) => {
+            let realIndex = i;
+            if (_data.length === DATA_LENGTH.SINGLE_ITEM) {
+                realIndex = i % 1;
+            }
+
+            if (_data.length === DATA_LENGTH.DOUBLE_ITEM) {
+                realIndex = i % 2;
+            }
+
             switch (mode) {
                 case 'parallax':
                     return (
                         <ParallaxLayout
-                            parallaxScrollingOffset={parallaxScrollingOffset}
-                            parallaxScrollingScale={parallaxScrollingScale}
                             data={data}
                             width={width}
                             height={height}
+                            vertical={vertical}
+                            parallaxScrollingOffset={parallaxScrollingOffset}
+                            parallaxScrollingScale={parallaxScrollingScale}
                             handlerOffsetX={offsetX}
                             index={i}
                             key={i}
                             loop={loop}
                             visibleRanges={visibleRanges}
-                            vertical={vertical}
                         >
-                            {renderItem(item, i)}
+                            {renderItem(item, realIndex)}
                         </ParallaxLayout>
                     );
                 case 'stack':
@@ -226,66 +246,67 @@ function Carousel<T>(
                         <StackLayout
                             data={data}
                             width={width}
-                            showLength={showLength}
                             height={height}
+                            vertical={vertical}
+                            showLength={showLength}
                             animationConfig={animationConfig}
                             handlerOffsetX={offsetX}
                             index={i}
                             key={i}
                             loop={loop}
                             visibleRanges={visibleRanges}
-                            vertical={vertical}
                         >
-                            {renderItem(item, i)}
+                            {renderItem(item, realIndex)}
                         </StackLayout>
                     );
                 case 'default':
                 default:
                     return (
-                        <CarouselItem
+                        <NormalLayout
                             data={data}
                             width={width}
                             height={height}
+                            vertical={vertical}
                             handlerOffsetX={offsetX}
                             index={i}
                             key={i}
                             loop={loop}
                             visibleRanges={visibleRanges}
-                            vertical={vertical}
                         >
-                            {renderItem(item, i)}
-                        </CarouselItem>
+                            {renderItem(item, realIndex)}
+                        </NormalLayout>
                     );
             }
         },
         [
             loop,
-            mode,
             data,
+            mode,
+            width,
+            _data,
+            height,
             offsetX,
-            parallaxScrollingOffset,
-            parallaxScrollingScale,
+            vertical,
+            showLength,
             renderItem,
             visibleRanges,
-            vertical,
             animationConfig,
-            width,
-            height,
-            showLength,
+            parallaxScrollingScale,
+            parallaxScrollingOffset,
         ]
     );
 
     return (
         <View style={[styles.container, layoutStyle, style]}>
             <ScrollViewGesture
-                pagingEnabled={pagingEnabled}
-                enableSnap={enableSnap}
-                vertical={vertical}
-                infinite={loop}
-                translation={handlerOffsetX}
-                style={style}
-                maxPage={data.length}
                 size={size}
+                style={style}
+                infinite={loop}
+                vertical={mode !== 'stack' && vertical}
+                maxPage={data.length}
+                enableSnap={enableSnap}
+                translation={handlerOffsetX}
+                pagingEnabled={pagingEnabled}
                 panGestureHandlerProps={panGestureHandlerProps}
                 onScrollBegin={scrollViewGestureOnScrollBegin}
                 onScrollEnd={scrollViewGestureOnScrollEnd}

@@ -2,47 +2,59 @@ import type { ViewStyle } from 'react-native';
 import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
 import type { StackAnimationConfig } from './layouts/StackLayout';
 
-interface IDefaultModeProps {
+export type ComputedDirectionTypes<T, VP = {}, HP = {}> =
+    | (T &
+          VP & {
+              /**
+               * Layout items vertically instead of horizontally
+               */
+              vertical: true;
+              /**
+               * Layout items vertically instead of horizontally
+               */
+              /**
+               * Specified carousel container width.
+               */
+              width?: number;
+              height: number;
+          })
+    | (T &
+          HP & {
+              /**
+               * Layout items vertically instead of horizontally
+               */
+              vertical?: false;
+              /**
+               * Layout items vertically instead of horizontally
+               */
+              /**
+               * Specified carousel container width.
+               */
+              width: number;
+              height?: number;
+          });
+
+type TDefaultModeProps = ComputedDirectionTypes<{
     /**
      * Carousel Animated transitions.
      * @default 'default'
      */
     mode?: 'default';
-    /**
-     * Layout items vertically instead of horizontally
-     */
-    /**
-     * Specified carousel container width.
-     */
-    width?: number;
-    height?: number;
-}
+}>;
 
-interface IParallaxModeProps {
+type TParallaxModeProps = ComputedDirectionTypes<{
     /**
      * Carousel Animated transitions.
      */
     mode: 'parallax';
-    /**
-     * Specified carousel container height.
-     * @default '100%'
-     */
-    height?: number;
-    width?: number;
-}
+}>;
 
-interface IStackModeProps {
+type TStackModeProps = ComputedDirectionTypes<{
     /**
      * Carousel Animated transitions.
      * @default 'default'
      */
     mode?: 'stack';
-    /**
-     * Specified carousel container height/width.
-     * @default '100%'
-     */
-    height?: number;
-    width?: number;
     /**
      * Stack animation style.
      * @default
@@ -58,7 +70,7 @@ interface IStackModeProps {
      * The maximum number of items will show in stack.
      */
     showLength?: number;
-}
+}>;
 
 export type TCarouselProps<T = any> = {
     ref?: React.Ref<ICarouselInstance>;
@@ -67,10 +79,6 @@ export type TCarouselProps<T = any> = {
      * @default true
      */
     loop?: boolean;
-    /**
-     * Layout items vertically instead of horizontally
-     */
-    vertical?: boolean;
     /**
      * Carousel items data set.
      */
@@ -158,7 +166,7 @@ export type TCarouselProps<T = any> = {
         offsetProgress: number,
         absoluteProgress: number
     ) => void;
-} & (IDefaultModeProps | IParallaxModeProps | IStackModeProps);
+} & (TDefaultModeProps | TParallaxModeProps | TStackModeProps);
 
 export interface ICarouselInstance {
     /**
