@@ -42,6 +42,7 @@ function Carousel<T>(
         vertical = false,
         pagingEnabled = true,
         enableSnap = true,
+        slidingSpeed = 100,
     } = props;
 
     let animationConfig: StackAnimationConfig | undefined;
@@ -107,6 +108,7 @@ function Carousel<T>(
         disable: !data.length,
         onScrollBegin: () => runOnJS(_onScrollBegin)(),
         onScrollEnd: () => runOnJS(_onScrollEnd)(),
+        slidingSpeed,
     });
 
     const { run, pause } = useAutoPlay({
@@ -309,6 +311,7 @@ function Carousel<T>(
                 panGestureHandlerProps={panGestureHandlerProps}
                 onScrollBegin={scrollViewGestureOnScrollBegin}
                 onScrollEnd={scrollViewGestureOnScrollEnd}
+                slidingSpeed={slidingSpeed}
             >
                 <Animated.View
                     style={[

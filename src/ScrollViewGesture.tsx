@@ -37,6 +37,7 @@ interface Props {
     translation: Animated.SharedValue<number>;
     size: number;
     maxPage: number;
+    slidingSpeed: number;
 }
 
 const IScrollViewGesture: React.FC<Props> = (props) => {
@@ -52,6 +53,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
         onScrollEnd,
         size,
         maxPage,
+        slidingSpeed = 100,
     } = props;
 
     const isHorizontal = useDerivedValue(() => !vertical, [vertical]);
@@ -66,6 +68,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                 toValue,
                 {
                     damping: 100,
+                    stiffness: slidingSpeed,
                 },
                 (isFinished) => {
                     if (isFinished) {
