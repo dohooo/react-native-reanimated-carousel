@@ -1,3 +1,10 @@
+# [1.2.0-beta.4](https://github.com/dohooo/react-native-reanimated-carousel/compare/v1.2.0-beta.3...v1.2.0-beta.4) (2022-01-05)
+
+
+### Bug Fixes
+
+* solve a bug caused by Parallax/Normal layout reconstruction ([651bf5e](https://github.com/dohooo/react-native-reanimated-carousel/commit/651bf5ee0572f512dddc01205dbb74d651cfa0ce))
+
 # [1.2.0-beta.3](https://github.com/dohooo/react-native-reanimated-carousel/compare/v1.1.0...v1.2.0-beta.3) (2022-01-05)
 
 

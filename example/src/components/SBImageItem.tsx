@@ -2,13 +2,16 @@ import React from 'react';
 import { StyleSheet, View, Image, ActivityIndicator } from 'react-native';
 
 const ISBImageItem: React.FC = () => {
+    const uri = React.useRef(
+        `https://picsum.photos/400/300?t=${new Date().getTime()}`
+    );
     return (
         <View style={styles.container}>
             <ActivityIndicator size="small" />
             <Image
                 style={styles.image}
                 source={{
-                    uri: `https://picsum.photos/800/600?t=${new Date().getTime()}`,
+                    uri: uri.current,
                 }}
             />
         </View>
