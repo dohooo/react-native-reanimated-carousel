@@ -1,3 +1,10 @@
+# [2.0.0](https://github.com/dohooo/react-native-reanimated-carousel/compare/v1.2.0-beta.4...v2.0.0) (2022-01-07)
+
+
+### Bug Fixes
+
+* fix bug from refactoring ([c77f4d8](https://github.com/dohooo/react-native-reanimated-carousel/commit/c77f4d8604e319528f2d15fd288734749615e077))
+
 # [1.2.0-beta.4](https://github.com/dohooo/react-native-reanimated-carousel/compare/v1.2.0-beta.3...v1.2.0-beta.4) (2022-01-05)
 
 
