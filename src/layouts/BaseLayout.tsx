@@ -5,45 +5,32 @@ import Animated, {
     useAnimatedReaction,
     useAnimatedStyle,
 } from 'react-native-reanimated';
-import type { ComputedDirectionTypes } from 'src/types';
 import { IOpts, useOffsetX } from '../hooks/useOffsetX';
 import type { IVisibleRanges } from '../hooks/useVisibleRanges';
-import type { TCarouselProps } from '../types';
 import { LazyView } from '../LazyView';
-import type { StackAnimationConfig } from './stack';
+import type { IAnimationConfig as IStackAnimationConfig } from './stack';
+import { CTX } from '../store';
 
 export type TAnimationStyle = (
     value: number
 ) => Animated.AnimatedStyleProp<ViewStyle>;
 
-export const BaseLayout: React.FC<
-    ComputedDirectionTypes<
-        {
-            loop?: boolean;
-            index: number;
-            handlerOffsetX: Animated.SharedValue<number>;
-            data: unknown[];
-            visibleRanges: IVisibleRanges;
-            animationStyle: TAnimationStyle;
-            animationConfig: {};
-        } & Pick<TCarouselProps<unknown>, 'mode' | 'animationConfig'>
-    >
-> = (props) => {
+export const BaseLayout: React.FC<{
+    index: number;
+    handlerOffsetX: Animated.SharedValue<number>;
+    visibleRanges: IVisibleRanges;
+    animationStyle: TAnimationStyle;
+}> = (props) => {
+    const { handlerOffsetX, index, children, visibleRanges, animationStyle } =
+        props;
+
     const {
-        handlerOffsetX,
-        index,
-        children,
-        width,
-        height,
-        loop,
-        data,
-        visibleRanges,
-        animationStyle,
-    } = props;
+        props: { mode, loop, data, width, height, vertical, animationConfig },
+    } = React.useContext(CTX);
 
     const [shouldUpdate, setShouldUpdate] = React.useState(false);
 
-    const size = props.vertical ? props.height : props.width;
+    const size = vertical ? height : width;
 
     let offsetXConfig: IOpts = {
         handlerOffsetX,
@@ -53,9 +40,9 @@ export const BaseLayout: React.FC<
         loop,
     };
 
-    if (props.mode === 'horizontal-stack') {
+    if (mode === 'horizontal-stack') {
         const { snapDirection, showLength } =
-            props.animationConfig as StackAnimationConfig;
+            animationConfig as IStackAnimationConfig;
 
         offsetXConfig = {
             handlerOffsetX,

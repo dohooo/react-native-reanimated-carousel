@@ -5,13 +5,14 @@ import type { TCarouselProps } from '../types';
 export type TInitializeCarouselProps<T> = TCarouselProps<T> & {
     defaultIndex: Required<TCarouselProps>['defaultIndex'];
     loop: Required<TCarouselProps>['loop'];
+    width: Required<TCarouselProps>['width'];
+    height: Required<TCarouselProps>['height'];
 };
 
 export function useInitProps<T>(
     props: TCarouselProps<T>
 ): TInitializeCarouselProps<T> {
     const {
-        mode,
         defaultIndex = 0,
         data: _data = [],
         loop = true,
@@ -20,8 +21,12 @@ export function useInitProps<T>(
         panGestureHandlerProps = {},
         pagingEnabled = true,
         enableSnap = true,
-        animationConfig: _animationConfig = {},
+        width: _width,
+        height: _height,
     } = props;
+
+    const width = Math.round(_width || 0);
+    const height = Math.round(_height || 0);
 
     const data = React.useMemo<T[]>(() => {
         if (!loop) return _data;
@@ -37,10 +42,12 @@ export function useInitProps<T>(
         return _data;
     }, [_data, loop]);
 
-    const animationConfig = _animationConfig;
-    if (mode && ['vertical-stack', 'horizontal-stack'].includes(mode)) {
-        animationConfig.showLength =
-            animationConfig.showLength ?? data.length - 1;
+    if (props.mode === 'vertical-stack' || props.mode === 'horizontal-stack') {
+        if (!props.animationConfig) {
+            props.animationConfig = {};
+        }
+        props.animationConfig.showLength =
+            props.animationConfig?.showLength ?? data.length - 1;
     }
 
     return {
@@ -50,10 +57,10 @@ export function useInitProps<T>(
         loop,
         autoPlayInterval,
         style,
-        mode,
         panGestureHandlerProps,
         pagingEnabled,
         enableSnap,
-        animationConfig,
+        width,
+        height,
     };
 }

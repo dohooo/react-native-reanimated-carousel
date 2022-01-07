@@ -8,37 +8,19 @@ type TLayoutConfigOpts<T> = TInitializeCarouselProps<T> & { size: number };
 export function useLayoutConfig<T>(
     opts: TLayoutConfigOpts<T>
 ): TAnimationStyle {
-    const {
-        mode,
-        size,
-        vertical,
-        parallaxScrollingOffset,
-        parallaxScrollingScale,
-        animationConfig,
-    } = opts as Required<TLayoutConfigOpts<T>>;
+    const { size, vertical } = opts as Required<TLayoutConfigOpts<T>>;
 
     return React.useMemo(() => {
-        switch (mode) {
+        const baseConfig = { size, vertical };
+        switch (opts.mode) {
             case 'parallax':
-                return Layouts.parallax({
-                    size,
-                    vertical,
-                    parallaxScrollingOffset,
-                    parallaxScrollingScale,
-                });
+                return Layouts.parallax(baseConfig, opts.animationConfig);
             case 'horizontal-stack':
-                return Layouts.horizontalStack(animationConfig);
+                return Layouts.horizontalStack(opts.animationConfig);
             case 'vertical-stack':
-                return Layouts.verticalStack(animationConfig);
+                return Layouts.verticalStack(opts.animationConfig);
             default:
-                return Layouts.normal({ size, vertical });
+                return Layouts.normal(baseConfig);
         }
-    }, [
-        mode,
-        animationConfig,
-        size,
-        vertical,
-        parallaxScrollingScale,
-        parallaxScrollingOffset,
-    ]);
+    }, [opts.mode, opts.animationConfig, size, vertical]);
 }
