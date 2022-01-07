@@ -19,28 +19,28 @@
 > 点击图片，查看 demo。🍺
 
 <p align="center">
-  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/normal/index.tsx">
+  <a href="./example/src/normal/index.tsx">
     <img src="assets/normal-horizontal.gif" width="300"/>  
   </a>
-  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/normal/index.tsx">
+  <a href="./example/src/normal/index.tsx">
     <img src="assets/normal-vertical.gif" width="300"/>  
   </a>
-  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/parallax/index.tsx">
+  <a href="./example/src/parallax/index.tsx">
     <img src="assets/parallax-horizontal.gif" width="300"/>  
   </a>
-  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/parallax/index.tsx">
+  <a href="./example/src/parallax/index.tsx">
     <img src="assets/parallax-vertical.gif" width="300"/>  
   </a>
-  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/stack/index.tsx">
+  <a href="./example/src/stack/index.tsx">
     <img src="assets/stack-horizontal-left.gif" width="300"/>  
   </a>
-  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/stack/index.tsx">
+  <a href="./example/src/stack/index.tsx">
     <img src="assets/stack-horizontal-right.gif" width="300"/>  
   </a>
-  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/stack/index.tsx">
+  <a href="./example/src/stack/index.tsx">
     <img src="assets/stack-vertical-left.gif" width="300"/>  
   </a>
-  <a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/src/stack/index.tsx">
+  <a href="./example/src/stack/index.tsx">
     <img src="assets/stack-vertical-right.gif" width="300"/>  
   </a>
 </p>
@@ -50,11 +50,11 @@
 ## Table of contents
 
 1. [安装](#安装)
-1. [使用]](#使用)
-1. [Props](https://github.com/dohooo/react-native-reanimated-carousel/blob/main/docs/props.zh-CN.md)
+1. [使用](#使用)
+1. [Props](./docs/props.zh-CN.md)
 1. [提示](#提示)
 1. [原因](#原因)
-1. [运行示例](#运行示例)
+1. [示例](#示例)
 
 ---
 
