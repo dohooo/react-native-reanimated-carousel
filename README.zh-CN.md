@@ -1,6 +1,6 @@
 [English](./README.md) | 简体中文
 
-# react-native-reanimated-carousel
+# react-native-reanimated-carousel 2
 
 <img src="assets/banner-zh.jpeg" width="100%"/>
 
@@ -13,10 +13,11 @@
 
 ## ReactNative 社区最好用的轮播图组件! 🎉🎉🎉
 
--   完全解决了`react-native-snap-carousel`的[问题](https://github.com/meliorence/react-native-snap-carousel/issues/632)! 更多样式与 API 正在开发中...[试一下](https://snack.expo.dev/@zhaodonghao586/simple-carousel)
+-   **完全解决了`react-native-snap-carousel`的[问题](https://github.com/meliorence/react-native-snap-carousel/issues/632)**
 -   **易用**、**无限滚动**、**完全使用 Reanimated2 实现**
+    > v2 已经发布，希望大家喜欢！~
 
-> 点击图片，查看 demo。🍺
+> 点击图片，查看 demo。[试一下(Snack)](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
 
 <p align="center">
   <a href="./example/src/normal/index.tsx">
@@ -47,7 +48,7 @@
 
 <br/>
 
-## Table of contents
+## 目录
 
 1. [安装](#安装)
 1. [使用](#使用)
@@ -55,6 +56,7 @@
 1. [提示](#提示)
 1. [原因](#原因)
 1. [示例](#示例)
+1. [v1 文档](https://github.com/dohooo/react-native-reanimated-carousel/tree/v1.x.x)
 
 ---
 
@@ -79,12 +81,11 @@ npm install react-native-reanimated-carousel
 ```tsx
 import Carousel from 'react-native-reanimated-carousel';
 
-<Carousel<{ color: string }>
-    width={width}
-    data={[{ color: 'red' }, { color: 'purple' }, { color: 'yellow' }]}
-    renderItem={({ color }) => {
-        return <View style={{ backgroundColor: color, flex: 1 }} />;
-    }}
+<Carousel
+    width={300}
+    height={150}
+    data={[1, 2, 3]}
+    renderItem={(item) => <AnyElement />}
 />;
 ```
 

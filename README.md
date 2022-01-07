@@ -1,6 +1,6 @@
 English | [简体中文](./README.zh-CN.md)
 
-# react-native-reanimated-carousel
+# react-native-reanimated-carousel 2
 
 <img src="assets/banner.png" width="100%"/>
 
@@ -13,10 +13,10 @@ English | [简体中文](./README.zh-CN.md)
 
 ## ReactNative community's best use of the carousel component! 🎉🎉🎉
 
--   It completely solves this [problem](https://github.com/meliorence/react-native-snap-carousel/issues/632) for `react-native-snap-carousel`! More styles and apis in development... [Try it](https://snack.expo.dev/@zhaodonghao586/simple-carousel)
+-   **It completely solves this [problem](https://github.com/meliorence/react-native-snap-carousel/issues/632) for `react-native-snap-carousel`!**
 -   **Simple**、**Infinitely scrolling very smooth**、**Fully implemented using Reanimated 2!**
 
-> Click on the image to see the demo. 🍺
+> Click on the image to see the demo. [Try it(Snack)](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
 
 <p align="center">
   <a href="./example/src/normal/index.tsx">
@@ -55,6 +55,7 @@ English | [简体中文](./README.zh-CN.md)
 1. [Tips](#Tips)
 1. [Reason](#Reason)
 1. [Example](#Example)
+1. [v1 docs](https://github.com/dohooo/react-native-reanimated-carousel/tree/v1.x.x)
 
 ## Installation
 
@@ -77,12 +78,11 @@ Now we need to install [`react-native-gesture-handler`](https://github.com/kmagi
 ```tsx
 import Carousel from 'react-native-reanimated-carousel';
 
-<Carousel<{ color: string }>
-    width={width}
-    data={[{ color: 'red' }, { color: 'purple' }, { color: 'yellow' }]}
-    renderItem={({ color }) => {
-        return <View style={{ backgroundColor: color, flex: 1 }} />;
-    }}
+<Carousel
+    width={300}
+    height={150}
+    data={[1, 2, 3]}
+    renderItem={(item) => <AnyElement />}
 />;
 ```
 
