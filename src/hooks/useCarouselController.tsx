@@ -1,21 +1,29 @@
 import React from 'react';
 import type Animated from 'react-native-reanimated';
-import { runOnJS, withSpring } from 'react-native-reanimated';
-import type { IIndexController } from './useIndexController';
+import { runOnJS, useSharedValue, withSpring } from 'react-native-reanimated';
 
 interface IOpts {
     loop: boolean;
     size: number;
     handlerOffsetX: Animated.SharedValue<number>;
-    indexController: IIndexController;
     disable?: boolean;
     onScrollBegin?: () => void;
     onScrollEnd?: () => void;
+    // the length before fill data
+    originalLength: number;
+    length: number;
+    onChange: (index: number) => void;
 }
 
 export interface ICarouselController {
+    length: number;
+    index: Animated.SharedValue<number>;
+    sharedIndex: React.MutableRefObject<number>;
+    sharedPreIndex: React.MutableRefObject<number>;
     prev: () => void;
     next: () => void;
+    computedIndex: () => void;
+    getCurrentIndex: () => number;
     to: (index: number, animated?: boolean) => void;
 }
 
@@ -24,9 +32,57 @@ export function useCarouselController(opts: IOpts): ICarouselController {
         size,
         loop,
         handlerOffsetX,
-        indexController,
         disable = false,
+        originalLength,
+        length,
+        onChange,
     } = opts;
+
+    const index = useSharedValue<number>(0);
+    // The Index displayed to the user
+    const sharedIndex = React.useRef<number>(0);
+    const sharedPreIndex = React.useRef<number>(0);
+
+    const convertToSharedIndex = React.useCallback(
+        (i: number) => {
+            if (loop) {
+                switch (originalLength) {
+                    case 1:
+                        return 0;
+                    case 2:
+                        return i % 2;
+                }
+            }
+            return i;
+        },
+        [originalLength, loop]
+    );
+
+    const computedIndex = React.useCallback(() => {
+        sharedPreIndex.current = sharedIndex.current;
+        const toInt = (handlerOffsetX.value / size) % length;
+        const i =
+            handlerOffsetX.value <= 0
+                ? Math.abs(toInt)
+                : Math.abs(toInt > 0 ? length - toInt : 0);
+        index.value = i;
+        const _sharedIndex = convertToSharedIndex(i);
+        sharedIndex.current = _sharedIndex;
+        onChange(_sharedIndex);
+    }, [
+        length,
+        handlerOffsetX,
+        sharedPreIndex,
+        index,
+        size,
+        sharedIndex,
+        convertToSharedIndex,
+        onChange,
+    ]);
+
+    const getCurrentIndex = React.useCallback(() => {
+        return index.value;
+    }, [index]);
 
     const canSliding = React.useCallback(() => {
         return !disable;
@@ -57,12 +113,7 @@ export function useCarouselController(opts: IOpts): ICarouselController {
     );
 
     const next = React.useCallback(() => {
-        if (
-            !canSliding() ||
-            (!loop &&
-                indexController.index.value === indexController.length - 1)
-        )
-            return;
+        if (!canSliding() || (!loop && index.value === length - 1)) return;
 
         onScrollBegin?.();
 
@@ -71,17 +122,17 @@ export function useCarouselController(opts: IOpts): ICarouselController {
         handlerOffsetX.value = scrollWithSpring((currentPage - 1) * size);
     }, [
         canSliding,
-        onScrollBegin,
-        size,
-        handlerOffsetX,
-        indexController,
         loop,
+        index.value,
+        length,
+        onScrollBegin,
+        handlerOffsetX,
+        size,
         scrollWithSpring,
     ]);
 
     const prev = React.useCallback(() => {
-        if (!canSliding() || (!loop && indexController.index.value === 0))
-            return;
+        if (!canSliding() || (!loop && index.value === 0)) return;
 
         onScrollBegin?.();
 
@@ -90,43 +141,41 @@ export function useCarouselController(opts: IOpts): ICarouselController {
         handlerOffsetX.value = scrollWithSpring((currentPage + 1) * size);
     }, [
         canSliding,
-        onScrollBegin,
-        size,
-        handlerOffsetX,
-        indexController,
         loop,
+        index.value,
+        onScrollBegin,
+        handlerOffsetX,
+        size,
         scrollWithSpring,
     ]);
 
     const to = React.useCallback(
-        (index: number, animated: boolean = false) => {
-            if (index === indexController.index.value) return;
+        (idx: number, animated: boolean = false) => {
+            if (idx === index.value) return;
             if (!canSliding()) return;
 
             onScrollBegin?.();
 
-            const offset =
-                handlerOffsetX.value +
-                (indexController.index.value - index) * size;
+            const offset = handlerOffsetX.value + (index.value - idx) * size;
 
             if (animated) {
                 handlerOffsetX.value = scrollWithSpring(offset, () => {
-                    indexController.index.value = index;
+                    index.value = idx;
                 });
             } else {
                 handlerOffsetX.value = offset;
-                indexController.index.value = index;
+                index.value = idx;
                 runOnJS(onScrollEnd)();
             }
         },
         [
+            index,
             canSliding,
             onScrollBegin,
-            onScrollEnd,
-            size,
-            indexController,
             handlerOffsetX,
+            size,
             scrollWithSpring,
+            onScrollEnd,
         ]
     );
 
@@ -134,5 +183,11 @@ export function useCarouselController(opts: IOpts): ICarouselController {
         next,
         prev,
         to,
+        index,
+        length,
+        sharedIndex,
+        sharedPreIndex,
+        computedIndex,
+        getCurrentIndex,
     };
 }

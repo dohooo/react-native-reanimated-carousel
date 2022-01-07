@@ -5,20 +5,26 @@ type TBaseConfig = {
     vertical: boolean;
 };
 
-export type TAnimationConfig = {
+export interface IAnimationConfig {
+    /**
+     * When use default Layout props,this prop can be control prev/next item offset.
+     * @default 100
+     */
     parallaxScrollingOffset?: number;
+    /**
+     * When use default Layout props,this prop can be control prev/next item offset.
+     * @default 0.8
+     */
     parallaxScrollingScale?: number;
-};
+}
 
 export function parallaxLayout(
-    animationConfig: TAnimationConfig & TBaseConfig
+    baseConfig: TBaseConfig,
+    animationConfig: IAnimationConfig = {}
 ) {
-    const {
-        size,
-        vertical,
-        parallaxScrollingOffset = 100,
-        parallaxScrollingScale = 0.8,
-    } = animationConfig;
+    const { size, vertical } = baseConfig;
+    const { parallaxScrollingOffset = 100, parallaxScrollingScale = 0.8 } =
+        animationConfig;
 
     return (value: number) => {
         'worklet';

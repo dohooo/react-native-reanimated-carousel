@@ -50,8 +50,10 @@ function Index() {
                     (progressValue.value = absoluteProgress)
                 }
                 mode="parallax"
-                parallaxScrollingScale={0.9}
-                parallaxScrollingOffset={50}
+                animationConfig={{
+                    parallaxScrollingScale: 0.9,
+                    parallaxScrollingOffset: 50,
+                }}
                 data={CAROUSEL_ITEMS}
                 renderItem={() => <SBImageItem />}
             />

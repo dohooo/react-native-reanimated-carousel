@@ -1,6 +1,7 @@
 import type { ViewStyle } from 'react-native';
 import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
-import type { StackAnimationConfig } from './layouts/stack';
+import type { IAnimationConfig as IStackAnimationConfig } from './layouts/stack';
+import type { IAnimationConfig as IParallaxAnimationConfig } from './layouts/parallax';
 
 export type ComputedDirectionTypes<T, VP = {}, HP = {}> =
     | (T &
@@ -39,7 +40,7 @@ type TParallaxModeProps = ComputedDirectionTypes<{
      * Carousel Animated transitions.
      */
     mode?: 'parallax';
-    animationConfig?: Record<string, unknown>;
+    animationConfig?: IParallaxAnimationConfig;
 }>;
 
 type TStackModeProps = ComputedDirectionTypes<{
@@ -57,7 +58,7 @@ type TStackModeProps = ComputedDirectionTypes<{
      *     scaleInterval: 0.08,
      *     rotateZDeg: 135,
      */
-    animationConfig?: StackAnimationConfig;
+    animationConfig?: IStackAnimationConfig;
 }>;
 
 export type TCarouselProps<T = any> = {
@@ -94,16 +95,6 @@ export type TCarouselProps<T = any> = {
      * Carousel container style
      */
     style?: ViewStyle;
-    /**
-     * When use default Layout props,this prop can be control prev/next item offset.
-     * @default 100
-     */
-    parallaxScrollingOffset?: number;
-    /**
-     * When use default Layout props,this prop can be control prev/next item offset.
-     * @default 0.8
-     */
-    parallaxScrollingScale?: number;
     /**
      * PanGestureHandler props
      */

@@ -3,7 +3,7 @@ import { Extrapolate, interpolate } from 'react-native-reanimated';
 
 const screen = Dimensions.get('window');
 
-export type StackAnimationConfig = {
+export interface IAnimationConfig {
     showLength?: number;
     moveSize?: number;
     stackInterval?: number;
@@ -11,11 +11,9 @@ export type StackAnimationConfig = {
     opacityInterval?: number;
     rotateZDeg?: number;
     snapDirection?: 'left' | 'right';
-};
+}
 
-export function horizontalStackLayout(
-    animationConfig: StackAnimationConfig = {}
-) {
+export function horizontalStackLayout(animationConfig: IAnimationConfig = {}) {
     return (_value: number) => {
         'worklet';
 
@@ -108,9 +106,7 @@ export function horizontalStackLayout(
     };
 }
 
-export function verticalStackLayout(
-    animationConfig: StackAnimationConfig = {}
-) {
+export function verticalStackLayout(animationConfig: IAnimationConfig = {}) {
     return (_value: number) => {
         'worklet';
 

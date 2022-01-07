@@ -3,7 +3,6 @@ import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import {
     PanGestureHandler,
     PanGestureHandlerGestureEvent,
-    PanGestureHandlerProps,
 } from 'react-native-gesture-handler';
 import Animated, {
     cancelAnimation,
@@ -15,6 +14,7 @@ import Animated, {
     withDecay,
     withSpring,
 } from 'react-native-reanimated';
+import { CTX } from './store';
 
 type GestureContext = {
     panOffset: number;
@@ -22,38 +22,30 @@ type GestureContext = {
 };
 
 interface Props {
-    style?: StyleProp<ViewStyle>;
-    infinite?: boolean;
-    pagingEnabled?: boolean;
-    enableSnap?: boolean;
-    vertical?: boolean;
-    panGestureHandlerProps?: Omit<
-        Partial<PanGestureHandlerProps>,
-        'onHandlerStateChange'
-    >;
-    onScrollBegin?: () => void;
-    onScrollEnd?: () => void;
-
-    translation: Animated.SharedValue<number>;
     size: number;
-    maxPage: number;
+    infinite?: boolean;
+    onScrollEnd?: () => void;
+    onScrollBegin?: () => void;
+    style?: StyleProp<ViewStyle>;
+    translation: Animated.SharedValue<number>;
 }
 
 const IScrollViewGesture: React.FC<Props> = (props) => {
     const {
-        style,
-        infinite,
-        vertical,
-        translation,
-        pagingEnabled = true,
-        enableSnap = true,
-        panGestureHandlerProps = {},
-        onScrollBegin,
-        onScrollEnd,
-        size,
-        maxPage,
-    } = props;
+        props: {
+            vertical,
+            style,
+            data,
+            pagingEnabled,
+            enableSnap,
+            panGestureHandlerProps,
+            loop: infinite,
+        },
+    } = React.useContext(CTX);
 
+    const { translation, onScrollBegin, onScrollEnd, size } = props;
+
+    const maxPage = data.length;
     const isHorizontal = useDerivedValue(() => !vertical, [vertical]);
     const touching = useSharedValue(false);
     const scrollEndTranslation = useSharedValue(0);
