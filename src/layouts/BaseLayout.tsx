@@ -1,73 +1,66 @@
 import React from 'react';
+import type { ViewStyle } from 'react-native';
 import Animated, {
-    Extrapolate,
-    interpolate,
     runOnJS,
     useAnimatedReaction,
     useAnimatedStyle,
 } from 'react-native-reanimated';
-import type { ComputedDirectionTypes } from 'src/types';
-import { useOffsetX } from '../hooks/useOffsetX';
+import { IOpts, useOffsetX } from '../hooks/useOffsetX';
 import type { IVisibleRanges } from '../hooks/useVisibleRanges';
 import { LazyView } from '../LazyView';
+import type { IAnimationConfig as IStackAnimationConfig } from './stack';
+import { CTX } from '../store';
 
-export const NormalLayout: React.FC<
-    ComputedDirectionTypes<{
-        loop?: boolean;
-        index: number;
-        handlerOffsetX: Animated.SharedValue<number>;
-        data: unknown[];
-        visibleRanges: IVisibleRanges;
-    }>
-> = (props) => {
+export type TAnimationStyle = (
+    value: number
+) => Animated.AnimatedStyleProp<ViewStyle>;
+
+export const BaseLayout: React.FC<{
+    index: number;
+    handlerOffsetX: Animated.SharedValue<number>;
+    visibleRanges: IVisibleRanges;
+    animationStyle: TAnimationStyle;
+}> = (props) => {
+    const { handlerOffsetX, index, children, visibleRanges, animationStyle } =
+        props;
+
     const {
-        handlerOffsetX,
-        index,
-        children,
-        width,
-        height,
-        loop,
-        data,
-        visibleRanges,
-        vertical,
-    } = props;
+        props: { mode, loop, data, width, height, vertical, animationConfig },
+    } = React.useContext(CTX);
 
     const [shouldUpdate, setShouldUpdate] = React.useState(false);
 
-    const size = props.vertical ? props.height : props.width;
+    const size = vertical ? height : width;
 
-    const x = useOffsetX(
-        {
+    let offsetXConfig: IOpts = {
+        handlerOffsetX,
+        index,
+        size,
+        data,
+        loop,
+    };
+
+    if (mode === 'horizontal-stack') {
+        const { snapDirection, showLength } =
+            animationConfig as IStackAnimationConfig;
+
+        offsetXConfig = {
             handlerOffsetX,
             index,
             size,
             data,
             loop,
-        },
-        visibleRanges
-    );
-
-    const offsetXStyle = useAnimatedStyle(() => {
-        const value = x.value / size;
-        const translate = interpolate(
-            value,
-            [-1, 0, 1],
-            [-size, 0, size],
-            Extrapolate.EXTEND
-        );
-
-        return {
-            transform: [
-                vertical
-                    ? {
-                          translateY: translate,
-                      }
-                    : {
-                          translateX: translate,
-                      },
-            ],
+            type: snapDirection === 'right' ? 'negative' : 'positive',
+            viewCount: showLength,
         };
-    }, [vertical]);
+    }
+
+    const x = useOffsetX(offsetXConfig, visibleRanges);
+
+    const _animatedStyle = useAnimatedStyle(
+        () => animationStyle(x.value / size),
+        [animationStyle]
+    );
 
     const updateView = React.useCallback(
         (negativeRange: number[], positiveRange: number[]) => {
@@ -98,7 +91,7 @@ export const NormalLayout: React.FC<
                     height: height || '100%',
                     position: 'absolute',
                 },
-                offsetXStyle,
+                _animatedStyle,
             ]}
         >
             <LazyView shouldUpdate={shouldUpdate}>{children}</LazyView>

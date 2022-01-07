@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Image, ActivityIndicator } from 'react-native';
 
-const ISBImageItem: React.FC = () => {
+export const SBImageItem: React.FC = () => {
     const uri = React.useRef(
         `https://picsum.photos/400/300?t=${new Date().getTime()}`
     );
@@ -17,8 +17,6 @@ const ISBImageItem: React.FC = () => {
         </View>
     );
 };
-
-export const SBImageItem = ISBImageItem;
 
 const styles = StyleSheet.create({
     container: {

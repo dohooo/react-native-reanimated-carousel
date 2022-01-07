@@ -1,142 +1,47 @@
 import React, { PropsWithChildren } from 'react';
-import Animated, {
-    runOnJS,
-    useAnimatedReaction,
-    useDerivedValue,
-    useSharedValue,
-} from 'react-native-reanimated';
-import { ParallaxLayout, StackLayout, NormalLayout } from './layouts/index';
+import Animated, { runOnJS, useDerivedValue } from 'react-native-reanimated';
 import { useCarouselController } from './hooks/useCarouselController';
 import { useAutoPlay } from './hooks/useAutoPlay';
-import { useIndexController } from './hooks/useIndexController';
 import { usePropsErrorBoundary } from './hooks/usePropsErrorBoundary';
 import { ScrollViewGesture } from './ScrollViewGesture';
 import { useVisibleRanges } from './hooks/useVisibleRanges';
 import type { ICarouselInstance, TCarouselProps } from './types';
 import { StyleSheet, View } from 'react-native';
-import type { StackAnimationConfig } from './layouts/StackLayout';
 import { DATA_LENGTH } from './constants';
+import { BaseLayout } from './layouts/BaseLayout';
+import { useLayoutConfig } from './hooks/useLayoutConfig';
+import { useInitProps } from './hooks/useInitProps';
+import { CTX } from './store';
+import { useCommonVariables } from './hooks/useCommonVariables';
+import { useOnProgressChange } from './hooks/useOnProgressChange';
 
 function Carousel<T>(
-    props: PropsWithChildren<TCarouselProps<T>>,
+    _props: PropsWithChildren<TCarouselProps<T>>,
     ref: React.Ref<ICarouselInstance>
 ) {
+    const props = useInitProps(_props);
+
     const {
-        defaultIndex = 0,
-        data: _data = [],
-        loop = true,
-        mode = 'default',
+        data,
+        loop,
+        mode,
+        style,
+        width,
+        height,
+        vertical,
         autoPlay,
-        autoPlayReverse,
-        autoPlayInterval = 1000,
-        parallaxScrollingOffset,
-        parallaxScrollingScale,
-        style = {},
-        panGestureHandlerProps = {},
         windowSize,
+        autoPlayReverse,
+        autoPlayInterval,
         renderItem,
         onScrollEnd,
         onSnapToItem,
         onScrollBegin,
         onProgressChange,
-        vertical = false,
-        pagingEnabled = true,
-        enableSnap = true,
     } = props;
 
-    let animationConfig: StackAnimationConfig | undefined;
-    let showLength: number | undefined;
-
-    if (props.mode === 'stack') {
-        animationConfig = props.animationConfig;
-        showLength = props.showLength;
-    }
-
-    // @ts-ignore
-    usePropsErrorBoundary({
-        ...props,
-        data: _data,
-        mode,
-        loop,
-        style,
-        vertical,
-        defaultIndex,
-        autoPlayInterval,
-        panGestureHandlerProps,
-    });
-
-    const width = Math.round(props.width || 0);
-    const height = Math.round(props.height || 0);
-    const size = (vertical ? height : width) as number;
-    const layoutStyle = { width: width || '100%', height: height || '100%' };
-    const defaultHandlerOffsetX = -Math.abs(defaultIndex * size);
-    const handlerOffsetX = useSharedValue<number>(defaultHandlerOffsetX);
-
-    React.useEffect(() => {
-        handlerOffsetX.value = defaultHandlerOffsetX;
-    }, [vertical, handlerOffsetX, defaultHandlerOffsetX, loop]);
-
-    const data = React.useMemo<T[]>(() => {
-        if (!loop) return _data;
-
-        if (_data.length === DATA_LENGTH.SINGLE_ITEM) {
-            return [_data[0], _data[0], _data[0]];
-        }
-
-        if (_data.length === DATA_LENGTH.DOUBLE_ITEM) {
-            return [_data[0], _data[1], _data[0], _data[1]];
-        }
-
-        return _data;
-    }, [_data, loop]);
-
-    const indexController = useIndexController({
-        originalLength: data.length,
-        length: data.length,
-        handlerOffsetX,
-        size,
-        loop,
-        onChange: (i) => onSnapToItem && runOnJS(onSnapToItem)(i),
-    });
-
-    const carouselController = useCarouselController({
-        loop,
-        size,
-        handlerOffsetX,
-        indexController,
-        disable: !data.length,
-        onScrollBegin: () => runOnJS(_onScrollBegin)(),
-        onScrollEnd: () => runOnJS(_onScrollEnd)(),
-    });
-
-    const { run, pause } = useAutoPlay({
-        autoPlay,
-        autoPlayInterval,
-        autoPlayReverse,
-        carouselController,
-    });
-
-    const { index, sharedPreIndex, sharedIndex, computedIndex } =
-        indexController;
-
-    const _onScrollBegin = React.useCallback(() => {
-        onScrollBegin?.();
-    }, [onScrollBegin]);
-
-    const scrollViewGestureOnScrollBegin = React.useCallback(() => {
-        pause();
-        _onScrollBegin();
-    }, [_onScrollBegin, pause]);
-
-    const _onScrollEnd = React.useCallback(() => {
-        computedIndex();
-        onScrollEnd?.(sharedPreIndex.current, sharedIndex.current);
-    }, [sharedPreIndex, sharedIndex, computedIndex, onScrollEnd]);
-
-    const scrollViewGestureOnScrollEnd = React.useCallback(() => {
-        run();
-        _onScrollEnd();
-    }, [_onScrollEnd, run]);
+    const commonVariables = useCommonVariables(props);
+    const { size, handlerOffsetX } = commonVariables;
 
     const offsetX = useDerivedValue(() => {
         const totalSize = size * data.length;
@@ -148,42 +53,51 @@ function Carousel<T>(
         return isNaN(x) ? 0 : x;
     }, [loop, size, data]);
 
-    useAnimatedReaction(
-        () => offsetX.value,
-        (_value) => {
-            let value = _value;
+    usePropsErrorBoundary(props);
+    useOnProgressChange({ size, offsetX, data, onProgressChange });
 
-            if (_data.length === DATA_LENGTH.SINGLE_ITEM) {
-                value = value % size;
-            }
+    const carouselController = useCarouselController({
+        loop,
+        size,
+        handlerOffsetX,
+        length: data.length,
+        disable: !data.length,
+        originalLength: data.length,
+        onScrollEnd: () => runOnJS(_onScrollEnd)(),
+        onScrollBegin: () => !!onScrollBegin && runOnJS(onScrollBegin)(),
+        onChange: (i) => onSnapToItem && runOnJS(onSnapToItem)(i),
+    });
 
-            if (_data.length === DATA_LENGTH.DOUBLE_ITEM) {
-                value = value % (size * 2);
-            }
+    const {
+        next,
+        prev,
+        sharedPreIndex,
+        sharedIndex,
+        computedIndex,
+        getCurrentIndex,
+    } = carouselController;
 
-            let absoluteProgress = Math.abs(value / size);
+    const { run, pause } = useAutoPlay({
+        autoPlay,
+        autoPlayInterval,
+        autoPlayReverse,
+        carouselController,
+    });
 
-            if (value > 0) {
-                absoluteProgress = data.length - absoluteProgress;
-            }
+    const scrollViewGestureOnScrollBegin = React.useCallback(() => {
+        pause();
+        onScrollBegin?.();
+    }, [onScrollBegin, pause]);
 
-            !!onProgressChange &&
-                runOnJS(onProgressChange)(value, absoluteProgress);
-        },
-        [onProgressChange, _data]
-    );
+    const _onScrollEnd = React.useCallback(() => {
+        computedIndex();
+        onScrollEnd?.(sharedPreIndex.current, sharedIndex.current);
+    }, [sharedPreIndex, sharedIndex, computedIndex, onScrollEnd]);
 
-    const next = React.useCallback(() => {
-        return carouselController.next();
-    }, [carouselController]);
-
-    const prev = React.useCallback(() => {
-        return carouselController.prev();
-    }, [carouselController]);
-
-    const getCurrentIndex = React.useCallback(() => {
-        return index.value;
-    }, [index]);
+    const scrollViewGestureOnScrollEnd = React.useCallback(() => {
+        run();
+        _onScrollEnd();
+    }, [_onScrollEnd, run]);
 
     const goToIndex = React.useCallback(
         (i: number, animated?: boolean) => {
@@ -210,120 +124,68 @@ function Carousel<T>(
         windowSize,
     });
 
+    const layoutConfig = useLayoutConfig<T>({ ...props, size });
+
     const renderLayout = React.useCallback(
         (item: T, i: number) => {
             let realIndex = i;
-            if (_data.length === DATA_LENGTH.SINGLE_ITEM) {
+            if (data.length === DATA_LENGTH.SINGLE_ITEM) {
                 realIndex = i % 1;
             }
 
-            if (_data.length === DATA_LENGTH.DOUBLE_ITEM) {
+            if (data.length === DATA_LENGTH.DOUBLE_ITEM) {
                 realIndex = i % 2;
             }
 
-            switch (mode) {
-                case 'parallax':
-                    return (
-                        <ParallaxLayout
-                            data={data}
-                            width={width}
-                            height={height}
-                            vertical={vertical}
-                            parallaxScrollingOffset={parallaxScrollingOffset}
-                            parallaxScrollingScale={parallaxScrollingScale}
-                            handlerOffsetX={offsetX}
-                            index={i}
-                            key={i}
-                            loop={loop}
-                            visibleRanges={visibleRanges}
-                        >
-                            {renderItem(item, realIndex)}
-                        </ParallaxLayout>
-                    );
-                case 'stack':
-                    return (
-                        <StackLayout
-                            data={data}
-                            width={width}
-                            height={height}
-                            vertical={vertical}
-                            showLength={showLength}
-                            animationConfig={animationConfig}
-                            handlerOffsetX={offsetX}
-                            index={i}
-                            key={i}
-                            loop={loop}
-                            visibleRanges={visibleRanges}
-                        >
-                            {renderItem(item, realIndex)}
-                        </StackLayout>
-                    );
-                case 'default':
-                default:
-                    return (
-                        <NormalLayout
-                            data={data}
-                            width={width}
-                            height={height}
-                            vertical={vertical}
-                            handlerOffsetX={offsetX}
-                            index={i}
-                            key={i}
-                            loop={loop}
-                            visibleRanges={visibleRanges}
-                        >
-                            {renderItem(item, realIndex)}
-                        </NormalLayout>
-                    );
-            }
+            return (
+                <BaseLayout
+                    key={i}
+                    index={i}
+                    handlerOffsetX={offsetX}
+                    visibleRanges={visibleRanges}
+                    animationStyle={layoutConfig}
+                >
+                    {renderItem(item, realIndex)}
+                </BaseLayout>
+            );
         },
-        [
-            loop,
-            data,
-            mode,
-            width,
-            _data,
-            height,
-            offsetX,
-            vertical,
-            showLength,
-            renderItem,
-            visibleRanges,
-            animationConfig,
-            parallaxScrollingScale,
-            parallaxScrollingOffset,
-        ]
+        [data, offsetX, renderItem, layoutConfig, visibleRanges]
     );
 
     return (
-        <View style={[styles.container, layoutStyle, style]}>
-            <ScrollViewGesture
-                size={size}
-                style={style}
-                infinite={loop}
-                vertical={mode !== 'stack' && vertical}
-                maxPage={data.length}
-                enableSnap={enableSnap}
-                translation={handlerOffsetX}
-                pagingEnabled={pagingEnabled}
-                panGestureHandlerProps={panGestureHandlerProps}
-                onScrollBegin={scrollViewGestureOnScrollBegin}
-                onScrollEnd={scrollViewGestureOnScrollEnd}
+        <CTX.Provider value={{ props, common: commonVariables }}>
+            <View
+                style={[
+                    styles.container,
+                    { width: width || '100%', height: height || '100%' },
+                    style,
+                ]}
             >
-                <Animated.View
-                    style={[
-                        styles.container,
-                        layoutStyle,
-                        style,
-                        vertical
-                            ? styles.itemsVertical
-                            : styles.itemsHorizontal,
-                    ]}
+                <ScrollViewGesture
+                    size={size}
+                    translation={handlerOffsetX}
+                    onScrollBegin={scrollViewGestureOnScrollBegin}
+                    onScrollEnd={scrollViewGestureOnScrollEnd}
                 >
-                    {data.map(renderLayout)}
-                </Animated.View>
-            </ScrollViewGesture>
-        </View>
+                    <Animated.View
+                        key={mode}
+                        style={[
+                            styles.container,
+                            {
+                                width: width || '100%',
+                                height: height || '100%',
+                            },
+                            style,
+                            vertical
+                                ? styles.itemsVertical
+                                : styles.itemsHorizontal,
+                        ]}
+                    >
+                        {data.map(renderLayout)}
+                    </Animated.View>
+                </ScrollViewGesture>
+            </View>
+        </CTX.Provider>
     );
 }
 

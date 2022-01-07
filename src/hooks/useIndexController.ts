@@ -7,6 +7,7 @@ export interface IIndexController {
     sharedIndex: React.MutableRefObject<number>;
     index: Animated.SharedValue<number>;
     computedIndex: () => void;
+    getCurrentIndex: () => number;
 }
 
 export function useIndexController(opts: {
@@ -62,5 +63,16 @@ export function useIndexController(opts: {
         onChange,
     ]);
 
-    return { length, index, sharedPreIndex, sharedIndex, computedIndex };
+    const getCurrentIndex = React.useCallback(() => {
+        return index.value;
+    }, [index]);
+
+    return {
+        index,
+        length,
+        sharedIndex,
+        sharedPreIndex,
+        computedIndex,
+        getCurrentIndex,
+    };
 }

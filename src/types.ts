@@ -1,6 +1,7 @@
 import type { ViewStyle } from 'react-native';
 import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
-import type { StackAnimationConfig } from './layouts/StackLayout';
+import type { IAnimationConfig as IStackAnimationConfig } from './layouts/stack';
+import type { IAnimationConfig as IParallaxAnimationConfig } from './layouts/parallax';
 
 export type ComputedDirectionTypes<T, VP = {}, HP = {}> =
     | (T &
@@ -34,27 +35,19 @@ export type ComputedDirectionTypes<T, VP = {}, HP = {}> =
               height?: number;
           });
 
-type TDefaultModeProps = ComputedDirectionTypes<{
-    /**
-     * Carousel Animated transitions.
-     * @default 'default'
-     */
-    mode?: 'default';
-}>;
-
 type TParallaxModeProps = ComputedDirectionTypes<{
     /**
      * Carousel Animated transitions.
      */
-    mode: 'parallax';
+    mode?: 'parallax';
+    animationConfig?: IParallaxAnimationConfig;
 }>;
 
 type TStackModeProps = ComputedDirectionTypes<{
     /**
      * Carousel Animated transitions.
-     * @default 'default'
      */
-    mode?: 'stack';
+    mode?: 'horizontal-stack' | 'vertical-stack';
     /**
      * Stack animation style.
      * @default
@@ -65,11 +58,7 @@ type TStackModeProps = ComputedDirectionTypes<{
      *     scaleInterval: 0.08,
      *     rotateZDeg: 135,
      */
-    animationConfig?: StackAnimationConfig;
-    /**
-     * The maximum number of items will show in stack.
-     */
-    showLength?: number;
+    animationConfig?: IStackAnimationConfig;
 }>;
 
 export type TCarouselProps<T = any> = {
@@ -106,16 +95,6 @@ export type TCarouselProps<T = any> = {
      * Carousel container style
      */
     style?: ViewStyle;
-    /**
-     * When use 'default' Layout props,this prop can be control prev/next item offset.
-     * @default 100
-     */
-    parallaxScrollingOffset?: number;
-    /**
-     * When use 'default' Layout props,this prop can be control prev/next item offset.
-     * @default 0.8
-     */
-    parallaxScrollingScale?: number;
     /**
      * PanGestureHandler props
      */
@@ -166,7 +145,7 @@ export type TCarouselProps<T = any> = {
         offsetProgress: number,
         absoluteProgress: number
     ) => void;
-} & (TDefaultModeProps | TParallaxModeProps | TStackModeProps);
+} & (TParallaxModeProps | TStackModeProps);
 
 export interface ICarouselInstance {
     /**
