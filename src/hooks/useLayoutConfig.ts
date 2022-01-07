@@ -1,19 +1,19 @@
 import React from 'react';
+import type { TAnimationStyle } from 'src/layouts/BaseLayout';
 import { Layouts } from '../layouts';
-import type { TLayoutConfig } from '../layouts/BaseLayout';
 import type { TInitializeCarouselProps } from './useInitProps';
 
 type TLayoutConfigOpts<T> = TInitializeCarouselProps<T> & { size: number };
 
-export function useLayoutConfig<T>(opts: TLayoutConfigOpts<T>): TLayoutConfig {
+export function useLayoutConfig<T>(
+    opts: TLayoutConfigOpts<T>
+): TAnimationStyle {
     const {
         mode,
         size,
         vertical,
         parallaxScrollingOffset,
         parallaxScrollingScale,
-        showLength,
-        data,
         animationConfig,
     } = opts as Required<TLayoutConfigOpts<T>>;
 
@@ -27,28 +27,17 @@ export function useLayoutConfig<T>(opts: TLayoutConfigOpts<T>): TLayoutConfig {
                     parallaxScrollingScale,
                 });
             case 'horizontal-stack':
-                return Layouts.horizontalStack({
-                    size,
-                    showLength: showLength || data.length - 1,
-                    animationConfig,
-                });
+                return Layouts.horizontalStack(animationConfig);
             case 'vertical-stack':
-                return Layouts.verticalStack({
-                    size,
-                    showLength: showLength || data.length - 1,
-                    animationConfig,
-                });
-            case 'default':
+                return Layouts.verticalStack(animationConfig);
             default:
                 return Layouts.normal({ size, vertical });
         }
     }, [
         mode,
-        size,
-        data,
-        vertical,
-        showLength,
         animationConfig,
+        size,
+        vertical,
         parallaxScrollingScale,
         parallaxScrollingOffset,
     ]);

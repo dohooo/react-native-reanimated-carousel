@@ -1,6 +1,6 @@
 import type { ViewStyle } from 'react-native';
 import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
-import type { StackAnimationConfig } from './layouts/StackLayout';
+import type { StackAnimationConfig } from './layouts/stack';
 
 export type ComputedDirectionTypes<T, VP = {}, HP = {}> =
     | (T &
@@ -34,27 +34,30 @@ export type ComputedDirectionTypes<T, VP = {}, HP = {}> =
               height?: number;
           });
 
-type TDefaultModeProps = ComputedDirectionTypes<{
-    /**
-     * Carousel Animated transitions.
-     * @default 'default'
-     */
-    mode?: 'default';
-}>;
-
 type TParallaxModeProps = ComputedDirectionTypes<{
     /**
      * Carousel Animated transitions.
      */
-    mode: 'parallax';
+    mode?: 'parallax';
+    animationConfig?: Record<string, unknown>;
 }>;
 
 type TStackModeProps = ComputedDirectionTypes<{
     /**
      * Carousel Animated transitions.
-     * @default 'default'
      */
-    mode: 'stack' | 'horizontal-stack' | 'vertical-stack';
+    mode?: 'horizontal-stack' | 'vertical-stack';
+    /**
+     * Stack animation style.
+     * @default
+     *     mode: 'vertical',
+     *     snapDirection: 'right',
+     *     moveSize: window.width,
+     *     stackInterval: 30,
+     *     scaleInterval: 0.08,
+     *     rotateZDeg: 135,
+     */
+    animationConfig?: StackAnimationConfig;
 }>;
 
 export type TCarouselProps<T = any> = {
@@ -92,12 +95,12 @@ export type TCarouselProps<T = any> = {
      */
     style?: ViewStyle;
     /**
-     * When use 'default' Layout props,this prop can be control prev/next item offset.
+     * When use default Layout props,this prop can be control prev/next item offset.
      * @default 100
      */
     parallaxScrollingOffset?: number;
     /**
-     * When use 'default' Layout props,this prop can be control prev/next item offset.
+     * When use default Layout props,this prop can be control prev/next item offset.
      * @default 0.8
      */
     parallaxScrollingScale?: number;
@@ -151,22 +154,7 @@ export type TCarouselProps<T = any> = {
         offsetProgress: number,
         absoluteProgress: number
     ) => void;
-    /**
-     * Stack animation style.
-     * @default
-     *     mode: 'vertical',
-     *     snapDirection: 'right',
-     *     moveSize: window.width,
-     *     stackInterval: 30,
-     *     scaleInterval: 0.08,
-     *     rotateZDeg: 135,
-     */
-    animationConfig?: StackAnimationConfig;
-    /**
-     * The maximum number of items will show in stack.
-     */
-    showLength?: number;
-} & (TDefaultModeProps | TParallaxModeProps | TStackModeProps);
+} & (TParallaxModeProps | TStackModeProps);
 
 export interface ICarouselInstance {
     /**

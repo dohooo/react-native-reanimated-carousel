@@ -11,15 +11,16 @@ export function useInitProps<T>(
     props: TCarouselProps<T>
 ): TInitializeCarouselProps<T> {
     const {
+        mode,
         defaultIndex = 0,
         data: _data = [],
         loop = true,
-        mode = 'default',
         autoPlayInterval = 1000,
         style = {},
         panGestureHandlerProps = {},
         pagingEnabled = true,
         enableSnap = true,
+        animationConfig: _animationConfig = {},
     } = props;
 
     const data = React.useMemo<T[]>(() => {
@@ -36,16 +37,23 @@ export function useInitProps<T>(
         return _data;
     }, [_data, loop]);
 
+    const animationConfig = _animationConfig;
+    if (mode && ['vertical-stack', 'horizontal-stack'].includes(mode)) {
+        animationConfig.showLength =
+            animationConfig.showLength ?? data.length - 1;
+    }
+
     return {
         ...props,
         defaultIndex,
         data,
         loop,
-        mode,
         autoPlayInterval,
         style,
+        mode,
         panGestureHandlerProps,
         pagingEnabled,
         enableSnap,
+        animationConfig,
     };
 }
