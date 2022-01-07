@@ -36,6 +36,7 @@ function Index() {
                 data={[...new Array(6).keys()]}
                 animationConfig={{
                     snapDirection,
+                    stackInterval: mode === 'vertical-stack' ? 8 : 18,
                 }}
                 renderItem={() => <SBImageItem />}
             />
