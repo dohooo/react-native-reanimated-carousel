@@ -16,7 +16,8 @@ English | [简体中文](./README.zh-CN.md)
 -   **It completely solves this [problem](https://github.com/meliorence/react-native-snap-carousel/issues/632) for `react-native-snap-carousel`!**
 -   **Simple**、**Infinitely scrolling very smooth**、**Fully implemented using Reanimated 2!**
 
-> v1 has been released! joint it! [v1 docs](https://github.com/dohooo/react-native-reanimated-carousel/tree/v1.x.x)  
+> V2 has been released! Joint it! [V1 docs](https://github.com/dohooo/react-native-reanimated-carousel/tree/v1.x.x)   
+
 > Click on the image to see the demo. [Try it(Snack)](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
 
 <p align="center">
