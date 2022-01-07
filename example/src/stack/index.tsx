@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native-ui-lib';
 import Carousel from '../../../src/index';
-import { SBImageItem } from '../components/SBImageItem';
+import { SBItem } from '../components/SBItem';
 import SButton from '../components/SButton';
 
 function Index() {
@@ -38,7 +38,7 @@ function Index() {
                     snapDirection,
                     stackInterval: mode === 'vertical-stack' ? 8 : 18,
                 }}
-                renderItem={() => <SBImageItem />}
+                renderItem={(_, index) => <SBItem index={index} key={index} />}
             />
             <View
                 style={{

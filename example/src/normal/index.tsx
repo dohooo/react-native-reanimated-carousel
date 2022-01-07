@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Dimensions } from 'react-native';
 import { View } from 'react-native-ui-lib';
 import Carousel from '../../../src/index';
-import { SBImageItem } from '../components/SBImageItem';
+import { SBItem } from '../components/SBItem';
 import SButton from '../components/SButton';
 
 const window = Dimensions.get('window');
@@ -33,7 +33,7 @@ function Index() {
                 autoPlay={isAutoPlay}
                 autoPlayInterval={isFast ? 100 : 1500}
                 data={[...new Array(6).keys()]}
-                renderItem={() => <SBImageItem />}
+                renderItem={(_, index) => <SBItem key={index} index={index} />}
             />
             <SButton
                 onPress={() => {
