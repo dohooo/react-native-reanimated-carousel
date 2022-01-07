@@ -5,7 +5,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import type { IVisibleRanges } from './useVisibleRanges';
 
-interface IOpts {
+export interface IOpts {
     index: number;
     size: number;
     handlerOffsetX: Animated.SharedValue<number>;

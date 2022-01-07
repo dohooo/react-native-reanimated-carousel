@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Dimensions, View } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
-import { SBImageItem } from '../components/SBImageItem';
+import { SBItem } from '../components/SBItem';
 import SButton from '../components/SButton';
 
 const window = Dimensions.get('window');
@@ -26,7 +26,9 @@ function Index() {
                     sliderWidth={PAGE_WIDTH}
                     data={[...new Array(6).keys()]}
                     windowSize={3}
-                    renderItem={() => <SBImageItem />}
+                    renderItem={({ index }: { index: number }) => (
+                        <SBItem index={index} key={index} />
+                    )}
                 />
             </View>
             <View

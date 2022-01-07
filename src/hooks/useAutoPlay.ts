@@ -16,26 +16,40 @@ export function useAutoPlay(opts: {
 
     const timer = React.useRef<NodeJS.Timer>();
 
-    const run = React.useCallback(() => {
-        if (autoPlay) {
-            timer.current = setInterval(() => {
-                autoPlayReverse
-                    ? carouselController.prev()
-                    : carouselController.next();
-            }, autoPlayInterval);
-        }
-    }, [autoPlay, autoPlayReverse, carouselController, autoPlayInterval]);
-
     const pause = React.useCallback(() => {
         timer.current && clearInterval(timer.current);
     }, []);
 
+    const run = React.useCallback(() => {
+        if (timer.current) {
+            pause();
+        }
+
+        if (!autoPlay) {
+            return;
+        }
+
+        timer.current = setInterval(() => {
+            autoPlayReverse
+                ? carouselController.prev()
+                : carouselController.next();
+        }, autoPlayInterval);
+    }, [
+        pause,
+        autoPlay,
+        autoPlayReverse,
+        autoPlayInterval,
+        carouselController,
+    ]);
+
     React.useEffect(() => {
-        run();
-        return () => {
-            !!timer.current && clearInterval(timer.current);
-        };
-    }, [run, timer]);
+        if (autoPlay) {
+            run();
+        } else {
+            pause();
+        }
+        return pause;
+    }, [run, pause, autoPlay]);
 
     return {
         run,

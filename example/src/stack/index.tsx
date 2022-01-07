@@ -1,18 +1,11 @@
 import * as React from 'react';
-import { Dimensions } from 'react-native';
 import { View } from 'react-native-ui-lib';
 import Carousel from '../../../src/index';
-import type { StackAnimationConfig } from '../../../src/layouts/StackLayout';
-import { SBImageItem } from '../components/SBImageItem';
+import { SBItem } from '../components/SBItem';
 import SButton from '../components/SButton';
 
-const window = Dimensions.get('window');
-const PAGE_WIDTH = window.width;
-
 function Index() {
-    const [mode, setMode] = React.useState<'horizontal' | 'vertical'>(
-        'horizontal'
-    );
+    const [mode, setMode] = React.useState<any>('horizontal-stack');
     const [snapDirection, setSnapDirection] = React.useState<'left' | 'right'>(
         'left'
     );
@@ -23,96 +16,96 @@ function Index() {
     const [autoPlayReverse, setAutoPlayReverse] =
         React.useState<boolean>(false);
 
-    const animationConfig = React.useMemo<StackAnimationConfig>(() => {
-        const basic = {
-            mode,
-            snapDirection,
-        };
-        if (mode === 'vertical') {
-            return {
-                ...basic,
-                stackInterval: 8,
-            };
-        }
-        return basic;
-    }, [mode, snapDirection]);
-
     return (
-        <View
-            style={{
-                flex: 1,
-            }}
-        >
+        <View style={{ flex: 1 }}>
             <Carousel
                 style={{
-                    height: PAGE_WIDTH * 0.8,
-                    width: PAGE_WIDTH,
-                    alignSelf: 'center',
+                    width: '100%',
+                    height: 240,
+                    alignItems: 'center',
                     justifyContent: 'center',
                 }}
-                pagingEnabled={pagingEnabled}
-                enableSnap={enableSnap}
-                mode="stack"
-                loop={loop}
                 width={280}
                 height={210}
+                pagingEnabled={pagingEnabled}
+                enableSnap={enableSnap}
+                mode={mode}
+                loop={loop}
                 autoPlay={autoPlay}
                 autoPlayReverse={autoPlayReverse}
                 data={[...new Array(6).keys()]}
-                animationConfig={animationConfig}
-                renderItem={() => <SBImageItem />}
+                modeConfig={{
+                    snapDirection,
+                    stackInterval: mode === 'vertical-stack' ? 8 : 18,
+                }}
+                renderItem={(_, index) => <SBItem index={index} key={index} />}
             />
-            <SButton
-                onPress={() => {
-                    setAutoPlay(!autoPlay);
+            <View
+                style={{
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    justifyContent: 'space-evenly',
                 }}
             >
-                {`autoPlay:${autoPlay}`}
-            </SButton>
-            <SButton
-                onPress={() => {
-                    setAutoPlayReverse(!autoPlayReverse);
-                }}
-            >
-                {`autoPlayReverse:${autoPlayReverse}`}
-            </SButton>
-            <SButton
-                onPress={() => {
-                    setLoop(!loop);
-                }}
-            >
-                {`loop:${loop}`}
-            </SButton>
-            <SButton
-                onPress={() => {
-                    setMode(mode === 'horizontal' ? 'vertical' : 'horizontal');
-                }}
-            >
-                {mode}
-            </SButton>
-            <SButton
-                onPress={() => {
-                    setSnapDirection(
-                        snapDirection === 'left' ? 'right' : 'left'
-                    );
-                }}
-            >
-                {snapDirection}
-            </SButton>
-            <SButton
-                onPress={() => {
-                    setPagingEnabled(!pagingEnabled);
-                }}
-            >
-                {`pagingEnabled:${pagingEnabled}`}
-            </SButton>
-            <SButton
-                onPress={() => {
-                    setEnableSnap(!enableSnap);
-                }}
-            >
-                {`enableSnap:${enableSnap}`}
-            </SButton>
+                <SButton
+                    onPress={() => {
+                        setMode('horizontal-stack');
+                    }}
+                >
+                    {'horizontal-stack'}
+                </SButton>
+                <SButton
+                    onPress={() => {
+                        setMode('vertical-stack');
+                    }}
+                >
+                    {'vertical-stack'}
+                </SButton>
+                <SButton
+                    onPress={() => {
+                        setAutoPlay(!autoPlay);
+                    }}
+                >
+                    {`autoPlay:${autoPlay}`}
+                </SButton>
+                <SButton
+                    onPress={() => {
+                        setAutoPlayReverse(!autoPlayReverse);
+                    }}
+                >
+                    {`autoPlayReverse:${autoPlayReverse}`}
+                </SButton>
+                <SButton
+                    onPress={() => {
+                        setLoop(!loop);
+                    }}
+                >
+                    {`loop:${loop}`}
+                </SButton>
+                <SButton
+                    onPress={() => {
+                        setSnapDirection(
+                            snapDirection === 'left' ? 'right' : 'left'
+                        );
+                    }}
+                >
+                    {snapDirection}
+                </SButton>
+                <SButton
+                    onPress={() => {
+                        setPagingEnabled(!pagingEnabled);
+                    }}
+                >
+                    {`pagingEnabled:${pagingEnabled}`}
+                </SButton>
+                <SButton
+                    onPress={() => {
+                        setEnableSnap(!enableSnap);
+                    }}
+                >
+                    {`enableSnap:${enableSnap}`}
+                </SButton>
+            </View>
         </View>
     );
 }

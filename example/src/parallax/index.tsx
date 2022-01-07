@@ -8,18 +8,24 @@ import Animated, {
     useSharedValue,
 } from 'react-native-reanimated';
 import SButton from '../components/SButton';
-import { SBImageItem } from '../components/SBImageItem';
-import { CAROUSEL_ITEMS } from '../contant';
+import { SBItem } from '../components/SBItem';
 
 const window = Dimensions.get('window');
 const PAGE_WIDTH = window.width;
+const colors = [
+    '#26292E',
+    '#899F9C',
+    '#B3C680',
+    '#5C6265',
+    '#F5D399',
+    '#F1F1F1',
+];
 
 function Index() {
     const [isVertical, setIsVertical] = React.useState(false);
     const [autoPlay, setAutoPlay] = React.useState(false);
     const [pagingEnabled, setPagingEnabled] = React.useState<boolean>(true);
     const [enableSnap, setEnableSnap] = React.useState<boolean>(true);
-
     const progressValue = useSharedValue<number>(0);
     const baseOptions = isVertical
         ? ({
@@ -32,6 +38,7 @@ function Index() {
               width: PAGE_WIDTH,
               height: PAGE_WIDTH * 0.6,
           } as const);
+
     return (
         <View
             style={{
@@ -49,10 +56,12 @@ function Index() {
                     (progressValue.value = absoluteProgress)
                 }
                 mode="parallax"
-                parallaxScrollingScale={0.9}
-                parallaxScrollingOffset={50}
-                data={CAROUSEL_ITEMS}
-                renderItem={() => <SBImageItem />}
+                modeConfig={{
+                    parallaxScrollingScale: 0.9,
+                    parallaxScrollingOffset: 50,
+                }}
+                data={colors}
+                renderItem={(_, index) => <SBItem index={index} />}
             />
             {!!progressValue && (
                 <View
@@ -75,7 +84,7 @@ function Index() {
                               }
                     }
                 >
-                    {CAROUSEL_ITEMS.map((backgroundColor, index) => {
+                    {colors.map((backgroundColor, index) => {
                         return (
                             <PaginationItem
                                 backgroundColor={backgroundColor}
@@ -83,7 +92,7 @@ function Index() {
                                 index={index}
                                 key={index}
                                 isRotate={isVertical}
-                                length={CAROUSEL_ITEMS.length}
+                                length={colors.length}
                             />
                         );
                     })}

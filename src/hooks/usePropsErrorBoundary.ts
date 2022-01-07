@@ -13,7 +13,9 @@ export function usePropsErrorBoundary(props: TCarouselProps) {
                 );
             }
         }
-        if (props.mode === 'default' || props.mode === 'parallax') {
+
+        // TODO
+        if (!props.mode || props.mode === 'parallax') {
             if (!props.vertical && !props.width) {
                 throw Error(
                     '`width` must be specified for vertical carousels.'
