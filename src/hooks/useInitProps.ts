@@ -43,11 +43,11 @@ export function useInitProps<T>(
     }, [_data, loop]);
 
     if (props.mode === 'vertical-stack' || props.mode === 'horizontal-stack') {
-        if (!props.animationConfig) {
-            props.animationConfig = {};
+        if (!props.modeConfig) {
+            props.modeConfig = {};
         }
-        props.animationConfig.showLength =
-            props.animationConfig?.showLength ?? data.length - 1;
+        props.modeConfig.showLength =
+            props.modeConfig?.showLength ?? data.length - 1;
     }
 
     return {

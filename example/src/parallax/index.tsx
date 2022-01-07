@@ -56,7 +56,7 @@ function Index() {
                     (progressValue.value = absoluteProgress)
                 }
                 mode="parallax"
-                animationConfig={{
+                modeConfig={{
                     parallaxScrollingScale: 0.9,
                     parallaxScrollingOffset: 50,
                 }}

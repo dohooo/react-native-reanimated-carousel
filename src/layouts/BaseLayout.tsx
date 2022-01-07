@@ -8,7 +8,7 @@ import Animated, {
 import { IOpts, useOffsetX } from '../hooks/useOffsetX';
 import type { IVisibleRanges } from '../hooks/useVisibleRanges';
 import { LazyView } from '../LazyView';
-import type { IAnimationConfig as IStackAnimationConfig } from './stack';
+import type { ILayoutConfig as IStackLayoutConfig } from './stack';
 import { CTX } from '../store';
 
 export type TAnimationStyle = (
@@ -25,7 +25,7 @@ export const BaseLayout: React.FC<{
         props;
 
     const {
-        props: { mode, loop, data, width, height, vertical, animationConfig },
+        props: { mode, loop, data, width, height, vertical, modeConfig },
     } = React.useContext(CTX);
 
     const [shouldUpdate, setShouldUpdate] = React.useState(false);
@@ -41,8 +41,7 @@ export const BaseLayout: React.FC<{
     };
 
     if (mode === 'horizontal-stack') {
-        const { snapDirection, showLength } =
-            animationConfig as IStackAnimationConfig;
+        const { snapDirection, showLength } = modeConfig as IStackLayoutConfig;
 
         offsetXConfig = {
             handlerOffsetX,

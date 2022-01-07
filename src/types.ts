@@ -1,7 +1,7 @@
 import type { ViewStyle } from 'react-native';
 import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
-import type { IAnimationConfig as IStackAnimationConfig } from './layouts/stack';
-import type { IAnimationConfig as IParallaxAnimationConfig } from './layouts/parallax';
+import type { ILayoutConfig as IStackLayoutConfig } from './layouts/stack';
+import type { ILayoutConfig as IParallaxLayoutConfig } from './layouts/parallax';
 
 export type ComputedDirectionTypes<T, VP = {}, HP = {}> =
     | (T &
@@ -40,7 +40,7 @@ type TParallaxModeProps = ComputedDirectionTypes<{
      * Carousel Animated transitions.
      */
     mode?: 'parallax';
-    animationConfig?: IParallaxAnimationConfig;
+    modeConfig?: IParallaxLayoutConfig;
 }>;
 
 type TStackModeProps = ComputedDirectionTypes<{
@@ -58,7 +58,7 @@ type TStackModeProps = ComputedDirectionTypes<{
      *     scaleInterval: 0.08,
      *     rotateZDeg: 135,
      */
-    animationConfig?: IStackAnimationConfig;
+    modeConfig?: IStackLayoutConfig;
 }>;
 
 export type TCarouselProps<T = any> = {

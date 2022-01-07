@@ -14,13 +14,13 @@ export function useLayoutConfig<T>(
         const baseConfig = { size, vertical };
         switch (opts.mode) {
             case 'parallax':
-                return Layouts.parallax(baseConfig, opts.animationConfig);
+                return Layouts.parallax(baseConfig, opts.modeConfig);
             case 'horizontal-stack':
-                return Layouts.horizontalStack(opts.animationConfig);
+                return Layouts.horizontalStack(opts.modeConfig);
             case 'vertical-stack':
-                return Layouts.verticalStack(opts.animationConfig);
+                return Layouts.verticalStack(opts.modeConfig);
             default:
                 return Layouts.normal(baseConfig);
         }
-    }, [opts.mode, opts.animationConfig, size, vertical]);
+    }, [opts.mode, opts.modeConfig, size, vertical]);
 }

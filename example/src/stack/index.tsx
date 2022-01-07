@@ -34,7 +34,7 @@ function Index() {
                 autoPlay={autoPlay}
                 autoPlayReverse={autoPlayReverse}
                 data={[...new Array(6).keys()]}
-                animationConfig={{
+                modeConfig={{
                     snapDirection,
                     stackInterval: mode === 'vertical-stack' ? 8 : 18,
                 }}
