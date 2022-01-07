@@ -9,7 +9,7 @@ English | [简体中文](./README.zh-CN.md)
 [![npm](https://img.shields.io/npm/dm/react-native-reanimated-carousel.svg?style=flat-square&colorB=007ec6)](https://www.npmjs.com/package/react-native-reanimated-carousel)
 [![github issues](https://img.shields.io/github/issues/dohooo/react-native-reanimated-carousel.svg?style=flat-square)](https://github.com/dohooo/react-native-reanimated-carousel/issues)
 [![github closed issues](https://img.shields.io/github/issues-closed/dohooo/react-native-reanimated-carousel.svg?style=flat-square&colorB=44cc11)](https://github.com/dohooo/react-native-reanimated-carousel/issues?q=is%3Aissue+is%3Aclosed)
-[![discord chat](https://img.shields.io/badge/chat-discord-blue?style=flat&logo=discord)](https://discord.gg/KsXRuDs43y)
+[![Discord](https://img.shields.io/discord/927906873783504936?color=blue&label=​&logo=discord&style=flat)](https://discord.gg/KsXRuDs43y)
 
 ## ReactNative community's best use of the carousel component! 🎉🎉🎉
 
