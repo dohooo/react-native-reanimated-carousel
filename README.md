@@ -1,6 +1,6 @@
 English | [简体中文](./README.zh-CN.md)
 
-# react-native-reanimated-carousel 2
+# react-native-reanimated-carousel
 
 <img src="assets/banner.png" width="100%"/>
 
