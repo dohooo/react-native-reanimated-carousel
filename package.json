@@ -28,7 +28,9 @@
         "prepare": "bob build",
         "release": "release-it",
         "ios": "yarn --cwd example ios",
+        "ios:pretty": "yarn --cwd example ios:pretty",
         "android": "yarn --cwd example android",
+        "android:pretty": "yarn --cwd example android:pretty",
         "pods": "cd example && pod-install --quiet",
         "bootstrap": "yarn example && yarn && yarn pods"
     },

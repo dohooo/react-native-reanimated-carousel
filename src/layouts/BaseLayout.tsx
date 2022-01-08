@@ -8,8 +8,8 @@ import Animated, {
 import { IOpts, useOffsetX } from '../hooks/useOffsetX';
 import type { IVisibleRanges } from '../hooks/useVisibleRanges';
 import { LazyView } from '../LazyView';
-import type { ILayoutConfig as IStackLayoutConfig } from './stack';
 import { CTX } from '../store';
+import type { ILayoutConfig } from './stack';
 
 export type TAnimationStyle = (
     value: number
@@ -24,24 +24,32 @@ export const BaseLayout: React.FC<{
     const { handlerOffsetX, index, children, visibleRanges, animationStyle } =
         props;
 
+    const context = React.useContext(CTX);
     const {
-        props: { mode, loop, data, width, height, vertical, modeConfig },
-    } = React.useContext(CTX);
-
-    const [shouldUpdate, setShouldUpdate] = React.useState(false);
-
+        props: {
+            loop,
+            data,
+            width,
+            height,
+            vertical,
+            customConfig,
+            mode,
+            modeConfig,
+        },
+    } = context;
     const size = vertical ? height : width;
-
+    const [shouldUpdate, setShouldUpdate] = React.useState(false);
     let offsetXConfig: IOpts = {
         handlerOffsetX,
         index,
         size,
         data,
         loop,
+        ...(typeof customConfig === 'function' ? customConfig() : {}),
     };
 
     if (mode === 'horizontal-stack') {
-        const { snapDirection, showLength } = modeConfig as IStackLayoutConfig;
+        const { snapDirection, showLength } = modeConfig as ILayoutConfig;
 
         offsetXConfig = {
             handlerOffsetX,
@@ -55,8 +63,7 @@ export const BaseLayout: React.FC<{
     }
 
     const x = useOffsetX(offsetXConfig, visibleRanges);
-
-    const _animatedStyle = useAnimatedStyle(
+    const animatedStyle = useAnimatedStyle(
         () => animationStyle(x.value / size),
         [animationStyle]
     );
@@ -90,7 +97,7 @@ export const BaseLayout: React.FC<{
                     height: height || '100%',
                     position: 'absolute',
                 },
-                _animatedStyle,
+                animatedStyle,
             ]}
         >
             <LazyView shouldUpdate={shouldUpdate}>{children}</LazyView>

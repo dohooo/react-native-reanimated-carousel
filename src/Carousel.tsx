@@ -38,6 +38,7 @@ function Carousel<T>(
         onSnapToItem,
         onScrollBegin,
         onProgressChange,
+        customAnimation,
     } = props;
 
     const commonVariables = useCommonVariables(props);
@@ -143,13 +144,20 @@ function Carousel<T>(
                     index={i}
                     handlerOffsetX={offsetX}
                     visibleRanges={visibleRanges}
-                    animationStyle={layoutConfig}
+                    animationStyle={customAnimation || layoutConfig}
                 >
                     {renderItem(item, realIndex)}
                 </BaseLayout>
             );
         },
-        [data, offsetX, renderItem, layoutConfig, visibleRanges]
+        [
+            data,
+            offsetX,
+            visibleRanges,
+            renderItem,
+            layoutConfig,
+            customAnimation,
+        ]
     );
 
     return (
