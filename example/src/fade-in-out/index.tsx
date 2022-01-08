@@ -45,7 +45,6 @@ function Index() {
                         <SBItem
                             key={index}
                             index={index}
-                            pretty
                             style={{
                                 borderWidth: 5,
                                 borderColor: Colors.orange50,
