@@ -4,6 +4,7 @@ import Animated, {
     runOnJS,
     useAnimatedReaction,
     useAnimatedStyle,
+    useDerivedValue,
 } from 'react-native-reanimated';
 import { IOpts, useOffsetX } from '../hooks/useOffsetX';
 import type { IVisibleRanges } from '../hooks/useVisibleRanges';
@@ -20,6 +21,9 @@ export const BaseLayout: React.FC<{
     handlerOffsetX: Animated.SharedValue<number>;
     visibleRanges: IVisibleRanges;
     animationStyle: TAnimationStyle;
+    children: (ctx: {
+        animationValue: Animated.SharedValue<number>;
+    }) => React.ReactElement;
 }> = (props) => {
     const { handlerOffsetX, index, children, visibleRanges, animationStyle } =
         props;
@@ -63,6 +67,7 @@ export const BaseLayout: React.FC<{
     }
 
     const x = useOffsetX(offsetXConfig, visibleRanges);
+    const animationValue = useDerivedValue(() => x.value / size, [x, size]);
     const animatedStyle = useAnimatedStyle(
         () => animationStyle(x.value / size),
         [animationStyle]
@@ -100,7 +105,9 @@ export const BaseLayout: React.FC<{
                 animatedStyle,
             ]}
         >
-            <LazyView shouldUpdate={shouldUpdate}>{children}</LazyView>
+            <LazyView shouldUpdate={shouldUpdate}>
+                {children({ animationValue })}
+            </LazyView>
         </Animated.View>
     );
 };

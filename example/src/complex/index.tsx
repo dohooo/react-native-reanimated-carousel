@@ -26,7 +26,7 @@ function Index() {
                     data={[...new Array(50).keys()]}
                     mode="parallax"
                     windowSize={3}
-                    renderItem={(index) => (
+                    renderItem={({ index }) => (
                         <View
                             key={index}
                             style={{
