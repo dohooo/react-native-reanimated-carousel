@@ -1,6 +1,8 @@
 ## 自定义动画
 
-经过一些努力，我们终于在v2版本中实现了自定义动画，下面给大家带来几个例子
+经过一些努力，我们终于在v2版本中实现了自定义动画，现在只需实现一个类型`TAnimationStyle`的回调函数，然后将它传给`Carousel`的`customAnimation`属性即可。
+
+下面给大家带来几个例子。
 
 ### 视差效果
 
@@ -27,6 +29,22 @@ const animationStyle: TAnimationStyle = React.useCallback(
     },
     []
 );
+
+<Carousel
+    style={{ width: screen.width, height: 240 }}
+    width={screen.width}
+    data={[...new Array(6).keys()]}
+    customAnimation={animationStyle}
+    renderItem={({ index, animationValue }) => {
+        return (
+            <CustomItem
+                key={index}
+                index={index}
+                animationValue={animationValue}
+            />
+        );
+    }}
+/>
 
 const CustomItem = ({ index, animationValue }) => {
     const maskStyle = useAnimatedStyle(() => {
@@ -60,25 +78,15 @@ const CustomItem = ({ index, animationValue }) => {
         </View>
     );
 }
-
-<Carousel
-    style={{ width: screen.width, height: 240 }}
-    width={screen.width}
-    data={[...new Array(6).keys()]}
-    customAnimation={animationStyle}
-    renderItem={({ index, animationValue }) => {
-        return (
-            <CustomItem
-                key={index}
-                index={index}
-                animationValue={animationValue}
-            />
-        );
-    }}
-/>
 ```
 
+为了让`Carousel`外部实现一些动画效果，比如`MaskView`，我们将每个item内部计算出来的动画值，通过`renderItem`传递了出来。
+
 ### 缩放渐入渐出效果
+
+<a href="../example/src/scale-fade-in-out/index.tsx">
+    <img src="././../assets/scale-fade-in-out.gif" width="300"/>  
+</a>
 
 ```ts
 const animationStyle: TAnimationStyle = React.useCallback(

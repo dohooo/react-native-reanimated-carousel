@@ -1,6 +1,8 @@
 ## Custom Animation
 
-After some hard work, we finally implemented custom animations in the v2 version, here are a few examples for you
+After some effort, we finally implemented custom animation in v2, now we just need to implement a callback function of type `TAnimationStyle` and pass it to the `customAnimation` property of `Carousel`.
+
+Here are a few examples for you.
 
 ### Parallax
 
@@ -27,6 +29,22 @@ const animationStyle: TAnimationStyle = React.useCallback(
     },
     []
 );
+
+<Carousel
+    style={{ width: screen.width, height: 240 }}
+    width={screen.width}
+    data={[...new Array(6).keys()]}
+    customAnimation={animationStyle}
+    renderItem={({ index, animationValue }) => {
+        return (
+            <CustomItem
+                key={index}
+                index={index}
+                animationValue={animationValue}
+            />
+        );
+    }}
+/>
 
 const CustomItem = ({ index, animationValue }) => {
     const maskStyle = useAnimatedStyle(() => {
@@ -60,25 +78,15 @@ const CustomItem = ({ index, animationValue }) => {
         </View>
     );
 }
-
-<Carousel
-    style={{ width: screen.width, height: 240 }}
-    width={screen.width}
-    data={[...new Array(6).keys()]}
-    customAnimation={animationStyle}
-    renderItem={({ index, animationValue }) => {
-        return (
-            <CustomItem
-                key={index}
-                index={index}
-                animationValue={animationValue}
-            />
-        );
-    }}
-/>
 ```
 
+In order to implement some animation effects outside `Carousel`, such as `MaskView`, we pass the animation value calculated inside each item through `renderItem`.
+
 ### ScaleFadeInOut
+
+<a href="../example/src/scale-fade-in-out/index.tsx">
+    <img src="././../assets/scale-fade-in-out.gif" width="300"/>  
+</a>
 
 ```ts
 const animationStyle: TAnimationStyle = React.useCallback(
