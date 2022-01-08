@@ -147,7 +147,11 @@ function Carousel<T>(
                     animationStyle={customAnimation || layoutConfig}
                 >
                     {({ animationValue }) =>
-                        renderItem({ item, index: realIndex, animationValue })
+                        renderItem({
+                            item,
+                            index: realIndex,
+                            animationValue,
+                        })
                     }
                 </BaseLayout>
             );

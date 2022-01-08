@@ -29,6 +29,9 @@ const LayoutsPage: Array<Record<'name', keyof RootStackParamList>> = [
     {
         name: 'SnapCarouselLoop',
     },
+    {
+        name: 'AdvancedParallax',
+    },
 ];
 
 const Index = () => {

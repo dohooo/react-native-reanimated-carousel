@@ -3,6 +3,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // @ts-ignore
 import { Restart } from 'fiction-expo-restart';
+import { I18nManager } from 'react-native';
+import { Text } from 'react-native-ui-lib';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import Home from './home';
 import NormalComponent from './normal';
@@ -11,9 +14,7 @@ import StackComponent from './stack';
 import ComplexComponent from './complex';
 import SnapCarouselComplexComponent from './snap-carousel-complex';
 import SnapCarouselLoopComponent from './snap-carousel-loop';
-import { I18nManager } from 'react-native';
-import { Text } from 'react-native-ui-lib';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import AdvancedParallaxComponent from './advanced-parallax';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -25,6 +26,7 @@ export type RootStackParamList = {
     Complex: undefined;
     SnapCarouselComplex: undefined;
     SnapCarouselLoop: undefined;
+    AdvancedParallax: undefined;
 };
 
 function App() {
@@ -65,6 +67,10 @@ function App() {
                 <Stack.Screen
                     name="SnapCarouselLoop"
                     component={SnapCarouselLoopComponent}
+                />
+                <Stack.Screen
+                    name="AdvancedParallax"
+                    component={AdvancedParallaxComponent}
                 />
             </Stack.Navigator>
         </NavigationContainer>
