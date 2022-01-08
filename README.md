@@ -13,12 +13,12 @@ English | [简体中文](./README.zh-CN.md)
 
 ## ReactNative community's best use of the carousel component! 🎉🎉🎉
 
--   **It completely solves this [problem](https://github.com/meliorence/react-native-snap-carousel/issues/632) for `react-native-snap-carousel`!**
+-   **It completely solves this** [[problem]](https://github.com/meliorence/react-native-snap-carousel/issues/632) **for `react-native-snap-carousel`!**
 -   **Simple**、**Infinitely scrolling very smooth**、**Fully implemented using Reanimated 2!**
 
-> V2 has been released! Joint it! [V1 docs](https://github.com/dohooo/react-native-reanimated-carousel/tree/v1.x.x)   
+> v2 has been released! Join it! [[v1 docs]](https://github.com/dohooo/react-native-reanimated-carousel/tree/v1.x.x)
 
-> Click on the image to see the demo. [Try it(Snack)](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
+> Click on the image to see the demo. [[Try it]](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
 
 <p align="center">
   <a href="./example/src/normal/index.tsx">
@@ -47,7 +47,16 @@ English | [简体中文](./README.zh-CN.md)
   </a>
 </p>
 
-<br/>
+> Now you can make cool animations with us! Very easy! [[Details]](./docs/custom-animation.md)
+
+<p align="center">
+  <a href="./example/src/advanced-parallax/index.tsx">
+    <img src="assets/advanced-parallax.gif" width="300"/>  
+  </a>
+  <a href="./example/src/scale-fade-in-out/index.tsx">
+    <img src="assets/scale-fade-in-out.gif" width="300"/>  
+  </a>
+</p>
 
 ## Table of contents
 
@@ -83,7 +92,7 @@ import Carousel from 'react-native-reanimated-carousel';
     width={300}
     height={150}
     data={[1, 2, 3]}
-    renderItem={(item) => <AnyElement />}
+    renderItem={({ item }) => <AnyElement />}
 />;
 ```
 
@@ -120,8 +129,8 @@ import Carousel from 'react-native-reanimated-carousel';
 ## Example
 
 ```shell
-yarn example -- ios
-yarn example -- android
+yarn ios
+yarn android
 ```
 
 ## License

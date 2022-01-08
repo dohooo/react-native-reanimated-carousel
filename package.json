@@ -22,12 +22,16 @@
         "!**/__mocks__"
     ],
     "scripts": {
+        "git": "node scripts/makegif.js ",
         "test": "jest",
         "typescript": "tsc --noEmit",
         "lint": "eslint \"src/**/*.{js,ts,tsx}\"",
         "prepare": "bob build",
         "release": "release-it",
-        "example": "yarn --cwd example",
+        "ios": "yarn --cwd example ios",
+        "ios:pretty": "yarn --cwd example ios:pretty",
+        "android": "yarn --cwd example android",
+        "android:pretty": "yarn --cwd example android:pretty",
         "pods": "cd example && pod-install --quiet",
         "bootstrap": "yarn example && yarn && yarn pods"
     },

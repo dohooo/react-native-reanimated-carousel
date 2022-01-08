@@ -49,7 +49,6 @@ export function useInitProps<T>(
         props.modeConfig.showLength =
             props.modeConfig?.showLength ?? data.length - 1;
     }
-
     return {
         ...props,
         defaultIndex,

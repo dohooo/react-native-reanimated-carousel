@@ -1,7 +1,8 @@
 import type { ViewStyle } from 'react-native';
 import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
-import type { ILayoutConfig as IStackLayoutConfig } from './layouts/stack';
-import type { ILayoutConfig as IParallaxLayoutConfig } from './layouts/parallax';
+import type Animated from 'react-native-reanimated';
+import type { TParallaxModeProps } from './layouts/parallax';
+import type { TStackModeProps } from './layouts/stack';
 
 export type ComputedDirectionTypes<T, VP = {}, HP = {}> =
     | (T &
@@ -35,31 +36,10 @@ export type ComputedDirectionTypes<T, VP = {}, HP = {}> =
               height?: number;
           });
 
-type TParallaxModeProps = ComputedDirectionTypes<{
-    /**
-     * Carousel Animated transitions.
-     */
-    mode?: 'parallax';
-    modeConfig?: IParallaxLayoutConfig;
-}>;
-
-type TStackModeProps = ComputedDirectionTypes<{
-    /**
-     * Carousel Animated transitions.
-     */
-    mode?: 'horizontal-stack' | 'vertical-stack';
-    /**
-     * Stack animation style.
-     * @default
-     *     mode: 'vertical',
-     *     snapDirection: 'right',
-     *     moveSize: window.width,
-     *     stackInterval: 30,
-     *     scaleInterval: 0.08,
-     *     rotateZDeg: 135,
-     */
-    modeConfig?: IStackLayoutConfig;
-}>;
+export type CustomConfig = {
+    type?: 'negative' | 'positive';
+    viewCount?: number;
+};
 
 export type TCarouselProps<T = any> = {
     ref?: React.Ref<ICarouselInstance>;
@@ -121,9 +101,18 @@ export type TCarouselProps<T = any> = {
      */
     enableSnap?: boolean;
     /**
+     * Custom carousel config.
+     */
+    customConfig?: () => CustomConfig;
+    /**
+     * Custom animations.
+     * Must use `worklet`, Details: https://docs.swmansion.com/react-native-reanimated/docs/2.2.0/worklets/
+     */
+    customAnimation?: (value: number) => Animated.AnimatedStyleProp<ViewStyle>;
+    /**
      * Render carousel item.
      */
-    renderItem: (data: T, index: number) => React.ReactNode;
+    renderItem: CarouselRenderItem<T>;
     /**
      * Callback fired when navigating to an item
      */
@@ -165,3 +154,13 @@ export interface ICarouselInstance {
      */
     goToIndex: (index: number, animated?: boolean) => void;
 }
+
+export interface CarouselRenderItemInfo<ItemT> {
+    item: ItemT;
+    index: number;
+    animationValue: Animated.SharedValue<number>;
+}
+
+export type CarouselRenderItem<ItemT> = (
+    info: CarouselRenderItemInfo<ItemT>
+) => React.ReactElement;

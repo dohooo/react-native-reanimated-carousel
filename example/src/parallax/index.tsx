@@ -61,7 +61,7 @@ function Index() {
                     parallaxScrollingOffset: 50,
                 }}
                 data={colors}
-                renderItem={(_, index) => <SBItem index={index} />}
+                renderItem={({ index }) => <SBItem index={index} />}
             />
             {!!progressValue && (
                 <View

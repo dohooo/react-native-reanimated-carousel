@@ -33,7 +33,7 @@ function Index() {
                 autoPlay={isAutoPlay}
                 autoPlayInterval={isFast ? 100 : 1500}
                 data={[...new Array(6).keys()]}
-                renderItem={(_, index) => <SBItem key={index} index={index} />}
+                renderItem={({ index }) => <SBItem key={index} index={index} />}
             />
             <SButton
                 onPress={() => {

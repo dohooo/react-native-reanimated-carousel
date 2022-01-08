@@ -5,7 +5,7 @@
     "private": true,
     "main": "index",
     "scripts": {
-        "android": "expo start --android",
+        "android:pretty": "expo start --android",
         "ios": "expo start -c --ios",
         "ios:pretty": "PRETTY=true expo start -c --ios",
         "web": "expo start --web",

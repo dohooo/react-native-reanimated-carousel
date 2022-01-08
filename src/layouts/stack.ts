@@ -1,5 +1,7 @@
+import { useMemo } from 'react';
 import { Dimensions, TransformsStyle, ViewStyle } from 'react-native';
 import { Extrapolate, interpolate } from 'react-native-reanimated';
+import type { ComputedDirectionTypes, CustomConfig } from 'src/types';
 
 const screen = Dimensions.get('window');
 
@@ -12,6 +14,24 @@ export interface ILayoutConfig {
     rotateZDeg?: number;
     snapDirection?: 'left' | 'right';
 }
+
+export type TStackModeProps = ComputedDirectionTypes<{
+    /**
+     * Carousel Animated transitions.
+     */
+    mode?: 'horizontal-stack' | 'vertical-stack';
+    /**
+     * Stack animation style.
+     * @default
+     *     mode: 'vertical',
+     *     snapDirection: 'right',
+     *     moveSize: window.width,
+     *     stackInterval: 30,
+     *     scaleInterval: 0.08,
+     *     rotateZDeg: 135,
+     */
+    modeConfig?: ILayoutConfig;
+}>;
 
 export function horizontalStackLayout(modeConfig: ILayoutConfig = {}) {
     return (_value: number) => {
@@ -103,6 +123,28 @@ export function horizontalStackLayout(modeConfig: ILayoutConfig = {}) {
         );
 
         return styles;
+    };
+}
+
+export function useHorizontalStackLayout(
+    customAnimationConfig: ILayoutConfig = {},
+    customConfig: CustomConfig = {}
+) {
+    const config = useMemo(
+        () => ({
+            type:
+                customAnimationConfig.snapDirection === 'right'
+                    ? 'negative'
+                    : 'positive',
+            viewCount: customAnimationConfig.showLength,
+            ...customConfig,
+        }),
+        [customAnimationConfig, customConfig]
+    );
+
+    return {
+        layout: horizontalStackLayout(customAnimationConfig),
+        config,
     };
 }
 

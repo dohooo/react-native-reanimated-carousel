@@ -1,11 +1,12 @@
 import { Extrapolate, interpolate } from 'react-native-reanimated';
+import type { ComputedDirectionTypes } from '../types';
 
 type TBaseConfig = {
     size: number;
     vertical: boolean;
 };
 
-export interface ILayoutConfig {
+interface ILayoutConfig {
     /**
      * When use default Layout props,this prop can be control prev/next item offset.
      * @default 100
@@ -17,6 +18,14 @@ export interface ILayoutConfig {
      */
     parallaxScrollingScale?: number;
 }
+
+export type TParallaxModeProps = ComputedDirectionTypes<{
+    /**
+     * Carousel Animated transitions.
+     */
+    mode?: 'parallax';
+    modeConfig?: ILayoutConfig;
+}>;
 
 export function parallaxLayout(
     baseConfig: TBaseConfig,
