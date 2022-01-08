@@ -27,7 +27,7 @@
         "typescript": "tsc --noEmit",
         "lint": "eslint \"src/**/*.{js,ts,tsx}\"",
         "prepare": "bob build",
-        "release": "release-it",
+        "release": "release-it --no-git.requireUpstream",
         "ios": "yarn --cwd example ios",
         "ios:pretty": "yarn --cwd example ios:pretty",
         "android": "yarn --cwd example android",
