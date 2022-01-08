@@ -54,6 +54,9 @@
   <a href="./example/src/advanced-parallax/index.tsx">
     <img src="assets/advanced-parallax.gif" width="300"/>  
   </a>
+  <a href="./example/src/scale-fade-in-out/index.tsx">
+    <img src="assets/scale-fade-in-out.gif" width="300"/>  
+  </a>
 </p>
 
 ## 目录

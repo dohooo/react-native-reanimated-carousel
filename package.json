@@ -22,6 +22,7 @@
         "!**/__mocks__"
     ],
     "scripts": {
+        "git": "node scripts/makegif.js ",
         "test": "jest",
         "typescript": "tsc --noEmit",
         "lint": "eslint \"src/**/*.{js,ts,tsx}\"",
