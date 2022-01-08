@@ -1,3 +1,25 @@
+# [2.1.0](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.0.0...v2.1.0) (2022-01-08)
+
+
+### Features
+
+* pass animation value to renderItem ([bf57233](https://github.com/dohooo/react-native-reanimated-carousel/commit/bf572335a19179aefd52d0bf43e61029ec2f945a)), closes [#89](https://github.com/dohooo/react-native-reanimated-carousel/issues/89)
+* support to custom carousel animations by `customAnimation` `customConfig` props ([eb3082b](https://github.com/dohooo/react-native-reanimated-carousel/commit/eb3082b74d3f08f6205cce47a30435ffc8570145))
+
+
+### BREAKING CHANGES
+
+* Remove the parameter of `renderItem` and change it to `info` object
+
+
+
+## [1.1.1](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.0.0...v2.1.0) (2022-01-04)
+
+
+### Bug Fixes
+
+* fix bug with windowSize props ([8a048df](https://github.com/dohooo/react-native-reanimated-carousel/commit/8a048dfafbf46ba6d4776f82564dea43af026144)), closes [#71](https://github.com/dohooo/react-native-reanimated-carousel/issues/71)
+
 # [2.0.0](https://github.com/dohooo/react-native-reanimated-carousel/compare/v1.2.0-beta.4...v2.0.0) (2022-01-07)
 
 
