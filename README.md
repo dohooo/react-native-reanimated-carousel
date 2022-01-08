@@ -120,8 +120,8 @@ import Carousel from 'react-native-reanimated-carousel';
 ## Example
 
 ```shell
-yarn example -- ios
-yarn example -- android
+yarn ios
+yarn android
 ```
 
 ## License

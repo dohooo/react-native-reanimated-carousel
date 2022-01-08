@@ -119,8 +119,8 @@ import Carousel from 'react-native-reanimated-carousel';
 ## 示例
 
 ```shell
-yarn example -- ios
-yarn example -- android
+yarn ios
+yarn android
 ```
 
 ## 许可

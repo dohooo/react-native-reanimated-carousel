@@ -27,7 +27,8 @@
         "lint": "eslint \"src/**/*.{js,ts,tsx}\"",
         "prepare": "bob build",
         "release": "release-it",
-        "example": "yarn --cwd example",
+        "ios": "yarn --cwd example ios",
+        "android": "yarn --cwd example android",
         "pods": "cd example && pod-install --quiet",
         "bootstrap": "yarn example && yarn && yarn pods"
     },
