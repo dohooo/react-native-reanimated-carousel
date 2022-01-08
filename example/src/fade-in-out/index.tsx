@@ -1,15 +1,16 @@
 import * as React from 'react';
 import { Dimensions, View } from 'react-native';
 import { interpolate } from 'react-native-reanimated';
-import { Colors } from 'react-native-ui-lib';
 import Carousel from '../../../src/index';
 import type { TAnimationStyle } from '../../../src/layouts/BaseLayout';
 import { SBItem } from '../components/SBItem';
+import SButton from '../components/SButton';
 
 const window = Dimensions.get('window');
 const PAGE_WIDTH = window.width;
 
 function Index() {
+    const [isAutoPlay, setIsAutoPlay] = React.useState(false);
     const animationStyle: TAnimationStyle = React.useCallback(
         (value: number) => {
             'worklet';
@@ -37,23 +38,22 @@ function Index() {
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}
+                autoPlay={isAutoPlay}
                 width={PAGE_WIDTH * 0.7}
                 height={240 * 0.7}
                 data={[...new Array(6).keys()]}
                 renderItem={({ index }) => {
-                    return (
-                        <SBItem
-                            key={index}
-                            index={index}
-                            style={{
-                                borderWidth: 5,
-                                borderColor: Colors.orange50,
-                            }}
-                        />
-                    );
+                    return <SBItem key={index} index={index} />;
                 }}
                 customAnimation={animationStyle}
             />
+            <SButton
+                onPress={() => {
+                    setIsAutoPlay(!isAutoPlay);
+                }}
+            >
+                AutoPlay:{`${isAutoPlay}`}
+            </SButton>
         </View>
     );
 }
