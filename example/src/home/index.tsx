@@ -24,7 +24,7 @@ const LayoutsPage: Array<Record<'name', keyof RootStackParamList>> = [
         name: 'AdvancedParallax',
     },
     {
-        name: 'FadeInOut',
+        name: 'ScaleFadeInOut',
     },
 ];
 
