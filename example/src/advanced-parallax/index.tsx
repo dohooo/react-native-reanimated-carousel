@@ -41,7 +41,6 @@ function Index() {
                 autoPlay={isAutoPlay}
                 style={{ width: PAGE_WIDTH, height: 240 }}
                 width={PAGE_WIDTH}
-                autoPlayInterval={1500}
                 data={[...new Array(6).keys()]}
                 renderItem={({ index, animationValue }) => {
                     return (
