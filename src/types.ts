@@ -112,7 +112,7 @@ export type TCarouselProps<T = any> = {
     /**
      * Render carousel item.
      */
-    renderItem: (data: T, index: number) => React.ReactNode;
+    renderItem: CarouselRenderItem<T>;
     /**
      * Callback fired when navigating to an item
      */
@@ -154,3 +154,13 @@ export interface ICarouselInstance {
      */
     goToIndex: (index: number, animated?: boolean) => void;
 }
+
+export interface CarouselRenderItemInfo<ItemT> {
+    item: ItemT;
+    index: number;
+    animationValue: Animated.SharedValue<number>;
+}
+
+export type CarouselRenderItem<ItemT> = (
+    info: CarouselRenderItemInfo<ItemT>
+) => React.ReactElement;

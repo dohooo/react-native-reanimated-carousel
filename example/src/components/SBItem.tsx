@@ -4,11 +4,17 @@ import { View } from 'react-native-ui-lib';
 import { SBImageItem } from './SBImageItem';
 import { SBTextItem } from './SBTextItem';
 import Constants from 'expo-constants';
+import type { StyleProp, ViewStyle } from 'react-native';
 
-export const SBItem: React.FC<{ index: number }> = ({ index }) => {
+interface Props {
+    style?: StyleProp<ViewStyle>;
+    index: number;
+    pretty?: boolean;
+}
+export const SBItem: React.FC<Props> = ({ style, index, pretty }) => {
     // @ts-ignore
     const enablePretty = Constants.manifest.extra.enablePretty;
-    const [isPretty, setIsPretty] = React.useState(enablePretty);
+    const [isPretty, setIsPretty] = React.useState(pretty || enablePretty);
     return (
         <LongPressGestureHandler
             onActivated={() => {
@@ -16,7 +22,11 @@ export const SBItem: React.FC<{ index: number }> = ({ index }) => {
             }}
         >
             <View flex>
-                {isPretty ? <SBImageItem /> : <SBTextItem index={index} />}
+                {isPretty ? (
+                    <SBImageItem style={style} />
+                ) : (
+                    <SBTextItem style={style} index={index} />
+                )}
             </View>
         </LongPressGestureHandler>
     );

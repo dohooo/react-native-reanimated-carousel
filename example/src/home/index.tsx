@@ -21,6 +21,15 @@ const LayoutsPage: Array<Record<'name', keyof RootStackParamList>> = [
         name: 'Stack',
     },
     {
+        name: 'AdvancedParallax',
+    },
+    {
+        name: 'ScaleFadeInOut',
+    },
+];
+
+const OtherPage: Array<Record<'name', keyof RootStackParamList>> = [
+    {
         name: 'Complex',
     },
     {
@@ -34,8 +43,29 @@ const LayoutsPage: Array<Record<'name', keyof RootStackParamList>> = [
 const Index = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     return (
-        <ScrollView style={{ flex: 1 }}>
+        <ScrollView
+            style={{ flex: 1 }}
+            stickyHeaderIndices={[0, LayoutsPage.length + 1]}
+        >
+            <View style={styles.section}>
+                <Text style={styles.sectionText}>{'Layouts'}</Text>
+            </View>
             {LayoutsPage.map(({ name }, index) => {
+                return (
+                    <TouchableHighlight
+                        key={index}
+                        onPress={() => navigation.navigate(name)}
+                    >
+                        <View style={styles.listItem}>
+                            <Text style={styles.text}>{name}</Text>
+                        </View>
+                    </TouchableHighlight>
+                );
+            })}
+            <View style={styles.section}>
+                <Text style={styles.sectionText}>{'Others'}</Text>
+            </View>
+            {OtherPage.map(({ name }, index) => {
                 return (
                     <TouchableHighlight
                         key={index}
@@ -63,5 +93,15 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 16,
+    },
+    section: {
+        flexDirection: 'row',
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        backgroundColor: Colors.grey60,
+    },
+    sectionText: {
+        fontSize: 14,
+        fontWeight: 'bold',
     },
 });

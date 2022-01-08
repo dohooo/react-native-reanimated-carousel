@@ -13,12 +13,12 @@
 
 ## ReactNative 社区最好用的轮播图组件! 🎉🎉🎉
 
--   **完全解决了`react-native-snap-carousel`的[问题](https://github.com/meliorence/react-native-snap-carousel/issues/632)**
+-   **完全解决了`react-native-snap-carousel`的** [[问题]](https://github.com/meliorence/react-native-snap-carousel/issues/632)
 -   **易用**、**无限滚动**、**完全使用 Reanimated2 实现**
 
-> V2 已经发布，希望大家喜欢！~ [V1 文档](https://github.com/dohooo/react-native-reanimated-carousel/tree/v1.x.x)
+> v2 已经发布，希望大家喜欢!~ [[v1 文档]](https://github.com/dohooo/react-native-reanimated-carousel/tree/v1.x.x)
 
-> 点击图片，查看 demo。[试一下(Snack)](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
+> 点击图片，查看 demo。[[试一下]](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
 
 <p align="center">
   <a href="./example/src/normal/index.tsx">
@@ -47,7 +47,17 @@
   </a>
 </p>
 
-<br/>
+
+> 现在你可以和我们一起来制作酷炫的动画了！ 非常简单! [[详情]](./docs/custom-animation.zh-CN.md)
+
+<p align="center">
+  <a href="./example/src/advanced-parallax/index.tsx">
+    <img src="assets/advanced-parallax.gif" width="300"/>  
+  </a>
+  <a href="./example/src/scale-fade-in-out/index.tsx">
+    <img src="assets/scale-fade-in-out.gif" width="300"/>  
+  </a>
+</p>
 
 ## 目录
 
@@ -85,7 +95,7 @@ import Carousel from 'react-native-reanimated-carousel';
     width={300}
     height={150}
     data={[1, 2, 3]}
-    renderItem={(item) => <AnyElement />}
+    renderItem={({ item }) => <AnyElement />}
 />;
 ```
 

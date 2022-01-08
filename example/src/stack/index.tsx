@@ -38,7 +38,7 @@ function Index() {
                     snapDirection,
                     stackInterval: mode === 'vertical-stack' ? 8 : 18,
                 }}
-                renderItem={(_, index) => <SBItem index={index} key={index} />}
+                renderItem={({ index }) => <SBItem index={index} key={index} />}
             />
             <View
                 style={{

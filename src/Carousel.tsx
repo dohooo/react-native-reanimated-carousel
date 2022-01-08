@@ -146,7 +146,13 @@ function Carousel<T>(
                     visibleRanges={visibleRanges}
                     animationStyle={customAnimation || layoutConfig}
                 >
-                    {renderItem(item, realIndex)}
+                    {({ animationValue }) =>
+                        renderItem({
+                            item,
+                            index: realIndex,
+                            animationValue,
+                        })
+                    }
                 </BaseLayout>
             );
         },

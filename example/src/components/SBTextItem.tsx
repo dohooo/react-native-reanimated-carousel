@@ -1,10 +1,15 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { Text } from 'react-native-ui-lib';
 
-export const SBTextItem: React.FC<{ index: number }> = ({ index }) => {
+interface Props {
+    style?: StyleProp<ViewStyle>;
+    index: number;
+}
+
+export const SBTextItem: React.FC<Props> = ({ style, index }) => {
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, style]}>
             <Text style={{ fontSize: 30 }} color="black">
                 {index}
             </Text>
