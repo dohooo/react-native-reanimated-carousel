@@ -50,6 +50,12 @@
 
 > 现在你可以和我们一起来制作酷炫的动画了！ 非常简单! [[详情]](./docs/custom-animation.zh-CN.md)
 
+<p align="center">
+  <a href="./example/src/advanced-parallax/index.tsx">
+    <img src="assets/advanced-parallax.gif" width="300"/>  
+  </a>
+</p>
+
 ## 目录
 
 1. [安装](#安装)

@@ -8,11 +8,13 @@ import Animated, {
 import Carousel from '../../../src/index';
 import type { TAnimationStyle } from '../../../src/layouts/BaseLayout';
 import { SBItem } from '../components/SBItem';
+import SButton from '../components/SButton';
 
 const window = Dimensions.get('window');
 const PAGE_WIDTH = window.width;
 
 function Index() {
+    const [isAutoPlay, setIsAutoPlay] = React.useState(false);
     const animationStyle: TAnimationStyle = React.useCallback(
         (value: number) => {
             'worklet';
@@ -36,6 +38,7 @@ function Index() {
         <View style={{ flex: 1 }}>
             <Carousel
                 loop={true}
+                autoPlay={isAutoPlay}
                 style={{ width: PAGE_WIDTH, height: 240 }}
                 width={PAGE_WIDTH}
                 autoPlayInterval={1500}
@@ -51,6 +54,13 @@ function Index() {
                 }}
                 customAnimation={animationStyle}
             />
+            <SButton
+                onPress={() => {
+                    setIsAutoPlay(!isAutoPlay);
+                }}
+            >
+                AutoPlay:{`${isAutoPlay}`}
+            </SButton>
         </View>
     );
 }

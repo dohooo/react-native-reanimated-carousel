@@ -49,6 +49,12 @@ English | [简体中文](./README.zh-CN.md)
 
 > Now you can make cool animations with us! Very easy! [[Details]](./docs/custom-animation.md)
 
+<p align="center">
+  <a href="./example/src/advanced-parallax/index.tsx">
+    <img src="assets/advanced-parallax.gif" width="300"/>  
+  </a>
+</p>
+
 ## Table of contents
 
 1. [Installation](#Installation)
