@@ -83,7 +83,7 @@ import Carousel from 'react-native-reanimated-carousel';
     width={300}
     height={150}
     data={[1, 2, 3]}
-    renderItem={(item) => <AnyElement />}
+    renderItem={({ item }) => <AnyElement />}
 />;
 ```
 
