@@ -80,7 +80,7 @@ const CustomItem = ({ index, animationValue }) => {
 }
 ```
 
-为了让`Carousel`外部实现一些动画效果，比如`MaskView`，我们将每个item内部计算出来的动画值，通过`renderItem`传递了出来。
+为了让`Carousel`外部实现一些动画效果，比如`MaskView`，我们将每个Item内部计算出来的动画值通过`renderItem`传递到了外部。
 
 ### 缩放渐入渐出效果
 

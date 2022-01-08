@@ -80,7 +80,7 @@ const CustomItem = ({ index, animationValue }) => {
 }
 ```
 
-In order to implement some animation effects outside `Carousel`, such as `MaskView`, we pass the animation value calculated inside each item through `renderItem`.
+In order to implement some animation effects outside `Carousel`, such as `MaskView`, we pass the animation value calculated inside each Item to the outside through `renderItem`.
 
 ### ScaleFadeInOut
 
