@@ -43,6 +43,7 @@ example/ios/Pods
 # node.js
 #
 node_modules/
+scripts/gif-works-directory/*
 npm-debug.log
 yarn-debug.log
 yarn-error.log

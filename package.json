@@ -22,7 +22,7 @@
         "!**/__mocks__"
     ],
     "scripts": {
-        "git": "node scripts/makegif.js ",
+        "gif": "node scripts/makegif.js ./scripts/gif-works-directory",
         "test": "jest",
         "typescript": "tsc --noEmit",
         "lint": "eslint \"src/**/*.{js,ts,tsx}\"",

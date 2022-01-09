@@ -6,6 +6,7 @@ const options = {
     resize: '441:235',
     colors: 255,
     fps: 60,
+    speed: 0.5,
 };
 
 async function convertFile(input) {
@@ -46,6 +47,13 @@ async function main() {
      */
     const [_p] = process.argv.slice(2);
     const sourceFilePath = path.resolve(_p);
+    const isExists = fs.existsSync(sourceFilePath);
+
+    if (!isExists) {
+        console.log('目标目录不存在');
+        return;
+    }
+
     const sourceFileInfo = fs.statSync(sourceFilePath);
 
     if (sourceFileInfo.isFile()) {
@@ -64,7 +72,13 @@ async function main() {
                 await convertFile(filePath);
             } catch (e) {}
         }
+
+        console.log('任务结束');
     }
 }
 
-main();
+try {
+    main();
+} catch (e) {
+    console.log(e);
+}
