@@ -39,8 +39,8 @@ const animationStyle: TAnimationStyle = React.useCallback(
         const zIndex = interpolate(value, [-1, 0, 1], [10, 20, 30]);
         const translateX = interpolate(
             value,
-            [-2, 0, 1],
-            [-PAGE_WIDTH, 0, PAGE_WIDTH]
+            [-1, 0, 1],
+            [-PAGE_WIDTH * 0.5, 0, PAGE_WIDTH]
         );
 
         return {
