@@ -1,8 +1,28 @@
-## 自定义动画
+# 自定义动画
 
 经过一些努力，我们终于在v2版本中实现了自定义动画，现在只需实现一个类型`TAnimationStyle`的回调函数，然后将它传给`Carousel`的`customAnimation`属性即可。
 
-下面给大家带来几个例子。
+## 准备
+
+```
+type TAnimationStyle = (value: number) => Animated.AnimatedStyleProp<ViewStyle>;
+```
+
+这个函数会在每个item里去调用，并接受一个参数`value`表示当前item相对`window`所在的位置，下图展示了`value`和位置的关系
+
+<img src="././../assets/custom-animation-sketch.png" width="300"/>  
+
+当拿到`value`后，我们只需要描述item在对应位置上如何展示，剩下的就交给`Animated`去执行吧。
+
+### 小贴士
+
+* 别忘了设置`zIndex`
+
+---
+
+## 发车！
+
+下面写了几个例子
 
 ### 视差效果
 
@@ -18,8 +38,8 @@ const animationStyle: TAnimationStyle = React.useCallback(
         const zIndex = interpolate(value, [-1, 0, 1], [10, 20, 30]);
         const translateX = interpolate(
             value,
-            [-2, 0, 1],
-            [-PAGE_WIDTH, 0, PAGE_WIDTH]
+            [-1, 0, 1],
+            [-PAGE_WIDTH * 0.5, 0, PAGE_WIDTH]
         );
 
         return {
