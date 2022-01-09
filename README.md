@@ -131,7 +131,12 @@ import Carousel from 'react-native-reanimated-carousel';
 
 ```shell
 yarn ios
+# use pretty images
+yarn ios:pretty
+
 yarn android
+# use pretty images
+yarn android:pretty
 ```
 
 ## License

@@ -131,7 +131,12 @@ import Carousel from 'react-native-reanimated-carousel';
 
 ```shell
 yarn ios
+# 使用更好看的图片
+yarn ios:pretty
+
 yarn android
+# 使用更好看的图片
+yarn android:pretty
 ```
 
 ## 许可
