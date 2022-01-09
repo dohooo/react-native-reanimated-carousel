@@ -1,8 +1,29 @@
-## Custom Animation
+# Custom Animation
 
 After some effort, we finally implemented custom animation in v2, now we just need to implement a callback function of type `TAnimationStyle` and pass it to the `customAnimation` property of `Carousel`.
 
-Here are a few examples for you.
+## Prepare
+
+```
+type TAnimationStyle = (value: number) => Animated.AnimatedStyleProp<ViewStyle>;
+```
+
+
+This function will be called in each item and accepts a parameter `value` indicating the position of the current item relative to `window`. The following picture shows the relationship between `value` and position
+
+<img src="././../assets/custom-animation-sketch.png" width="300"/>  
+
+After getting the `value`, we only need to describe how the item is displayed in the corresponding position, and the rest is handed over to `Animated` to execute.
+
+### Tips
+
+* Don't forget to set `zIndex`
+
+---
+
+## Let's get started!
+
+Here are a few examples.
 
 ### Parallax
 
@@ -18,8 +39,8 @@ const animationStyle: TAnimationStyle = React.useCallback(
         const zIndex = interpolate(value, [-1, 0, 1], [10, 20, 30]);
         const translateX = interpolate(
             value,
-            [-2, 0, 1],
-            [-PAGE_WIDTH, 0, PAGE_WIDTH]
+            [-1, 0, 1],
+            [-PAGE_WIDTH * 0.5, 0, PAGE_WIDTH]
         );
 
         return {
