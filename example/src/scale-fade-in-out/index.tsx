@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Dimensions, View } from 'react-native';
 import { interpolate } from 'react-native-reanimated';
 import { Colors } from 'react-native-ui-lib';
-import Carousel from '../../../src/index';
+import Carousel from 'react-native-reanimated-carousel';
 import type { TAnimationStyle } from '../../../src/layouts/BaseLayout';
 import { SBItem } from '../components/SBItem';
 

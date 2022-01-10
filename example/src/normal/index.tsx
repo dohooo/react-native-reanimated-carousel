@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Dimensions } from 'react-native';
 import { View } from 'react-native-ui-lib';
-import Carousel from '../../../src/index';
+import Carousel from 'react-native-reanimated-carousel';
 import { SBItem } from '../components/SBItem';
 import SButton from '../components/SButton';
 

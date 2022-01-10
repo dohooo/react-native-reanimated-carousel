@@ -5,7 +5,7 @@ import Animated, {
     interpolateColor,
     useAnimatedStyle,
 } from 'react-native-reanimated';
-import Carousel from '../../../src/index';
+import Carousel from 'react-native-reanimated-carousel';
 import type { TAnimationStyle } from '../../../src/layouts/BaseLayout';
 import { SBItem } from '../components/SBItem';
 import SButton from '../components/SButton';
