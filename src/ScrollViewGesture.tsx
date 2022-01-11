@@ -12,8 +12,9 @@ import Animated, {
     useDerivedValue,
     useSharedValue,
     withDecay,
-    withSpring,
+    withTiming,
 } from 'react-native-reanimated';
+import { Easing } from './constants';
 import { CTX } from './store';
 
 type GestureContext = {
@@ -40,6 +41,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
             enableSnap,
             panGestureHandlerProps,
             loop: infinite,
+            autoPlayInterval,
         },
     } = React.useContext(CTX);
 
@@ -54,10 +56,11 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
     const _withSpring = React.useCallback(
         (toValue: number, onFinished?: () => void) => {
             'worklet';
-            return withSpring(
+            return withTiming(
                 toValue,
                 {
-                    damping: 100,
+                    duration: autoPlayInterval,
+                    easing: Easing.easeOutQuart,
                 },
                 (isFinished) => {
                     if (isFinished) {
@@ -66,7 +69,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                 }
             );
         },
-        []
+        [autoPlayInterval]
     );
 
     const endWithSpring = React.useCallback(
