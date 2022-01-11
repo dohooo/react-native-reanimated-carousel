@@ -60,7 +60,11 @@ const Index = () => {
     return (
         <ScrollView
             style={{ flex: 1 }}
-            stickyHeaderIndices={[0, LayoutsPage.length + 1]}
+            stickyHeaderIndices={[
+                0,
+                LayoutsPage.length + 1,
+                LayoutsPage.length + CustomAnimations.length + 2,
+            ]}
         >
             <View style={styles.section}>
                 <Text style={styles.sectionText}>{'Layouts'}</Text>
