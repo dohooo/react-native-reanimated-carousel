@@ -1,3 +1,10 @@
+## [2.1.1](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.1.0...v2.1.1) (2022-01-11)
+
+
+### Bug Fixes
+
+* autoplay will scroll out of bounds ([2cfacff](https://github.com/dohooo/react-native-reanimated-carousel/commit/2cfacffb62f1e4934393cb5f42e55cbdddc2d8f2))
+
 # [2.1.0](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.0.0...v2.1.0) (2022-01-08)
 
 
