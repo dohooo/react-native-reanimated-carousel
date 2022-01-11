@@ -48,7 +48,6 @@
   </a>
 </p>
 
-
 > 现在你可以和我们一起来制作酷炫的动画了！ 非常简单! [[详情]](./docs/custom-animation.zh-CN.md)
 
 <p align="center">
@@ -63,6 +62,9 @@
   </a>
   <a href="./example/src/rotate-scale-fade-in-out/index.tsx">
     <img src="assets/rotate-scale-fade-in-out.gif" width="300"/>  
+  </a>
+  <a href="./example/src/rotate-in-out/index.tsx">
+    <img src="assets/rotate-in-out.gif" width="300"/>  
   </a>
 </p>
 

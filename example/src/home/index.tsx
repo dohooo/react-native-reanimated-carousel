@@ -20,6 +20,9 @@ const LayoutsPage: Array<Record<'name', keyof RootStackParamList>> = [
     {
         name: 'Stack',
     },
+];
+
+const CustomAnimations: Array<Record<'name', keyof RootStackParamList>> = [
     {
         name: 'AdvancedParallax',
     },
@@ -28,6 +31,9 @@ const LayoutsPage: Array<Record<'name', keyof RootStackParamList>> = [
     },
     {
         name: 'ScaleFadeInOut',
+    },
+    {
+        name: 'RotateInOut',
     },
     {
         name: 'RotateScaleFadeInOut',
@@ -57,6 +63,21 @@ const Index = () => {
                 <Text style={styles.sectionText}>{'Layouts'}</Text>
             </View>
             {LayoutsPage.map(({ name }, index) => {
+                return (
+                    <TouchableHighlight
+                        key={index}
+                        onPress={() => navigation.navigate(name)}
+                    >
+                        <View style={styles.listItem}>
+                            <Text style={styles.text}>{name}</Text>
+                        </View>
+                    </TouchableHighlight>
+                );
+            })}
+            <View style={styles.section}>
+                <Text style={styles.sectionText}>{'CustomAnimations'}</Text>
+            </View>
+            {CustomAnimations.map(({ name }, index) => {
                 return (
                     <TouchableHighlight
                         key={index}
