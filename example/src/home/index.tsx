@@ -38,6 +38,9 @@ const CustomAnimations: Array<Record<'name', keyof RootStackParamList>> = [
     {
         name: 'RotateScaleFadeInOut',
     },
+    {
+        name: 'AnimTabBar',
+    },
 ];
 
 const OtherPage: Array<Record<'name', keyof RootStackParamList>> = [
