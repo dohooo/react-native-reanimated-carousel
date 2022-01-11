@@ -1,3 +1,11 @@
+## [2.1.2](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.1.1...v2.1.2) (2022-01-11)
+
+
+### Bug Fixes
+
+* fix wrong offset when out of bounds ([db27279](https://github.com/dohooo/react-native-reanimated-carousel/commit/db2727951916876205a315c4b2fdcee63e74fab0)), closes [#94](https://github.com/dohooo/react-native-reanimated-carousel/issues/94)
+* remove ExtrapolateParameter of normal layout translate ([850e960](https://github.com/dohooo/react-native-reanimated-carousel/commit/850e96082ec44422d99c5a5a1767a6530b1405d9)), closes [#96](https://github.com/dohooo/react-native-reanimated-carousel/issues/96)
+
 ## [2.1.1](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.1.0...v2.1.1) (2022-01-11)
 
 
