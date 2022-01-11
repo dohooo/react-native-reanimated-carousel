@@ -202,7 +202,11 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                     !infinite &&
                     (translation.value > 0 || translation.value < -ctx.max)
                 ) {
-                    panTranslation = panTranslation * 0.5;
+                    const boundary = translation.value > 0 ? 0 : -ctx.max;
+                    const fixed = boundary - ctx.panOffset;
+                    const dynamic = panTranslation - fixed;
+                    translation.value = boundary + dynamic * 0.5;
+                    return;
                 }
 
                 translation.value = ctx.panOffset + panTranslation;
