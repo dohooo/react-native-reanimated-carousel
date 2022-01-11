@@ -67,6 +67,7 @@ function Carousel<T>(
         onScrollEnd: () => runOnJS(_onScrollEnd)(),
         onScrollBegin: () => !!onScrollBegin && runOnJS(onScrollBegin)(),
         onChange: (i) => onSnapToItem && runOnJS(onSnapToItem)(i),
+        duration: autoPlayInterval,
     });
 
     const {
