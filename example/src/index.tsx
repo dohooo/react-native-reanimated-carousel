@@ -17,6 +17,7 @@ import SnapCarouselLoopComponent from './snap-carousel-loop';
 import AdvancedParallaxComponent from './advanced-parallax';
 import PauseAdvancedParallaxComponent from './pause-advanced-parallax';
 import ScaleFadeInOutComponent from './scale-fade-in-out';
+import RotateScaleFadeInOutComponent from './rotate-scale-fade-in-out';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -29,6 +30,7 @@ export type RootStackParamList = {
     AdvancedParallax: undefined;
     PauseAdvancedParallax: undefined;
     ScaleFadeInOut: undefined;
+    RotateScaleFadeInOut: undefined;
 
     SnapCarouselComplex: undefined;
     SnapCarouselLoop: undefined;
@@ -76,6 +78,10 @@ function App() {
                 <Stack.Screen
                     name="ScaleFadeInOut"
                     component={ScaleFadeInOutComponent}
+                />
+                <Stack.Screen
+                    name="RotateScaleFadeInOut"
+                    component={RotateScaleFadeInOutComponent}
                 />
 
                 <Stack.Screen

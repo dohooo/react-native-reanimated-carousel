@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import SButton from '../components/SButton';
 import { SBItem } from '../components/SBItem';
+import { ElementsText } from '../constants';
 
 const window = Dimensions.get('window');
 const PAGE_WIDTH = window.width;
@@ -100,7 +101,7 @@ function Index() {
             )}
             <SButton
                 onPress={() => setAutoPlay(!autoPlay)}
-            >{`autoPlay:${autoPlay}`}</SButton>
+            >{`${ElementsText.AUTOPLAY}:${autoPlay}`}</SButton>
             <SButton
                 onPress={() => {
                     setIsVertical(!isVertical);

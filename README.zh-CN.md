@@ -61,6 +61,9 @@
   <a href="./example/src/scale-fade-in-out/index.tsx">
     <img src="assets/scale-fade-in-out.gif" width="300"/>  
   </a>
+  <a href="./example/src/rotate-scale-fade-in-out/index.tsx">
+    <img src="assets/rotate-scale-fade-in-out.gif" width="300"/>  
+  </a>
 </p>
 
 ## 目录

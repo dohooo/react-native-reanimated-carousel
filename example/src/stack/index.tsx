@@ -3,6 +3,7 @@ import { View } from 'react-native-ui-lib';
 import Carousel from 'react-native-reanimated-carousel';
 import { SBItem } from '../components/SBItem';
 import SButton from '../components/SButton';
+import { ElementsText } from '../constants';
 
 function Index() {
     const [mode, setMode] = React.useState<any>('horizontal-stack');
@@ -66,7 +67,7 @@ function Index() {
                         setAutoPlay(!autoPlay);
                     }}
                 >
-                    {`autoPlay:${autoPlay}`}
+                    {`${ElementsText.AUTOPLAY}:${autoPlay}`}
                 </SButton>
                 <SButton
                     onPress={() => {

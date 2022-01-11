@@ -29,6 +29,9 @@ const LayoutsPage: Array<Record<'name', keyof RootStackParamList>> = [
     {
         name: 'ScaleFadeInOut',
     },
+    {
+        name: 'RotateScaleFadeInOut',
+    },
 ];
 
 const OtherPage: Array<Record<'name', keyof RootStackParamList>> = [

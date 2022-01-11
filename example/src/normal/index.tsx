@@ -4,6 +4,7 @@ import { View } from 'react-native-ui-lib';
 import Carousel from 'react-native-reanimated-carousel';
 import { SBItem } from '../components/SBItem';
 import SButton from '../components/SButton';
+import { ElementsText } from '../constants';
 
 const window = Dimensions.get('window');
 const PAGE_WIDTH = window.width;
@@ -54,7 +55,7 @@ function Index() {
                     setIsAutoPlay(!isAutoPlay);
                 }}
             >
-                AutoPlay:{`${isAutoPlay}`}
+                {ElementsText.AUTOPLAY}:{`${isAutoPlay}`}
             </SButton>
         </View>
     );

@@ -8,16 +8,15 @@ After some effort, we finally implemented custom animation in v2, now we just ne
 type TAnimationStyle = (value: number) => Animated.AnimatedStyleProp<ViewStyle>;
 ```
 
-
 This function will be called in each item and accepts a parameter `value` indicating the position of the current item relative to `window`. The following picture shows the relationship between `value` and position
 
-<img src="././../assets/custom-animation-sketch.png" width="300"/>  
+<img src="././../assets/custom-animation-sketch.png" width="300"/>
 
 After getting the `value`, we only need to describe how the item is displayed in the corresponding position, and the rest is handed over to `Animated` to execute.
 
 ### Tips
 
-* Don't forget to set `zIndex`
+-   Don't forget to set `zIndex`
 
 ---
 
@@ -32,24 +31,21 @@ Here are a few examples.
 </a>
 
 ```ts
-const animationStyle: TAnimationStyle = React.useCallback(
-    (value: number) => {
-        'worklet';
+const animationStyle: TAnimationStyle = React.useCallback((value: number) => {
+    'worklet';
 
-        const zIndex = interpolate(value, [-1, 0, 1], [10, 20, 30]);
-        const translateX = interpolate(
-            value,
-            [-1, 0, 1],
-            [-PAGE_WIDTH * 0.5, 0, PAGE_WIDTH]
-        );
+    const zIndex = interpolate(value, [-1, 0, 1], [10, 20, 30]);
+    const translateX = interpolate(
+        value,
+        [-1, 0, 1],
+        [-PAGE_WIDTH * 0.5, 0, PAGE_WIDTH]
+    );
 
-        return {
-            transform: [{ translateX }],
-            zIndex,
-        };
-    },
-    []
-);
+    return {
+        transform: [{ translateX }],
+        zIndex,
+    };
+}, []);
 
 <Carousel
     style={{ width: screen.width, height: 240 }}
@@ -65,7 +61,7 @@ const animationStyle: TAnimationStyle = React.useCallback(
             />
         );
     }}
-/>
+/>;
 
 const CustomItem = ({ index, animationValue }) => {
     const maskStyle = useAnimatedStyle(() => {
@@ -98,7 +94,7 @@ const CustomItem = ({ index, animationValue }) => {
             />
         </View>
     );
-}
+};
 ```
 
 In order to implement some animation effects outside `Carousel`, such as `MaskView`, we pass the animation value calculated inside each Item to the outside through `renderItem`.
@@ -110,22 +106,19 @@ In order to implement some animation effects outside `Carousel`, such as `MaskVi
 </a>
 
 ```ts
-const animationStyle: TAnimationStyle = React.useCallback(
-    (value: number) => {
-        'worklet';
+const animationStyle: TAnimationStyle = React.useCallback((value: number) => {
+    'worklet';
 
-        const zIndex = interpolate(value, [-1, 0, 1], [10, 20, 30]);
-        const scale = interpolate(value, [-1, 0, 1], [1.25, 1, 0.25]);
-        const opacity = interpolate(value, [-0.75, 0, 1], [0, 1, 0]);
+    const zIndex = interpolate(value, [-1, 0, 1], [10, 20, 30]);
+    const scale = interpolate(value, [-1, 0, 1], [1.25, 1, 0.25]);
+    const opacity = interpolate(value, [-0.75, 0, 1], [0, 1, 0]);
 
-        return {
-            transform: [{ scale }],
-            zIndex,
-            opacity,
-        };
-    },
-    []
-);
+    return {
+        transform: [{ scale }],
+        zIndex,
+        opacity,
+    };
+}, []);
 
 <Carousel
     style={{
@@ -139,16 +132,7 @@ const animationStyle: TAnimationStyle = React.useCallback(
     data={[...new Array(6).keys()]}
     customAnimation={animationStyle}
     renderItem={({ index }) => {
-        return (
-            <SBItem
-                key={index}
-                index={index}
-                style={{
-                    borderWidth: 5,
-                    borderColor: Colors.orange50,
-                }}
-            />
-        );
+        return <SBItem key={index} index={index} />;
     }}
-/>
+/>;
 ```
