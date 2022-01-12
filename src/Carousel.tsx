@@ -1,10 +1,12 @@
 import React, { PropsWithChildren } from 'react';
 import Animated, { runOnJS, useDerivedValue } from 'react-native-reanimated';
+
 import { useCarouselController } from './hooks/useCarouselController';
 import { useAutoPlay } from './hooks/useAutoPlay';
 import { usePropsErrorBoundary } from './hooks/usePropsErrorBoundary';
 import { ScrollViewGesture } from './ScrollViewGesture';
 import { useVisibleRanges } from './hooks/useVisibleRanges';
+
 import type { ICarouselInstance, TCarouselProps } from './types';
 import { StyleSheet, View } from 'react-native';
 import { DATA_LENGTH } from './constants';
@@ -33,6 +35,7 @@ function Carousel<T>(
         windowSize,
         autoPlayReverse,
         autoPlayInterval,
+        scrollAnimationDuration,
         renderItem,
         onScrollEnd,
         onSnapToItem,
@@ -67,7 +70,7 @@ function Carousel<T>(
         onScrollEnd: () => runOnJS(_onScrollEnd)(),
         onScrollBegin: () => !!onScrollBegin && runOnJS(onScrollBegin)(),
         onChange: (i) => onSnapToItem && runOnJS(onSnapToItem)(i),
-        duration: autoPlayInterval,
+        duration: scrollAnimationDuration,
     });
 
     const {
