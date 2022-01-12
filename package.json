@@ -30,10 +30,13 @@
         "release": "release-it --no-git.requireUpstream",
         "ios": "yarn --cwd example ios",
         "ios:pretty": "yarn --cwd example ios:pretty",
+        "web": "yarn --cwd example web",
+        "web:pretty": "yarn --cwd example web:pretty",
         "android": "yarn --cwd example android",
         "android:pretty": "yarn --cwd example android:pretty",
         "pods": "cd example && pod-install --quiet",
-        "bootstrap": "yarn example && yarn && yarn pods"
+        "bootstrap": "yarn example && yarn && yarn pods",
+        "deploy": "cd example && yarn deploy"
     },
     "keywords": [
         "react-native",

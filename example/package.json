@@ -1,6 +1,7 @@
 {
     "name": "react-native-reanimated-carousel-example",
     "description": "Example app for react-native-reanimated-carousel",
+    "homepage": "https://dohooo.github.io/react-native-reanimated-carousel/",
     "version": "0.0.1",
     "private": true,
     "main": "index",
@@ -9,8 +10,12 @@
         "ios": "expo start -c --ios",
         "ios:pretty": "PRETTY=true expo start -c --ios",
         "web": "expo start --web",
+        "web:pretty": "PRETTY=true expo start --web",
         "start": "expo start",
-        "test": "jest"
+        "test": "jest",
+        "build:web": "expo build:web",
+        "deploy": "gh-pages -d web-build",
+        "predeploy": "yarn build:web"
     },
     "dependencies": {
         "@react-navigation/core": "^6.1.0",
@@ -32,6 +37,7 @@
     },
     "devDependencies": {
         "@babel/core": "~7.9.0",
+        "@babel/plugin-syntax-dynamic-import": "^7.8.3",
         "@babel/runtime": "^7.9.6",
         "@types/react-native-snap-carousel": "^3.8.5",
         "babel-plugin-inline-dotenv": "^1.6.0",
@@ -41,7 +47,6 @@
         "expo-cli": "^4.0.13",
         "fiction-expo-restart": "^1.1.0",
         "react-native-gesture-handler": "~1.10.2",
-        "react-native-reanimated": "2.2.3",
-        "@babel/plugin-syntax-dynamic-import": "^7.8.3"
+        "react-native-reanimated": "2.2.3"
     }
 }

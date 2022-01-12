@@ -4,7 +4,7 @@
 
 <img src="assets/banner-zh.jpeg" width="100%"/>
 
-![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS-brightgreen.svg?style=flat-square&colorB=191A17)
+![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS%20%7C%20Web-brightgreen.svg?style=flat-square&colorB=191A17)
 [![npm](https://img.shields.io/npm/v/react-native-reanimated-carousel.svg?style=flat-square)](https://www.npmjs.com/package/react-native-reanimated-carousel)
 [![npm](https://img.shields.io/npm/dm/react-native-reanimated-carousel.svg?style=flat-square&colorB=007ec6)](https://www.npmjs.com/package/react-native-reanimated-carousel)
 [![npm](https://img.shields.io/npm/dw/react-native-reanimated-carousel.svg?style=flat-square&colorB=007ec6)](https://www.npmjs.com/package/react-native-reanimated-carousel)
@@ -18,6 +18,8 @@
 -   **易用**、**无限滚动**、**完全使用 Reanimated2 实现**
 
 > v2 已经发布，希望大家喜欢!~ [[v1 文档]](https://github.com/dohooo/react-native-reanimated-carousel/tree/v1.x.x)
+
+> 支持Web端 [[示例]](https://dohooo.github.io/react-native-reanimated-carousel/)
 
 > 点击图片，查看 demo。[[试一下]](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
 
@@ -138,16 +140,20 @@ import Carousel from 'react-native-reanimated-carousel';
   <img src="assets/normal-fast.gif" width="50%"/>
 </p>
 </details>
+
 ## 示例
+
+> `:pretty` 使用更好看的图片
 
 ```shell
 yarn ios
-# 使用更好看的图片
 yarn ios:pretty
 
 yarn android
-# 使用更好看的图片
 yarn android:pretty
+
+yarn web
+yarn web:pretty
 ```
 
 ## 许可
