@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dimensions, View } from 'react-native';
+import { View } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import Animated, {
     Extrapolate,
@@ -9,9 +9,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import SButton from '../components/SButton';
 import { SBItem } from '../components/SBItem';
-import { ElementsText } from '../constants';
+import { ElementsText, window } from '../constants';
 
-const window = Dimensions.get('window');
 const PAGE_WIDTH = window.width;
 const colors = [
     '#26292E',

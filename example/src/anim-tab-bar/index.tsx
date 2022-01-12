@@ -1,13 +1,11 @@
 import * as React from 'react';
-import { Dimensions } from 'react-native';
 import { Extrapolate, interpolate } from 'react-native-reanimated';
 import Carousel from 'react-native-reanimated-carousel';
 import { View, Text } from 'react-native-ui-lib';
 import type { TAnimationStyle } from '../../../src/layouts/BaseLayout';
-import { ElementsText } from '../constants';
+import { ElementsText, window } from '../constants';
 import { useToggleButton } from '../hooks/useToggleButton';
 
-const window = Dimensions.get('window');
 const PAGE_WIDTH = 40;
 const PAGE_HEIGHT = 40;
 

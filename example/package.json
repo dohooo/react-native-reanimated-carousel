@@ -26,9 +26,9 @@
         "react-native-safe-area-context": "3.2.0",
         "react-native-screens": "~3.0.0",
         "react-native-snap-carousel": "^3.9.1",
-        "react-native-ui-lib": "^6.5.4",
+        "react-native-ui-lib": "^6.7.1",
         "react-native-unimodules": "~0.13.3",
-        "react-native-web": "~0.13.12"
+        "react-native-web": "^0.17.5"
     },
     "devDependencies": {
         "@babel/core": "~7.9.0",
@@ -36,10 +36,12 @@
         "@types/react-native-snap-carousel": "^3.8.5",
         "babel-plugin-inline-dotenv": "^1.6.0",
         "babel-plugin-module-resolver": "^4.0.0",
+        "babel-plugin-react-native-web": "^0.17.5",
         "babel-preset-expo": "8.3.0",
         "expo-cli": "^4.0.13",
         "fiction-expo-restart": "^1.1.0",
         "react-native-gesture-handler": "~1.10.2",
-        "react-native-reanimated": "2.2.3"
+        "react-native-reanimated": "2.2.3",
+        "@babel/plugin-syntax-dynamic-import": "^7.8.3"
     }
 }
