@@ -72,6 +72,11 @@ export type TCarouselProps<T = any> = {
      */
     autoPlayInterval?: number;
     /**
+     * Time a scroll animation takes to finish
+     * @default 500 (ms)
+     */
+    scrollAnimationDuration?:number;
+    /**
      * Carousel container style
      */
     style?: ViewStyle;
