@@ -19,7 +19,7 @@
 
 > v2 已经发布，希望大家喜欢!~ [[v1 文档]](https://github.com/dohooo/react-native-reanimated-carousel/tree/v1.x.x)
 
-> 点击图片，查看 demo。[[试一下]](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
+> 点击图片，查看代码片段。[[试一下]](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
 
 <p align="center">
   <a href="./example/src/normal/index.tsx">
