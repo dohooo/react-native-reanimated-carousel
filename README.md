@@ -19,7 +19,7 @@ English | [简体中文](./README.zh-CN.md)
 
 > v2 has been released! Join it! [[v1 docs]](https://github.com/dohooo/react-native-reanimated-carousel/tree/v1.x.x)
 
-> Click on the image to see the demo. [[Try it]](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
+> Click on the image to see the code snippets. [[Try it]](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
 
 <p align="center">
   <a href="./example/src/normal/index.tsx">
