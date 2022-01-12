@@ -105,7 +105,9 @@ export function useCarouselController(opts: IOpts): ICarouselController {
                 toValue,
                 { duration, easing: Easing.easeOutQuart },
                 (isFinished: boolean) => {
-                    callback?.();
+                    if (callback) {
+                        runOnJS(callback)();
+                    }
                     if (isFinished) {
                         runOnJS(onScrollEnd)();
                     }
