@@ -2,12 +2,12 @@
   "files": {
     "static/js/0.ca0398ae.chunk.js": "/react-native-reanimated-carousel/static/js/0.ca0398ae.chunk.js",
     "static/js/0.ca0398ae.chunk.js.map": "/react-native-reanimated-carousel/static/js/0.ca0398ae.chunk.js.map",
-    "app.js": "/react-native-reanimated-carousel/static/js/app.86267e3a.chunk.js",
-    "app.js.map": "/react-native-reanimated-carousel/static/js/app.86267e3a.chunk.js.map",
+    "app.js": "/react-native-reanimated-carousel/static/js/app.229d748a.chunk.js",
+    "app.js.map": "/react-native-reanimated-carousel/static/js/app.229d748a.chunk.js.map",
     "runtime~app.js": "/react-native-reanimated-carousel/static/js/runtime~app.4e46b1d0.js",
     "runtime~app.js.map": "/react-native-reanimated-carousel/static/js/runtime~app.4e46b1d0.js.map",
-    "static/js/3.d497f7b7.chunk.js": "/react-native-reanimated-carousel/static/js/3.d497f7b7.chunk.js",
-    "static/js/3.d497f7b7.chunk.js.map": "/react-native-reanimated-carousel/static/js/3.d497f7b7.chunk.js.map",
+    "static/js/3.1b455715.chunk.js": "/react-native-reanimated-carousel/static/js/3.1b455715.chunk.js",
+    "static/js/3.1b455715.chunk.js.map": "/react-native-reanimated-carousel/static/js/3.1b455715.chunk.js.map",
     "static/js/4.a5b4d680.chunk.js": "/react-native-reanimated-carousel/static/js/4.a5b4d680.chunk.js",
     "static/js/4.a5b4d680.chunk.js.map": "/react-native-reanimated-carousel/static/js/4.a5b4d680.chunk.js.map",
     "static/js/5.9fbfdc49.chunk.js": "/react-native-reanimated-carousel/static/js/5.9fbfdc49.chunk.js",
@@ -15,14 +15,14 @@
     "index.html": "/react-native-reanimated-carousel/index.html",
     "manifest.json": "/react-native-reanimated-carousel/manifest.json",
     "serve.json": "/react-native-reanimated-carousel/serve.json",
-    "static/js/3.d497f7b7.chunk.js.LICENSE.txt": "/react-native-reanimated-carousel/static/js/3.d497f7b7.chunk.js.LICENSE.txt",
+    "static/js/3.1b455715.chunk.js.LICENSE.txt": "/react-native-reanimated-carousel/static/js/3.1b455715.chunk.js.LICENSE.txt",
     "static/media/TransparentSwatch.png": "/react-native-reanimated-carousel/static/media/TransparentSwatch.3689fd00.png",
     "static/media/gradientOverlay.png": "/react-native-reanimated-carousel/static/media/gradientOverlay.7d102364.png",
     "static/media/web-example-qrcode.png": "/react-native-reanimated-carousel/static/media/web-example-qrcode.0190b8c9.png"
   },
   "entrypoints": [
     "static/js/runtime~app.4e46b1d0.js",
-    "static/js/3.d497f7b7.chunk.js",
-    "static/js/app.86267e3a.chunk.js"
+    "static/js/3.1b455715.chunk.js",
+    "static/js/app.229d748a.chunk.js"
   ]
 }
