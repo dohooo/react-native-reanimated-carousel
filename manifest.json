@@ -1,0 +1,8 @@
+{
+  "description": "Example app for react-native-reanimated-carousel",
+  "display": "standalone",
+  "lang": "en",
+  "name": "react-native-reanimated-carousel-example",
+  "short_name": "react-native-reanimated-carousel-example",
+  "start_url": "/?utm_source=web_app_manifest"
+}

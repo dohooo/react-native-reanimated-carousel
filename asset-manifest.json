@@ -1,0 +1,27 @@
+{
+  "files": {
+    "static/js/0.fab8b909.chunk.js": "/static/js/0.fab8b909.chunk.js",
+    "static/js/0.fab8b909.chunk.js.map": "/static/js/0.fab8b909.chunk.js.map",
+    "app.js": "/static/js/app.285d85e3.chunk.js",
+    "app.js.map": "/static/js/app.285d85e3.chunk.js.map",
+    "runtime~app.js": "/static/js/runtime~app.a706ba20.js",
+    "runtime~app.js.map": "/static/js/runtime~app.a706ba20.js.map",
+    "static/js/3.924caed8.chunk.js": "/static/js/3.924caed8.chunk.js",
+    "static/js/3.924caed8.chunk.js.map": "/static/js/3.924caed8.chunk.js.map",
+    "static/js/4.3e73ad2b.chunk.js": "/static/js/4.3e73ad2b.chunk.js",
+    "static/js/4.3e73ad2b.chunk.js.map": "/static/js/4.3e73ad2b.chunk.js.map",
+    "static/js/5.879a2cbd.chunk.js": "/static/js/5.879a2cbd.chunk.js",
+    "static/js/5.879a2cbd.chunk.js.map": "/static/js/5.879a2cbd.chunk.js.map",
+    "index.html": "/index.html",
+    "manifest.json": "/manifest.json",
+    "serve.json": "/serve.json",
+    "static/js/3.924caed8.chunk.js.LICENSE.txt": "/static/js/3.924caed8.chunk.js.LICENSE.txt",
+    "static/media/TransparentSwatch.png": "/static/media/TransparentSwatch.3689fd00.png",
+    "static/media/gradientOverlay.png": "/static/media/gradientOverlay.7d102364.png"
+  },
+  "entrypoints": [
+    "static/js/runtime~app.a706ba20.js",
+    "static/js/3.924caed8.chunk.js",
+    "static/js/app.285d85e3.chunk.js"
+  ]
+}
