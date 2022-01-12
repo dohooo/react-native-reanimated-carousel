@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Dimensions, View } from 'react-native';
+import { View } from 'react-native';
 import { interpolate } from 'react-native-reanimated';
 import Carousel from 'react-native-reanimated-carousel';
 import type { TAnimationStyle } from '../../../src/layouts/BaseLayout';
 import { SBItem } from '../components/SBItem';
+import { window } from '../constants';
 
-const window = Dimensions.get('window');
 const PAGE_WIDTH = window.width;
 
 function Index() {

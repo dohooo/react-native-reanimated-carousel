@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // @ts-ignore
 import { Restart } from 'fiction-expo-restart';
 import { I18nManager } from 'react-native';
-import { Text } from 'react-native-ui-lib';
+import { Text, View } from 'react-native-ui-lib';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import Home from './home';
@@ -12,14 +12,23 @@ import NormalComponent from './normal';
 import ParallaxComponent from './parallax';
 import StackComponent from './stack';
 import ComplexComponent from './complex';
-import SnapCarouselComplexComponent from './snap-carousel-complex';
-import SnapCarouselLoopComponent from './snap-carousel-loop';
 import AdvancedParallaxComponent from './advanced-parallax';
 import PauseAdvancedParallaxComponent from './pause-advanced-parallax';
 import ScaleFadeInOutComponent from './scale-fade-in-out';
 import RotateInOutComponent from './rotate-in-out';
 import RotateScaleFadeInOutComponent from './rotate-scale-fade-in-out';
 import AnimTabBarComponent from './anim-tab-bar';
+import { isWeb } from './utils';
+import { window } from './constants';
+import { QRCode } from './components/QRCode';
+
+// Not support to WEB (react-native-snap-carousel)
+const SnapCarouselComplexComponent = React.lazy(
+    () => import('./snap-carousel-complex')
+);
+const SnapCarouselLoopComponent = React.lazy(
+    () => import('./snap-carousel-loop')
+);
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -41,73 +50,107 @@ export type RootStackParamList = {
     SnapCarouselLoop: undefined;
 };
 
+const WebContainer: React.FC = ({ children }) => {
+    return (
+        <View
+            style={{
+                height: '100%',
+                width: window.width,
+                alignSelf: 'center',
+            }}
+        >
+            {children}
+        </View>
+    );
+};
+
 function App() {
     const [isRTL, setIsRTL] = React.useState(I18nManager.isRTL);
-    return (
-        <NavigationContainer>
-            <Stack.Navigator
-                initialRouteName="Home"
-                screenOptions={{
-                    contentStyle: {
-                        flex: 1,
-                        backgroundColor: 'white',
-                    },
-                    headerRight: ({ tintColor }) => (
-                        <TouchableWithoutFeedback
-                            onPress={() => {
-                                I18nManager.forceRTL(!isRTL);
-                                setIsRTL(!isRTL);
-                                Restart();
-                            }}
-                        >
-                            <Text color={tintColor}>
-                                {isRTL ? 'LTR' : 'RTL'}
-                            </Text>
-                        </TouchableWithoutFeedback>
-                    ),
-                }}
-            >
-                <Stack.Screen name="Home" component={Home} />
-                <Stack.Screen name="Normal" component={NormalComponent} />
-                <Stack.Screen name="Parallax" component={ParallaxComponent} />
-                <Stack.Screen name="Stack" component={StackComponent} />
-                <Stack.Screen name="Complex" component={ComplexComponent} />
-                <Stack.Screen
-                    name="AdvancedParallax"
-                    component={AdvancedParallaxComponent}
-                />
-                <Stack.Screen
-                    name="PauseAdvancedParallax"
-                    component={PauseAdvancedParallaxComponent}
-                />
-                <Stack.Screen
-                    name="ScaleFadeInOut"
-                    component={ScaleFadeInOutComponent}
-                />
-                <Stack.Screen
-                    name="RotateInOut"
-                    component={RotateInOutComponent}
-                />
-                <Stack.Screen
-                    name="RotateScaleFadeInOut"
-                    component={RotateScaleFadeInOutComponent}
-                />
-                <Stack.Screen
-                    name="AnimTabBar"
-                    component={AnimTabBarComponent}
-                />
 
-                <Stack.Screen
-                    name="SnapCarouselComplex"
-                    component={SnapCarouselComplexComponent}
-                />
-                <Stack.Screen
-                    name="SnapCarouselLoop"
-                    component={SnapCarouselLoopComponent}
-                />
-            </Stack.Navigator>
-        </NavigationContainer>
+    const app = (
+        <View flex>
+            <NavigationContainer>
+                <Stack.Navigator
+                    initialRouteName="Home"
+                    screenOptions={{
+                        contentStyle: {
+                            flex: 1,
+                            backgroundColor: 'white',
+                        },
+                        headerRight: ({ tintColor }) => (
+                            <View row centerV>
+                                {isWeb && (
+                                    <>
+                                        <QRCode tintColor={tintColor} />
+                                        <Text color={tintColor}> | </Text>
+                                    </>
+                                )}
+                                <TouchableWithoutFeedback
+                                    onPress={() => {
+                                        I18nManager.forceRTL(!isRTL);
+                                        setIsRTL(!isRTL);
+                                        Restart();
+                                    }}
+                                >
+                                    <Text color={tintColor}>
+                                        {isRTL ? 'LTR' : 'RTL'}
+                                    </Text>
+                                </TouchableWithoutFeedback>
+                            </View>
+                        ),
+                    }}
+                >
+                    <Stack.Screen name="Home" component={Home} />
+                    <Stack.Screen name="Normal" component={NormalComponent} />
+                    <Stack.Screen
+                        name="Parallax"
+                        component={ParallaxComponent}
+                    />
+                    <Stack.Screen name="Stack" component={StackComponent} />
+                    <Stack.Screen name="Complex" component={ComplexComponent} />
+                    <Stack.Screen
+                        name="AdvancedParallax"
+                        component={AdvancedParallaxComponent}
+                    />
+                    <Stack.Screen
+                        name="PauseAdvancedParallax"
+                        component={PauseAdvancedParallaxComponent}
+                    />
+                    <Stack.Screen
+                        name="ScaleFadeInOut"
+                        component={ScaleFadeInOutComponent}
+                    />
+                    <Stack.Screen
+                        name="RotateInOut"
+                        component={RotateInOutComponent}
+                    />
+                    <Stack.Screen
+                        name="RotateScaleFadeInOut"
+                        component={RotateScaleFadeInOutComponent}
+                    />
+                    <Stack.Screen
+                        name="AnimTabBar"
+                        component={AnimTabBarComponent}
+                    />
+
+                    <Stack.Screen
+                        name="SnapCarouselComplex"
+                        component={SnapCarouselComplexComponent}
+                    />
+                    <Stack.Screen
+                        name="SnapCarouselLoop"
+                        component={SnapCarouselLoopComponent}
+                    />
+                </Stack.Navigator>
+            </NavigationContainer>
+        </View>
     );
+
+    if (isWeb) {
+        return <WebContainer>{app}</WebContainer>;
+    }
+
+    return app;
 }
 
 export default App;

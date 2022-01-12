@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dimensions, Pressable } from 'react-native';
+import { Pressable } from 'react-native';
 import Animated, {
     Extrapolate,
     interpolate,
@@ -11,10 +11,9 @@ import Animated, {
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { Colors, View } from 'react-native-ui-lib';
 import SButton from '../components/SButton';
-import { ElementsText } from '../constants';
+import { ElementsText, window } from '../constants';
 import { useToggleButton } from '../hooks/useToggleButton';
 
-const window = Dimensions.get('window');
 const PAGE_WIDTH = 60;
 const PAGE_HEIGHT = 40;
 const DATA = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];

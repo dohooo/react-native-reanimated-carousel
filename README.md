@@ -4,7 +4,7 @@ English | [简体中文](./README.zh-CN.md)
 
 <img src="assets/banner.png" width="100%"/>
 
-![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS-brightgreen.svg?style=flat-square&colorB=191A17)
+![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS%20%7C%20Web-brightgreen.svg?style=flat-square&colorB=191A17)
 [![npm](https://img.shields.io/npm/v/react-native-reanimated-carousel.svg?style=flat-square)](https://www.npmjs.com/package/react-native-reanimated-carousel)
 [![npm](https://img.shields.io/npm/dm/react-native-reanimated-carousel.svg?style=flat-square&colorB=007ec6)](https://www.npmjs.com/package/react-native-reanimated-carousel)
 [![npm](https://img.shields.io/npm/dw/react-native-reanimated-carousel.svg?style=flat-square&colorB=007ec6)](https://www.npmjs.com/package/react-native-reanimated-carousel)
@@ -17,9 +17,11 @@ English | [简体中文](./README.zh-CN.md)
 -   **It completely solves this** [[problem]](https://github.com/meliorence/react-native-snap-carousel/issues/632) **for `react-native-snap-carousel`!**
 -   **Simple**、**Infinitely scrolling very smooth**、**Fully implemented using Reanimated 2!**
 
-> v2 has been released! Join it! [[v1 docs]](https://github.com/dohooo/react-native-reanimated-carousel/tree/v1.x.x)
+> V2 has been released! Join it! [[v1 docs]](https://github.com/dohooo/react-native-reanimated-carousel/tree/v1.x.x) 
 
-> Click on the image to see the demo. [[Try it]](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
+> Support to Web [[demo]](https://dohooo.github.io/react-native-reanimated-carousel/)
+
+> Click on the image to see the code snippets. [[Try it]](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
 
 <p align="center">
   <a href="./example/src/normal/index.tsx">
@@ -140,15 +142,16 @@ import Carousel from 'react-native-reanimated-carousel';
 </details>
 
 ## Example
-
+> `:pretty` use pretty images
 ```shell
 yarn ios
-# use pretty images
 yarn ios:pretty
 
 yarn android
-# use pretty images
 yarn android:pretty
+
+yarn web
+yarn web:pretty
 ```
 
 ## License

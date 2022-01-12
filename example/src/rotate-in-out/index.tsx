@@ -1,13 +1,12 @@
 import * as React from 'react';
-import { Dimensions, View } from 'react-native';
+import { View } from 'react-native';
 import { interpolate } from 'react-native-reanimated';
 import Carousel from 'react-native-reanimated-carousel';
 import type { TAnimationStyle } from '../../../src/layouts/BaseLayout';
 import { SBItem } from '../components/SBItem';
-import { ElementsText } from '../constants';
+import { ElementsText, window } from '../constants';
 import { useToggleButton } from '../hooks/useToggleButton';
 
-const window = Dimensions.get('window');
 const scale = 0.7;
 const PAGE_WIDTH = window.width * scale;
 const PAGE_HEIGHT = 240 * scale;

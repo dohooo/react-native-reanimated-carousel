@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Dimensions, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import SButton from '../components/SButton';
+import { window } from '../constants';
 
-const window = Dimensions.get('window');
 const PAGE_WIDTH = window.width;
 
 function Index() {
