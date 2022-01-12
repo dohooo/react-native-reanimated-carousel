@@ -21,7 +21,7 @@ English | [简体中文](./README.zh-CN.md)
 
 > Support to Web [[demo]](https://dohooo.github.io/react-native-reanimated-carousel/)
 
-> Click on the image to see the demo. [[Try it]](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
+> Click on the image to see the code snippets. [[Try it]](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
 
 <p align="center">
   <a href="./example/src/normal/index.tsx">

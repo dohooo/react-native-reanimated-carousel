@@ -21,7 +21,7 @@
 
 > 支持Web端 [[示例]](https://dohooo.github.io/react-native-reanimated-carousel/)
 
-> 点击图片，查看 demo。[[试一下]](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
+> 点击图片，查看代码 [[试一下]](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
 
 <p align="center">
   <a href="./example/src/normal/index.tsx">
