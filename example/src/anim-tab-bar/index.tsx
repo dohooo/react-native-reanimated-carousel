@@ -19,22 +19,17 @@ const PAGE_HEIGHT = 40;
 const DATA = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
 
 function Index() {
-    const r1 = React.useRef<ICarouselInstance>(null);
-    const r2 = React.useRef<ICarouselInstance>(null);
-    const AutoPLay1 = useToggleButton({
-        defaultValue: false,
-        buttonTitle: ElementsText.AUTOPLAY,
-    });
-    const AutoPLay2 = useToggleButton({
+    const r = React.useRef<ICarouselInstance>(null);
+    const AutoPLay = useToggleButton({
         defaultValue: false,
         buttonTitle: ElementsText.AUTOPLAY,
     });
 
     return (
         <View style={{ flex: 1 }}>
-            <View style={{ marginTop: 100 }}>
+            <View style={{ marginVertical: 100 }}>
                 <Carousel
-                    ref={r1}
+                    ref={r}
                     loop={false}
                     style={{
                         width: window.width,
@@ -53,7 +48,7 @@ function Index() {
                                 animationValue={animationValue}
                                 label={item}
                                 onPress={() =>
-                                    r1.current?.scrollTo(
+                                    r.current?.scrollTo(
                                         animationValue.value,
                                         true
                                     )
@@ -61,69 +56,19 @@ function Index() {
                             />
                         );
                     }}
-                    autoPlay={AutoPLay1.status}
+                    autoPlay={AutoPLay.status}
                 />
-                {AutoPLay1.button}
-                <View
-                    style={{
-                        marginTop: 8,
-                        flexDirection: 'row',
-                        justifyContent: 'space-evenly',
-                    }}
-                >
-                    <SButton onPress={() => r1.current?.prev()}>
-                        {'Prev'}
-                    </SButton>
-                    <SButton onPress={() => r1.current?.next()}>
-                        {'Next'}
-                    </SButton>
-                </View>
-                <View style={{ marginTop: 100 }}>
-                    <Carousel
-                        ref={r2}
-                        style={{
-                            width: window.width,
-                            height: PAGE_HEIGHT,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderBottomWidth: 1,
-                            borderBottomColor: Colors.blue30,
-                        }}
-                        width={PAGE_WIDTH}
-                        height={PAGE_HEIGHT}
-                        data={DATA}
-                        renderItem={({ item, animationValue }) => {
-                            return (
-                                <Item
-                                    animationValue={animationValue}
-                                    label={item}
-                                    onPress={() =>
-                                        r2.current?.scrollTo(
-                                            animationValue.value,
-                                            true
-                                        )
-                                    }
-                                />
-                            );
-                        }}
-                        autoPlay={AutoPLay2.status}
-                    />
-                    {AutoPLay2.button}
-                    <View
-                        style={{
-                            marginTop: 8,
-                            flexDirection: 'row',
-                            justifyContent: 'space-evenly',
-                        }}
-                    >
-                        <SButton onPress={() => r2.current?.prev()}>
-                            {'Prev'}
-                        </SButton>
-                        <SButton onPress={() => r2.current?.next()}>
-                            {'Next'}
-                        </SButton>
-                    </View>
-                </View>
+            </View>
+            {AutoPLay.button}
+            <View
+                style={{
+                    marginTop: 24,
+                    flexDirection: 'row',
+                    justifyContent: 'space-evenly',
+                }}
+            >
+                <SButton onPress={() => r.current?.prev()}>{'Prev'}</SButton>
+                <SButton onPress={() => r.current?.next()}>{'Next'}</SButton>
             </View>
         </View>
     );
