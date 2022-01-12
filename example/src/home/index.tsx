@@ -9,6 +9,7 @@ import {
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import type { RootStackParamList } from '../index';
 import { Colors } from 'react-native-ui-lib';
+import { isAndroid, isIos } from '../utils';
 
 const LayoutsPage: Array<Record<'name', keyof RootStackParamList>> = [
     {
@@ -47,13 +48,18 @@ const OtherPage: Array<Record<'name', keyof RootStackParamList>> = [
     {
         name: 'Complex',
     },
-    {
-        name: 'SnapCarouselComplex',
-    },
-    {
-        name: 'SnapCarouselLoop',
-    },
 ];
+
+if (isIos || isAndroid) {
+    OtherPage.push(
+        {
+            name: 'SnapCarouselComplex',
+        },
+        {
+            name: 'SnapCarouselLoop',
+        }
+    );
+}
 
 const Index = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();

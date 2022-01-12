@@ -1,98 +1,44 @@
-version: 2.1
+# This is a basic workflow to help you get started with Actions
 
-executors:
-  default:
-    docker:
-      - image: circleci/node:10
-    working_directory: ~/project
+name: CI
 
-commands:
-  attach_project:
-    steps:
-      - attach_workspace:
-          at: ~/project
+# Controls when the workflow will run
+on:
+    # Triggers the workflow on push or pull request events but only for the main branch
+    push:
+        branches:
+            - main
+            - develop
+    pull_request:
+        branches:
+            - main
+            - develop
+    workflow_dispatch:
 
 jobs:
-  install-dependencies:
-    executor: default
-    steps:
-      - checkout
-      - attach_project
-      - restore_cache:
-          keys:
-            - dependencies-{{ checksum "package.json" }}
-            - dependencies-
-      - restore_cache:
-          keys:
-            - dependencies-example-{{ checksum "example/package.json" }}
-            - dependencies-example-
-      - run:
-          name: Install dependencies
-          command: |
-            yarn install --cwd example --frozen-lockfile
-            yarn install --frozen-lockfile
-      - save_cache:
-          key: dependencies-{{ checksum "package.json" }}
-          paths: node_modules
-      - save_cache:
-          key: dependencies-example-{{ checksum "example/package.json" }}
-          paths: example/node_modules
-      - persist_to_workspace:
-          root: .
-          paths: .
+    deploy_web_example:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Setup Node
+              uses: actions/setup-node@v1
+              with:
+                  node-version: '14.x'
 
-  lint:
-    executor: default
-    steps:
-      - attach_project
-      - run:
-          name: Lint files
-          command: |
-            yarn lint
+            - uses: borales/actions-yarn@v2.3.0
+              with:
+                  cmd: install
 
-  typescript:
-    executor: default
-    steps:
-      - attach_project
-      - run:
-          name: Typecheck files
-          command: |
-            yarn typescript
+            - name: install example dependencies
+              run: cd example/
 
-  unit-tests:
-    executor: default
-    steps:
-      - attach_project
-      - run:
-          name: Run unit tests
-          command: |
-            yarn test --coverage
-      - store_artifacts:
-          path: coverage
-          destination: coverage
+            - uses: borales/actions-yarn@v2.3.0
+              with:
+                  cmd: install
 
-  build-package:
-    executor: default
-    steps:
-      - attach_project
-      - run:
-          name: Build package
-          command: |
-            yarn prepare
+            - name: go back
+              run: cd ../
 
-workflows:
-  build-and-test:
-    jobs:
-      - install-dependencies
-      - lint:
-          requires:
-            - install-dependencies
-      - typescript:
-          requires:
-            - install-dependencies
-      - unit-tests:
-          requires:
-            - install-dependencies
-      - build-package:
-          requires:
-            - install-dependencies
+            - uses: borales/actions-yarn@v2.3.0
+              with:
+                  cmd: deploy

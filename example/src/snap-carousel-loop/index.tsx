@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Dimensions, View } from 'react-native';
+import { View } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { SBItem } from '../components/SBItem';
 import SButton from '../components/SButton';
+import { window } from '../constants';
 
-const window = Dimensions.get('window');
 const PAGE_WIDTH = window.width;
 
 function Index() {
