@@ -140,11 +140,11 @@ export interface ICarouselInstance {
     /**
      * Play the last one
      */
-    prev: () => void;
+    prev: (n?: number) => void;
     /**
      * Play the next one
      */
-    next: () => void;
+    next: (n?: number) => void;
     /**
      * Get current item index
      */
@@ -153,6 +153,10 @@ export interface ICarouselInstance {
      * Go to index
      */
     goToIndex: (index: number, animated?: boolean) => void;
+    /**
+     * Go to index by animationValue
+     */
+    scrollTo: (value: number, animated?: boolean) => void;
 }
 
 export interface CarouselRenderItemInfo<ItemT> {
