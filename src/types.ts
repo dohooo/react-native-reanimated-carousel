@@ -138,23 +138,27 @@ export type TCarouselProps<T = any> = {
 
 export interface ICarouselInstance {
     /**
-     * Play the last one
+     * Scroll to previous item, it takes one optional argument (count),
+     * which allows you to specify how many items to cross
      */
-    prev: (n?: number) => void;
+    prev: (count?: number) => void;
     /**
-     * Play the next one
+     * Scroll to next item, it takes one optional argument (count),
+     * which allows you to specify how many items to cross
      */
-    next: (n?: number) => void;
+    next: (count?: number) => void;
     /**
      * Get current item index
      */
     getCurrentIndex: () => number;
     /**
      * Go to index
+     * @deprecated use scrollTo instead
      */
     goToIndex: (index: number, animated?: boolean) => void;
     /**
-     * Go to index by animationValue
+     * Use value to scroll to a position where relative to the current position,
+     * scrollTo(-2) is equivalent to prev(2), scrollTo(2) is equivalent to next(2)
      */
     scrollTo: (value: number, animated?: boolean) => void;
 }

@@ -48,7 +48,10 @@ function Index() {
                                 animationValue={animationValue}
                                 label={item}
                                 onPress={() =>
-                                    r.current?.scrollTo(animationValue.value)
+                                    r.current?.scrollTo(
+                                        animationValue.value,
+                                        true
+                                    )
                                 }
                             />
                         );

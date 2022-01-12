@@ -129,12 +129,12 @@ export function useCarouselController(opts: IOpts): ICarouselController {
     );
 
     const next = React.useCallback(
-        (n = 1, animated = true) => {
+        (count = 1, animated = true) => {
             if (!canSliding() || (!loop && index.value >= length - 1)) return;
 
             onScrollBegin?.();
 
-            const nextPage = currentFixedPage() + n;
+            const nextPage = currentFixedPage() + count;
             index.value = nextPage;
             handlerOffsetX.value = animated
                 ? scrollWithTiming(-nextPage * size)
@@ -154,12 +154,12 @@ export function useCarouselController(opts: IOpts): ICarouselController {
     );
 
     const prev = React.useCallback(
-        (n = 1, animated = true) => {
+        (count = 1, animated = true) => {
             if (!canSliding() || (!loop && index.value <= 0)) return;
 
             onScrollBegin?.();
 
-            const prevPage = currentFixedPage() - n;
+            const prevPage = currentFixedPage() - count;
             index.value = prevPage;
             handlerOffsetX.value = animated
                 ? scrollWithTiming(-prevPage * size)
@@ -207,7 +207,7 @@ export function useCarouselController(opts: IOpts): ICarouselController {
     );
 
     const scrollTo = React.useCallback(
-        (value: number, animated = true) => {
+        (value: number, animated = false) => {
             const n = Math.round(value);
             if (n < 0) {
                 prev(Math.abs(n), animated);
