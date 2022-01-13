@@ -7,6 +7,8 @@ export type TInitializeCarouselProps<T> = TCarouselProps<T> & {
     loop: Required<TCarouselProps>['loop'];
     width: Required<TCarouselProps>['width'];
     height: Required<TCarouselProps>['height'];
+    scrollAnimationDuration: Required<TCarouselProps>['scrollAnimationDuration'];
+    autoPlayInterval: Required<TCarouselProps>['autoPlayInterval'];
 };
 
 export function useInitProps<T>(

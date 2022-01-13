@@ -22,8 +22,8 @@ export interface ICarouselController {
     index: Animated.SharedValue<number>;
     sharedIndex: React.MutableRefObject<number>;
     sharedPreIndex: React.MutableRefObject<number>;
-    prev: () => void;
-    next: () => void;
+    prev: (callback?: () => void) => void;
+    next: (callback?: () => void) => void;
     computedIndex: () => void;
     getCurrentIndex: () => number;
     to: (index: number, animated?: boolean) => void;
@@ -105,11 +105,9 @@ export function useCarouselController(opts: IOpts): ICarouselController {
                 toValue,
                 { duration, easing: Easing.easeOutQuart },
                 (isFinished: boolean) => {
-                    if (callback) {
-                        runOnJS(callback)();
-                    }
                     if (isFinished) {
                         runOnJS(onScrollEnd)();
+                        callback && runOnJS(callback)();
                     }
                 }
             );
@@ -117,42 +115,54 @@ export function useCarouselController(opts: IOpts): ICarouselController {
         [onScrollEnd, duration]
     );
 
-    const next = React.useCallback(() => {
-        if (!canSliding() || (!loop && index.value === length - 1)) return;
+    const next = React.useCallback(
+        (callback?: () => void) => {
+            if (!canSliding() || (!loop && index.value === length - 1)) return;
 
-        onScrollBegin?.();
+            onScrollBegin?.();
 
-        const currentPage = Math.round(handlerOffsetX.value / size);
+            const currentPage = Math.round(handlerOffsetX.value / size);
 
-        handlerOffsetX.value = scrollWithTiming((currentPage - 1) * size);
-    }, [
-        canSliding,
-        loop,
-        index.value,
-        length,
-        onScrollBegin,
-        handlerOffsetX,
-        size,
-        scrollWithTiming,
-    ]);
+            handlerOffsetX.value = scrollWithTiming(
+                (currentPage - 1) * size,
+                callback
+            );
+        },
+        [
+            canSliding,
+            loop,
+            index.value,
+            length,
+            onScrollBegin,
+            handlerOffsetX,
+            size,
+            scrollWithTiming,
+        ]
+    );
 
-    const prev = React.useCallback(() => {
-        if (!canSliding() || (!loop && index.value === 0)) return;
+    const prev = React.useCallback(
+        (callback?: () => void) => {
+            if (!canSliding() || (!loop && index.value === 0)) return;
 
-        onScrollBegin?.();
+            onScrollBegin?.();
 
-        const currentPage = Math.round(handlerOffsetX.value / size);
+            const currentPage = Math.round(handlerOffsetX.value / size);
 
-        handlerOffsetX.value = scrollWithTiming((currentPage + 1) * size);
-    }, [
-        canSliding,
-        loop,
-        index.value,
-        onScrollBegin,
-        handlerOffsetX,
-        size,
-        scrollWithTiming,
-    ]);
+            handlerOffsetX.value = scrollWithTiming(
+                (currentPage + 1) * size,
+                callback
+            );
+        },
+        [
+            canSliding,
+            loop,
+            index.value,
+            onScrollBegin,
+            handlerOffsetX,
+            size,
+            scrollWithTiming,
+        ]
+    );
 
     const to = React.useCallback(
         (idx: number, animated: boolean = false) => {
