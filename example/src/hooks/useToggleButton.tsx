@@ -11,7 +11,7 @@ export function useToggleButton(opts: {
     const button = React.useMemo(() => {
         return (
             <SButton onPress={() => setStatus(!status)}>
-                {buttonTitle}:{`${status}`}
+                {buttonTitle}: {`${status}`}
             </SButton>
         );
     }, [status, buttonTitle]);

@@ -68,82 +68,90 @@ function App() {
     const [isRTL, setIsRTL] = React.useState(I18nManager.isRTL);
 
     const app = (
-        <View flex>
-            <NavigationContainer>
-                <Stack.Navigator
-                    initialRouteName="Home"
-                    screenOptions={{
-                        contentStyle: {
-                            flex: 1,
-                            backgroundColor: 'white',
-                        },
-                        headerRight: ({ tintColor }) => (
-                            <View row centerV>
-                                {isWeb && (
-                                    <>
-                                        <QRCode tintColor={tintColor} />
-                                        <Text color={tintColor}> | </Text>
-                                    </>
-                                )}
-                                <TouchableWithoutFeedback
-                                    onPress={() => {
-                                        I18nManager.forceRTL(!isRTL);
-                                        setIsRTL(!isRTL);
-                                        Restart();
-                                    }}
-                                >
-                                    <Text color={tintColor}>
-                                        {isRTL ? 'LTR' : 'RTL'}
-                                    </Text>
-                                </TouchableWithoutFeedback>
-                            </View>
-                        ),
-                    }}
-                >
-                    <Stack.Screen name="Home" component={Home} />
-                    <Stack.Screen name="Normal" component={NormalComponent} />
-                    <Stack.Screen
-                        name="Parallax"
-                        component={ParallaxComponent}
-                    />
-                    <Stack.Screen name="Stack" component={StackComponent} />
-                    <Stack.Screen name="Complex" component={ComplexComponent} />
-                    <Stack.Screen
-                        name="AdvancedParallax"
-                        component={AdvancedParallaxComponent}
-                    />
-                    <Stack.Screen
-                        name="PauseAdvancedParallax"
-                        component={PauseAdvancedParallaxComponent}
-                    />
-                    <Stack.Screen
-                        name="ScaleFadeInOut"
-                        component={ScaleFadeInOutComponent}
-                    />
-                    <Stack.Screen
-                        name="RotateInOut"
-                        component={RotateInOutComponent}
-                    />
-                    <Stack.Screen
-                        name="RotateScaleFadeInOut"
-                        component={RotateScaleFadeInOutComponent}
-                    />
-                    <Stack.Screen
-                        name="AnimTabBar"
-                        component={AnimTabBarComponent}
-                    />
+        <React.Suspense fallback={null}>
+            <View flex>
+                <NavigationContainer>
+                    <Stack.Navigator
+                        initialRouteName="Home"
+                        screenOptions={{
+                            contentStyle: {
+                                flex: 1,
+                                backgroundColor: 'white',
+                            },
+                            headerRight: ({ tintColor }) => (
+                                <View row centerV>
+                                    {isWeb && (
+                                        <>
+                                            <QRCode tintColor={tintColor} />
+                                            <Text color={tintColor}> | </Text>
+                                        </>
+                                    )}
+                                    <TouchableWithoutFeedback
+                                        onPress={() => {
+                                            I18nManager.forceRTL(!isRTL);
+                                            setIsRTL(!isRTL);
+                                            Restart();
+                                        }}
+                                    >
+                                        <Text color={tintColor}>
+                                            {isRTL ? 'LTR' : 'RTL'}
+                                        </Text>
+                                    </TouchableWithoutFeedback>
+                                </View>
+                            ),
+                        }}
+                    >
+                        <Stack.Screen name="Home" component={Home} />
+                        <Stack.Screen
+                            name="Normal"
+                            component={NormalComponent}
+                        />
+                        <Stack.Screen
+                            name="Parallax"
+                            component={ParallaxComponent}
+                        />
+                        <Stack.Screen name="Stack" component={StackComponent} />
+                        <Stack.Screen
+                            name="Complex"
+                            component={ComplexComponent}
+                        />
+                        <Stack.Screen
+                            name="AdvancedParallax"
+                            component={AdvancedParallaxComponent}
+                        />
+                        <Stack.Screen
+                            name="PauseAdvancedParallax"
+                            component={PauseAdvancedParallaxComponent}
+                        />
+                        <Stack.Screen
+                            name="ScaleFadeInOut"
+                            component={ScaleFadeInOutComponent}
+                        />
+                        <Stack.Screen
+                            name="RotateInOut"
+                            component={RotateInOutComponent}
+                        />
+                        <Stack.Screen
+                            name="RotateScaleFadeInOut"
+                            component={RotateScaleFadeInOutComponent}
+                        />
+                        <Stack.Screen
+                            name="AnimTabBar"
+                            component={AnimTabBarComponent}
+                        />
 
-                    <Stack.Screen
-                        name="SnapCarouselComplex"
-                        component={SnapCarouselComplexComponent}
-                    />
-                    <Stack.Screen
-                        name="SnapCarouselLoop"
-                        component={SnapCarouselLoopComponent}
-                    />
-                </Stack.Navigator>
-            </NavigationContainer>
-        </View>
+                        <Stack.Screen
+                            name="SnapCarouselComplex"
+                            component={SnapCarouselComplexComponent}
+                        />
+                        <Stack.Screen
+                            name="SnapCarouselLoop"
+                            component={SnapCarouselLoopComponent}
+                        />
+                    </Stack.Navigator>
+                </NavigationContainer>
+            </View>
+        </React.Suspense>
     );
 
     if (isWeb) {

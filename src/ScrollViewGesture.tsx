@@ -41,7 +41,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
             enableSnap,
             panGestureHandlerProps,
             loop: infinite,
-            autoPlayInterval,
+            scrollAnimationDuration,
         },
     } = React.useContext(CTX);
 
@@ -59,7 +59,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
             return withTiming(
                 toValue,
                 {
-                    duration: autoPlayInterval,
+                    duration: scrollAnimationDuration,
                     easing: Easing.easeOutQuart,
                 },
                 (isFinished) => {
@@ -69,7 +69,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                 }
             );
         },
-        [autoPlayInterval]
+        [scrollAnimationDuration]
     );
 
     const endWithSpring = React.useCallback(

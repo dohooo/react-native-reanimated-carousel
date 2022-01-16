@@ -1,10 +1,12 @@
 import React, { PropsWithChildren } from 'react';
 import Animated, { runOnJS, useDerivedValue } from 'react-native-reanimated';
+
 import { useCarouselController } from './hooks/useCarouselController';
 import { useAutoPlay } from './hooks/useAutoPlay';
 import { usePropsErrorBoundary } from './hooks/usePropsErrorBoundary';
 import { ScrollViewGesture } from './ScrollViewGesture';
 import { useVisibleRanges } from './hooks/useVisibleRanges';
+
 import type { ICarouselInstance, TCarouselProps } from './types';
 import { StyleSheet, View } from 'react-native';
 import { DATA_LENGTH } from './constants';
@@ -33,6 +35,7 @@ function Carousel<T>(
         windowSize,
         autoPlayReverse,
         autoPlayInterval,
+        scrollAnimationDuration,
         renderItem,
         onScrollEnd,
         onSnapToItem,
@@ -66,8 +69,8 @@ function Carousel<T>(
         originalLength: data.length,
         onScrollEnd: () => runOnJS(_onScrollEnd)(),
         onScrollBegin: () => !!onScrollBegin && runOnJS(onScrollBegin)(),
-        onChange: (i) => onSnapToItem && runOnJS(onSnapToItem)(i),
-        duration: autoPlayInterval,
+        onChange: (i) => !!onSnapToItem && runOnJS(onSnapToItem)(i),
+        duration: scrollAnimationDuration,
     });
 
     const {
@@ -79,7 +82,7 @@ function Carousel<T>(
         getCurrentIndex,
     } = carouselController;
 
-    const { run, pause } = useAutoPlay({
+    const { start, pause } = useAutoPlay({
         autoPlay,
         autoPlayInterval,
         autoPlayReverse,
@@ -97,9 +100,9 @@ function Carousel<T>(
     }, [sharedPreIndex, sharedIndex, computedIndex, onScrollEnd]);
 
     const scrollViewGestureOnScrollEnd = React.useCallback(() => {
-        run();
+        start();
         _onScrollEnd();
-    }, [_onScrollEnd, run]);
+    }, [_onScrollEnd, start]);
 
     const goToIndex = React.useCallback(
         (i: number, animated?: boolean) => {
@@ -115,8 +118,9 @@ function Carousel<T>(
             prev,
             getCurrentIndex,
             goToIndex,
+            scrollTo: carouselController.scrollTo,
         }),
-        [getCurrentIndex, goToIndex, next, prev]
+        [getCurrentIndex, goToIndex, next, prev, carouselController.scrollTo]
     );
 
     const visibleRanges = useVisibleRanges({
