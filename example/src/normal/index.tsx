@@ -30,7 +30,8 @@ function Index() {
                 {...baseOptions}
                 loop
                 autoPlay={isAutoPlay}
-                autoPlayInterval={isFast ? 100 : 1500}
+                scrollAnimationDuration={2000}
+                autoPlayInterval={isFast ? 100 : 2000}
                 data={[...new Array(6).keys()]}
                 renderItem={({ index }) => <SBItem key={index} index={index} />}
             />

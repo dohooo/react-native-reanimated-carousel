@@ -84,7 +84,10 @@ function Carousel<T>(
 
     const { run, pause } = useAutoPlay({
         autoPlay,
-        autoPlayInterval,
+        autoPlayInterval: Math.max(
+            autoPlayInterval - scrollAnimationDuration,
+            0
+        ),
         autoPlayReverse,
         carouselController,
     });
