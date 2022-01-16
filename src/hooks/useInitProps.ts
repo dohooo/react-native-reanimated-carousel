@@ -2,14 +2,20 @@ import React from 'react';
 import { DATA_LENGTH } from '../constants';
 import type { TCarouselProps } from '../types';
 
-export type TInitializeCarouselProps<T> = TCarouselProps<T> & {
-    defaultIndex: Required<TCarouselProps>['defaultIndex'];
-    loop: Required<TCarouselProps>['loop'];
-    width: Required<TCarouselProps>['width'];
-    height: Required<TCarouselProps>['height'];
-    scrollAnimationDuration: Required<TCarouselProps>['scrollAnimationDuration'];
-    autoPlayInterval: Required<TCarouselProps>['autoPlayInterval'];
-};
+type TGetRequiredProps<P extends keyof TCarouselProps> = Record<
+    P,
+    Required<TCarouselProps>[P]
+>;
+
+export type TInitializeCarouselProps<T> = TCarouselProps<T> &
+    TGetRequiredProps<
+        | 'defaultIndex'
+        | 'loop'
+        | 'width'
+        | 'height'
+        | 'scrollAnimationDuration'
+        | 'autoPlayInterval'
+    >;
 
 export function useInitProps<T>(
     props: TCarouselProps<T>
@@ -18,7 +24,7 @@ export function useInitProps<T>(
         defaultIndex = 0,
         data: _data = [],
         loop = true,
-        autoPlayInterval = 1000,
+        autoPlayInterval: _autoPlayInterval = 1000,
         scrollAnimationDuration = 500,
         style = {},
         panGestureHandlerProps = {},
@@ -30,6 +36,7 @@ export function useInitProps<T>(
 
     const width = Math.round(_width || 0);
     const height = Math.round(_height || 0);
+    const autoPlayInterval = Math.max(_autoPlayInterval, 0);
 
     const data = React.useMemo<T[]>(() => {
         if (!loop) return _data;

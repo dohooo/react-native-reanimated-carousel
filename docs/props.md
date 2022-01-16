@@ -57,5 +57,5 @@
 | prev            | ({ count = 1, animated = false, onFinished?: () => void }) => void                      | Scroll to previous item, it takes one optional argument (count), which allows you to specify how many items to cross      |
 | next            | ({ count = 1, animated = false, onFinished?: () => void }) => void                      | Scroll to next item, it takes one optional argument (count), which allows you to specify how many items to cross      |
 | scrollTo        | ({ count = 1, animated = false, onFinished?: () => void }) => void | Use count to scroll to a position where relative to the current position, scrollTo(-2) is equivalent to prev(2), scrollTo(2) is equivalent to next(2)            |
-| goToIndex       | (index: number, animated?: boolean) => void | Go to index            |
+| （deprecated）goToIndex       | (index: number, animated?: boolean) => void | Go to index            |
 | getCurrentIndex | ()=>number                                  | Get current item index |
