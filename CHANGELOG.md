@@ -1,3 +1,11 @@
+## [2.2.1](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.1.2...v2.2.1) (2022-01-16)
+
+
+### Bug Fixes
+
+* fix comments ([753051f](https://github.com/dohooo/react-native-reanimated-carousel/commit/753051fddea78d0edc7ddffc657bc65a4c272dde))
+* fix useCarouselController ([f5dc6dc](https://github.com/dohooo/react-native-reanimated-carousel/commit/f5dc6dc8976b2dddf387a7cd564d51756f04893b)), closes [#101](https://github.com/dohooo/react-native-reanimated-carousel/issues/101)
+
 # [2.2.0](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.1.2...v2.2.0) (2022-01-16)
 
 
