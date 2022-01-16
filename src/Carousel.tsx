@@ -69,7 +69,7 @@ function Carousel<T>(
         originalLength: data.length,
         onScrollEnd: () => runOnJS(_onScrollEnd)(),
         onScrollBegin: () => !!onScrollBegin && runOnJS(onScrollBegin)(),
-        onChange: (i) => onSnapToItem && runOnJS(onSnapToItem)(i),
+        onChange: (i) => !!onSnapToItem && runOnJS(onSnapToItem)(i),
         duration: scrollAnimationDuration,
     });
 
@@ -82,7 +82,7 @@ function Carousel<T>(
         getCurrentIndex,
     } = carouselController;
 
-    const { run, pause } = useAutoPlay({
+    const { start, pause } = useAutoPlay({
         autoPlay,
         autoPlayInterval,
         autoPlayReverse,
@@ -100,9 +100,9 @@ function Carousel<T>(
     }, [sharedPreIndex, sharedIndex, computedIndex, onScrollEnd]);
 
     const scrollViewGestureOnScrollEnd = React.useCallback(() => {
-        run();
+        start();
         _onScrollEnd();
-    }, [_onScrollEnd, run]);
+    }, [_onScrollEnd, start]);
 
     const goToIndex = React.useCallback(
         (i: number, animated?: boolean) => {
@@ -118,8 +118,9 @@ function Carousel<T>(
             prev,
             getCurrentIndex,
             goToIndex,
+            scrollTo: carouselController.scrollTo,
         }),
-        [getCurrentIndex, goToIndex, next, prev]
+        [getCurrentIndex, goToIndex, next, prev, carouselController.scrollTo]
     );
 
     const visibleRanges = useVisibleRanges({

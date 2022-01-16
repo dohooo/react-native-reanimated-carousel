@@ -52,6 +52,7 @@ function Index() {
                     );
                 }}
                 customAnimation={animationStyle}
+                scrollAnimationDuration={1200}
             />
             <SButton
                 onPress={() => {
