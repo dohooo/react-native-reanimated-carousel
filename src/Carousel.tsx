@@ -121,8 +121,9 @@ function Carousel<T>(
             prev,
             getCurrentIndex,
             goToIndex,
+            scrollTo: carouselController.scrollTo,
         }),
-        [getCurrentIndex, goToIndex, next, prev]
+        [getCurrentIndex, goToIndex, next, prev, carouselController.scrollTo]
     );
 
     const visibleRanges = useVisibleRanges({

@@ -54,7 +54,8 @@
 
 | name            | types                                       | description        |
 | --------------- | ------------------------------------------- | ------------------ |
-| prev            | ()=>void                                    | 切换至上一张       |
-| loop            | ()=>void                                    | 切换至下一张       |
-| goToIndex       | (index: number, animated?: boolean) => void | 切换至指定下标元素 |
+| prev            | (count?: number = 1)=>void                  | 切换至上一项，可以指定`count`决定切换的数量 |
+| next            | (count?: number = 1)=>void                  | 切换至下一张，可以指定`count`决定切换的数量 |
+| scrollTo        | (value: number, animated?: boolean)=>void   | 切换到距离当前相对位置为`value`的位置，`scrollTo(-2)`等价于`prev(2)`，`scrollTo(2)`等价于`next(2)` |
+| （弃用）goToIndex | (index: number, animated?: boolean) => void | 切换至指定下标元素 |
 | getCurrentIndex | ()=>number                                  | 获得当前轮播图下标 |

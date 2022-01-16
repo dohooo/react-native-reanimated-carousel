@@ -3,6 +3,12 @@ import type Animated from 'react-native-reanimated';
 import { Easing } from '../constants';
 import { runOnJS, useSharedValue, withTiming } from 'react-native-reanimated';
 
+interface TCarouselActionOptions {
+    count?: number;
+    animated?: boolean;
+    onFinished?: () => void;
+}
+
 interface IOpts {
     loop: boolean;
     size: number;
@@ -22,14 +28,15 @@ export interface ICarouselController {
     index: Animated.SharedValue<number>;
     sharedIndex: React.MutableRefObject<number>;
     sharedPreIndex: React.MutableRefObject<number>;
-    prev: (callback?: () => void) => void;
-    next: (callback?: () => void) => void;
+    prev: (opts?: TCarouselActionOptions) => void;
+    next: (opts?: TCarouselActionOptions) => void;
     computedIndex: () => void;
     getCurrentIndex: () => number;
     to: (index: number, animated?: boolean) => void;
+    scrollTo: (opts?: TCarouselActionOptions) => void;
 }
 
-export function useCarouselController(opts: IOpts): ICarouselController {
+export function useCarouselController(options: IOpts): ICarouselController {
     const {
         size,
         loop,
@@ -39,12 +46,25 @@ export function useCarouselController(opts: IOpts): ICarouselController {
         length,
         onChange,
         duration,
-    } = opts;
+    } = options;
 
     const index = useSharedValue<number>(0);
     // The Index displayed to the user
     const sharedIndex = React.useRef<number>(0);
     const sharedPreIndex = React.useRef<number>(0);
+
+    const currentFixedPage = React.useCallback(() => {
+        if (loop) {
+            return -Math.round(handlerOffsetX.value / size);
+        }
+
+        const fixed = (handlerOffsetX.value / size) % length;
+        return Math.round(
+            handlerOffsetX.value <= 0
+                ? Math.abs(fixed)
+                : Math.abs(fixed > 0 ? length - fixed : 0)
+        );
+    }, [handlerOffsetX, length, size, loop]);
 
     const convertToSharedIndex = React.useCallback(
         (i: number) => {
@@ -92,22 +112,22 @@ export function useCarouselController(opts: IOpts): ICarouselController {
     }, [disable]);
 
     const onScrollEnd = React.useCallback(() => {
-        opts.onScrollEnd?.();
-    }, [opts]);
+        options.onScrollEnd?.();
+    }, [options]);
 
     const onScrollBegin = React.useCallback(() => {
-        opts.onScrollBegin?.();
-    }, [opts]);
+        options.onScrollBegin?.();
+    }, [options]);
 
     const scrollWithTiming = React.useCallback(
-        (toValue: number, callback?: () => void) => {
+        (toValue: number, onFinished?: () => void) => {
             return withTiming(
                 toValue,
                 { duration, easing: Easing.easeOutQuart },
                 (isFinished: boolean) => {
                     if (isFinished) {
                         runOnJS(onScrollEnd)();
-                        callback && runOnJS(callback)();
+                        onFinished && runOnJS(onFinished)();
                     }
                 }
             );
@@ -116,51 +136,67 @@ export function useCarouselController(opts: IOpts): ICarouselController {
     );
 
     const next = React.useCallback(
-        (callback?: () => void) => {
-            if (!canSliding() || (!loop && index.value === length - 1)) return;
+        (opts: TCarouselActionOptions = {}) => {
+            const { count = 1, animated = true, onFinished } = opts;
+            if (!canSliding() || (!loop && index.value >= length - 1)) return;
 
             onScrollBegin?.();
 
-            const currentPage = Math.round(handlerOffsetX.value / size);
+            const nextPage = currentFixedPage() + count;
+            index.value = nextPage;
 
-            handlerOffsetX.value = scrollWithTiming(
-                (currentPage - 1) * size,
-                callback
-            );
+            if (animated) {
+                handlerOffsetX.value = scrollWithTiming(
+                    -nextPage * size,
+                    onFinished
+                );
+            } else {
+                handlerOffsetX.value = -nextPage * size;
+                onFinished?.();
+            }
         },
         [
             canSliding,
             loop,
-            index.value,
+            index,
             length,
             onScrollBegin,
             handlerOffsetX,
             size,
             scrollWithTiming,
+            currentFixedPage,
         ]
     );
 
     const prev = React.useCallback(
-        (callback?: () => void) => {
-            if (!canSliding() || (!loop && index.value === 0)) return;
+        (opts: TCarouselActionOptions = {}) => {
+            const { count = 1, animated = true, onFinished } = opts;
+            if (!canSliding() || (!loop && index.value <= 0)) return;
 
             onScrollBegin?.();
 
-            const currentPage = Math.round(handlerOffsetX.value / size);
+            const prevPage = currentFixedPage() - count;
+            index.value = prevPage;
 
-            handlerOffsetX.value = scrollWithTiming(
-                (currentPage + 1) * size,
-                callback
-            );
+            if (animated) {
+                handlerOffsetX.value = scrollWithTiming(
+                    -prevPage * size,
+                    onFinished
+                );
+            } else {
+                handlerOffsetX.value = -prevPage * size;
+                onFinished?.();
+            }
         },
         [
             canSliding,
             loop,
-            index.value,
+            index,
             onScrollBegin,
             handlerOffsetX,
             size,
             scrollWithTiming,
+            currentFixedPage,
         ]
     );
 
@@ -174,9 +210,8 @@ export function useCarouselController(opts: IOpts): ICarouselController {
             const offset = handlerOffsetX.value + (index.value - idx) * size;
 
             if (animated) {
-                handlerOffsetX.value = scrollWithTiming(offset, () => {
-                    index.value = idx;
-                });
+                index.value = idx;
+                handlerOffsetX.value = scrollWithTiming(offset);
             } else {
                 handlerOffsetX.value = offset;
                 index.value = idx;
@@ -194,10 +229,27 @@ export function useCarouselController(opts: IOpts): ICarouselController {
         ]
     );
 
+    const scrollTo = React.useCallback(
+        (opts: TCarouselActionOptions = {}) => {
+            const { count, animated = false } = opts;
+            if (!count) {
+                return;
+            }
+            const n = Math.round(count);
+            if (n < 0) {
+                prev({ count: Math.abs(n), animated });
+            } else {
+                next({ count: n, animated });
+            }
+        },
+        [prev, next]
+    );
+
     return {
         next,
         prev,
         to,
+        scrollTo,
         index,
         length,
         sharedIndex,
