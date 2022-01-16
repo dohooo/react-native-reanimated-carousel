@@ -24,13 +24,15 @@ function Index() {
         defaultValue: false,
         buttonTitle: ElementsText.AUTOPLAY,
     });
+    const [loop, setLoop] = React.useState(false);
 
     return (
         <View style={{ flex: 1 }}>
             <View style={{ marginVertical: 100 }}>
                 <Carousel
+                    key={`${loop}`}
                     ref={r}
-                    loop={false}
+                    loop={loop}
                     style={{
                         width: window.width,
                         height: PAGE_HEIGHT,
@@ -48,10 +50,10 @@ function Index() {
                                 animationValue={animationValue}
                                 label={item}
                                 onPress={() =>
-                                    r.current?.scrollTo(
-                                        animationValue.value,
-                                        true
-                                    )
+                                    r.current?.scrollTo({
+                                        count: animationValue.value,
+                                        animated: true,
+                                    })
                                 }
                             />
                         );
@@ -60,6 +62,7 @@ function Index() {
                 />
             </View>
             {AutoPLay.button}
+            <SButton onPress={() => setLoop(!loop)}>{`Loop: ${loop}`}</SButton>
             <View
                 style={{
                     marginTop: 24,

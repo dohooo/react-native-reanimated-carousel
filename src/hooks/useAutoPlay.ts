@@ -29,8 +29,8 @@ export function useAutoPlay(opts: {
 
         timer.current = setTimeout(() => {
             autoPlayReverse
-                ? carouselController.prev(run)
-                : carouselController.next(run);
+                ? carouselController.prev({ onFinished: run })
+                : carouselController.next({ onFinished: run });
         }, autoPlayInterval);
     }, [autoPlayReverse, autoPlayInterval, carouselController]);
 

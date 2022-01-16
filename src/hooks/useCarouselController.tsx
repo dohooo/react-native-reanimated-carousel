@@ -2,12 +2,7 @@ import React from 'react';
 import type Animated from 'react-native-reanimated';
 import { Easing } from '../constants';
 import { runOnJS, useSharedValue, withTiming } from 'react-native-reanimated';
-
-interface TCarouselActionOptions {
-    count?: number;
-    animated?: boolean;
-    onFinished?: () => void;
-}
+import type { TCarouselActionOptions } from '../types';
 
 interface IOpts {
     loop: boolean;
