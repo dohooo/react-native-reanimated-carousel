@@ -226,15 +226,15 @@ export function useCarouselController(options: IOpts): ICarouselController {
 
     const scrollTo = React.useCallback(
         (opts: TCarouselActionOptions = {}) => {
-            const { count, animated = false } = opts;
+            const { count, animated = false, onFinished } = opts;
             if (!count) {
                 return;
             }
             const n = Math.round(count);
             if (n < 0) {
-                prev({ count: Math.abs(n), animated });
+                prev({ count: Math.abs(n), animated, onFinished });
             } else {
-                next({ count: n, animated });
+                next({ count: n, animated, onFinished });
             }
         },
         [prev, next]
