@@ -35,7 +35,7 @@
         "android": "yarn --cwd example android",
         "android:pretty": "yarn --cwd example android:pretty",
         "pods": "cd example && pod-install --quiet",
-        "bootstrap": "yarn example && yarn && yarn pods",
+        "bootstrap": "yarn && yarn pods",
         "deploy": "cd example && yarn deploy"
     },
     "keywords": [
