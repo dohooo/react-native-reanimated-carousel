@@ -9,31 +9,32 @@ export function useOnProgressChange(
     opts: {
         size: number;
         offsetX: Animated.SharedValue<number>;
-    } & Pick<TCarouselProps, 'data' | 'onProgressChange'>
+        rawData: TCarouselProps['data'];
+    } & Pick<TCarouselProps, 'onProgressChange'>
 ) {
-    const { offsetX, data, size, onProgressChange } = opts;
+    const { offsetX, rawData, size, onProgressChange } = opts;
     useAnimatedReaction(
         () => offsetX.value,
         (_value) => {
             let value = _value;
 
-            if (data.length === DATA_LENGTH.SINGLE_ITEM) {
+            if (rawData.length === DATA_LENGTH.SINGLE_ITEM) {
                 value = value % size;
             }
 
-            if (data.length === DATA_LENGTH.DOUBLE_ITEM) {
+            if (rawData.length === DATA_LENGTH.DOUBLE_ITEM) {
                 value = value % (size * 2);
             }
 
             let absoluteProgress = Math.abs(value / size);
 
             if (value > 0) {
-                absoluteProgress = data.length - absoluteProgress;
+                absoluteProgress = rawData.length - absoluteProgress;
             }
 
             !!onProgressChange &&
                 runOnJS(onProgressChange)(value, absoluteProgress);
         },
-        [onProgressChange, data]
+        [onProgressChange, rawData]
     );
 }

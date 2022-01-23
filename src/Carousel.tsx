@@ -25,6 +25,7 @@ function Carousel<T>(
 
     const {
         data,
+        rawData,
         loop,
         mode,
         style,
@@ -58,7 +59,7 @@ function Carousel<T>(
     }, [loop, size, data]);
 
     usePropsErrorBoundary(props);
-    useOnProgressChange({ size, offsetX, data, onProgressChange });
+    useOnProgressChange({ size, offsetX, rawData, onProgressChange });
 
     const carouselController = useCarouselController({
         loop,
@@ -135,11 +136,11 @@ function Carousel<T>(
     const renderLayout = React.useCallback(
         (item: T, i: number) => {
             let realIndex = i;
-            if (data.length === DATA_LENGTH.SINGLE_ITEM) {
+            if (rawData.length === DATA_LENGTH.SINGLE_ITEM) {
                 realIndex = i % 1;
             }
 
-            if (data.length === DATA_LENGTH.DOUBLE_ITEM) {
+            if (rawData.length === DATA_LENGTH.DOUBLE_ITEM) {
                 realIndex = i % 2;
             }
 
@@ -162,7 +163,7 @@ function Carousel<T>(
             );
         },
         [
-            data,
+            rawData,
             offsetX,
             visibleRanges,
             renderItem,
