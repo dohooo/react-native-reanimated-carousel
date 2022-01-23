@@ -35,9 +35,12 @@ export function useAutoPlay(opts: {
     }, []);
 
     const start = React.useCallback(() => {
+        if (!autoPlay) {
+            return;
+        }
         stopped.current = false;
         play();
-    }, [play]);
+    }, [play, autoPlay]);
 
     React.useEffect(() => {
         if (autoPlay) {
