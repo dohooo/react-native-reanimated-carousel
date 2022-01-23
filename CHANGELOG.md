@@ -1,3 +1,11 @@
+## [2.2.2](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.2.1...v2.2.2) (2022-01-23)
+
+
+### Bug Fixes
+
+* onProgressChange & onSnapToItem bug when only 2 image ([bdb2d74](https://github.com/dohooo/react-native-reanimated-carousel/commit/bdb2d74245dfdefe024ba11b462dbe29bd7e18d6)), closes [#74](https://github.com/dohooo/react-native-reanimated-carousel/issues/74)
+* when autoPlay is false, manual sliding will still autoPlay ([6aa3cc4](https://github.com/dohooo/react-native-reanimated-carousel/commit/6aa3cc4a557efaa9e3262202f4a98ff960255b54)), closes [#111](https://github.com/dohooo/react-native-reanimated-carousel/issues/111)
+
 ## [2.2.1](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.1.2...v2.2.1) (2022-01-16)
 
 
