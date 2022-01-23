@@ -15,14 +15,17 @@ export type TInitializeCarouselProps<T> = TCarouselProps<T> &
         | 'height'
         | 'scrollAnimationDuration'
         | 'autoPlayInterval'
-    >;
+    > & {
+        // Raw data that has not been processed
+        rawData: T[];
+    };
 
 export function useInitProps<T>(
     props: TCarouselProps<T>
 ): TInitializeCarouselProps<T> {
     const {
         defaultIndex = 0,
-        data: _data = [],
+        data: rawData = [],
         loop = true,
         autoPlayInterval: _autoPlayInterval = 1000,
         scrollAnimationDuration = 500,
@@ -39,18 +42,18 @@ export function useInitProps<T>(
     const autoPlayInterval = Math.max(_autoPlayInterval, 0);
 
     const data = React.useMemo<T[]>(() => {
-        if (!loop) return _data;
+        if (!loop) return rawData;
 
-        if (_data.length === DATA_LENGTH.SINGLE_ITEM) {
-            return [_data[0], _data[0], _data[0]];
+        if (rawData.length === DATA_LENGTH.SINGLE_ITEM) {
+            return [rawData[0], rawData[0], rawData[0]];
         }
 
-        if (_data.length === DATA_LENGTH.DOUBLE_ITEM) {
-            return [_data[0], _data[1], _data[0], _data[1]];
+        if (rawData.length === DATA_LENGTH.DOUBLE_ITEM) {
+            return [rawData[0], rawData[1], rawData[0], rawData[1]];
         }
 
-        return _data;
-    }, [_data, loop]);
+        return rawData;
+    }, [rawData, loop]);
 
     if (props.mode === 'vertical-stack' || props.mode === 'horizontal-stack') {
         if (!props.modeConfig) {
@@ -63,6 +66,7 @@ export function useInitProps<T>(
         ...props,
         defaultIndex,
         data,
+        rawData,
         loop,
         autoPlayInterval,
         scrollAnimationDuration,
