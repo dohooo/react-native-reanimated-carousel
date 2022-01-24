@@ -2,7 +2,7 @@
 
 # react-native-reanimated-carousel
 
-<img src="assets/banner-zh.png" width="100%"/>
+<img src="assets/home-banner-zh.png" width="100%"/>
 
 ![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS%20%7C%20Web-brightgreen.svg?style=flat-square&colorB=191A17)
 [![npm](https://img.shields.io/npm/v/react-native-reanimated-carousel.svg?style=flat-square)](https://www.npmjs.com/package/react-native-reanimated-carousel)
