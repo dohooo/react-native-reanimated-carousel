@@ -1,3 +1,10 @@
+## [2.2.3](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.2.2...v2.2.3) (2022-01-24)
+
+
+### Bug Fixes
+
+* autoplay will paused when click ([eb21293](https://github.com/dohooo/react-native-reanimated-carousel/commit/eb21293d6c0544da9e62a418505945dc46a59cb6)), closes [#115](https://github.com/dohooo/react-native-reanimated-carousel/issues/115)
+
 ## [2.2.2](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.2.1...v2.2.2) (2022-01-23)
 
 

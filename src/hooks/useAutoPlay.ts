@@ -30,9 +30,12 @@ export function useAutoPlay(opts: {
     }, [autoPlayReverse, autoPlayInterval, carouselController]);
 
     const pause = React.useCallback(() => {
+        if (!autoPlay) {
+            return;
+        }
         timer.current && clearInterval(timer.current);
         stopped.current = true;
-    }, []);
+    }, [autoPlay]);
 
     const start = React.useCallback(() => {
         if (!autoPlay) {

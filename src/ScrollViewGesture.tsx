@@ -25,8 +25,10 @@ type GestureContext = {
 interface Props {
     size: number;
     infinite?: boolean;
-    onScrollEnd?: () => void;
     onScrollBegin?: () => void;
+    onScrollEnd?: () => void;
+    onTouchBegin?: () => void;
+    onTouchEnd?: () => void;
     style?: StyleProp<ViewStyle>;
     translation: Animated.SharedValue<number>;
 }
@@ -45,7 +47,14 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
         },
     } = React.useContext(CTX);
 
-    const { translation, onScrollBegin, onScrollEnd, size } = props;
+    const {
+        translation,
+        size,
+        onScrollBegin,
+        onScrollEnd,
+        onTouchBegin,
+        onTouchEnd,
+    } = props;
 
     const maxPage = data.length;
     const isHorizontal = useDerivedValue(() => !vertical, [vertical]);
@@ -116,22 +125,28 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
         ]
     );
 
-    const resetBoundary = React.useCallback(() => {
-        'worklet';
-        const onFinish = (isFinished: boolean) => {
+    const onFinish = React.useCallback(
+        (isFinished: boolean) => {
+            'worklet';
             if (isFinished) {
                 touching.value = false;
                 onScrollEnd && runOnJS(onScrollEnd)();
             }
-        };
-        const activeDecay = () => {
-            touching.value = true;
-            translation.value = withDecay(
-                { velocity: scrollEndVelocity.value },
-                onFinish
-            );
-        };
+        },
+        [onScrollEnd, touching]
+    );
 
+    const activeDecay = React.useCallback(() => {
+        'worklet';
+        touching.value = true;
+        translation.value = withDecay(
+            { velocity: scrollEndVelocity.value },
+            onFinish
+        );
+    }, [onFinish, scrollEndVelocity.value, touching, translation]);
+
+    const resetBoundary = React.useCallback(() => {
+        'worklet';
         if (touching.value) {
             return;
         }
@@ -158,15 +173,14 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
             }
         }
     }, [
-        infinite,
-        touching,
-        _withSpring,
+        touching.value,
         translation,
-        scrollEndTranslation,
-        scrollEndVelocity,
-        onScrollEnd,
         maxPage,
         size,
+        scrollEndTranslation.value,
+        infinite,
+        activeDecay,
+        _withSpring,
     ]);
 
     useAnimatedReaction(
@@ -176,7 +190,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                 resetBoundary();
             }
         },
-        [pagingEnabled]
+        [pagingEnabled, resetBoundary]
     );
 
     const panGestureEventHandler = useAnimatedGestureHandler<
@@ -227,7 +241,16 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                 }
             },
         },
-        [pagingEnabled, isHorizontal.value, infinite, maxPage, size, enableSnap]
+        [
+            pagingEnabled,
+            isHorizontal.value,
+            infinite,
+            maxPage,
+            size,
+            enableSnap,
+            onScrollBegin,
+            onScrollEnd,
+        ]
     );
 
     const directionStyle = React.useMemo(() => {
@@ -235,7 +258,11 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
     }, [vertical]);
 
     return (
-        <Animated.View style={[styles.container, directionStyle, style]}>
+        <Animated.View
+            style={[styles.container, directionStyle, style]}
+            onTouchStart={onTouchBegin}
+            onTouchEnd={onTouchEnd}
+        >
             <PanGestureHandler
                 {...panGestureHandlerProps}
                 onGestureEvent={panGestureEventHandler}

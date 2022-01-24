@@ -90,20 +90,24 @@ function Carousel<T>(
         carouselController,
     });
 
-    const scrollViewGestureOnScrollBegin = React.useCallback(() => {
-        pause();
-        onScrollBegin?.();
-    }, [onScrollBegin, pause]);
-
     const _onScrollEnd = React.useCallback(() => {
         computedIndex();
         onScrollEnd?.(sharedPreIndex.current, sharedIndex.current);
     }, [sharedPreIndex, sharedIndex, computedIndex, onScrollEnd]);
 
+    const scrollViewGestureOnScrollBegin = React.useCallback(() => {
+        pause();
+        onScrollBegin?.();
+    }, [onScrollBegin, pause]);
+
     const scrollViewGestureOnScrollEnd = React.useCallback(() => {
         start();
         _onScrollEnd();
     }, [_onScrollEnd, start]);
+
+    const scrollViewGestureOnTouchBegin = React.useCallback(pause, [pause]);
+
+    const scrollViewGestureOnTouchEnd = React.useCallback(start, [start]);
 
     const goToIndex = React.useCallback(
         (i: number, animated?: boolean) => {
@@ -186,6 +190,8 @@ function Carousel<T>(
                     translation={handlerOffsetX}
                     onScrollBegin={scrollViewGestureOnScrollBegin}
                     onScrollEnd={scrollViewGestureOnScrollEnd}
+                    onTouchBegin={scrollViewGestureOnTouchBegin}
+                    onTouchEnd={scrollViewGestureOnTouchEnd}
                 >
                     <Animated.View
                         key={mode}
