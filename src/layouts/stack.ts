@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Dimensions, TransformsStyle, ViewStyle } from 'react-native';
 import { Extrapolate, interpolate } from 'react-native-reanimated';
-import type { ComputedDirectionTypes, CustomConfig } from 'src/types';
+import type { ComputedDirectionTypes, CustomConfig } from '../types';
 
 const screen = Dimensions.get('window');
 
