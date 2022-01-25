@@ -1,3 +1,10 @@
+## [2.2.4](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.2.3...v2.2.4) (2022-01-25)
+
+
+### Bug Fixes
+
+* fixed types error ([d7af323](https://github.com/dohooo/react-native-reanimated-carousel/commit/d7af323052bb30c70b24de1ac24a8de78f80cdf1)), closes [#118](https://github.com/dohooo/react-native-reanimated-carousel/issues/118)
+
 ## [2.2.3](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.2.2...v2.2.3) (2022-01-24)
 
 
