@@ -22,7 +22,6 @@
         "resolveJsonModule": true,
         "skipLibCheck": true,
         "strict": true,
-        "declaration": false,
         "target": "esnext"
     }
 }
