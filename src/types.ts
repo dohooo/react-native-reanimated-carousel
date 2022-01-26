@@ -83,9 +83,8 @@ export type TCarouselProps<T = any> = {
     /**
      * PanGestureHandler props
      */
-    panGestureHandlerProps?: Omit<
-        Partial<PanGestureHandlerProps>,
-        'onHandlerStateChange'
+    panGestureHandlerProps?: Partial<
+        Omit<PanGestureHandlerProps, 'onHandlerStateChange'>
     >;
     /**
      * Determines the maximum number of items will respond to pan gesture events,
