@@ -7,11 +7,14 @@ assignees: dohooo
 
 ---
 
+<!---
+Any problem that does not include an accurate reproduction step is likely to be closed 
+-->
 **Describe the bug**
 A clear and concise description of what the bug is. If you intend to submit a PR for this issue, tell us in the description. Thanks!
 
 **To Reproduce**
-Steps to reproduce the behavior (**Any problem that does not include an accurate reproduction step is likely to be closed**):
+Steps to reproduce the behavior:
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
