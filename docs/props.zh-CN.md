@@ -19,6 +19,7 @@
 | onSnapToItem            | ❌                  |                                                                                                       | (index: number) => void                                                                                                  | 切换至另一张轮播图时触发                                                                                                     |
 | onScrollBegin           | ❌                  |                                                                                                       | () => void                                                                                                               | 切换动画开始时触发                                                                                                           |
 | onScrollEnd             | ❌                  |                                                                                                       | (previous: number, current: number) => void                                                                              | 切换动画结束时触发                                                                                                           |
+| withAnimation           | ❌                  |                                                                                                       | (previous: number, current: number) => void                                                                              | 指定滚动时的动画效果                                                                                                         |
 | panGestureHandlerProps  | ❌                  | {}                                                                                                    | Omit<Partial\<PanGestureHandlerProps\>,'onHandlerStateChange'>                                                           | PanGestureHandler props                                                                                                      |
 | windowSize              | ❌                  | 0                                                                                                     | number                                                                                                                   | 能响应平移手势事件的最大 item 数量，0 表示所有元素都会先响应                                                                 |
 | onProgressChange        | ❌                  |                                                                                                       | onProgressChange?: (offsetProgress: number,absoluteProgress: number) => void                                             | 当滚动进度发生变化时触发 `offsetProgress`:总的偏移值 (0 390 780 ...); `absoluteProgress`:转化为 index 的进度变化 (0 1 2 ...) |
@@ -52,10 +53,10 @@
 
 ## Ref
 
-| name            | types                                       | description        |
-| --------------- | ------------------------------------------- | ------------------ |
-| prev            | ({ count = 1, animated = false, onFinished?: () => void }) => void                  | 切换至上一项，可以指定`count`决定切换的数量 |
-| next            | ({ count = 1, animated = false, onFinished?: () => void }) => void                  | 切换至下一张，可以指定`count`决定切换的数量 |
-| scrollTo        | ({ count = 1, animated = false, onFinished?: () => void }) => void   | 切换到距离当前相对位置为`count`的位置，`scrollTo(-2)`等价于`prev(2)`，`scrollTo(2)`等价于`next(2)` |
-| （弃用）goToIndex | (index: number, animated?: boolean) => void | 切换至指定下标元素 |
-| getCurrentIndex | ()=>number                                  | 获得当前轮播图下标 |
+| name              | types                                                              | description                                                                                        |
+| ----------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| prev              | ({ count = 1, animated = false, onFinished?: () => void }) => void | 切换至上一项，可以指定`count`决定切换的数量                                                        |
+| next              | ({ count = 1, animated = false, onFinished?: () => void }) => void | 切换至下一张，可以指定`count`决定切换的数量                                                        |
+| scrollTo          | ({ count = 1, animated = false, onFinished?: () => void }) => void | 切换到距离当前相对位置为`count`的位置，`scrollTo(-2)`等价于`prev(2)`，`scrollTo(2)`等价于`next(2)` |
+| （弃用）goToIndex | (index: number, animated?: boolean) => void                        | 切换至指定下标元素                                                                                 |
+| getCurrentIndex   | ()=>number                                                         | 获得当前轮播图下标                                                                                 |

@@ -1,4 +1,3 @@
-const path = require('path');
 const pak = require('../package.json');
 
 module.exports = function (api) {
@@ -10,10 +9,11 @@ module.exports = function (api) {
             [
                 'module-resolver',
                 {
+                    root: ['./src', '../src'],
                     extensions: ['.tsx', '.ts', '.js', '.json'],
                     alias: {
-                        // For development, we want to alias the library to the source
-                        [pak.name]: path.join(__dirname, '..', pak.source),
+                        [pak.name]: '../src',
+                        '@/utils': '../src/utils',
                     },
                 },
             ],

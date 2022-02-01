@@ -41,6 +41,16 @@ export type CustomConfig = {
     viewCount?: number;
 };
 
+export type WithAnimation =
+    | {
+          type: 'spring';
+          config: Animated.WithSpringConfig;
+      }
+    | {
+          type: 'timing';
+          config: Animated.WithTimingConfig;
+      };
+
 export type TCarouselProps<T = any> = {
     ref?: React.Ref<ICarouselInstance>;
     /**
@@ -104,6 +114,10 @@ export type TCarouselProps<T = any> = {
      * @default true
      */
     enableSnap?: boolean;
+    /**
+     * Specifies the scrolling animation effect.
+     */
+    withAnimation?: WithAnimation;
     /**
      * Custom carousel config.
      */

@@ -12,10 +12,11 @@ import Animated, {
     useDerivedValue,
     useSharedValue,
     withDecay,
-    withTiming,
 } from 'react-native-reanimated';
 import { Easing } from './constants';
 import { CTX } from './store';
+import type { WithAnimation } from './types';
+import { dealWithAnimation } from './utils/dealWithAnimation';
 
 type GestureContext = {
     panOffset: number;
@@ -44,6 +45,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
             panGestureHandlerProps,
             loop: infinite,
             scrollAnimationDuration,
+            withAnimation,
         },
     } = React.useContext(CTX);
 
@@ -65,20 +67,27 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
     const _withSpring = React.useCallback(
         (toValue: number, onFinished?: () => void) => {
             'worklet';
-            return withTiming(
-                toValue,
-                {
+            const callback = (isFinished: boolean) => {
+                'worklet';
+                if (isFinished) {
+                    onFinished && runOnJS(onFinished)();
+                }
+            };
+
+            const defaultWithAnimation: WithAnimation = {
+                type: 'timing',
+                config: {
                     duration: scrollAnimationDuration,
                     easing: Easing.easeOutQuart,
                 },
-                (isFinished) => {
-                    if (isFinished) {
-                        onFinished?.();
-                    }
-                }
+            };
+
+            return dealWithAnimation(withAnimation ?? defaultWithAnimation)(
+                toValue,
+                callback
             );
         },
-        [scrollAnimationDuration]
+        [scrollAnimationDuration, withAnimation]
     );
 
     const endWithSpring = React.useCallback(
@@ -234,7 +243,8 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                     ? translationX
                     : translationY;
 
-                endWithSpring(() => onScrollEnd && runOnJS(onScrollEnd)());
+                // endWithSpring(() => onScrollEnd && runOnJS(onScrollEnd)());
+                endWithSpring(onScrollEnd);
 
                 if (!infinite) {
                     touching.value = false;
