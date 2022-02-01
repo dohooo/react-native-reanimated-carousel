@@ -28,6 +28,7 @@
         "lint": "eslint \"src/**/*.{js,ts,tsx}\"",
         "prepare": "bob build",
         "release": "release-it --no-git.requireUpstream",
+        "preRelease": "release-it --no-git.requireUpstream --preRelease=beta",
         "ios": "yarn --cwd example ios",
         "ios:pretty": "yarn --cwd example ios:pretty",
         "web": "yarn --cwd example web",
