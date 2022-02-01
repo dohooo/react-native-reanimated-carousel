@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, Text } from 'react-native-ui-lib';
 import Carousel from 'react-native-reanimated-carousel';
 import SButton from '../components/SButton';
-import { ElementsText, window } from '../constants';
+import { window } from '../constants';
 import Animated, { Easing } from 'react-native-reanimated';
 
 const PAGE_WIDTH = window.width / 2;
@@ -54,21 +54,17 @@ function ReactionContainer(props: {
 }
 
 function Index() {
-    const [isVertical, setIsVertical] = React.useState(false);
     const [isFast, setIsFast] = React.useState(false);
-    const [isAutoPlay, setIsAutoPlay] = React.useState(false);
 
     return (
         <ReactionContainer text="一二三四五六七八九十">
             {(text, layout) => {
                 return (
-                    <View style={{ flex: 1 }}>
+                    <View centerH flex marginT-24>
                         <Carousel
                             width={layout?.width ?? PAGE_WIDTH}
                             height={30}
                             style={{
-                                borderWidth: 1,
-                                borderColor: 'red',
                                 width: 200,
                             }}
                             enableSnap={false}
@@ -88,24 +84,10 @@ function Index() {
                         />
                         <SButton
                             onPress={() => {
-                                setIsVertical(!isVertical);
-                            }}
-                        >
-                            {isVertical ? 'Set horizontal' : 'Set Vertical'}
-                        </SButton>
-                        <SButton
-                            onPress={() => {
                                 setIsFast(!isFast);
                             }}
                         >
                             {isFast ? 'NORMAL' : 'FAST'}
-                        </SButton>
-                        <SButton
-                            onPress={() => {
-                                setIsAutoPlay(!isAutoPlay);
-                            }}
-                        >
-                            {ElementsText.AUTOPLAY}:{`${isAutoPlay}`}
                         </SButton>
                     </View>
                 );
