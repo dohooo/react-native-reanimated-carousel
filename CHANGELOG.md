@@ -1,3 +1,15 @@
+## [2.2.5-beta.0](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.2.4...v2.2.5-beta.0) (2022-02-01)
+
+
+### Bug Fixes
+
+* fixed type of props ([bb1e99b](https://github.com/dohooo/react-native-reanimated-carousel/commit/bb1e99bd2983d0d4a79a4ce3a9911f3edcb3391a))
+
+
+### Features
+
+* support to modify scroll animation. Add `withAnimation` props ([e3f34a4](https://github.com/dohooo/react-native-reanimated-carousel/commit/e3f34a4be91c69cd1239c69c1bed1f306042bd7a)), closes [#105](https://github.com/dohooo/react-native-reanimated-carousel/issues/105)
+
 ## [2.2.4](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.2.3...v2.2.4) (2022-01-25)
 
 
