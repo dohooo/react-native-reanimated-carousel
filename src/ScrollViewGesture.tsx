@@ -150,7 +150,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
         touching.value = true;
         translation.value = withDecay(
             { velocity: scrollEndVelocity.value },
-            onFinish
+            (isFinished) => onFinish(isFinished as boolean)
         );
     }, [onFinish, scrollEndVelocity.value, touching, translation]);
 

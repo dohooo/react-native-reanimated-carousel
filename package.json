@@ -26,6 +26,7 @@
         "test": "jest",
         "typescript": "tsc --noEmit",
         "lint": "eslint \"src/**/*.{js,ts,tsx}\"",
+        "dev": "yarn watch 'yarn prepare' ./src",
         "prepare": "bob build",
         "release": "release-it --no-git.requireUpstream",
         "preRelease": "release-it --no-git.requireUpstream --preRelease=beta",
@@ -55,12 +56,14 @@
         "registry": "https://registry.npmjs.org/"
     },
     "devDependencies": {
+        "@babel/plugin-syntax-dynamic-import": "^7.8.3",
         "@commitlint/config-conventional": "^11.0.0",
         "@react-native-community/eslint-config": "^2.0.0",
         "@release-it/conventional-changelog": "^2.0.0",
         "@types/jest": "^26.0.0",
         "@types/react": "^16.9.19",
         "@types/react-native": "0.62.13",
+        "babel-plugin-inline-dotenv": "^1.6.0",
         "babel-plugin-module-resolver": "^4.1.0",
         "commitlint": "^11.0.0",
         "cz-conventional-changelog": "^3.3.0",
@@ -139,7 +142,12 @@
         "source": "src",
         "output": "lib",
         "targets": [
-            "commonjs",
+            [
+                "commonjs",
+                {
+                    "configFile": "./babel.config.js"
+                }
+            ],
             "module",
             [
                 "typescript",

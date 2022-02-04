@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { View, Text } from 'react-native-ui-lib';
 import Carousel from 'react-native-reanimated-carousel';
-import SButton from '../components/SButton';
 import { window } from '../constants';
 import Animated, { Easing } from 'react-native-reanimated';
 
@@ -54,8 +53,6 @@ function ReactionContainer(props: {
 }
 
 function Index() {
-    const [isFast, setIsFast] = React.useState(false);
-
     return (
         <ReactionContainer text="一二三四五六七八九十">
             {(text, layout) => {
@@ -81,14 +78,8 @@ function Index() {
                             autoPlayInterval={0}
                             data={[...new Array(6).keys()]}
                             renderItem={() => text}
+                            panGestureHandlerProps={{ enabled: false }}
                         />
-                        <SButton
-                            onPress={() => {
-                                setIsFast(!isFast);
-                            }}
-                        >
-                            {isFast ? 'NORMAL' : 'FAST'}
-                        </SButton>
                     </View>
                 );
             }}

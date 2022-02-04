@@ -1,5 +1,10 @@
 import type { ViewStyle } from 'react-native';
 import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
+import type {
+    AnimatedStyleProp,
+    WithSpringConfig,
+    WithTimingConfig,
+} from 'react-native-reanimated';
 import type Animated from 'react-native-reanimated';
 import type { TParallaxModeProps } from './layouts/parallax';
 import type { TStackModeProps } from './layouts/stack';
@@ -44,11 +49,11 @@ export type CustomConfig = {
 export type WithAnimation =
     | {
           type: 'spring';
-          config: Animated.WithSpringConfig;
+          config: WithSpringConfig;
       }
     | {
           type: 'timing';
-          config: Animated.WithTimingConfig;
+          config: WithTimingConfig;
       };
 
 export type TCarouselProps<T = any> = {
@@ -126,7 +131,7 @@ export type TCarouselProps<T = any> = {
      * Custom animations.
      * Must use `worklet`, Details: https://docs.swmansion.com/react-native-reanimated/docs/2.2.0/worklets/
      */
-    customAnimation?: (value: number) => Animated.AnimatedStyleProp<ViewStyle>;
+    customAnimation?: (value: number) => AnimatedStyleProp<ViewStyle>;
     /**
      * Render carousel item.
      */
