@@ -3,7 +3,6 @@
     "version": "2.2.5-beta.2",
     "description": "Simple carousel component.fully implemented using Reanimated 2.Infinitely scrolling, very smooth.",
     "main": "lib/commonjs/index",
-    "module": "lib/module/index",
     "types": "lib/typescript/index.d.ts",
     "source": "src/index",
     "files": [
