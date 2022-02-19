@@ -1,3 +1,11 @@
+# [2.3.0](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.2.5-beta.3...v2.3.0) (2022-02-19)
+
+
+### Features
+
+* add enabled props ([e713e12](https://github.com/dohooo/react-native-reanimated-carousel/commit/e713e125bf44a45a9e48ae75dbc00f665368711f))
+* deprecated enableSnap instead with snapEnabled ([43c84c2](https://github.com/dohooo/react-native-reanimated-carousel/commit/43c84c2cc8ac45247c3ea348d912673ff1ef5132))
+
 ## [2.2.5-beta.3](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.2.5-beta.2...v2.2.5-beta.3) (2022-02-04)
 
 ## [2.2.5-beta.2](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.2.5-beta.1...v2.2.5-beta.2) (2022-02-04)
