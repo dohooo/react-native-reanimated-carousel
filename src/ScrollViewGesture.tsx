@@ -244,7 +244,6 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                     ? translationX
                     : translationY;
 
-                // endWithSpring(() => onScrollEnd && runOnJS(onScrollEnd)());
                 endWithSpring(onScrollEnd);
 
                 if (!infinite) {
