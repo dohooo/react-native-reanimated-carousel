@@ -64,7 +64,7 @@ function Index() {
                             style={{
                                 width: 200,
                             }}
-                            enableSnap={false}
+                            snapEnabled={false}
                             pagingEnabled={false}
                             loop
                             autoPlay

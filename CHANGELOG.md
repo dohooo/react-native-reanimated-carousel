@@ -136,7 +136,7 @@
 
 * add stack layout ([5a70a23](https://github.com/dohooo/react-native-reanimated-carousel/commit/5a70a230307e0b258e16230d6b21be2c4d8c7497))
 * multiple stack styles are supported ([d4497a7](https://github.com/dohooo/react-native-reanimated-carousel/commit/d4497a785f6da4dae79e812dac1d5515303d0cd3))
-* support pagingEnabled enableSnap ([000658e](https://github.com/dohooo/react-native-reanimated-carousel/commit/000658ed4a97b58d4e2649b6ab816e62919beff9)), closes [#65](https://github.com/dohooo/react-native-reanimated-carousel/issues/65)
+* support pagingEnabled snapEnabled ([000658e](https://github.com/dohooo/react-native-reanimated-carousel/commit/000658ed4a97b58d4e2649b6ab816e62919beff9)), closes [#65](https://github.com/dohooo/react-native-reanimated-carousel/issues/65)
 
 
 

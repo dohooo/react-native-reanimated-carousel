@@ -116,9 +116,15 @@ export type TCarouselProps<T = any> = {
     /**
      * If enabled, releasing the touch will scroll to the nearest item.
      * valid when pagingEnabled=false
-     * @default true
+     * @deprecated please use snapEnabled instead
      */
     enableSnap?: boolean;
+    /**
+     * If enabled, releasing the touch will scroll to the nearest item.
+     * valid when pagingEnabled=false
+     * @default true
+     */
+    snapEnabled?: boolean;
     /**
      * Specifies the scrolling animation effect.
      */

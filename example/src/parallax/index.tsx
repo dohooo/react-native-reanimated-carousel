@@ -25,7 +25,7 @@ function Index() {
     const [isVertical, setIsVertical] = React.useState(false);
     const [autoPlay, setAutoPlay] = React.useState(false);
     const [pagingEnabled, setPagingEnabled] = React.useState<boolean>(true);
-    const [enableSnap, setEnableSnap] = React.useState<boolean>(true);
+    const [snapEnabled, setSnapEnabled] = React.useState<boolean>(true);
     const progressValue = useSharedValue<number>(0);
     const baseOptions = isVertical
         ? ({
@@ -49,7 +49,7 @@ function Index() {
                 {...baseOptions}
                 loop
                 pagingEnabled={pagingEnabled}
-                enableSnap={enableSnap}
+                snapEnabled={snapEnabled}
                 autoPlay={autoPlay}
                 autoPlayInterval={1500}
                 onProgressChange={(_, absoluteProgress) =>
@@ -117,10 +117,10 @@ function Index() {
             </SButton>
             <SButton
                 onPress={() => {
-                    setEnableSnap(!enableSnap);
+                    setSnapEnabled(!snapEnabled);
                 }}
             >
-                {`enableSnap:${enableSnap}`}
+                {`snapEnabled:${snapEnabled}`}
             </SButton>
         </View>
     );

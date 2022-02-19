@@ -32,7 +32,7 @@ export function useInitProps<T>(
         style = {},
         panGestureHandlerProps = {},
         pagingEnabled = true,
-        enableSnap = true,
+        snapEnabled = props.enableSnap ?? true,
         width: _width,
         height: _height,
     } = props;
@@ -73,7 +73,7 @@ export function useInitProps<T>(
         style,
         panGestureHandlerProps,
         pagingEnabled,
-        enableSnap,
+        snapEnabled,
         width,
         height,
     };

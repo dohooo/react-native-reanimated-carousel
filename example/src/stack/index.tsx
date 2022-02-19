@@ -11,7 +11,7 @@ function Index() {
         'left'
     );
     const [pagingEnabled, setPagingEnabled] = React.useState<boolean>(true);
-    const [enableSnap, setEnableSnap] = React.useState<boolean>(true);
+    const [snapEnabled, setSnapEnabled] = React.useState<boolean>(true);
     const [loop, setLoop] = React.useState<boolean>(true);
     const [autoPlay, setAutoPlay] = React.useState<boolean>(false);
     const [autoPlayReverse, setAutoPlayReverse] =
@@ -29,7 +29,7 @@ function Index() {
                 width={280}
                 height={210}
                 pagingEnabled={pagingEnabled}
-                enableSnap={enableSnap}
+                snapEnabled={snapEnabled}
                 mode={mode}
                 loop={loop}
                 autoPlay={autoPlay}
@@ -101,10 +101,10 @@ function Index() {
                 </SButton>
                 <SButton
                     onPress={() => {
-                        setEnableSnap(!enableSnap);
+                        setSnapEnabled(!snapEnabled);
                     }}
                 >
-                    {`enableSnap:${enableSnap}`}
+                    {`snapEnabled:${snapEnabled}`}
                 </SButton>
             </View>
         </View>

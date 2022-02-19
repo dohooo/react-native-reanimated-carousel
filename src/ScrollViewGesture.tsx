@@ -41,7 +41,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
             style,
             data,
             pagingEnabled,
-            enableSnap,
+            snapEnabled,
             panGestureHandlerProps,
             loop: infinite,
             scrollAnimationDuration,
@@ -96,7 +96,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
             const origin = translation.value;
             const velocity = scrollEndVelocity.value;
             if (!pagingEnabled) {
-                if (enableSnap) {
+                if (snapEnabled) {
                     const nextPage =
                         Math.round((origin + velocity * 0.4) / size) * size;
                     translation.value = _withSpring(nextPage, onFinished);
@@ -130,7 +130,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
             size,
             maxPage,
             pagingEnabled,
-            enableSnap,
+            snapEnabled,
         ]
     );
 
@@ -257,7 +257,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
             infinite,
             maxPage,
             size,
-            enableSnap,
+            snapEnabled,
             onScrollBegin,
             onScrollEnd,
         ]
