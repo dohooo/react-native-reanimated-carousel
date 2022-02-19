@@ -71,6 +71,9 @@
   <a href="./example/src/anim-tab-bar/index.tsx">
     <img src="assets/anim-tab-bar.gif" width="300"/>  
   </a>
+  <a href="./example/src/marquee/index.tsx">
+    <img src="assets/marquee.gif" width="300"/>  
+  </a>
 </p>
 
 ## 目录

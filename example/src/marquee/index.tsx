@@ -57,7 +57,7 @@ function Index() {
         <ReactionContainer text="一二三四五六七八九十">
             {(text, layout) => {
                 return (
-                    <View centerH flex marginT-24>
+                    <View centerH flex marginT-72>
                         <Carousel
                             width={layout?.width ?? PAGE_WIDTH}
                             height={30}
