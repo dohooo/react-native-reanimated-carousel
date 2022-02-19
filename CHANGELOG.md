@@ -1,3 +1,21 @@
+## [2.2.5-beta.3](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.2.5-beta.2...v2.2.5-beta.3) (2022-02-04)
+
+## [2.2.5-beta.2](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.2.5-beta.1...v2.2.5-beta.2) (2022-02-04)
+
+## [2.2.5-beta.1](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.2.5-beta.0...v2.2.5-beta.1) (2022-02-04)
+
+## [2.2.5-beta.0](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.2.4...v2.2.5-beta.0) (2022-02-01)
+
+
+### Bug Fixes
+
+* fixed type of props ([bb1e99b](https://github.com/dohooo/react-native-reanimated-carousel/commit/bb1e99bd2983d0d4a79a4ce3a9911f3edcb3391a))
+
+
+### Features
+
+* support to modify scroll animation. Add `withAnimation` props ([e3f34a4](https://github.com/dohooo/react-native-reanimated-carousel/commit/e3f34a4be91c69cd1239c69c1bed1f306042bd7a)), closes [#105](https://github.com/dohooo/react-native-reanimated-carousel/issues/105)
+
 ## [2.2.4](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.2.3...v2.2.4) (2022-01-25)
 
 
@@ -118,7 +136,7 @@
 
 * add stack layout ([5a70a23](https://github.com/dohooo/react-native-reanimated-carousel/commit/5a70a230307e0b258e16230d6b21be2c4d8c7497))
 * multiple stack styles are supported ([d4497a7](https://github.com/dohooo/react-native-reanimated-carousel/commit/d4497a785f6da4dae79e812dac1d5515303d0cd3))
-* support pagingEnabled enableSnap ([000658e](https://github.com/dohooo/react-native-reanimated-carousel/commit/000658ed4a97b58d4e2649b6ab816e62919beff9)), closes [#65](https://github.com/dohooo/react-native-reanimated-carousel/issues/65)
+* support pagingEnabled snapEnabled ([000658e](https://github.com/dohooo/react-native-reanimated-carousel/commit/000658ed4a97b58d4e2649b6ab816e62919beff9)), closes [#65](https://github.com/dohooo/react-native-reanimated-carousel/issues/65)
 
 
 

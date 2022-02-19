@@ -1,13 +1,19 @@
 import React from 'react';
 import type Animated from 'react-native-reanimated';
 import { Easing } from '../constants';
-import { runOnJS, useSharedValue, withTiming } from 'react-native-reanimated';
-import type { TCarouselActionOptions } from '../types';
+import { runOnJS, useSharedValue } from 'react-native-reanimated';
+import type {
+    TCarouselActionOptions,
+    TCarouselProps,
+    WithAnimation,
+} from '../types';
+import { dealWithAnimation } from '@/utils/dealWithAnimation';
 
 interface IOpts {
     loop: boolean;
     size: number;
     handlerOffsetX: Animated.SharedValue<number>;
+    withAnimation?: TCarouselProps['withAnimation'];
     disable?: boolean;
     duration?: number;
     originalLength: number;
@@ -36,6 +42,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
         size,
         loop,
         handlerOffsetX,
+        withAnimation,
         disable = false,
         originalLength,
         length,
@@ -116,22 +123,31 @@ export function useCarouselController(options: IOpts): ICarouselController {
 
     const scrollWithTiming = React.useCallback(
         (toValue: number, onFinished?: () => void) => {
-            return withTiming(
-                toValue,
-                { duration, easing: Easing.easeOutQuart },
-                (isFinished: boolean) => {
-                    if (isFinished) {
-                        runOnJS(onScrollEnd)();
-                        onFinished && runOnJS(onFinished)();
-                    }
+            'worklet';
+            const callback = (isFinished: boolean) => {
+                'worklet';
+                if (isFinished) {
+                    runOnJS(onScrollEnd)();
+                    onFinished && runOnJS(onFinished)();
                 }
+            };
+
+            const defaultWithAnimation: WithAnimation = {
+                type: 'timing',
+                config: { duration, easing: Easing.easeOutQuart },
+            };
+
+            return dealWithAnimation(withAnimation ?? defaultWithAnimation)(
+                toValue,
+                callback
             );
         },
-        [onScrollEnd, duration]
+        [duration, withAnimation, onScrollEnd]
     );
 
     const next = React.useCallback(
         (opts: TCarouselActionOptions = {}) => {
+            'worklet';
             const { count = 1, animated = true, onFinished } = opts;
             if (!canSliding() || (!loop && index.value >= length - 1)) return;
 
@@ -144,7 +160,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
                 handlerOffsetX.value = scrollWithTiming(
                     -nextPage * size,
                     onFinished
-                );
+                ) as any;
             } else {
                 handlerOffsetX.value = -nextPage * size;
                 onFinished?.();

@@ -18,6 +18,7 @@ import ScaleFadeInOutComponent from './scale-fade-in-out';
 import RotateInOutComponent from './rotate-in-out';
 import RotateScaleFadeInOutComponent from './rotate-scale-fade-in-out';
 import AnimTabBarComponent from './anim-tab-bar';
+import MarqueeComponent from './marquee';
 import { isWeb } from './utils';
 import { window } from './constants';
 import { QRCode } from './components/QRCode';
@@ -45,6 +46,7 @@ export type RootStackParamList = {
     RotateInOut: undefined;
     RotateScaleFadeInOut: undefined;
     AnimTabBar: undefined;
+    Marquee: undefined;
 
     SnapCarouselComplex: undefined;
     SnapCarouselLoop: undefined;
@@ -138,6 +140,10 @@ function App() {
                         <Stack.Screen
                             name="AnimTabBar"
                             component={AnimTabBarComponent}
+                        />
+                        <Stack.Screen
+                            name="Marquee"
+                            component={MarqueeComponent}
                         />
 
                         <Stack.Screen

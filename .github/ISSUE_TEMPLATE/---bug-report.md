@@ -29,7 +29,8 @@ If applicable, add screenshots to help explain your problem.
 **Versions (please complete the following information):**
  - react: v0.0.0  
  - react-native: v0.0.0  
- - react-native-reanimated: v0.0.0  
+ - react-native-reanimated: v0.0.0    
+ - react-native-reanimated-carousel: v0.0.0  
  - react-native-gesture-handler: v0.0.0  
 
 **Smartphone (please complete the following information):**

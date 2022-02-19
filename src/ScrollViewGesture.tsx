@@ -12,10 +12,11 @@ import Animated, {
     useDerivedValue,
     useSharedValue,
     withDecay,
-    withTiming,
 } from 'react-native-reanimated';
 import { Easing } from './constants';
 import { CTX } from './store';
+import type { WithAnimation } from './types';
+import { dealWithAnimation } from './utils/dealWithAnimation';
 
 type GestureContext = {
     panOffset: number;
@@ -40,10 +41,12 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
             style,
             data,
             pagingEnabled,
-            enableSnap,
+            snapEnabled,
             panGestureHandlerProps,
             loop: infinite,
             scrollAnimationDuration,
+            withAnimation,
+            enabled,
         },
     } = React.useContext(CTX);
 
@@ -65,20 +68,27 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
     const _withSpring = React.useCallback(
         (toValue: number, onFinished?: () => void) => {
             'worklet';
-            return withTiming(
-                toValue,
-                {
+            const callback = (isFinished: boolean) => {
+                'worklet';
+                if (isFinished) {
+                    onFinished && runOnJS(onFinished)();
+                }
+            };
+
+            const defaultWithAnimation: WithAnimation = {
+                type: 'timing',
+                config: {
                     duration: scrollAnimationDuration,
                     easing: Easing.easeOutQuart,
                 },
-                (isFinished) => {
-                    if (isFinished) {
-                        onFinished?.();
-                    }
-                }
+            };
+
+            return dealWithAnimation(withAnimation ?? defaultWithAnimation)(
+                toValue,
+                callback
             );
         },
-        [scrollAnimationDuration]
+        [scrollAnimationDuration, withAnimation]
     );
 
     const endWithSpring = React.useCallback(
@@ -87,7 +97,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
             const origin = translation.value;
             const velocity = scrollEndVelocity.value;
             if (!pagingEnabled) {
-                if (enableSnap) {
+                if (snapEnabled) {
                     const nextPage =
                         Math.round((origin + velocity * 0.4) / size) * size;
                     translation.value = _withSpring(nextPage, onFinished);
@@ -121,7 +131,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
             size,
             maxPage,
             pagingEnabled,
-            enableSnap,
+            snapEnabled,
         ]
     );
 
@@ -141,7 +151,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
         touching.value = true;
         translation.value = withDecay(
             { velocity: scrollEndVelocity.value },
-            onFinish
+            (isFinished) => onFinish(isFinished as boolean)
         );
     }, [onFinish, scrollEndVelocity.value, touching, translation]);
 
@@ -234,7 +244,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                     ? translationX
                     : translationY;
 
-                endWithSpring(() => onScrollEnd && runOnJS(onScrollEnd)());
+                endWithSpring(onScrollEnd);
 
                 if (!infinite) {
                     touching.value = false;
@@ -247,7 +257,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
             infinite,
             maxPage,
             size,
-            enableSnap,
+            snapEnabled,
             onScrollBegin,
             onScrollEnd,
         ]
@@ -265,6 +275,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
         >
             <PanGestureHandler
                 {...panGestureHandlerProps}
+                enabled={enabled}
                 onGestureEvent={panGestureEventHandler}
             >
                 {props.children}

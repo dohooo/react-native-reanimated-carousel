@@ -1,6 +1,7 @@
 import React from 'react';
 import type { ViewStyle } from 'react-native';
 import Animated, {
+    AnimatedStyleProp,
     runOnJS,
     useAnimatedReaction,
     useAnimatedStyle,
@@ -12,9 +13,7 @@ import { LazyView } from '../LazyView';
 import { CTX } from '../store';
 import type { ILayoutConfig } from './stack';
 
-export type TAnimationStyle = (
-    value: number
-) => Animated.AnimatedStyleProp<ViewStyle>;
+export type TAnimationStyle = (value: number) => AnimatedStyleProp<ViewStyle>;
 
 export const BaseLayout: React.FC<{
     index: number;
@@ -69,6 +68,7 @@ export const BaseLayout: React.FC<{
     const x = useOffsetX(offsetXConfig, visibleRanges);
     const animationValue = useDerivedValue(() => x.value / size, [x, size]);
     const animatedStyle = useAnimatedStyle(
+        // @ts-ignore
         () => animationStyle(x.value / size),
         [animationStyle]
     );

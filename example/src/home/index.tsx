@@ -42,6 +42,9 @@ const CustomAnimations: Array<Record<'name', keyof RootStackParamList>> = [
     {
         name: 'AnimTabBar',
     },
+    {
+        name: 'Marquee',
+    },
 ];
 
 const OtherPage: Array<Record<'name', keyof RootStackParamList>> = [

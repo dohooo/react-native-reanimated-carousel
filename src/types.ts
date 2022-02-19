@@ -1,5 +1,10 @@
 import type { ViewStyle } from 'react-native';
 import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
+import type {
+    AnimatedStyleProp,
+    WithSpringConfig,
+    WithTimingConfig,
+} from 'react-native-reanimated';
 import type Animated from 'react-native-reanimated';
 import type { TParallaxModeProps } from './layouts/parallax';
 import type { TStackModeProps } from './layouts/stack';
@@ -40,6 +45,16 @@ export type CustomConfig = {
     type?: 'negative' | 'positive';
     viewCount?: number;
 };
+
+export type WithAnimation =
+    | {
+          type: 'spring';
+          config: WithSpringConfig;
+      }
+    | {
+          type: 'timing';
+          config: WithTimingConfig;
+      };
 
 export type TCarouselProps<T = any> = {
     ref?: React.Ref<ICarouselInstance>;
@@ -84,7 +99,7 @@ export type TCarouselProps<T = any> = {
      * PanGestureHandler props
      */
     panGestureHandlerProps?: Partial<
-        Omit<PanGestureHandlerProps, 'onHandlerStateChange'>
+        Omit<PanGestureHandlerProps, 'onHandlerStateChange' | 'enabled'>
     >;
     /**
      * Determines the maximum number of items will respond to pan gesture events,
@@ -101,9 +116,24 @@ export type TCarouselProps<T = any> = {
     /**
      * If enabled, releasing the touch will scroll to the nearest item.
      * valid when pagingEnabled=false
-     * @default true
+     * @deprecated please use snapEnabled instead
      */
     enableSnap?: boolean;
+    /**
+     * If enabled, releasing the touch will scroll to the nearest item.
+     * valid when pagingEnabled=false
+     * @default true
+     */
+    snapEnabled?: boolean;
+    /**
+     * If false, Carousel will not respond to any gestures.
+     * @default true
+     */
+    enabled?: boolean;
+    /**
+     * Specifies the scrolling animation effect.
+     */
+    withAnimation?: WithAnimation;
     /**
      * Custom carousel config.
      */
@@ -112,7 +142,7 @@ export type TCarouselProps<T = any> = {
      * Custom animations.
      * Must use `worklet`, Details: https://docs.swmansion.com/react-native-reanimated/docs/2.2.0/worklets/
      */
-    customAnimation?: (value: number) => Animated.AnimatedStyleProp<ViewStyle>;
+    customAnimation?: (value: number) => AnimatedStyleProp<ViewStyle>;
     /**
      * Render carousel item.
      */
