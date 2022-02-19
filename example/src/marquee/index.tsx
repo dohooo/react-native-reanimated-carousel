@@ -78,7 +78,7 @@ function Index() {
                             autoPlayInterval={0}
                             data={[...new Array(6).keys()]}
                             renderItem={() => text}
-                            panGestureHandlerProps={{ enabled: false }}
+                            enabled={false}
                         />
                     </View>
                 );

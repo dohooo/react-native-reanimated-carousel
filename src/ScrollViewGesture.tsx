@@ -46,6 +46,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
             loop: infinite,
             scrollAnimationDuration,
             withAnimation,
+            enabled,
         },
     } = React.useContext(CTX);
 
@@ -275,6 +276,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
         >
             <PanGestureHandler
                 {...panGestureHandlerProps}
+                enabled={enabled}
                 onGestureEvent={panGestureEventHandler}
             >
                 {props.children}

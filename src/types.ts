@@ -99,7 +99,7 @@ export type TCarouselProps<T = any> = {
      * PanGestureHandler props
      */
     panGestureHandlerProps?: Partial<
-        Omit<PanGestureHandlerProps, 'onHandlerStateChange'>
+        Omit<PanGestureHandlerProps, 'onHandlerStateChange' | 'enabled'>
     >;
     /**
      * Determines the maximum number of items will respond to pan gesture events,
@@ -125,6 +125,11 @@ export type TCarouselProps<T = any> = {
      * @default true
      */
     snapEnabled?: boolean;
+    /**
+     * If false, Carousel will not respond to any gestures.
+     * @default true
+     */
+    enabled?: boolean;
     /**
      * Specifies the scrolling animation effect.
      */
