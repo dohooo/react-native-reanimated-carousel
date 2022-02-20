@@ -15,7 +15,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Easing } from './constants';
 import { CTX } from './store';
-import type { WithAnimation } from './types';
+import type { WithTimingAnimation } from './types';
 import { dealWithAnimation } from './utils/dealWithAnimation';
 
 type GestureContext = {
@@ -75,7 +75,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                 }
             };
 
-            const defaultWithAnimation: WithAnimation = {
+            const defaultWithAnimation: WithTimingAnimation = {
                 type: 'timing',
                 config: {
                     duration: scrollAnimationDuration,
