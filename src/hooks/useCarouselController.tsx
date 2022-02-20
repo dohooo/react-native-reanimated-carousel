@@ -5,7 +5,7 @@ import { runOnJS, useSharedValue } from 'react-native-reanimated';
 import type {
     TCarouselActionOptions,
     TCarouselProps,
-    WithAnimation,
+    WithTimingAnimation,
 } from '../types';
 import { dealWithAnimation } from '@/utils/dealWithAnimation';
 
@@ -132,7 +132,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
                 }
             };
 
-            const defaultWithAnimation: WithAnimation = {
+            const defaultWithAnimation: WithTimingAnimation = {
                 type: 'timing',
                 config: { duration, easing: Easing.easeOutQuart },
             };

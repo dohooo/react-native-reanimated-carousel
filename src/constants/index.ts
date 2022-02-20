@@ -1,4 +1,4 @@
-import { Easing as _Easing } from 'react-native-reanimated';
+import Animated, { Easing as _Easing } from 'react-native-reanimated';
 
 export enum DATA_LENGTH {
     SINGLE_ITEM = 1,
@@ -6,5 +6,10 @@ export enum DATA_LENGTH {
 }
 
 export const Easing = {
-    easeOutQuart: _Easing.bezier(0.25, 1, 0.5, 1),
+    easeOutQuart: _Easing.bezier(
+        0.25,
+        1,
+        0.5,
+        1
+    ) as unknown as Animated.EasingFunction,
 };

@@ -46,15 +46,17 @@ export type CustomConfig = {
     viewCount?: number;
 };
 
-export type WithAnimation =
-    | {
-          type: 'spring';
-          config: WithSpringConfig;
-      }
-    | {
-          type: 'timing';
-          config: WithTimingConfig;
-      };
+export type WithSpringAnimation = {
+    type: 'spring';
+    config: WithSpringConfig;
+};
+
+export type WithTimingAnimation = {
+    type: 'timing';
+    config: WithTimingConfig;
+};
+
+export type WithAnimation = WithSpringAnimation | WithTimingAnimation;
 
 export type TCarouselProps<T = any> = {
     ref?: React.Ref<ICarouselInstance>;
