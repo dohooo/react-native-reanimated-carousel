@@ -17,6 +17,11 @@ interface ILayoutConfig {
      * @default 0.8
      */
     parallaxScrollingScale?: number;
+    /**
+     * When use default Layout props,this prop can be control prev/next item offset.
+     * @default Math.pow(parallaxScrollingScale, 2)
+     */
+    parallaxAdjacentItemScale?: number;
 }
 
 export type TParallaxModeProps = ComputedDirectionTypes<{
@@ -32,8 +37,10 @@ export function parallaxLayout(
     modeConfig: ILayoutConfig = {}
 ) {
     const { size, vertical } = baseConfig;
-    const { parallaxScrollingOffset = 100, parallaxScrollingScale = 0.8 } =
-        modeConfig;
+    const { parallaxScrollingOffset = 100,
+        parallaxScrollingScale = 0.8,
+        parallaxAdjacentItemScale = Math.pow(parallaxScrollingScale, 2),
+    } = modeConfig;
 
     return (value: number) => {
         'worklet';
@@ -54,9 +61,9 @@ export function parallaxLayout(
             value,
             [-1, 0, 1],
             [
-                Math.pow(parallaxScrollingScale, 2),
+                parallaxAdjacentItemScale,
                 parallaxScrollingScale,
-                Math.pow(parallaxScrollingScale, 2),
+                parallaxAdjacentItemScale,
             ],
             Extrapolate.CLAMP
         );
