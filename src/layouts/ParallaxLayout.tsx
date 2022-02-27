@@ -16,6 +16,7 @@ export const ParallaxLayout: React.FC<
         loop?: boolean;
         parallaxScrollingOffset?: number;
         parallaxScrollingScale?: number;
+        parallaxAdjacentItemScale?: number;
         handlerOffsetX: Animated.SharedValue<number>;
         index: number;
         data: unknown[];
@@ -26,6 +27,7 @@ export const ParallaxLayout: React.FC<
         handlerOffsetX,
         parallaxScrollingOffset = 100,
         parallaxScrollingScale = 0.8,
+        parallaxAdjacentItemScale = Math.pow(parallaxScrollingScale, 2),
         index,
         width,
         height,
@@ -76,9 +78,9 @@ export const ParallaxLayout: React.FC<
             value,
             [-1, 0, 1],
             [
-                Math.pow(parallaxScrollingScale, 2),
+                parallaxAdjacentItemScale,
                 parallaxScrollingScale,
-                Math.pow(parallaxScrollingScale, 2),
+                parallaxAdjacentItemScale,
             ],
             Extrapolate.CLAMP
         );
