@@ -1,3 +1,15 @@
+## [2.3.1](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.0...v2.3.1) (2022-02-28)
+
+
+### Bug Fixes
+
+* fix memory leak ([73a5fe2](https://github.com/dohooo/react-native-reanimated-carousel/commit/73a5fe20a247ed1de84d23b64d7ba981410950ca)), closes [#137](https://github.com/dohooo/react-native-reanimated-carousel/issues/137)
+
+
+### Features
+
+* added "parallaxAdjacentItemScale" property into parallax layout ([7e98433](https://github.com/dohooo/react-native-reanimated-carousel/commit/7e98433eb6e91fadf22f27426ba2c004a35db7aa))
+
 # [2.3.0](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.2.5-beta.3...v2.3.0) (2022-02-19)
 
 

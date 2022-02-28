@@ -35,10 +35,11 @@
 
 ### Parallax
 
-| name                    | required | default | types  | description                                                                     |
-| ----------------------- | -------- | ------- | ------ | ------------------------------------------------------------------------------- |
-| parallaxScrollingOffset | ❌       | 100     | number | When use 'parallax' Layout props,this prop can be control prev/next item offset |
-| parallaxScrollingScale  | ❌       | 0.8     | number | When use 'parallax' Layout props,this prop can be control prev/next item scale  |
+| name                      | required | default                                                            | types  | description                          |
+| ------------------------- | -------- | ------------------------------------------------------------------ | ------ | ------------------------------------ |
+| parallaxScrollingOffset   | ❌       | 100                                                                | number | control prev/next item offset        |
+| parallaxScrollingScale    | ❌       | 0.8                                                                | number | control prev/current/next item scale |
+| parallaxAdjacentItemScale | ❌       | parallaxAdjacentItemScale \|\| Math.pow(parallaxScrollingScale, 2) | number | control prev/next item scale         |
 
 ### Stack
 
