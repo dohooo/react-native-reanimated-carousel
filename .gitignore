@@ -47,6 +47,7 @@ scripts/gif-works-directory/*
 npm-debug.log
 yarn-debug.log
 yarn-error.log
+\.env
 
 # BUCK
 buck-out/

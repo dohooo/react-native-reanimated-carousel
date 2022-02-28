@@ -157,6 +157,14 @@ yarn web
 yarn web:pretty
 ```
 
+## Sponsors
+
+<p align="center">
+  <a href="./sponsorkit/sponsors.svg">
+    <img src='./sponsorkit/sponsors.svg'/>
+  </a>
+</p>
+
 ## License
 
 MIT
