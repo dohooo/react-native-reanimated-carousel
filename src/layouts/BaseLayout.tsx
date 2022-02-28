@@ -7,6 +7,7 @@ import Animated, {
     useAnimatedStyle,
     useDerivedValue,
 } from 'react-native-reanimated';
+import { useCheckMounted } from 'src/hooks/useCheckMounted';
 import { IOpts, useOffsetX } from '../hooks/useOffsetX';
 import type { IVisibleRanges } from '../hooks/useVisibleRanges';
 import { LazyView } from '../LazyView';
@@ -24,6 +25,7 @@ export const BaseLayout: React.FC<{
         animationValue: Animated.SharedValue<number>;
     }) => React.ReactElement;
 }> = (props) => {
+    const mounted = useCheckMounted();
     const { handlerOffsetX, index, children, visibleRanges, animationStyle } =
         props;
 
@@ -86,10 +88,11 @@ export const BaseLayout: React.FC<{
     useAnimatedReaction(
         () => visibleRanges.value,
         () => {
-            runOnJS(updateView)(
-                visibleRanges.value.negativeRange,
-                visibleRanges.value.positiveRange
-            );
+            mounted.current &&
+                runOnJS(updateView)(
+                    visibleRanges.value.negativeRange,
+                    visibleRanges.value.positiveRange
+                );
         },
         [visibleRanges.value]
     );
