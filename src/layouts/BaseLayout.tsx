@@ -77,22 +77,22 @@ export const BaseLayout: React.FC<{
 
     const updateView = React.useCallback(
         (negativeRange: number[], positiveRange: number[]) => {
-            setShouldUpdate(
-                (index >= negativeRange[0] && index <= negativeRange[1]) ||
-                    (index >= positiveRange[0] && index <= positiveRange[1])
-            );
+            mounted.current &&
+                setShouldUpdate(
+                    (index >= negativeRange[0] && index <= negativeRange[1]) ||
+                        (index >= positiveRange[0] && index <= positiveRange[1])
+                );
         },
-        [index]
+        [index, mounted]
     );
 
     useAnimatedReaction(
         () => visibleRanges.value,
         () => {
-            mounted.current &&
-                runOnJS(updateView)(
-                    visibleRanges.value.negativeRange,
-                    visibleRanges.value.positiveRange
-                );
+            runOnJS(updateView)(
+                visibleRanges.value.negativeRange,
+                visibleRanges.value.positiveRange
+            );
         },
         [visibleRanges.value]
     );
