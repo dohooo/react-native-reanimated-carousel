@@ -35,10 +35,11 @@
 
 ### Parallax
 
-| name                    | required | default | types  | description                                                     |
-| ----------------------- | -------- | ------- | ------ | --------------------------------------------------------------- |
-| parallaxScrollingOffset | ❌       | 100     | number | 当使用 mode=`parallax`,这个属性可以控制两侧图片离中间元素的距离 |
-| parallaxScrollingScale  | ❌       | 0.8     | number | 当使用 mode=`parallax`,这个属性可以控制两侧图片的缩放比例       |
+| name                      | required | default                                                            | types  | description                      |
+| ------------------------- | -------- | ------------------------------------------------------------------ | ------ | -------------------------------- |
+| parallaxScrollingOffset   | ❌       | 100                                                                | number | 控制两侧图片离中间元素的距离     |
+| parallaxScrollingScale    | ❌       | 0.8                                                                | number | 控制前面/当前/后面图片的缩放比例 |
+| parallaxAdjacentItemScale | ❌       | parallaxAdjacentItemScale \|\| Math.pow(parallaxScrollingScale, 2) | number | 控制前面/后面图片的缩放比例      |
 
 ### Stack
 

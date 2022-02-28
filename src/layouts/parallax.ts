@@ -6,19 +6,19 @@ type TBaseConfig = {
     vertical: boolean;
 };
 
-interface ILayoutConfig {
+export interface ILayoutConfig {
     /**
-     * When use default Layout props,this prop can be control prev/next item offset.
+     * control prev/next item offset.
      * @default 100
      */
     parallaxScrollingOffset?: number;
     /**
-     * When use default Layout props,this prop can be control prev/next item offset.
+     * control prev/current/next item offset.
      * @default 0.8
      */
     parallaxScrollingScale?: number;
     /**
-     * When use default Layout props,this prop can be control prev/next item offset.
+     * control prev/next item offset.
      * @default Math.pow(parallaxScrollingScale, 2)
      */
     parallaxAdjacentItemScale?: number;
@@ -37,7 +37,8 @@ export function parallaxLayout(
     modeConfig: ILayoutConfig = {}
 ) {
     const { size, vertical } = baseConfig;
-    const { parallaxScrollingOffset = 100,
+    const {
+        parallaxScrollingOffset = 100,
         parallaxScrollingScale = 0.8,
         parallaxAdjacentItemScale = Math.pow(parallaxScrollingScale, 2),
     } = modeConfig;

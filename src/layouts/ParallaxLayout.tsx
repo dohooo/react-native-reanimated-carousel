@@ -10,18 +10,18 @@ import type { ComputedDirectionTypes } from 'src/types';
 import { useOffsetX } from '../hooks/useOffsetX';
 import type { IVisibleRanges } from '../hooks/useVisibleRanges';
 import { LazyView } from '../LazyView';
+import type { ILayoutConfig } from './parallax';
 
 export const ParallaxLayout: React.FC<
-    ComputedDirectionTypes<{
-        loop?: boolean;
-        parallaxScrollingOffset?: number;
-        parallaxScrollingScale?: number;
-        parallaxAdjacentItemScale?: number;
-        handlerOffsetX: Animated.SharedValue<number>;
-        index: number;
-        data: unknown[];
-        visibleRanges: IVisibleRanges;
-    }>
+    ComputedDirectionTypes<
+        {
+            loop?: boolean;
+            handlerOffsetX: Animated.SharedValue<number>;
+            index: number;
+            data: unknown[];
+            visibleRanges: IVisibleRanges;
+        } & ILayoutConfig
+    >
 > = (props) => {
     const {
         handlerOffsetX,
