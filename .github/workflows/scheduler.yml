@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Update sponsors
-        run: npx sponsorkit -w 800 --dir . && npx sponsorkit -w 1300 --name sponsors.wide --dir .
+        run: npx sponsorkit -w 800 --dir ./sponsorkit && npx sponsorkit -w 1300 --name sponsors.wide --dir ./sponsorkit
         env:
           SPONSORKIT_TOKEN: ${{ secrets.SPONSORS_TOKEN }}
           SPONSORKIT_LOGIN: dohooo
