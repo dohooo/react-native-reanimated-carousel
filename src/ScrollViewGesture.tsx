@@ -19,6 +19,7 @@ import type { WithTimingAnimation } from './types';
 import { dealWithAnimation } from './utils/dealWithAnimation';
 
 type GestureContext = {
+    validStart: boolean;
     panOffset: number;
     max: number;
 };
@@ -210,12 +211,16 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
         {
             onStart: (_, ctx) => {
                 touching.value = true;
-                cancelAnimation(translation);
+                ctx.validStart = true;
                 onScrollBegin && runOnJS(onScrollBegin)();
                 ctx.max = (maxPage - 1) * size;
                 ctx.panOffset = translation.value;
             },
             onActive: (e, ctx) => {
+                if (ctx.validStart) {
+                    ctx.validStart = false;
+                    cancelAnimation(translation);
+                }
                 touching.value = true;
                 const { translationX, translationY } = e;
                 let panTranslation = isHorizontal.value
