@@ -2,8 +2,8 @@
   "files": {
     "static/js/0.87f718db.chunk.js": "/react-native-reanimated-carousel/static/js/0.87f718db.chunk.js",
     "static/js/0.87f718db.chunk.js.map": "/react-native-reanimated-carousel/static/js/0.87f718db.chunk.js.map",
-    "app.js": "/react-native-reanimated-carousel/static/js/app.3e155e06.chunk.js",
-    "app.js.map": "/react-native-reanimated-carousel/static/js/app.3e155e06.chunk.js.map",
+    "app.js": "/react-native-reanimated-carousel/static/js/app.cfcc66d4.chunk.js",
+    "app.js.map": "/react-native-reanimated-carousel/static/js/app.cfcc66d4.chunk.js.map",
     "runtime~app.js": "/react-native-reanimated-carousel/static/js/runtime~app.17a9e008.js",
     "runtime~app.js.map": "/react-native-reanimated-carousel/static/js/runtime~app.17a9e008.js.map",
     "static/js/3.8ebf9654.chunk.js": "/react-native-reanimated-carousel/static/js/3.8ebf9654.chunk.js",
@@ -23,6 +23,6 @@
   "entrypoints": [
     "static/js/runtime~app.17a9e008.js",
     "static/js/3.8ebf9654.chunk.js",
-    "static/js/app.3e155e06.chunk.js"
+    "static/js/app.cfcc66d4.chunk.js"
   ]
 }
