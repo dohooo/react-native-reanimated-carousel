@@ -1,3 +1,10 @@
+## [2.3.2-beta.1](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.2-beta.0...v2.3.2-beta.1) (2022-03-03)
+
+
+### Bug Fixes
+
+* remove logic that touch the screent will stopped animation ([4328d9a](https://github.com/dohooo/react-native-reanimated-carousel/commit/4328d9a1068a28817d12f4fb2ba066e419fad9c8))
+
 ## [2.3.2-beta.0](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.1...v2.3.2-beta.0) (2022-03-03)
 
 ## [2.3.1](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.0...v2.3.1) (2022-02-28)
