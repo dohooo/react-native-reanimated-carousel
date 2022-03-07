@@ -119,6 +119,19 @@ import Carousel from 'react-native-reanimated-carousel';
 -   Optimizing
 
     -   When rendering a large number of elements, you can use the 'windowSize' property to control how many items of the current element are rendered. The default is full rendering. After testing without this property, frames will drop when rendering 200 empty views. After setting this property, rendering 1000 empty views is still smooth. (The specific number depends on the phone model tested)
+  
+-   Used in `ScrollView/FlastList`
+
+    -   **[#143](https://github.com/dohooo/react-native-reanimated-carousel/issues/143) - Carousel suppresses ScrollView/FlastList scroll gesture handler:** When using a carousel with a layout oriented to only one direction (vertical/horizontal) and inside a ScrollView/FlatList, it is important for the user experience that the unused axis does not impede the scroll of the list. So that, for example, the x-axis is free we can change the [activeOffsetX](https://docs.swmansion.com/react-native-gesture-handler/docs/1.10.3/api/gesture-handlers/pan-gh/#activeoffsetx) of the gesture handler:
+
+        ```tsx
+        <Carousel
+          {...}
+          panGestureHandlerProps={{
+            activeOffsetX: [-10, 10],
+          }}
+        />
+        ```
 
 -   RTL
     -   Support to RTL mode with no more configuration needed. But in RTL mode, need to manually set the autoPlayReverse props for autoplay to control scrolling direction.
