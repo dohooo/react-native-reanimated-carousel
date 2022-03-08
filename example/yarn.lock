@@ -1783,6 +1783,11 @@
     find-up "^5.0.0"
     js-yaml "^4.1.0"
 
+"@faker-js/faker@^6.0.0-beta.0":
+  version "6.0.0-beta.0"
+  resolved "https://registry.npmmirror.com/@faker-js/faker/-/faker-6.0.0-beta.0.tgz#8d772b0c37ebc450e3a95114be549e8fd245f16f"
+  integrity sha512-7QdsX5ZqUEz87twuoKEJe7NHn6OHQsVYQpJcK0disnR0XuVb9FEgQUcsViard9OTNN/fG/nZT63V35vieOwZ4Q==
+
 "@gar/promisify@^1.0.1":
   version "1.1.3"
   resolved "https://registry.npmmirror.com/@gar/promisify/-/promisify-1.1.3.tgz#555193ab2e3bb3b6adc3d551c9c030d9e860daf6"
@@ -5790,6 +5795,11 @@ expo-asset@~8.3.1:
     md5-file "^3.2.3"
     path-browserify "^1.0.0"
     url-parse "^1.4.4"
+
+expo-blur@~9.0.3:
+  version "9.0.3"
+  resolved "https://registry.npmmirror.com/expo-blur/-/expo-blur-9.0.3.tgz#5095b5bd04d000f73b351d0e4736767b86b49bbd"
+  integrity sha512-7jMqzo53eg5t9Uc1Tg+yGu9lKL9the4CWAQO0kC6YMhrsDiB13mwOUesC+IScHDTSUKNMGcHI8kN+OmvEWfPig==
 
 expo-cli@^4.0.13:
   version "4.13.0"

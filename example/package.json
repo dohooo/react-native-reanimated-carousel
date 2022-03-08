@@ -18,11 +18,13 @@
         "predeploy": "yarn build:web"
     },
     "dependencies": {
+        "@faker-js/faker": "^6.0.0-beta.0",
         "@react-navigation/core": "^6.1.0",
         "@react-navigation/native": "^6.0.6",
         "@react-navigation/native-stack": "^6.2.5",
         "babel-loader": "^8.2.3",
         "expo": "^41.0.0",
+        "expo-blur": "~9.0.3",
         "expo-constants": "~10.1.3",
         "expo-splash-screen": "~0.10.2",
         "react": "16.13.1",
