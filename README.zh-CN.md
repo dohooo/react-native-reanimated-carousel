@@ -74,6 +74,10 @@
   <a href="./example/src/marquee/index.tsx">
     <img src="assets/marquee.gif" width="300"/>  
   </a>
+  <br/>
+  <a href="./example/src/flow/index.tsx">
+    <img src="assets/flow.gif" width="300"/>  
+  </a>
 </p>
 
 ## 目录

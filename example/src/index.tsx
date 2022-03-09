@@ -19,6 +19,7 @@ import RotateInOutComponent from './rotate-in-out';
 import RotateScaleFadeInOutComponent from './rotate-scale-fade-in-out';
 import AnimTabBarComponent from './anim-tab-bar';
 import MarqueeComponent from './marquee';
+import Flow from './flow';
 import { isWeb } from './utils';
 import { window } from './constants';
 import { QRCode } from './components/QRCode';
@@ -39,6 +40,7 @@ export type RootStackParamList = {
     Parallax: undefined;
     Stack: undefined;
 
+    Flow: undefined;
     Complex: undefined;
     AdvancedParallax: undefined;
     PauseAdvancedParallax: undefined;
@@ -113,6 +115,7 @@ function App() {
                             component={ParallaxComponent}
                         />
                         <Stack.Screen name="Stack" component={StackComponent} />
+                        <Stack.Screen name="Flow" component={Flow} />
                         <Stack.Screen
                             name="Complex"
                             component={ComplexComponent}
