@@ -178,7 +178,7 @@ yarn web:pretty
 
 <p align="center">
   <a href="./sponsorkit/sponsors.svg">
-    <img src='./sponsorkit/sponsors.svg'/>
+    <img src='./sponsorkit/sponsors.png'/>
   </a>
 </p>
 
