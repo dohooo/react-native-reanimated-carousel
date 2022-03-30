@@ -36,6 +36,6 @@ export function useOnProgressChange(
             !!onProgressChange &&
                 runOnJS(onProgressChange)(value, absoluteProgress);
         },
-        [onProgressChange, rawData]
+        [onProgressChange, rawDataLength]
     );
 }

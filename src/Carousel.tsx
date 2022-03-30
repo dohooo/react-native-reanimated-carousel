@@ -56,7 +56,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
                 return handlerOffsetX.value;
             }
             return isNaN(x) ? 0 : x;
-        }, [loop, size, data]);
+        }, [loop, size, dataLength]);
 
         usePropsErrorBoundary(props);
         useOnProgressChange({ size, offsetX, rawData, onProgressChange });
