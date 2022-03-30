@@ -13,23 +13,24 @@ export function useOnProgressChange(
     } & Pick<TCarouselProps, 'onProgressChange'>
 ) {
     const { offsetX, rawData, size, onProgressChange } = opts;
+    const rawDataLength = rawData.length;
     useAnimatedReaction(
         () => offsetX.value,
         (_value) => {
             let value = _value;
 
-            if (rawData.length === DATA_LENGTH.SINGLE_ITEM) {
+            if (rawDataLength === DATA_LENGTH.SINGLE_ITEM) {
                 value = value % size;
             }
 
-            if (rawData.length === DATA_LENGTH.DOUBLE_ITEM) {
+            if (rawDataLength === DATA_LENGTH.DOUBLE_ITEM) {
                 value = value % (size * 2);
             }
 
             let absoluteProgress = Math.abs(value / size);
 
             if (value > 0) {
-                absoluteProgress = rawData.length - absoluteProgress;
+                absoluteProgress = rawDataLength - absoluteProgress;
             }
 
             !!onProgressChange &&
