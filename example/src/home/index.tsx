@@ -28,6 +28,9 @@ const CustomAnimations: Array<Record<'name', keyof RootStackParamList>> = [
         name: 'Flow',
     },
     {
+        name: 'ParallaxLayers',
+    },
+    {
         name: 'AdvancedParallax',
     },
     {

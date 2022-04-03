@@ -17,7 +17,7 @@ English | [简体中文](./README.zh-CN.md)
 -   **It completely solves this** [[problem]](https://github.com/meliorence/react-native-snap-carousel/issues/632) **for `react-native-snap-carousel`!**
 -   **Simple**、**Infinitely scrolling very smooth**、**Fully implemented using Reanimated 2!**
 
-> V2 has been released! Join it! [[v1 docs]](https://github.com/dohooo/react-native-reanimated-carousel/tree/v1.x.x) 
+> V2 has been released! Join it! [[v1 docs]](https://github.com/dohooo/react-native-reanimated-carousel/tree/v1.x.x)
 
 > Support to Web [[demo]](https://dohooo.github.io/react-native-reanimated-carousel/)
 
@@ -78,6 +78,10 @@ English | [简体中文](./README.zh-CN.md)
   <a href="./example/src/flow/index.tsx">
     <img src="assets/flow.gif" width="300"/>  
   </a>
+  <br/>
+  <a href="./example/src/parallax-layers/index.tsx">
+    <img src="assets/parallax-layers.gif" width="300"/>  
+  </a>
 </p>
 
 ## Table of contents
@@ -123,7 +127,7 @@ import Carousel from 'react-native-reanimated-carousel';
 -   Optimizing
 
     -   When rendering a large number of elements, you can use the 'windowSize' property to control how many items of the current element are rendered. The default is full rendering. After testing without this property, frames will drop when rendering 200 empty views. After setting this property, rendering 1000 empty views is still smooth. (The specific number depends on the phone model tested)
-  
+
 -   Used in `ScrollView/FlastList`
 
     -   **[#143](https://github.com/dohooo/react-native-reanimated-carousel/issues/143) - Carousel suppresses ScrollView/FlastList scroll gesture handler:** When using a carousel with a layout oriented to only one direction (vertical/horizontal) and inside a ScrollView/FlatList, it is important for the user experience that the unused axis does not impede the scroll of the list. So that, for example, the x-axis is free we can change the [activeOffsetX](https://docs.swmansion.com/react-native-gesture-handler/docs/1.10.3/api/gesture-handlers/pan-gh/#activeoffsetx) of the gesture handler:
@@ -162,7 +166,9 @@ import Carousel from 'react-native-reanimated-carousel';
 </details>
 
 ## Example
+
 > `:pretty` use pretty images
+
 ```shell
 yarn ios
 yarn ios:pretty

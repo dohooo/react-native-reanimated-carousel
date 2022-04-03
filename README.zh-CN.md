@@ -19,7 +19,7 @@
 
 > v2 已经发布，希望大家喜欢!~ [[v1 文档]](https://github.com/dohooo/react-native-reanimated-carousel/tree/v1.x.x)
 
-> 支持Web端 [[示例]](https://dohooo.github.io/react-native-reanimated-carousel/)
+> 支持 Web 端 [[示例]](https://dohooo.github.io/react-native-reanimated-carousel/)
 
 > 点击图片，查看代码 [[试一下]](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
 
@@ -78,6 +78,10 @@
   <a href="./example/src/flow/index.tsx">
     <img src="assets/flow.gif" width="300"/>  
   </a>
+  <br/>
+  <a href="./example/src/parallax-layers/index.tsx">
+    <img src="assets/parallax-layers.gif" width="300"/>  
+  </a>
 </p>
 
 ## 目录
@@ -125,7 +129,8 @@ import Carousel from 'react-native-reanimated-carousel';
 -   优化
     -   当渲染大量元素时，可使用`windowSize`属性，来控制当前元素的两侧渲染数量，默认为全量渲染。经测试不加此属性，渲染 200 个空 view 时会出现掉帧情况，设置此属性后渲染 1000 个空 view 依旧流畅。（具体数量与测试的手机型号相关）
 -   在`ScrollView/FlastList`中使用
-    -   **[#143](https://github.com/dohooo/react-native-reanimated-carousel/issues/143) - Carousel suppresses ScrollView/FlastList scroll gesture handler:** 当轮播图被放置在ScrollView/FlatList中时，轮播图的部分将无法控制列表滚动，解决办法是我们只允许手势系统识别某一方向，而不是所有方向，在下方例子中我们为了让列表可以向下滑动，所以我们使用[activeOffsetX](https://docs.swmansion.com/react-native-gesture-handler/docs/1.10.3/api/gesture-handlers/pan-gh/#activeoffsetx)属性来控制轮播图只识别横向手势:
+
+    -   **[#143](https://github.com/dohooo/react-native-reanimated-carousel/issues/143) - Carousel suppresses ScrollView/FlastList scroll gesture handler:** 当轮播图被放置在 ScrollView/FlatList 中时，轮播图的部分将无法控制列表滚动，解决办法是我们只允许手势系统识别某一方向，而不是所有方向，在下方例子中我们为了让列表可以向下滑动，所以我们使用[activeOffsetX](https://docs.swmansion.com/react-native-gesture-handler/docs/1.10.3/api/gesture-handlers/pan-gh/#activeoffsetx)属性来控制轮播图只识别横向手势:
 
         ```tsx
         <Carousel
@@ -135,7 +140,7 @@ import Carousel from 'react-native-reanimated-carousel';
           }}
         />
         ```
-    
+
 -   RTL
     -   所有 layout 均完美支持 RTL 模式，并且无需再做任何配置。但在 RTL 模式下使用自动播放时，默认不会自动转换方向，需要结合 autoPlayReverse 来手动控制方向。
 -   EXPO

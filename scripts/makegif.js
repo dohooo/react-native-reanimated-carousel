@@ -3,7 +3,7 @@ const gifify = require('gifify');
 const path = require('path');
 
 const options = {
-    resize: '441:235',
+    resize: '441:632',
     colors: 255,
     fps: 60,
     speed: 0.5,
