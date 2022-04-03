@@ -4,6 +4,7 @@ import Carousel from 'react-native-reanimated-carousel';
 import { SBItem } from '../components/SBItem';
 import SButton from '../components/SButton';
 import { ElementsText } from '../constants';
+import { FadeInRight } from 'react-native-reanimated';
 
 function Index() {
     const [mode, setMode] = React.useState<any>('horizontal-stack');
@@ -16,6 +17,9 @@ function Index() {
     const [autoPlay, setAutoPlay] = React.useState<boolean>(false);
     const [autoPlayReverse, setAutoPlayReverse] =
         React.useState<boolean>(false);
+
+    const data = React.useRef<number[]>([...new Array(6).keys()]).current;
+    const viewCount = 5;
 
     return (
         <View style={{ flex: 1 }}>
@@ -34,12 +38,21 @@ function Index() {
                 loop={loop}
                 autoPlay={autoPlay}
                 autoPlayReverse={autoPlayReverse}
-                data={[...new Array(6).keys()]}
+                data={data}
                 modeConfig={{
                     snapDirection,
                     stackInterval: mode === 'vertical-stack' ? 8 : 18,
                 }}
-                renderItem={({ index }) => <SBItem index={index} key={index} />}
+                customConfig={() => ({ type: 'positive', viewCount })}
+                renderItem={({ index }) => (
+                    <SBItem
+                        index={index}
+                        key={index}
+                        entering={FadeInRight.delay(
+                            (viewCount - index) * 100
+                        ).duration(200)}
+                    />
+                )}
             />
             <View
                 style={{

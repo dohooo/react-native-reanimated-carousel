@@ -1,3 +1,19 @@
+## [2.3.3](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.3-beta.1...v2.3.3) (2022-04-03)
+
+## [2.3.3-beta.1](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.3-beta.0...v2.3.3-beta.1) (2022-03-30)
+
+
+### Bug Fixes
+
+* add *length and remove *data from deps ([fbfd372](https://github.com/dohooo/react-native-reanimated-carousel/commit/fbfd37293cd5931f8843ee3346debfffdf3c404d))
+* https://github.com/dohooo/react-native-reanimated-carousel/issues/66 ([54e74d2](https://github.com/dohooo/react-native-reanimated-carousel/commit/54e74d20d7f6e6f73e8ba45f223578bc9b8bd9b3))
+* update example dependence ([ac2c504](https://github.com/dohooo/react-native-reanimated-carousel/commit/ac2c504b09ee109bad8a8602b844800341e2881b))
+
+
+### Features
+
+* add flow animation ([d5d39a8](https://github.com/dohooo/react-native-reanimated-carousel/commit/d5d39a80cecbd9c5436b1c1c5f4faf8082ba976a))
+
 ## [2.3.3-beta.0](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.2...v2.3.3-beta.0) (2022-03-30)
 
 ## [2.3.2](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.2-beta.1...v2.3.2) (2022-03-03)
