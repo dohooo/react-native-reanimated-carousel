@@ -18,6 +18,7 @@ interface IOpts {
     duration?: number;
     originalLength: number;
     length: number;
+    defaultIndex?: number;
     onScrollBegin?: () => void;
     onScrollEnd?: () => void;
     // the length before fill data
@@ -48,12 +49,13 @@ export function useCarouselController(options: IOpts): ICarouselController {
         length,
         onChange,
         duration,
+        defaultIndex = 0,
     } = options;
 
-    const index = useSharedValue<number>(0);
+    const index = useSharedValue<number>(defaultIndex);
     // The Index displayed to the user
-    const sharedIndex = React.useRef<number>(0);
-    const sharedPreIndex = React.useRef<number>(0);
+    const sharedIndex = React.useRef<number>(defaultIndex);
+    const sharedPreIndex = React.useRef<number>(defaultIndex);
 
     const currentFixedPage = React.useCallback(() => {
         if (loop) {
