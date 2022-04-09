@@ -19,6 +19,7 @@ import RotateInOutComponent from './rotate-in-out';
 import RotateScaleFadeInOutComponent from './rotate-scale-fade-in-out';
 import AnimTabBarComponent from './anim-tab-bar';
 import MarqueeComponent from './marquee';
+import MultipleComponent from './multiple';
 import Flow from './flow';
 import ParallaxLayers from './parallax-layers';
 import { isWeb } from './utils';
@@ -51,6 +52,7 @@ export type RootStackParamList = {
     RotateScaleFadeInOut: undefined;
     AnimTabBar: undefined;
     Marquee: undefined;
+    Multiple: undefined;
 
     SnapCarouselComplex: undefined;
     SnapCarouselLoop: undefined;
@@ -153,6 +155,10 @@ function App() {
                         <Stack.Screen
                             name="Marquee"
                             component={MarqueeComponent}
+                        />
+                        <Stack.Screen
+                            name="Multiple"
+                            component={MultipleComponent}
                         />
 
                         <Stack.Screen

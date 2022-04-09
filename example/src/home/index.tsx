@@ -51,6 +51,9 @@ const CustomAnimations: Array<Record<'name', keyof RootStackParamList>> = [
     {
         name: 'Marquee',
     },
+    {
+        name: 'Multiple',
+    },
 ];
 
 const OtherPage: Array<Record<'name', keyof RootStackParamList>> = [

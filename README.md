@@ -74,7 +74,9 @@ English | [简体中文](./README.zh-CN.md)
   <a href="./example/src/marquee/index.tsx">
     <img src="assets/marquee.gif" width="300"/>  
   </a>
-  <br/>
+  <a href="./example/src/multiple/index.tsx">
+    <img src="assets/multiple.gif" width="300"/>  
+  </a>
   <a href="./example/src/flow/index.tsx">
     <img src="assets/flow.gif" width="300"/>  
   </a>
