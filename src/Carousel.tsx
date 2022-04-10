@@ -42,6 +42,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
             onScrollBegin,
             onProgressChange,
             customAnimation,
+            defaultIndex,
         } = props;
 
         const commonVariables = useCommonVariables(props);
@@ -69,6 +70,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
             disable: !data.length,
             withAnimation,
             originalLength: data.length,
+            defaultIndex,
             onScrollEnd: () => runOnJS(_onScrollEnd)(),
             onScrollBegin: () => !!onScrollBegin && runOnJS(onScrollBegin)(),
             onChange: (i) => !!onSnapToItem && runOnJS(onSnapToItem)(i),
