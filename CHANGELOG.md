@@ -1,3 +1,10 @@
+## [2.3.4](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.3...v2.3.4) (2022-04-10)
+
+
+### Bug Fixes
+
+* "defaultIndex" wasn't define internal values (UI bridge and refs) ([7f7a659](https://github.com/dohooo/react-native-reanimated-carousel/commit/7f7a659a6e9863ecbdc7241d990c0e67c16313d0))
+
 ## [2.3.3](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.3-beta.1...v2.3.3) (2022-04-03)
 
 ## [2.3.3-beta.1](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.3-beta.0...v2.3.3-beta.1) (2022-03-30)
