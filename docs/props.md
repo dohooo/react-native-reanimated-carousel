@@ -62,3 +62,21 @@
 | scrollTo                | ({ count = 1, animated = false, onFinished?: () => void }) => void | Use count to scroll to a position where relative to the current position, scrollTo(-2) is equivalent to prev(2), scrollTo(2) is equivalent to next(2) |
 | （deprecated）goToIndex | (index: number, animated?: boolean) => void                        | Go to index                                                                                                                                           |
 | getCurrentIndex         | ()=>number                                                         | Get current item index                                                                                                                                |
+
+## Pagination
+
+
+| name                      | required | default                                                            | types  | description                          |
+| ------------------------- | -------- | ------------------------------------------------------------------ | ------ | ------------------------------------ |
+| length   | ✅      | 1                                                               | number | Dots length        |
+| style    | ❌       | {}                                                       | Viewstyle | Custom container style |
+| progressValue | ✅ |      | Animated value | Animated value to handle dot animation     |
+| inactiveColor | ❌ |    '#707070'  | String| color of dot when it's inactive    |
+| activeColor | ❌|    '#707070'  | String| color of dot when it's active    |
+| dotSize | ❌|    6  | Number| Dot size    |
+| inactiveScaleSize | ❌|    0.8  | Number| scale size of dot when it's inactive      |
+| activeScaleSize | ❌ |   1   | ANumber| scale size of dot when it's active      |
+| dotStyle | ❌ |    {}  | Viewstyle | Custom dot style   |
+| inactiveOpacity | ❌|    0.5  | Number| opacity of dot when it's inactive     |
+| activeOpacity | ❌ |    1  | Number| opacity of dot when it's active    |
+| activeIndex | ❌ |      | Number| Index of  active item|
