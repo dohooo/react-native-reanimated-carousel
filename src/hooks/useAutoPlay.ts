@@ -34,7 +34,7 @@ export function useAutoPlay(opts: {
         if (!autoPlay) {
             return;
         }
-        timer.current && clearInterval(timer.current);
+        timer.current && clearTimeout(timer.current);
         stopped.current = true;
     }, [autoPlay]);
 
