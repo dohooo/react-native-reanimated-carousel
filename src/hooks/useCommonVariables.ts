@@ -18,6 +18,10 @@ export function useCommonVariables(
     const handlerOffsetX = useSharedValue<number>(defaultHandlerOffsetX);
 
     React.useEffect(() => {
+        /**
+         * TODO @dohooo @gxxgcn
+         * #163 add deps with rawData.
+         **/
         handlerOffsetX.value = defaultHandlerOffsetX;
     }, [vertical, handlerOffsetX, defaultHandlerOffsetX]);
 
