@@ -11,7 +11,7 @@ interface ICommonVariables {
 export function useCommonVariables(
     props: TInitializeCarouselProps<any>
 ): ICommonVariables {
-    const { vertical, height, width, data, defaultIndex } = props;
+    const { vertical, height, width, data, defaultIndex, rawData } = props;
     const size = vertical ? height : width;
     const validLength = data.length - 1;
     const defaultHandlerOffsetX = -Math.abs(defaultIndex * size);
@@ -23,7 +23,7 @@ export function useCommonVariables(
          * #163 add deps with rawData.
          **/
         handlerOffsetX.value = defaultHandlerOffsetX;
-    }, [vertical, handlerOffsetX, defaultHandlerOffsetX]);
+    }, [vertical, handlerOffsetX, defaultHandlerOffsetX, rawData]);
 
     return {
         size,
