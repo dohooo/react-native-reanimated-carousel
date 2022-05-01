@@ -33,6 +33,7 @@ export function useInitProps<T>(
         style = {},
         panGestureHandlerProps = {},
         pagingEnabled = true,
+        autoFillData = true,
         snapEnabled = props.enableSnap ?? true,
         width: _width,
         height: _height,
@@ -43,7 +44,7 @@ export function useInitProps<T>(
     const autoPlayInterval = Math.max(_autoPlayInterval, 0);
 
     const data = React.useMemo<T[]>(() => {
-        if (!loop) return rawData;
+        if (!loop || !autoFillData) return rawData;
 
         if (rawData.length === DATA_LENGTH.SINGLE_ITEM) {
             return [rawData[0], rawData[0], rawData[0]];
@@ -54,7 +55,7 @@ export function useInitProps<T>(
         }
 
         return rawData;
-    }, [rawData, loop]);
+    }, [rawData, loop, autoFillData]);
 
     if (props.mode === 'vertical-stack' || props.mode === 'horizontal-stack') {
         if (!props.modeConfig) {

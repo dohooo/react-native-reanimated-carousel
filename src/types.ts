@@ -70,6 +70,14 @@ export type TCarouselProps<T = any> = {
      */
     data: T[];
     /**
+     * Auto fill data array to allow loop playback when the loop props is true.
+     * @default true
+     * @example
+     * [1] => [1, 1, 1]
+     * [1, 2] => [1, 2, 1, 2]
+     */
+    autoFillData?: boolean;
+    /**
      * Default index
      * @default 0
      */
