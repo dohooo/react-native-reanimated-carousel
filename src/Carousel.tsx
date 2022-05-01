@@ -191,7 +191,6 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
                     style={[
                         styles.container,
                         { width: width || '100%', height: height || '100%' },
-                        style,
                     ]}
                 >
                     <ScrollViewGesture
