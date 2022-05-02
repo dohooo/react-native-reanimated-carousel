@@ -1,3 +1,10 @@
+## [2.3.7](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.6...v2.3.7) (2022-05-02)
+
+
+### Bug Fixes
+
+* fix styles prop bug ([439ac4d](https://github.com/dohooo/react-native-reanimated-carousel/commit/439ac4d622f720cba287aa264573517218a365d6))
+
 ## [2.3.6](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.5...v2.3.6) (2022-05-02)
 
 
