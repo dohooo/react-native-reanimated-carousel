@@ -273,7 +273,11 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
 
     return (
         <Animated.View
-            style={[styles.container, directionStyle]}
+            style={[
+                styles.container,
+                directionStyle,
+                { width: '100%', height: '100%' },
+            ]}
             onTouchStart={onTouchBegin}
             onTouchEnd={onTouchEnd}
         >
