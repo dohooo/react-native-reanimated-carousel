@@ -39,7 +39,6 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
     const {
         props: {
             vertical,
-            style,
             data,
             pagingEnabled,
             snapEnabled,
@@ -274,7 +273,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
 
     return (
         <Animated.View
-            style={[styles.container, directionStyle, style]}
+            style={[styles.container, directionStyle]}
             onTouchStart={onTouchBegin}
             onTouchEnd={onTouchEnd}
         >
