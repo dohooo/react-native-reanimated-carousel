@@ -1,3 +1,17 @@
+## [2.3.6](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.5...v2.3.6) (2022-05-02)
+
+
+### Bug Fixes
+
+* current index doesn't reset when modify data length ([99f44bc](https://github.com/dohooo/react-native-reanimated-carousel/commit/99f44bc995cf45970b151528aa9478cc03e1ceef)), closes [#163](https://github.com/dohooo/react-native-reanimated-carousel/issues/163)
+* duplicate style ([7e7e00f](https://github.com/dohooo/react-native-reanimated-carousel/commit/7e7e00f4ee18bf92749f9e2224d4e0c7e98647ba)), closes [#169](https://github.com/dohooo/react-native-reanimated-carousel/issues/169)
+* refactoring logic of withAutoFillData, Add onProgressChange value boundary ([101456a](https://github.com/dohooo/react-native-reanimated-carousel/commit/101456a4e7a3f4719db844b302bd6d5f912206cb)), closes [#158](https://github.com/dohooo/react-native-reanimated-carousel/issues/158)
+
+
+### Features
+
+* add autoFillData props, It controls whether the data is automatically populated ([309688c](https://github.com/dohooo/react-native-reanimated-carousel/commit/309688cb6c862f059e3915df9dce1c3f62e8e146)), closes [#170](https://github.com/dohooo/react-native-reanimated-carousel/issues/170)
+
 ## [2.3.5](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.4...v2.3.5) (2022-04-27)
 
 ## [2.3.4](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.3...v2.3.4) (2022-04-10)
