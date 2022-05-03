@@ -1,3 +1,10 @@
+## [2.3.9](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.8...v2.3.9) (2022-05-03)
+
+
+### Bug Fixes
+
+* update typescript config ([8fa86a2](https://github.com/dohooo/react-native-reanimated-carousel/commit/8fa86a269afccdde77a9a2abe7ea75d658f22c9c))
+
 ## [2.3.8](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.7...v2.3.8) (2022-05-02)
 
 
