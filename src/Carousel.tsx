@@ -22,6 +22,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
         const props = useInitProps(_props);
 
         const {
+            testID,
             data,
             rawData,
             loop,
@@ -201,6 +202,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
                         { width: width || '100%', height: height || '100%' },
                         style,
                     ]}
+                    testID={testID}
                 >
                     <ScrollViewGesture
                         size={size}

@@ -145,6 +145,10 @@ export type TCarouselProps<T = any> = {
      */
     withAnimation?: WithAnimation;
     /**
+     * Used to locate this view in end-to-end tests.
+     */
+    testID?: string;
+    /**
      * Custom carousel config.
      */
     customConfig?: () => CustomConfig;
