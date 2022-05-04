@@ -1,5 +1,9 @@
 import React from 'react';
-import Animated, { runOnJS, useDerivedValue } from 'react-native-reanimated';
+import Animated, {
+    runOnJS,
+    runOnUI,
+    useDerivedValue,
+} from 'react-native-reanimated';
 
 import { useCarouselController } from './hooks/useCarouselController';
 import { useAutoPlay } from './hooks/useAutoPlay';
@@ -74,28 +78,27 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
         const carouselController = useCarouselController({
             loop,
             size,
+            data,
+            autoFillData,
             handlerOffsetX,
-            length: data.length,
-            disable: !data.length,
             withAnimation,
-            originalLength: data.length,
             defaultIndex,
             onScrollEnd: () => runOnJS(_onScrollEnd)(),
             onScrollBegin: () => !!onScrollBegin && runOnJS(onScrollBegin)(),
-            onChange: (i) => !!onSnapToItem && runOnJS(onSnapToItem)(i),
             duration: scrollAnimationDuration,
         });
 
         const {
+            sharedIndex,
+            sharedPreIndex,
+            to,
             next,
             prev,
-            sharedPreIndex,
-            sharedIndex,
-            computedIndex,
+            scrollTo,
             getCurrentIndex,
         } = carouselController;
 
-        const { start, pause } = useAutoPlay({
+        const { start: startAutoPlay, pause: pauseAutoPlay } = useAutoPlay({
             autoPlay,
             autoPlayInterval,
             autoPlayReverse,
@@ -103,29 +106,44 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
         });
 
         const _onScrollEnd = React.useCallback(() => {
-            computedIndex();
-            onScrollEnd?.(sharedPreIndex.current, sharedIndex.current);
-        }, [sharedPreIndex, sharedIndex, computedIndex, onScrollEnd]);
+            'worklet';
+            const _sharedIndex = Math.round(sharedIndex.value);
+            const _sharedPreIndex = Math.round(sharedPreIndex.value);
+
+            if (onSnapToItem) {
+                runOnJS(onSnapToItem)(_sharedIndex);
+            }
+            if (onScrollEnd) {
+                runOnJS(onScrollEnd)(_sharedPreIndex, _sharedIndex);
+            }
+        }, [onSnapToItem, onScrollEnd, sharedIndex, sharedPreIndex]);
 
         const scrollViewGestureOnScrollBegin = React.useCallback(() => {
-            pause();
+            pauseAutoPlay();
             onScrollBegin?.();
-        }, [onScrollBegin, pause]);
+        }, [onScrollBegin, pauseAutoPlay]);
 
         const scrollViewGestureOnScrollEnd = React.useCallback(() => {
-            start();
-            _onScrollEnd();
-        }, [_onScrollEnd, start]);
+            startAutoPlay();
+            /**
+             * TODO magic
+             */
+            runOnUI(_onScrollEnd)();
+        }, [_onScrollEnd, startAutoPlay]);
 
-        const scrollViewGestureOnTouchBegin = React.useCallback(pause, [pause]);
+        const scrollViewGestureOnTouchBegin = React.useCallback(pauseAutoPlay, [
+            pauseAutoPlay,
+        ]);
 
-        const scrollViewGestureOnTouchEnd = React.useCallback(start, [start]);
+        const scrollViewGestureOnTouchEnd = React.useCallback(startAutoPlay, [
+            startAutoPlay,
+        ]);
 
         const goToIndex = React.useCallback(
             (i: number, animated?: boolean) => {
-                carouselController.to(i, animated);
+                to(i, animated);
             },
-            [carouselController]
+            [to]
         );
 
         React.useImperativeHandle(
@@ -135,15 +153,9 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
                 prev,
                 getCurrentIndex,
                 goToIndex,
-                scrollTo: carouselController.scrollTo,
+                scrollTo,
             }),
-            [
-                getCurrentIndex,
-                goToIndex,
-                next,
-                prev,
-                carouselController.scrollTo,
-            ]
+            [getCurrentIndex, goToIndex, next, prev, scrollTo]
         );
 
         const visibleRanges = useVisibleRanges({

@@ -68,24 +68,22 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
     const _withSpring = React.useCallback(
         (toValue: number, onFinished?: () => void) => {
             'worklet';
-            const callback = (isFinished: boolean) => {
-                'worklet';
-                if (isFinished) {
-                    onFinished && runOnJS(onFinished)();
-                }
-            };
-
             const defaultWithAnimation: WithTimingAnimation = {
                 type: 'timing',
                 config: {
-                    duration: scrollAnimationDuration,
+                    duration: scrollAnimationDuration + 100,
                     easing: Easing.easeOutQuart,
                 },
             };
 
             return dealWithAnimation(withAnimation ?? defaultWithAnimation)(
                 toValue,
-                callback
+                (isFinished: boolean) => {
+                    'worklet';
+                    if (isFinished) {
+                        onFinished && runOnJS(onFinished)();
+                    }
+                }
             );
         },
         [scrollAnimationDuration, withAnimation]

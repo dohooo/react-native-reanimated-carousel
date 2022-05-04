@@ -12,6 +12,24 @@ type BaseParams<T extends object = {}> = {
     loop: boolean;
 } & T;
 
+export function convertToSharedIndex(
+    params: BaseParams<{ index: number; rawDataLength: number }>
+) {
+    'worklet';
+    const { loop, rawDataLength, index, autoFillData } = params;
+
+    if (isAutoFillData({ loop, autoFillData })) {
+        switch (rawDataLength) {
+            case SINGLE_ITEM:
+                return 0;
+            case DOUBLE_ITEM:
+                return index % 2;
+        }
+    }
+
+    return index;
+}
+
 export function computedOffsetXValueWithAutoFillData(
     params: BaseParams<{
         rawDataLength: number;

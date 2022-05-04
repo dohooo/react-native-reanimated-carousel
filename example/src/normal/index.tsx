@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native-ui-lib';
-import Carousel from 'react-native-reanimated-carousel';
+import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { SBItem } from '../components/SBItem';
 import SButton from '../components/SButton';
 import { ElementsText, window } from '../constants';
@@ -8,9 +8,11 @@ import { ElementsText, window } from '../constants';
 const PAGE_WIDTH = window.width;
 
 function Index() {
+    const [data, setData] = React.useState([...new Array(6).keys()]);
     const [isVertical, setIsVertical] = React.useState(false);
     const [isFast, setIsFast] = React.useState(false);
     const [isAutoPlay, setIsAutoPlay] = React.useState(false);
+    const ref = React.useRef<ICarouselInstance>(null);
 
     const baseOptions = isVertical
         ? ({
@@ -29,9 +31,11 @@ function Index() {
             <Carousel
                 {...baseOptions}
                 loop
+                ref={ref}
                 autoPlay={isAutoPlay}
                 autoPlayInterval={isFast ? 100 : 2000}
-                data={[...new Array(6).keys()]}
+                data={data}
+                onSnapToItem={(index) => console.log('current index:', index)}
                 renderItem={({ index }) => <SBItem key={index} index={index} />}
             />
             <SButton
@@ -54,6 +58,24 @@ function Index() {
                 }}
             >
                 {ElementsText.AUTOPLAY}:{`${isAutoPlay}`}
+            </SButton>
+            <SButton
+                onPress={() => {
+                    console.log(ref.current?.getCurrentIndex());
+                }}
+            >
+                Log current index
+            </SButton>
+            <SButton
+                onPress={() => {
+                    setData(
+                        data.length === 6
+                            ? [...new Array(8).keys()]
+                            : [...new Array(6).keys()]
+                    );
+                }}
+            >
+                Change data length to:{data.length === 6 ? 8 : 6}
             </SButton>
         </View>
     );
