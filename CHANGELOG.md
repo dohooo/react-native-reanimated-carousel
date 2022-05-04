@@ -1,3 +1,15 @@
+## [2.3.10](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.9...v2.3.10) (2022-05-04)
+
+
+### Bug Fixes
+
+* getCurrentIndex always return last snap index even after multiple data changes ([9b03a4d](https://github.com/dohooo/react-native-reanimated-carousel/commit/9b03a4d7f53bf22c0ee78dc91ec74f42b865357b)), closes [#178](https://github.com/dohooo/react-native-reanimated-carousel/issues/178)
+
+
+### Features
+
+* add testID props for e2e test ([a66eecb](https://github.com/dohooo/react-native-reanimated-carousel/commit/a66eecbe1603edb577ced79c63941d4d25c60ecc)), closes [#177](https://github.com/dohooo/react-native-reanimated-carousel/issues/177)
+
 ## [2.3.9](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.8...v2.3.9) (2022-05-03)
 
 
