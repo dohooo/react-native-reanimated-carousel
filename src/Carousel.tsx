@@ -107,8 +107,9 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
 
         const _onScrollEnd = React.useCallback(() => {
             'worklet';
-            const _sharedIndex = Math.round(sharedIndex.value);
-            const _sharedPreIndex = Math.round(sharedPreIndex.value);
+            const _sharedIndex = Math.round(sharedIndex.value) % rawData.length;
+            const _sharedPreIndex =
+                Math.round(sharedPreIndex.value) % rawData.length;
 
             if (onSnapToItem) {
                 runOnJS(onSnapToItem)(_sharedIndex);
@@ -116,7 +117,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
             if (onScrollEnd) {
                 runOnJS(onScrollEnd)(_sharedPreIndex, _sharedIndex);
             }
-        }, [onSnapToItem, onScrollEnd, sharedIndex, sharedPreIndex]);
+        }, [onSnapToItem, onScrollEnd, rawData, sharedIndex, sharedPreIndex]);
 
         const scrollViewGestureOnScrollBegin = React.useCallback(() => {
             pauseAutoPlay();
