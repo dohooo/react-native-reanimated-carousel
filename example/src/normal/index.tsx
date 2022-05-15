@@ -77,6 +77,20 @@ function Index() {
             >
                 Change data length to:{data.length === 6 ? 8 : 6}
             </SButton>
+            <SButton
+                onPress={() => {
+                    ref.current?.scrollTo({ count: -1, animated: true });
+                }}
+            >
+                prev
+            </SButton>
+            <SButton
+                onPress={() => {
+                    ref.current?.scrollTo({ count: 1, animated: true });
+                }}
+            >
+                next
+            </SButton>
         </View>
     );
 }

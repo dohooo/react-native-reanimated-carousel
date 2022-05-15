@@ -51,6 +51,7 @@
         "fiction-expo-restart": "^1.1.0",
         "gh-pages": "^3.2.3",
         "react-native-gesture-handler": "~2.1.0",
-        "react-native-reanimated": "~2.3.1"
+        "react-native-reanimated": "~2.3.1",
+        "typescript": "~4.3.5"
     }
 }
