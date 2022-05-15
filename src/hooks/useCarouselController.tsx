@@ -3,7 +3,7 @@ import type Animated from 'react-native-reanimated';
 import { Easing } from '../constants';
 import {
     runOnJS,
-    useAnimatedReaction,
+    useDerivedValue,
     useSharedValue,
 } from 'react-native-reanimated';
 import type {
@@ -76,27 +76,29 @@ export function useCarouselController(options: IOpts): ICarouselController {
         );
     }, [handlerOffsetX, dataInfo, size, loop]);
 
-    const computedIndex = React.useCallback(
-        (handlerOffsetXValue: number) => {
-            'worklet';
-            sharedPreIndex.value = sharedIndex.value;
-            const toInt = (handlerOffsetXValue / size) % dataInfo.length;
-            const isPositive = handlerOffsetXValue <= 0;
-            const i = isPositive
-                ? Math.abs(toInt)
-                : Math.abs(toInt > 0 ? dataInfo.length - toInt : 0);
-            index.value = i;
-            sharedIndex.value = convertToSharedIndex({
-                loop,
-                rawDataLength: dataInfo.originalLength,
-                autoFillData: autoFillData!,
-                index: i,
-            });
-        },
-        [sharedPreIndex, sharedIndex, size, dataInfo, index, loop, autoFillData]
-    );
-
-    useAnimatedReaction(() => handlerOffsetX.value, computedIndex, [
+    useDerivedValue(() => {
+        const handlerOffsetXValue = handlerOffsetX.value;
+        sharedPreIndex.value = sharedIndex.value;
+        const toInt = (handlerOffsetXValue / size) % dataInfo.length;
+        const isPositive = handlerOffsetXValue <= 0;
+        const i = isPositive
+            ? Math.abs(toInt)
+            : Math.abs(toInt > 0 ? dataInfo.length - toInt : 0);
+        index.value = i;
+        sharedIndex.value = convertToSharedIndex({
+            loop,
+            rawDataLength: dataInfo.originalLength,
+            autoFillData: autoFillData!,
+            index: i,
+        });
+    }, [
+        sharedPreIndex,
+        sharedIndex,
+        size,
+        dataInfo,
+        index,
+        loop,
+        autoFillData,
         handlerOffsetX,
     ]);
 
