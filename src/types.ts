@@ -172,7 +172,7 @@ export type TCarouselProps<T = any> = {
     /**
      * On scroll end
      */
-    onScrollEnd?: (previous: number, current: number) => void;
+    onScrollEnd?: (index: number) => void;
     /**
      * On progress change
      * @param offsetProgress Total of offset distance (0 390 780 ...)

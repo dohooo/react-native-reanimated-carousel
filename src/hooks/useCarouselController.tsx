@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import type Animated from 'react-native-reanimated';
 import { Easing } from '../constants';
 import {
     runOnJS,
-    useDerivedValue,
+    useAnimatedReaction,
     useSharedValue,
 } from 'react-native-reanimated';
 import type {
@@ -13,6 +13,7 @@ import type {
 } from '../types';
 import { dealWithAnimation } from '@/utils/dealWithAnimation';
 import { convertToSharedIndex } from '@/utils/computedWithAutoFillData';
+import { round } from '@/utils/log';
 
 interface IOpts {
     loop: boolean;
@@ -28,8 +29,7 @@ interface IOpts {
 }
 
 export interface ICarouselController {
-    sharedIndex: Animated.SharedValue<number>;
-    sharedPreIndex: Animated.SharedValue<number>;
+    getSharedIndex: () => number;
     prev: (opts?: TCarouselActionOptions) => void;
     next: (opts?: TCarouselActionOptions) => void;
     getCurrentIndex: () => number;
@@ -60,8 +60,8 @@ export function useCarouselController(options: IOpts): ICarouselController {
 
     const index = useSharedValue<number>(defaultIndex);
     // The Index displayed to the user
-    const sharedIndex = useSharedValue<number>(defaultIndex);
-    const sharedPreIndex = useSharedValue<number>(defaultIndex);
+    const sharedIndex = useRef<number>(defaultIndex);
+    const sharedPreIndex = useRef<number>(defaultIndex);
 
     const currentFixedPage = React.useCallback(() => {
         if (loop) {
@@ -76,31 +76,46 @@ export function useCarouselController(options: IOpts): ICarouselController {
         );
     }, [handlerOffsetX, dataInfo, size, loop]);
 
-    useDerivedValue(() => {
-        const handlerOffsetXValue = handlerOffsetX.value;
-        sharedPreIndex.value = sharedIndex.value;
-        const toInt = (handlerOffsetXValue / size) % dataInfo.length;
-        const isPositive = handlerOffsetXValue <= 0;
-        const i = isPositive
-            ? Math.abs(toInt)
-            : Math.abs(toInt > 0 ? dataInfo.length - toInt : 0);
-        index.value = i;
-        sharedIndex.value = convertToSharedIndex({
+    function setSharedIndex(newSharedIndex: number) {
+        sharedIndex.current = newSharedIndex;
+    }
+
+    useAnimatedReaction(
+        () => {
+            const handlerOffsetXValue = handlerOffsetX.value;
+            const toInt = round(handlerOffsetXValue / size) % dataInfo.length;
+            const isPositive = handlerOffsetXValue <= 0;
+            const i = isPositive
+                ? Math.abs(toInt)
+                : Math.abs(toInt > 0 ? dataInfo.length - toInt : 0);
+
+            const newSharedIndexValue = convertToSharedIndex({
+                loop,
+                rawDataLength: dataInfo.originalLength,
+                autoFillData: autoFillData!,
+                index: i,
+            });
+
+            return {
+                i,
+                newSharedIndexValue,
+            };
+        },
+        ({ i, newSharedIndexValue }) => {
+            index.value = i;
+            runOnJS(setSharedIndex)(newSharedIndexValue);
+        },
+        [
+            sharedPreIndex,
+            sharedIndex,
+            size,
+            dataInfo,
+            index,
             loop,
-            rawDataLength: dataInfo.originalLength,
-            autoFillData: autoFillData!,
-            index: i,
-        });
-    }, [
-        sharedPreIndex,
-        sharedIndex,
-        size,
-        dataInfo,
-        index,
-        loop,
-        autoFillData,
-        handlerOffsetX,
-    ]);
+            autoFillData,
+            handlerOffsetX,
+        ]
+    );
 
     const getCurrentIndex = React.useCallback(() => {
         return index.value;
@@ -255,12 +270,11 @@ export function useCarouselController(options: IOpts): ICarouselController {
     );
 
     return {
-        sharedIndex,
-        sharedPreIndex,
         to,
         next,
         prev,
         scrollTo,
         getCurrentIndex,
+        getSharedIndex: () => sharedIndex.current,
     };
 }
