@@ -1,3 +1,10 @@
+# [2.4.0](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.11...v2.4.0) (2022-05-18)
+
+
+### Bug Fixes
+
+* index bug ([57a18ad](https://github.com/dohooo/react-native-reanimated-carousel/commit/57a18ad8f3382b737030b29a5bbc449fbcf08cb7)), closes [#185](https://github.com/dohooo/react-native-reanimated-carousel/issues/185)
+
 ## [2.3.11](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.10...v2.3.11) (2022-05-15)
 
 
