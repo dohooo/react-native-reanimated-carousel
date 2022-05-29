@@ -1,3 +1,16 @@
+# [2.5.0](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.4.0...v2.5.0) (2022-05-29)
+
+
+### Bug Fixes
+
+* modify styles prop types ([c32a98c](https://github.com/dohooo/react-native-reanimated-carousel/commit/c32a98cb5667b3b97601186726869e73efcb924e)), closes [#195](https://github.com/dohooo/react-native-reanimated-carousel/issues/195)
+
+
+### Features
+
+* add index argument, can jump to specific position. And remove goToIndex prop in ref ([138e606](https://github.com/dohooo/react-native-reanimated-carousel/commit/138e606dccf8c94c2de800076695f38654ab911e)), closes [#196](https://github.com/dohooo/react-native-reanimated-carousel/issues/196)
+* always return the real index ([03216a5](https://github.com/dohooo/react-native-reanimated-carousel/commit/03216a5761bd04a9220233f1bfbdd6dcb6549b7f)), closes [#192](https://github.com/dohooo/react-native-reanimated-carousel/issues/192)
+
 # [2.4.0](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.3.11...v2.4.0) (2022-05-18)
 
 
