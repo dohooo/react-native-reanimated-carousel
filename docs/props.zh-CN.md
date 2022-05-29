@@ -57,10 +57,9 @@
 
 ## Ref
 
-| name              | types                                                              | description                                                                                        |
-| ----------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| prev              | ({ count = 1, animated = false, onFinished?: () => void }) => void | 切换至上一项，可以指定`count`决定切换的数量                                                        |
-| next              | ({ count = 1, animated = false, onFinished?: () => void }) => void | 切换至下一张，可以指定`count`决定切换的数量                                                        |
-| scrollTo          | ({ count = 1, animated = false, onFinished?: () => void }) => void | 切换到距离当前相对位置为`count`的位置，`scrollTo(-2)`等价于`prev(2)`，`scrollTo(2)`等价于`next(2)` |
-| （弃用）goToIndex | (index: number, animated?: boolean) => void                        | 切换至指定下标元素                                                                                 |
-| getCurrentIndex   | ()=>number                                                         | 获得当前轮播图下标                                                                                 |
+| name            | types                                                                                  | description                                                                                                                                                                     |
+| --------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| prev            | ({ count: number, animated: boolean, onFinished?: () => void }) => void                | 切换至上一项，可以指定`count`决定切换的数量                                                                                                                                     |
+| next            | ({ count: number, animated: boolean, onFinished?: () => void }) => void                | 切换至下一张，可以指定`count`决定切换的数量                                                                                                                                     |
+| scrollTo        | ({ index: number, count: number, animated: boolean, onFinished?: () => void }) => void | 切换到距离当前相对位置为`count`的位置，`scrollTo({count:-2})`等价于`prev(2)`，`scrollTo({count:2})`等价于`next(2)`. 同样可以跳转到指定位置 `scrollTo({index:2,animated:false})` |
+| getCurrentIndex | ()=>number                                                                             | 获得当前轮播图下标                                                                                                                                                              |

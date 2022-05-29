@@ -33,7 +33,6 @@ export interface ICarouselController {
     prev: (opts?: TCarouselActionOptions) => void;
     next: (opts?: TCarouselActionOptions) => void;
     getCurrentIndex: () => number;
-    to: (index: number, animated?: boolean) => void;
     scrollTo: (opts?: TCarouselActionOptions) => void;
 }
 
@@ -225,21 +224,22 @@ export function useCarouselController(options: IOpts): ICarouselController {
     );
 
     const to = React.useCallback(
-        (idx: number, animated: boolean = false) => {
-            if (idx === index.value) return;
+        (opts: { i: number; animated: boolean; onFinished?: () => void }) => {
+            const { i, animated = false, onFinished } = opts;
+            if (i === index.value) return;
             if (!canSliding()) return;
 
             onScrollBegin?.();
 
-            const offset = handlerOffsetX.value + (index.value - idx) * size;
+            const offset = handlerOffsetX.value + (index.value - i) * size;
 
             if (animated) {
-                index.value = idx;
-                handlerOffsetX.value = scrollWithTiming(offset);
+                index.value = i;
+                handlerOffsetX.value = scrollWithTiming(offset, onFinished);
             } else {
                 handlerOffsetX.value = offset;
-                index.value = idx;
-                runOnJS(onScrollEnd)();
+                index.value = i;
+                onFinished?.();
             }
         },
         [
@@ -249,28 +249,34 @@ export function useCarouselController(options: IOpts): ICarouselController {
             handlerOffsetX,
             size,
             scrollWithTiming,
-            onScrollEnd,
         ]
     );
 
     const scrollTo = React.useCallback(
         (opts: TCarouselActionOptions = {}) => {
-            const { count, animated = false, onFinished } = opts;
+            const { index: i, count, animated = false, onFinished } = opts;
+
+            if (i) {
+                to({ i, animated, onFinished });
+                return;
+            }
+
             if (!count) {
                 return;
             }
+
             const n = Math.round(count);
+
             if (n < 0) {
                 prev({ count: Math.abs(n), animated, onFinished });
             } else {
                 next({ count: n, animated, onFinished });
             }
         },
-        [prev, next]
+        [prev, next, to]
     );
 
     return {
-        to,
         next,
         prev,
         scrollTo,

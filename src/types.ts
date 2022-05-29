@@ -189,21 +189,16 @@ export interface ICarouselInstance {
      * Scroll to previous item, it takes one optional argument (count),
      * which allows you to specify how many items to cross
      */
-    prev: (opts?: TCarouselActionOptions) => void;
+    prev: (opts?: Omit<TCarouselActionOptions, 'index'>) => void;
     /**
      * Scroll to next item, it takes one optional argument (count),
      * which allows you to specify how many items to cross
      */
-    next: (opts?: TCarouselActionOptions) => void;
+    next: (opts?: Omit<TCarouselActionOptions, 'index'>) => void;
     /**
      * Get current item index
      */
     getCurrentIndex: () => number;
-    /**
-     * Go to index
-     * @deprecated use scrollTo instead
-     */
-    goToIndex: (index: number, animated?: boolean) => void;
     /**
      * Use value to scroll to a position where relative to the current position,
      * scrollTo(-2) is equivalent to prev(2), scrollTo(2) is equivalent to next(2)
@@ -222,6 +217,7 @@ export type CarouselRenderItem<ItemT> = (
 ) => React.ReactElement;
 
 export interface TCarouselActionOptions {
+    index?: number;
     count?: number;
     animated?: boolean;
     onFinished?: () => void;
