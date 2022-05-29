@@ -1,4 +1,4 @@
-import type { ViewStyle } from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
 import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
 import type {
     AnimatedStyleProp,
@@ -104,7 +104,7 @@ export type TCarouselProps<T = any> = {
     /**
      * Carousel container style
      */
-    style?: ViewStyle;
+    style?: StyleProp<ViewStyle>;
     /**
      * PanGestureHandler props
      */
