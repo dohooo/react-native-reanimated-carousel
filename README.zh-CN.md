@@ -183,6 +183,14 @@ yarn web
 yarn web:pretty
 ```
 
+## 赞助商
+
+<p align="center">
+  <a href="./sponsorkit/sponsors.svg">
+    <img src='./sponsorkit/sponsors.svg'/>
+  </a>
+</p>
+
 ## 许可
 
 MIT
