@@ -256,7 +256,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
         (opts: TCarouselActionOptions = {}) => {
             const { index: i, count, animated = false, onFinished } = opts;
 
-            if (i) {
+            if (typeof i === 'number' && i > -1) {
                 to({ i, animated, onFinished });
                 return;
             }
