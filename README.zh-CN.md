@@ -23,69 +23,28 @@
 
 > 点击图片，查看代码 [[试一下]](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
 
-<p align="center">
-  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/normal/index.tsx">
-    <img src="assets/normal-horizontal.gif" width="300"/>  
-  </a>
-  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/normal/index.tsx">
-    <img src="assets/normal-vertical.gif" width="300"/>  
-  </a>
-  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/parallax/index.tsx">
-    <img src="assets/parallax-horizontal.gif" width="300"/>  
-  </a>
-  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/parallax/index.tsx">
-    <img src="assets/parallax-vertical.gif" width="300"/>  
-  </a>
-  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/stack/index.tsx">
-    <img src="assets/stack-horizontal-left.gif" width="300"/>  
-  </a>
-  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/stack/index.tsx">
-    <img src="assets/stack-horizontal-right.gif" width="300"/>  
-  </a>
-  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/stack/index.tsx">
-    <img src="assets/stack-vertical-left.gif" width="300"/>  
-  </a>
-  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/stack/index.tsx">
-    <img src="assets/stack-vertical-right.gif" width="300"/>  
-  </a>
-</p>
+[<img src="assets/normal-horizontal.gif" width="33%"/>](./example/src/normal/index.tsx)
+[<img src="assets/normal-vertical.gif" width="33%"/>](./example/src/normal/index.tsx)
+[<img src="assets/parallax-horizontal.gif" width="33%"/>](./example/src/parallax/index.tsx)
+[<img src="assets/parallax-vertical.gif" width="33%"/>](./example/src/parallax/index.tsx)
+[<img src="assets/stack-horizontal-left.gif" width="33%"/>](./example/src/stack/index.tsx)
+[<img src="assets/stack-horizontal-right.gif" width="33%"/>](./example/src/stack/index.tsx)
+[<img src="assets/stack-vertical-left.gif" width="33%"/>](./example/src/stack/index.tsx)
+[<img src="assets/stack-vertical-right.gif" width="33%"/>](./example/src/stack/index.tsx)
 
 > 现在你可以和我们一起来制作酷炫的动画了！ 非常简单! [[详情]](./docs/custom-animation.zh-CN.md)
 
-<p align="center">
-  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/advanced-parallax/index.tsx">
-    <img src="assets/advanced-parallax.gif" width="300"/>  
-  </a>
-  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/pause-advanced-parallax/index.tsx">
-    <img src="assets/pause-advanced-parallax.gif" width="300"/>  
-  </a>
-  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/scale-fade-in-out/index.tsx">
-    <img src="assets/scale-fade-in-out.gif" width="300"/>  
-  </a>
-  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/rotate-scale-fade-in-out/index.tsx">
-    <img src="assets/rotate-scale-fade-in-out.gif" width="300"/>  
-  </a>
-  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/rotate-in-out/index.tsx">
-    <img src="assets/rotate-in-out.gif" width="300"/>  
-  </a>
-  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/anim-tab-bar/index.tsx">
-    <img src="assets/anim-tab-bar.gif" width="300"/>  
-  </a>
-  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/marquee/index.tsx">
-    <img src="assets/marquee.gif" width="300"/>  
-  </a>
-  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/multiple/index.tsx">
-    <img src="assets/multiple.gif" width="300"/>  
-  </a>
-  <br/>
-  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/flow/index.tsx">
-    <img src="assets/flow.gif" width="300"/>  
-  </a>
-  <br/>
-  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/parallax-layers/index.tsx">
-    <img src="assets/parallax-layers.gif" width="300"/>  
-  </a>
-</p>
+[<img src="assets/advanced-parallax.gif" width="33%"/>](./example/src/advanced-parallax/index.tsx)
+[<img src="assets/pause-advanced-parallax.gif" width="33%"/>](./example/src/pause-advanced-parallax/index.tsx)
+[<img src="assets/scale-fade-in-out.gif" width="33%"/>](./example/src/scale-fade-in-out/index.tsx)
+[<img src="assets/rotate-scale-fade-in-out.gif" width="33%"/>](./example/src/rotate-scale-fade-in-out/index.tsx)
+[<img src="assets/rotate-in-out.gif" width="33%"/>](./example/src/rotate-in-out/index.tsx)
+[<img src="assets/anim-tab-bar.gif" width="33%"/>](./example/src/anim-tab-bar/index.tsx)
+[<img src="assets/marquee.gif" width="33%"/>](./example/src/marquee/index.tsx)
+[<img src="assets/multiple.gif" width="33%"/>](./example/src/multiple/index.tsx)  
+[<p align="center"><img src="assets/parallax-layers.gif" width="33%"/></p>](./example/src/parallax-layers/index.tsx)  
+[<p align="center"><img src="assets/flow.gif" width="33%"/></p>](./example/src/flow/index.tsx)
+
 
 ## 目录
 
