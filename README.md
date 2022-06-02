@@ -36,12 +36,12 @@ English | [简体中文](./README.zh-CN.md)
 |                        <img src="assets/advanced-parallax.gif"/>                        |                    <img src="assets/pause-advanced-parallax.gif"/>                    |                 <img src="assets/scale-fade-in-out.gif"/>                 |
 | :-------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------: | :-----------------------------------------------------------------------: |
 |        <a href="./example/src/advanced-parallax/index.tsx">advanced-parallax</a>        | <a href="./example/src/pause-advanced-parallax/index.tsx">pause-advanced-parallax</a> | <a href="./example/src/scale-fade-in-out/index.tsx">scale-fade-in-out</a> |
-|                     <img src="assets/rotate-scale-fade-in-outgif"/>                     |                         <img src="assets/rotate-in-out.gif"/>                         |                   <img src="assets/anim-tab-bar.gif"/>                    |
+|                     <img src="assets/rotate-scale-fade-in-out.gif"/>                     |                         <img src="assets/rotate-in-out.gif"/>                         |                   <img src="assets/anim-tab-bar.gif"/>                    |
 | <a href="./example/src/rotate-scale-fade-in-out/index.tsx">rotate-scale-fade-in-out</a> |           <a href="./example/src/rotate-in-out/index.tsx">rotate-in-out</a>           |      <a href="./example/src/anim-tab-bar/index.tsx">anim-tab-bar</a>      |
 |                             <img src="assets/marquee.gif"/>                             |                           <img src="assets/multiple.gif"/>                            |                                                                           |
 |                  <a href="./example/src/marquee/index.tsx">marquee</a>                  |                <a href="./example/src/multiple/index.tsx">multiple</a>                |                                                                           |
 |                         <img src="assets/parallax-layers.gif"/>                         |                             <img src="assets/flow.gif"/>                              |                                                                           |
-|          <a href="./example/src/parallax-layers/index.tsx">parallax-layers</a>          |                  <a href="./example/src/flow/index.tsx">multiple</a>                  |                                                                           |
+|          <a href="./example/src/parallax-layers/index.tsx">parallax-layers</a>          |                  <a href="./example/src/flow/index.tsx">flow</a>                  |                                                                           |
 
 ## Table of contents
 
