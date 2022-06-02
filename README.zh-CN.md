@@ -24,28 +24,28 @@
 > 点击图片，查看代码 [[试一下]](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
 
 <p align="center">
-  <a href="./example/src/normal/index.tsx">
+  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/normal/index.tsx">
     <img src="assets/normal-horizontal.gif" width="300"/>  
   </a>
-  <a href="./example/src/normal/index.tsx">
+  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/normal/index.tsx">
     <img src="assets/normal-vertical.gif" width="300"/>  
   </a>
-  <a href="./example/src/parallax/index.tsx">
+  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/parallax/index.tsx">
     <img src="assets/parallax-horizontal.gif" width="300"/>  
   </a>
-  <a href="./example/src/parallax/index.tsx">
+  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/parallax/index.tsx">
     <img src="assets/parallax-vertical.gif" width="300"/>  
   </a>
-  <a href="./example/src/stack/index.tsx">
+  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/stack/index.tsx">
     <img src="assets/stack-horizontal-left.gif" width="300"/>  
   </a>
-  <a href="./example/src/stack/index.tsx">
+  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/stack/index.tsx">
     <img src="assets/stack-horizontal-right.gif" width="300"/>  
   </a>
-  <a href="./example/src/stack/index.tsx">
+  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/stack/index.tsx">
     <img src="assets/stack-vertical-left.gif" width="300"/>  
   </a>
-  <a href="./example/src/stack/index.tsx">
+  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/stack/index.tsx">
     <img src="assets/stack-vertical-right.gif" width="300"/>  
   </a>
 </p>
@@ -53,36 +53,36 @@
 > 现在你可以和我们一起来制作酷炫的动画了！ 非常简单! [[详情]](./docs/custom-animation.zh-CN.md)
 
 <p align="center">
-  <a href="./example/src/advanced-parallax/index.tsx">
+  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/advanced-parallax/index.tsx">
     <img src="assets/advanced-parallax.gif" width="300"/>  
   </a>
-  <a href="./example/src/pause-advanced-parallax/index.tsx">
+  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/pause-advanced-parallax/index.tsx">
     <img src="assets/pause-advanced-parallax.gif" width="300"/>  
   </a>
-  <a href="./example/src/scale-fade-in-out/index.tsx">
+  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/scale-fade-in-out/index.tsx">
     <img src="assets/scale-fade-in-out.gif" width="300"/>  
   </a>
-  <a href="./example/src/rotate-scale-fade-in-out/index.tsx">
+  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/rotate-scale-fade-in-out/index.tsx">
     <img src="assets/rotate-scale-fade-in-out.gif" width="300"/>  
   </a>
-  <a href="./example/src/rotate-in-out/index.tsx">
+  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/rotate-in-out/index.tsx">
     <img src="assets/rotate-in-out.gif" width="300"/>  
   </a>
-  <a href="./example/src/anim-tab-bar/index.tsx">
+  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/anim-tab-bar/index.tsx">
     <img src="assets/anim-tab-bar.gif" width="300"/>  
   </a>
-  <a href="./example/src/marquee/index.tsx">
+  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/marquee/index.tsx">
     <img src="assets/marquee.gif" width="300"/>  
   </a>
-  <a href="./example/src/multiple/index.tsx">
+  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/multiple/index.tsx">
     <img src="assets/multiple.gif" width="300"/>  
   </a>
   <br/>
-  <a href="./example/src/flow/index.tsx">
+  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/flow/index.tsx">
     <img src="assets/flow.gif" width="300"/>  
   </a>
   <br/>
-  <a href="./example/src/parallax-layers/index.tsx">
+  <a target="_blank" href="https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/src/parallax-layers/index.tsx">
     <img src="assets/parallax-layers.gif" width="300"/>  
   </a>
 </p>
@@ -186,9 +186,7 @@ yarn web:pretty
 ## 赞助商
 
 <p align="center">
-  <a href="./sponsorkit/sponsors.svg">
-    <img src='./sponsorkit/sponsors.svg'/>
-  </a>
+  <img src='./sponsorkit/sponsors.svg'/>
 </p>
 
 ## 许可
