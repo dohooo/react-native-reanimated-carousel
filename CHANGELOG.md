@@ -1,3 +1,10 @@
+# [2.6.0](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.5.1...v2.6.0) (2022-06-04)
+
+
+### Bug Fixes
+
+* global.__reanimatedWorkletInit is not a function ([591f0d8](https://github.com/dohooo/react-native-reanimated-carousel/commit/591f0d89744d4f7b97784139c86fa1ef85a70606)), closes [#159](https://github.com/dohooo/react-native-reanimated-carousel/issues/159) [#182](https://github.com/dohooo/react-native-reanimated-carousel/issues/182)
+
 ## [2.5.1](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.5.0...v2.5.1) (2022-06-01)
 
 # [2.5.0](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.4.0...v2.5.0) (2022-05-29)
