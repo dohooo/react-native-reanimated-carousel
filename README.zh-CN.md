@@ -36,12 +36,12 @@
 |                        <img src="assets/advanced-parallax.gif"/>                        |                    <img src="assets/pause-advanced-parallax.gif"/>                    |                 <img src="assets/scale-fade-in-out.gif"/>                 |
 | :-------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------: | :-----------------------------------------------------------------------: |
 |        <a href="./example/src/advanced-parallax/index.tsx">advanced-parallax</a>        | <a href="./example/src/pause-advanced-parallax/index.tsx">pause-advanced-parallax</a> | <a href="./example/src/scale-fade-in-out/index.tsx">scale-fade-in-out</a> |
-|                     <img src="assets/rotate-scale-fade-in-out.gif"/>                     |                         <img src="assets/rotate-in-out.gif"/>                         |                   <img src="assets/anim-tab-bar.gif"/>                    |
+|                    <img src="assets/rotate-scale-fade-in-out.gif"/>                     |                         <img src="assets/rotate-in-out.gif"/>                         |                   <img src="assets/anim-tab-bar.gif"/>                    |
 | <a href="./example/src/rotate-scale-fade-in-out/index.tsx">rotate-scale-fade-in-out</a> |           <a href="./example/src/rotate-in-out/index.tsx">rotate-in-out</a>           |      <a href="./example/src/anim-tab-bar/index.tsx">anim-tab-bar</a>      |
 |                             <img src="assets/marquee.gif"/>                             |                           <img src="assets/multiple.gif"/>                            |                                                                           |
 |                  <a href="./example/src/marquee/index.tsx">marquee</a>                  |                <a href="./example/src/multiple/index.tsx">multiple</a>                |                                                                           |
 |                         <img src="assets/parallax-layers.gif"/>                         |                             <img src="assets/flow.gif"/>                              |                                                                           |
-|          <a href="./example/src/parallax-layers/index.tsx">parallax-layers</a>          |                  <a href="./example/src/flow/index.tsx">flow</a>                  |                                                                           |
+|          <a href="./example/src/parallax-layers/index.tsx">parallax-layers</a>          |                    <a href="./example/src/flow/index.tsx">flow</a>                    |                                                                           |
 
 ## 目录
 
@@ -69,6 +69,10 @@ npm install react-native-reanimated-carousel
 ```
 
 并且我们需要安装 [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler) 、[`react-native-reanimated(>=2.0.0)`](https://github.com/kmagiera/react-native-reanimated)，安装步骤可参考各自文档。
+| | react-native-reanimated | react-native-gesture-handler |
+| -------------------------------------- | ----------------------- | ---------------------------- |
+| react-native-reanimated-carousel < v3 | <2.7.0 | \* |
+| react-native-reanimated-carousel >= v3 | >=2.7.0 | \* |
 
 ## 使用
 
