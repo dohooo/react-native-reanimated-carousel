@@ -1,3 +1,10 @@
+# [3.0.0](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.6.0...v3.0.0) (2022-06-10)
+
+
+### Bug Fixes
+
+* update reanimated version for fix "undefined is not a function" ([a326f8c](https://github.com/dohooo/react-native-reanimated-carousel/commit/a326f8c58e3572b9a8fcaf8885c2b43208420af2)), closes [#159](https://github.com/dohooo/react-native-reanimated-carousel/issues/159)
+
 # [2.6.0](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.5.1...v2.6.0) (2022-06-04)
 
 
