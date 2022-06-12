@@ -146,7 +146,7 @@ yarn web:pretty
 ## 赞助商
 
 <p align="center">
-  <img src='./sponsorkit/sponsors.svg'/>
+  <img src='https://github.com/dohooo/sponsors/blob/master/sponsors.png?raw=true'/>
 </p>
 
 ## 许可
