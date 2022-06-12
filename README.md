@@ -147,7 +147,7 @@ yarn web:pretty
 ## Sponsors
 
 <p align="center">
-  <img src='./sponsorkit/sponsors.svg'/>
+  <img src='https://github.com/dohooo/sponsors/blob/master/sponsors.png?raw=true'/>
 </p>
 
 ## License
