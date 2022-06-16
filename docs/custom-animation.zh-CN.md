@@ -26,7 +26,7 @@ type TAnimationStyle = (value: number) => Animated.AnimatedStyleProp<ViewStyle>;
 
 ### 视差效果
 
-<a href="../example/src/advanced-parallax/index.tsx">
+<a href="../exampleExpo/src/advanced-parallax/index.tsx">
     <img src="././../assets/advanced-parallax.gif" width="300"/>  
 </a>
 
@@ -101,7 +101,7 @@ const CustomItem = ({ index, animationValue }) => {
 
 ### 缩放渐入渐出效果
 
-<a href="../example/src/scale-fade-in-out/index.tsx">
+<a href="../exampleExpo/src/scale-fade-in-out/index.tsx">
     <img src="././../assets/scale-fade-in-out.gif" width="300"/>  
 </a>
 

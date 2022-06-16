@@ -26,7 +26,7 @@ Here are a few examples.
 
 ### Parallax
 
-<a href="../example/src/advanced-parallax/index.tsx">
+<a href="../exampleExpo/src/advanced-parallax/index.tsx">
     <img src="././../assets/advanced-parallax.gif" width="300"/>  
 </a>
 
@@ -101,7 +101,7 @@ In order to implement some animation effects outside `Carousel`, such as `MaskVi
 
 ### ScaleFadeInOut
 
-<a href="../example/src/scale-fade-in-out/index.tsx">
+<a href="../exampleExpo/src/scale-fade-in-out/index.tsx">
     <img src="././../assets/scale-fade-in-out.gif" width="300"/>  
 </a>
 

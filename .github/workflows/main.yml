@@ -35,9 +35,9 @@ jobs:
                       ${{ runner.os }}-yarn-
 
             - run: yarn install
-            - run: cd ./example && yarn install && yarn build:web
+            - run: cd ./exampleExpo && yarn install && yarn build:web
             - name: Deploy
               uses: peaceiris/actions-gh-pages@v3
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
-                  publish_dir: ./example/web-build
+                  publish_dir: ./exampleExpo/web-build

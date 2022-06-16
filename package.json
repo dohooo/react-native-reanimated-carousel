@@ -28,15 +28,15 @@
         "prepare": "bob build",
         "release": "yarn prepare && release-it --no-git.requireUpstream",
         "preRelease": "yarn prepare && release-it --no-git.requireUpstream --preRelease=beta",
-        "ios": "yarn --cwd example ios",
-        "ios:pretty": "yarn --cwd example ios:pretty",
-        "web": "yarn --cwd example web",
-        "web:pretty": "yarn --cwd example web:pretty",
-        "android": "yarn --cwd example android",
-        "android:pretty": "yarn --cwd example android:pretty",
-        "pods": "cd example && pod-install --quiet",
+        "ios": "yarn --cwd exampleExpo ios",
+        "ios:pretty": "yarn --cwd exampleExpo ios:pretty",
+        "web": "yarn --cwd exampleExpo web",
+        "web:pretty": "yarn --cwd exampleExpo web:pretty",
+        "android": "yarn --cwd exampleExpo android",
+        "android:pretty": "yarn --cwd exampleExpo android:pretty",
+        "pods": "cd exampleExpo && pod-install --quiet",
         "bootstrap": "yarn && yarn pods",
-        "deploy": "cd example && yarn deploy"
+        "deploy": "cd exampleExpo && yarn deploy"
     },
     "keywords": [
         "react-native",
@@ -92,6 +92,8 @@
     "jest": {
         "preset": "react-native",
         "modulePathIgnorePatterns": [
+            "<rootDir>/exampleExpo/node_modules",
+            "<rootDir>/exampleBare/node_modules",
             "<rootDir>/example/node_modules",
             "<rootDir>/lib/"
         ]
