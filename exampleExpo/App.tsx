@@ -7,31 +7,31 @@ import { I18nManager } from 'react-native';
 import { Text, View } from 'react-native-ui-lib';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
-import Home from './home';
-import NormalComponent from './normal';
-import ParallaxComponent from './parallax';
-import StackComponent from './stack';
-import ComplexComponent from './complex';
-import AdvancedParallaxComponent from './advanced-parallax';
-import PauseAdvancedParallaxComponent from './pause-advanced-parallax';
-import ScaleFadeInOutComponent from './scale-fade-in-out';
-import RotateInOutComponent from './rotate-in-out';
-import RotateScaleFadeInOutComponent from './rotate-scale-fade-in-out';
-import AnimTabBarComponent from './anim-tab-bar';
-import MarqueeComponent from './marquee';
-import MultipleComponent from './multiple';
-import Flow from './flow';
-import ParallaxLayers from './parallax-layers';
-import { isWeb } from './utils';
-import { window } from './constants';
-import { QRCode } from './components/QRCode';
+import Home from './src/home';
+import NormalComponent from './src/normal';
+import ParallaxComponent from './src/parallax';
+import StackComponent from './src/stack';
+import ComplexComponent from './src/complex';
+import AdvancedParallaxComponent from './src/advanced-parallax';
+import PauseAdvancedParallaxComponent from './src/pause-advanced-parallax';
+import ScaleFadeInOutComponent from './src/scale-fade-in-out';
+import RotateInOutComponent from './src/rotate-in-out';
+import RotateScaleFadeInOutComponent from './src/rotate-scale-fade-in-out';
+import AnimTabBarComponent from './src/anim-tab-bar';
+import MarqueeComponent from './src/marquee';
+import MultipleComponent from './src/multiple';
+import Flow from './src/flow';
+import ParallaxLayers from './src/parallax-layers';
+import { isWeb } from './src/utils';
+import { window } from './src/constants';
+import { QRCode } from './src/components/QRCode';
 
 // Not support to WEB (react-native-snap-carousel)
 const SnapCarouselComplexComponent = React.lazy(
-    () => import('./snap-carousel-complex')
+    () => import('./src/snap-carousel-complex')
 );
 const SnapCarouselLoopComponent = React.lazy(
-    () => import('./snap-carousel-loop')
+    () => import('./src/snap-carousel-loop')
 );
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
