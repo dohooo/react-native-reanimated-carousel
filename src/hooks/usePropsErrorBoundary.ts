@@ -18,7 +18,7 @@ export function usePropsErrorBoundary(props: TCarouselProps) {
         if (!props.mode || props.mode === 'parallax') {
             if (!props.vertical && !props.width) {
                 throw Error(
-                    '`width` must be specified for vertical carousels.'
+                    '`width` must be specified for horizontal carousels.'
                 );
             }
             if (props.vertical && !props.height) {
