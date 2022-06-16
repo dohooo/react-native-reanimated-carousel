@@ -1,0 +1,7 @@
+{
+  "display": "standalone",
+  "lang": "en",
+  "name": "exampleexpo",
+  "short_name": "exampleexpo",
+  "start_url": "/?utm_source=web_app_manifest"
+}
