@@ -3,11 +3,16 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-        "start": "expo start",
-        "android": "expo start --android",
-        "ios": "expo start --ios",
+        "android:pretty": "expo start --android",
+        "ios": "expo start -c --ios",
+        "ios:pretty": "PRETTY=true expo start -c --ios",
         "web": "expo start --web",
-        "eject": "expo eject"
+        "web:pretty": "PRETTY=true expo start --web",
+        "start": "expo start",
+        "test": "jest",
+        "build:web": "expo build:web",
+        "deploy": "gh-pages -d web-build",
+        "predeploy": "yarn build:web"
     },
     "dependencies": {
         "@faker-js/faker": "^6.0.0-beta.0",
