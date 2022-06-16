@@ -1,4 +1,5 @@
 {
   "compilerOptions": {},
-  "extends": "../tsconfig.json"
+  "extends": "../tsconfig.json",
+  "exclude": []
 }

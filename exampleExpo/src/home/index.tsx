@@ -7,7 +7,7 @@ import {
     TouchableHighlight,
 } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import type { RootStackParamList } from '../index';
+import type { RootStackParamList } from '../App';
 import { Colors } from 'react-native-ui-lib';
 import { isAndroid, isIos } from '../utils';
 
@@ -24,6 +24,9 @@ const LayoutsPage: Array<Record<'name', keyof RootStackParamList>> = [
 ];
 
 const CustomAnimations: Array<Record<'name', keyof RootStackParamList>> = [
+    {
+        name: 'Circular',
+    },
     {
         name: 'Flow',
     },
