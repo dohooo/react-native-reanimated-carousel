@@ -94,7 +94,6 @@
         "modulePathIgnorePatterns": [
             "<rootDir>/exampleExpo/node_modules",
             "<rootDir>/exampleBare/node_modules",
-            "<rootDir>/example/node_modules",
             "<rootDir>/lib/"
         ]
     },
