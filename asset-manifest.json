@@ -4,8 +4,8 @@
     "static/js/0.1b91b2b9.chunk.js.map": "/static/js/0.1b91b2b9.chunk.js.map",
     "app.js": "/static/js/app.6b20bf91.chunk.js",
     "app.js.map": "/static/js/app.6b20bf91.chunk.js.map",
-    "runtime~app.js": "/static/js/runtime~app.2acb5701.js",
-    "runtime~app.js.map": "/static/js/runtime~app.2acb5701.js.map",
+    "runtime~app.js": "/static/js/runtime~app.e6ea8c7c.js",
+    "runtime~app.js.map": "/static/js/runtime~app.e6ea8c7c.js.map",
     "static/js/3.d4b6b74d.chunk.js": "/static/js/3.d4b6b74d.chunk.js",
     "static/js/3.d4b6b74d.chunk.js.map": "/static/js/3.d4b6b74d.chunk.js.map",
     "static/js/4.e681a558.chunk.js": "/static/js/4.e681a558.chunk.js",
@@ -22,7 +22,7 @@
     "static/media/web-example-qrcode.png": "/static/media/web-example-qrcode.0190b8c9.png"
   },
   "entrypoints": [
-    "static/js/runtime~app.2acb5701.js",
+    "static/js/runtime~app.e6ea8c7c.js",
     "static/js/3.d4b6b74d.chunk.js",
     "static/js/app.6b20bf91.chunk.js"
   ]
