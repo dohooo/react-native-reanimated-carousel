@@ -1,22 +1,39 @@
 import React from 'react';
-import { View, Button, ButtonProps, Text } from 'react-native-ui-lib';
-
+import { View, Text } from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 export interface ISButtonProps {
     visible?: boolean;
+    onPress?: () => void;
 }
 
-const SButton: React.FC<ISButtonProps & ButtonProps> = (props) => {
-    const { children, visible = true } = props;
+const SButton: React.FC<ISButtonProps> = (props) => {
+    const { children, visible = true, onPress } = props;
 
     if (!visible) {
         return <></>;
     }
 
     return (
-        <View row centerH>
-            <Button {...props} marginT-20 backgroundColor="#26292E">
-                <Text color="white">{children}</Text>
-            </Button>
+        <View
+            style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+            }}
+        >
+            <TouchableWithoutFeedback onPress={onPress}>
+                <View
+                    style={{
+                        marginTop: 20,
+                        backgroundColor: '#26292E',
+                        borderRadius: 50,
+                        paddingHorizontal: 20,
+                        padding: 10,
+                    }}
+                >
+                    <Text style={{ color: 'white' }}>{children}</Text>
+                </View>
+            </TouchableWithoutFeedback>
         </View>
     );
 };

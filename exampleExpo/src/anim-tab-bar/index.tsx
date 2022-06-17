@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pressable } from 'react-native';
+import { View, Pressable } from 'react-native';
 import Animated, {
     Extrapolate,
     interpolate,
@@ -9,7 +9,6 @@ import Animated, {
     withTiming,
 } from 'react-native-reanimated';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
-import { Colors, View } from 'react-native-ui-lib';
 import SButton from '../components/SButton';
 import { ElementsText, window } from '../constants';
 import { useToggleButton } from '../hooks/useToggleButton';
@@ -39,7 +38,7 @@ function Index() {
                         justifyContent: 'center',
                         alignItems: 'center',
                         borderBottomWidth: 1,
-                        borderBottomColor: Colors.blue30,
+                        borderBottomColor: '#0071fa',
                     }}
                     width={PAGE_WIDTH}
                     height={PAGE_HEIGHT}
@@ -114,7 +113,7 @@ const Item: React.FC<Props> = (props) => {
         const color = interpolateColor(
             animationValue.value,
             [-1, 0, 1],
-            [Colors.grey30, Colors.blue30, Colors.grey30]
+            ['#b6bbc0', '#0071fa', '#b6bbc0']
         );
 
         return {

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { View } from 'react-native-ui-lib';
 import Carousel from 'react-native-reanimated-carousel';
 import SButton from '../components/SButton';
 import type { TAnimationStyle } from '../../../src/layouts/BaseLayout';
@@ -11,7 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { SBImageItem } from '../components/SBImageItem';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import faker from '@faker-js/faker';
 
 const PAGE_WIDTH = window.width;

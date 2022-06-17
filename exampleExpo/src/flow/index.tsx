@@ -4,7 +4,7 @@ import Carousel from 'react-native-reanimated-carousel';
 import type { TAnimationStyle } from '../../../src/layouts/BaseLayout';
 import { window } from '../constants';
 import { useHeaderHeight } from '@react-navigation/elements';
-import { Text, View } from 'react-native-ui-lib';
+import { Text, View } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { faker } from '@faker-js/faker';
 import { Image } from 'react-native';
@@ -81,17 +81,22 @@ function Index() {
                 data={[...new Array(10).keys()]}
                 renderItem={({ index }) => {
                     return (
-                        <View key={index} flex padding-10>
+                        <View key={index} style={{ flex: 1, padding: 10 }}>
                             <View
-                                flex
-                                br20
-                                row
-                                spread
                                 style={{
                                     alignItems: 'flex-start',
+                                    flex: 1,
+                                    justifyContent: 'space-between',
+                                    flexDirection: 'row',
+                                    borderRadius: 20,
                                 }}
                             >
-                                <View row centerV>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                    }}
+                                >
                                     <Image
                                         style={{
                                             width: 20,
@@ -110,8 +115,8 @@ function Index() {
                                         numberOfLines={1}
                                         style={{
                                             maxWidth: ITEM_WIDTH * 0.3 - 40,
+                                            color: 'white',
                                         }}
-                                        white
                                     >
                                         {faker.animal.dog()}
                                     </Text>

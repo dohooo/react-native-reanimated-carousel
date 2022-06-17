@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { View } from 'react-native-ui-lib';
 import Carousel from 'react-native-reanimated-carousel';
 import SButton from '../components/SButton';
 import type { TAnimationStyle } from '../../../src/layouts/BaseLayout';
 import { ElementsText, window } from '../constants';
 import { interpolate } from 'react-native-reanimated';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { SBImageItem } from '../components/SBImageItem';
 import { faker } from '@faker-js/faker';
 

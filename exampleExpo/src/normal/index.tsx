@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native-ui-lib';
+import { View } from 'react-native';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { SBItem } from '../components/SBItem';
 import SButton from '../components/SButton';

@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
-import { Text } from 'react-native-ui-lib';
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
 interface Props {
     style?: StyleProp<ViewStyle>;
@@ -10,9 +9,7 @@ interface Props {
 export const SBTextItem: React.FC<Props> = ({ style, index }) => {
     return (
         <View style={[styles.container, style]}>
-            <Text style={{ fontSize: 30 }} color="black">
-                {index}
-            </Text>
+            <Text style={{ fontSize: 30, color: 'black' }}>{index}</Text>
         </View>
     );
 };

@@ -3,8 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // @ts-ignore
 import { Restart } from 'fiction-expo-restart';
-import { I18nManager } from 'react-native';
-import { Text, View } from 'react-native-ui-lib';
+import { I18nManager, Text, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import Home from './home';
@@ -81,7 +80,7 @@ function App() {
 
     const app = (
         <React.Suspense fallback={null}>
-            <View flex>
+            <View style={{ flex: 1 }}>
                 <NavigationContainer>
                     <Stack.Navigator
                         initialRouteName="Home"
@@ -91,11 +90,19 @@ function App() {
                                 backgroundColor: 'white',
                             },
                             headerRight: ({ tintColor }) => (
-                                <View row centerV>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                    }}
+                                >
                                     {isWeb && (
                                         <>
                                             <QRCode tintColor={tintColor} />
-                                            <Text color={tintColor}> | </Text>
+                                            <Text style={{ color: tintColor }}>
+                                                {' '}
+                                                |{' '}
+                                            </Text>
                                         </>
                                     )}
                                     <TouchableWithoutFeedback
@@ -105,7 +112,7 @@ function App() {
                                             Restart();
                                         }}
                                     >
-                                        <Text color={tintColor}>
+                                        <Text style={{ color: tintColor }}>
                                             {isRTL ? 'LTR' : 'RTL'}
                                         </Text>
                                     </TouchableWithoutFeedback>

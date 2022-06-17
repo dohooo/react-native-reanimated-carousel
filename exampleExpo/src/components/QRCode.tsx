@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { Image, StyleSheet } from 'react-native';
+import { Text, View, Image, StyleSheet } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { Text, View } from 'react-native-ui-lib';
 
 export const QRCode: React.FC<{ tintColor?: string }> = ({ tintColor }) => {
     const [visible, setVisible] = React.useState(false);
@@ -12,7 +11,7 @@ export const QRCode: React.FC<{ tintColor?: string }> = ({ tintColor }) => {
             }}
         >
             <View>
-                <Text color={tintColor}>{'QR CODE'}</Text>
+                <Text style={{ color: tintColor }}>{'QR CODE'}</Text>
                 {visible && (
                     <View style={styles.qrCodeContainer}>
                         <Image

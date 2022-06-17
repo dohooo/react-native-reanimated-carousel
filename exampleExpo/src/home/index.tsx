@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import type { RootStackParamList } from '../App';
-import { Colors } from 'react-native-ui-lib';
 import { isAndroid, isIos } from '../utils';
 
 const LayoutsPage: Array<Record<'name', keyof RootStackParamList>> = [
@@ -144,7 +143,7 @@ export default Index;
 const styles = StyleSheet.create({
     listItem: {
         alignItems: 'flex-start',
-        borderColor: Colors.grey60,
+        borderColor: '#e8ecf0',
         borderBottomWidth: 0.5,
         padding: 16,
         backgroundColor: '#fff',
@@ -156,7 +155,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingHorizontal: 16,
         paddingVertical: 8,
-        backgroundColor: Colors.grey60,
+        backgroundColor: '#e8ecf0',
     },
     sectionText: {
         fontSize: 14,

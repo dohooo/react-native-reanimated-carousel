@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text } from 'react-native-ui-lib';
+import { View, Text } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import { window } from '../constants';
 import Animated, { Easing } from 'react-native-reanimated';
@@ -57,7 +57,13 @@ function Index() {
         <ReactionContainer text="一二三四五六七八九十">
             {(text, layout) => {
                 return (
-                    <View centerH flex marginT-72>
+                    <View
+                        style={{
+                            alignItems: 'center',
+                            flex: 1,
+                            marginTop: 72,
+                        }}
+                    >
                         <Carousel
                             width={layout?.width ?? PAGE_WIDTH}
                             height={30}

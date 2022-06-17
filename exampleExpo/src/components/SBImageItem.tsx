@@ -5,9 +5,9 @@ import {
     ActivityIndicator,
     StyleProp,
     ViewStyle,
+    Image,
     ImageURISource,
 } from 'react-native';
-import { Image } from 'react-native-ui-lib';
 
 interface Props {
     style?: StyleProp<ViewStyle>;
