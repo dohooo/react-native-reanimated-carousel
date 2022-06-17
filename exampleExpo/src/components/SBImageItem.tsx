@@ -2,29 +2,28 @@ import React from 'react';
 import {
     StyleSheet,
     View,
-    Image,
     ActivityIndicator,
     StyleProp,
     ViewStyle,
+    ImageURISource,
 } from 'react-native';
+import { Image } from 'react-native-ui-lib';
 
 interface Props {
     style?: StyleProp<ViewStyle>;
+    index?: number;
 }
 
-export const SBImageItem: React.FC<Props> = ({ style }) => {
-    const uri = React.useRef(
-        `https://picsum.photos/400/300?t=${new Date().getTime()}`
-    );
+export const SBImageItem: React.FC<Props> = ({ style, index: _index }) => {
+    const index = (_index || 0) + 1;
+    const source = React.useRef<ImageURISource>({
+        uri: `https://picsum.photos/id/${index}/400/300`,
+    }).current;
+
     return (
         <View style={[styles.container, style]}>
             <ActivityIndicator size="small" />
-            <Image
-                style={styles.image}
-                source={{
-                    uri: uri.current,
-                }}
-            />
+            <Image key={index} style={styles.image} source={source} />
         </View>
     );
 };

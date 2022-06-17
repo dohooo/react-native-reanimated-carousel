@@ -16,7 +16,7 @@
     },
     "dependencies": {
         "@faker-js/faker": "^6.0.0-beta.0",
-        "@react-native-picker/picker": "^2.4.1",
+        "@react-native-picker/picker": "2.4.0",
         "@react-navigation/core": "^6.1.0",
         "@react-navigation/native": "^6.0.6",
         "@react-navigation/native-stack": "^6.2.5",
