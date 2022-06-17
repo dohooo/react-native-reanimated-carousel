@@ -7,7 +7,7 @@ const node_modules = path.join(__dirname, 'node_modules');
 
 module.exports = async function (env, argv) {
     const config = await createExpoWebpackConfigAsync(env, argv);
-    // config.output.publicPath = '/react-native-reanimated-carousel';
+    config.output.publicPath = '/react-native-reanimated-carousel';
     config.module.rules.push({
         test: /\.(js|jsx|ts|tsx)$/,
         include: path.resolve(root, 'src'),
