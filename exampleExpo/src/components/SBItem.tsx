@@ -26,7 +26,7 @@ export const SBItem: React.FC<Props> = (props) => {
         >
             <Animated.View style={{ flex: 1 }} {...animatedViewProps}>
                 {isPretty ? (
-                    <SBImageItem style={style} />
+                    <SBImageItem style={style} index={index} />
                 ) : (
                     <SBTextItem style={style} index={index} />
                 )}

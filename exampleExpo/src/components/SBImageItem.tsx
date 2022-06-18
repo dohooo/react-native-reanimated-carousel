@@ -7,6 +7,7 @@ import {
     ViewStyle,
     Image,
     ImageURISource,
+    Text,
 } from 'react-native';
 
 interface Props {
@@ -24,6 +25,20 @@ export const SBImageItem: React.FC<Props> = ({ style, index: _index }) => {
         <View style={[styles.container, style]}>
             <ActivityIndicator size="small" />
             <Image key={index} style={styles.image} source={source} />
+            <Text
+                style={{
+                    position: 'absolute',
+                    color: 'white',
+                    fontSize: 40,
+                    backgroundColor: '#333333',
+                    borderRadius: 5,
+                    overflow: 'hidden',
+                    paddingHorizontal: 10,
+                    paddingTop: 2,
+                }}
+            >
+                {index}
+            </Text>
         </View>
     );
 };
