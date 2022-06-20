@@ -95,9 +95,14 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
             const origin = translation.value;
             const velocity = scrollEndVelocity.value;
             if (!pagingEnabled) {
+                /**
+                 * If enabled, releasing the touch will scroll to the nearest item.
+                 * valid when pagingEnabled=false
+                 */
                 if (snapEnabled) {
                     const nextPage =
                         Math.round((origin + velocity * 0.4) / size) * size;
+
                     translation.value = _withSpring(nextPage, onFinished);
                     return;
                 }
@@ -107,14 +112,14 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                 });
                 return;
             }
-            const page = Math.round(-translation.value / size);
-            const velocityPage = Math.round(
-                -(translation.value + scrollEndVelocity.value) / size
-            );
-            let finalPage = Math.min(
-                page + 1,
-                Math.max(page - 1, velocityPage)
-            );
+
+            const direction =
+                -scrollEndTranslation.value /
+                Math.abs(scrollEndTranslation.value);
+            const computed = direction < 0 ? Math.ceil : Math.floor;
+            const page = computed(-translation.value / size);
+            let finalPage = page + direction;
+
             if (!infinite) {
                 finalPage = Math.min(maxPage - 1, Math.max(0, finalPage));
             }
@@ -122,14 +127,15 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
             translation.value = _withSpring(-finalPage * size, onFinished);
         },
         [
+            translation,
+            scrollEndVelocity.value,
+            pagingEnabled,
+            size,
+            scrollEndTranslation.value,
             infinite,
             _withSpring,
-            translation,
-            scrollEndVelocity,
-            size,
-            maxPage,
-            pagingEnabled,
             snapEnabled,
+            maxPage,
         ]
     );
 

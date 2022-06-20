@@ -12,6 +12,7 @@ function Index() {
     const [isVertical, setIsVertical] = React.useState(false);
     const [isFast, setIsFast] = React.useState(false);
     const [isAutoPlay, setIsAutoPlay] = React.useState(false);
+    const [isPagingEnabled, setIsPagingEnabled] = React.useState(true);
     const ref = React.useRef<ICarouselInstance>(null);
 
     const baseOptions = isVertical
@@ -35,6 +36,7 @@ function Index() {
                 autoPlay={isAutoPlay}
                 autoPlayInterval={isFast ? 100 : 2000}
                 data={data}
+                pagingEnabled={isPagingEnabled}
                 onSnapToItem={(index) => console.log('current index:', index)}
                 renderItem={({ index }) => <SBItem key={index} index={index} />}
             />
@@ -51,6 +53,13 @@ function Index() {
                 }}
             >
                 {isFast ? 'NORMAL' : 'FAST'}
+            </SButton>
+            <SButton
+                onPress={() => {
+                    setIsPagingEnabled(!isPagingEnabled);
+                }}
+            >
+                PagingEnabled:{isPagingEnabled.toString()}
             </SButton>
             <SButton
                 onPress={() => {

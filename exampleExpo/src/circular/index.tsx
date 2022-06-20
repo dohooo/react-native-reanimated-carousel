@@ -93,6 +93,7 @@ function Index() {
                             }}
                         >
                             <SBImageItem
+                                showIndex={false}
                                 style={{
                                     position: 'absolute',
                                     width: '100%',

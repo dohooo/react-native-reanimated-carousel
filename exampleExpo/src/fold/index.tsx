@@ -3,11 +3,7 @@ import Carousel from 'react-native-reanimated-carousel';
 import SButton from '../components/SButton';
 import type { TAnimationStyle } from '../../../src/layouts/BaseLayout';
 import { ElementsText, window } from '../constants';
-import Animated, {
-    Extrapolate,
-    interpolate,
-    useAnimatedStyle,
-} from 'react-native-reanimated';
+import Animated, { Extrapolate, interpolate } from 'react-native-reanimated';
 import { SBImageItem } from '../components/SBImageItem';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { StyleSheet, Text, View } from 'react-native';
@@ -121,19 +117,7 @@ function Index() {
 const Item: React.FC<{
     index: number;
     animationValue: Animated.SharedValue<number>;
-}> = ({ index, animationValue }) => {
-    const maskStyle = useAnimatedStyle(() => {
-        // const backgroundColor = interpolateColor(
-        //     animationValue.value,
-        //     [-1, 0, 1],
-        //     ['#000000dd', 'transparent', '#000000dd']
-        // );
-
-        return {
-            // backgroundColor,
-        };
-    }, [animationValue]);
-
+}> = ({ index }) => {
     return (
         <TouchableWithoutFeedback
             onPress={() => {
@@ -151,7 +135,12 @@ const Item: React.FC<{
                     alignItems: 'center',
                 }}
             >
-                <SBImageItem key={index} style={styles.image} index={index} />
+                <SBImageItem
+                    showIndex={false}
+                    key={index}
+                    style={styles.image}
+                    index={index}
+                />
                 <Text
                     style={{
                         color: 'white',
@@ -163,20 +152,6 @@ const Item: React.FC<{
                 >
                     {faker.name.findName().slice(0, 2).toUpperCase()}
                 </Text>
-
-                <Animated.View
-                    pointerEvents="none"
-                    style={[
-                        {
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                        },
-                        maskStyle,
-                    ]}
-                />
             </View>
         </TouchableWithoutFeedback>
     );

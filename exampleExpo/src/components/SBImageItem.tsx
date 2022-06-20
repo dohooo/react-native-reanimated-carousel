@@ -13,9 +13,14 @@ import {
 interface Props {
     style?: StyleProp<ViewStyle>;
     index?: number;
+    showIndex?: boolean;
 }
 
-export const SBImageItem: React.FC<Props> = ({ style, index: _index }) => {
+export const SBImageItem: React.FC<Props> = ({
+    style,
+    index: _index,
+    showIndex = true,
+}) => {
     const index = (_index || 0) + 1;
     const source = React.useRef<ImageURISource>({
         uri: `https://picsum.photos/id/${index}/400/300`,
@@ -37,7 +42,7 @@ export const SBImageItem: React.FC<Props> = ({ style, index: _index }) => {
                     paddingTop: 2,
                 }}
             >
-                {index}
+                {showIndex ? index : ''}
             </Text>
         </View>
     );
