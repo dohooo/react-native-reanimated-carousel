@@ -2,28 +2,28 @@
   "files": {
     "static/js/0.1b91b2b9.chunk.js": "/static/js/0.1b91b2b9.chunk.js",
     "static/js/0.1b91b2b9.chunk.js.map": "/static/js/0.1b91b2b9.chunk.js.map",
-    "app.js": "/static/js/app.67b55d32.chunk.js",
-    "app.js.map": "/static/js/app.67b55d32.chunk.js.map",
-    "runtime~app.js": "/static/js/runtime~app.addadd57.js",
-    "runtime~app.js.map": "/static/js/runtime~app.addadd57.js.map",
-    "static/js/3.b374ab2b.chunk.js": "/static/js/3.b374ab2b.chunk.js",
-    "static/js/3.b374ab2b.chunk.js.map": "/static/js/3.b374ab2b.chunk.js.map",
-    "static/js/4.74e463a3.chunk.js": "/static/js/4.74e463a3.chunk.js",
-    "static/js/4.74e463a3.chunk.js.map": "/static/js/4.74e463a3.chunk.js.map",
-    "static/js/5.553d075c.chunk.js": "/static/js/5.553d075c.chunk.js",
-    "static/js/5.553d075c.chunk.js.map": "/static/js/5.553d075c.chunk.js.map",
+    "app.js": "/static/js/app.1f2c47aa.chunk.js",
+    "app.js.map": "/static/js/app.1f2c47aa.chunk.js.map",
+    "runtime~app.js": "/static/js/runtime~app.5c05f036.js",
+    "runtime~app.js.map": "/static/js/runtime~app.5c05f036.js.map",
+    "static/js/3.6a23f87d.chunk.js": "/static/js/3.6a23f87d.chunk.js",
+    "static/js/3.6a23f87d.chunk.js.map": "/static/js/3.6a23f87d.chunk.js.map",
+    "static/js/4.801eefed.chunk.js": "/static/js/4.801eefed.chunk.js",
+    "static/js/4.801eefed.chunk.js.map": "/static/js/4.801eefed.chunk.js.map",
+    "static/js/5.199af638.chunk.js": "/static/js/5.199af638.chunk.js",
+    "static/js/5.199af638.chunk.js.map": "/static/js/5.199af638.chunk.js.map",
     "index.html": "/index.html",
     "manifest.json": "/manifest.json",
     "serve.json": "/serve.json",
-    "static/js/3.b374ab2b.chunk.js.LICENSE.txt": "/static/js/3.b374ab2b.chunk.js.LICENSE.txt",
+    "static/js/3.6a23f87d.chunk.js.LICENSE.txt": "/static/js/3.6a23f87d.chunk.js.LICENSE.txt",
     "static/media/fruit-0.png": "/static/media/fruit-0.f6e5fd8a.png",
     "static/media/fruit-1.png": "/static/media/fruit-1.376adefc.png",
     "static/media/fruit-2.png": "/static/media/fruit-2.88e08834.png",
     "static/media/web-example-qrcode.png": "/static/media/web-example-qrcode.0190b8c9.png"
   },
   "entrypoints": [
-    "static/js/runtime~app.addadd57.js",
-    "static/js/3.b374ab2b.chunk.js",
-    "static/js/app.67b55d32.chunk.js"
+    "static/js/runtime~app.5c05f036.js",
+    "static/js/3.6a23f87d.chunk.js",
+    "static/js/app.1f2c47aa.chunk.js"
   ]
 }
