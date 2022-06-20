@@ -1,3 +1,19 @@
+## [3.0.1](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.0.0...v3.0.1) (2022-06-20)
+
+
+### Bug Fixes
+
+* error message for horizontal carousels ([5a6e9af](https://github.com/dohooo/react-native-reanimated-carousel/commit/5a6e9afc8263fda708d7c9b104d00d563cbaa3b0))
+* fixed `pagingEnabled` prop error ([3c17836](https://github.com/dohooo/react-native-reanimated-carousel/commit/3c1783600768bacaecabe2c82698ee18e50782fe))
+* solved web side issues ([34f1108](https://github.com/dohooo/react-native-reanimated-carousel/commit/34f11084e57ac9d5e47880b0422daf0716e1e99c))
+* upgrade example scripts ([4293608](https://github.com/dohooo/react-native-reanimated-carousel/commit/42936086edb9d19da66303d5bc2f3f993c727df9))
+
+
+### Features
+
+* add circular animation ([289a1e8](https://github.com/dohooo/react-native-reanimated-carousel/commit/289a1e8497defd8903bae88d3def245fa6b69b99))
+* add fold animation ([1de879f](https://github.com/dohooo/react-native-reanimated-carousel/commit/1de879f91b659b98dba02232d26ec1116ef5efad))
+
 # [3.0.0](https://github.com/dohooo/react-native-reanimated-carousel/compare/v2.6.0...v3.0.0) (2022-06-10)
 
 
