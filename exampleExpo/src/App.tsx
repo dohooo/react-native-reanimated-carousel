@@ -21,6 +21,7 @@ import MarqueeComponent from './marquee';
 import MultipleComponent from './multiple';
 import Flow from './flow';
 import Fold from './fold';
+import StackCards from './stack-cards';
 import Circular from './circular';
 import ParallaxLayers from './parallax-layers';
 import { isWeb } from './utils';
@@ -43,6 +44,7 @@ export type RootStackParamList = {
     Parallax: undefined;
     Stack: undefined;
 
+    StackCards: undefined;
     Fold: undefined;
     Circular: undefined;
     Flow: undefined;
@@ -130,6 +132,11 @@ function App() {
                             component={ParallaxComponent}
                         />
                         <Stack.Screen name="Stack" component={StackComponent} />
+
+                        <Stack.Screen
+                            name="StackCards"
+                            component={StackCards}
+                        />
                         <Stack.Screen name="Fold" component={Fold} />
                         <Stack.Screen name="Circular" component={Circular} />
                         <Stack.Screen name="Flow" component={Flow} />

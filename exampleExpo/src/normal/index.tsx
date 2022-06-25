@@ -17,22 +17,23 @@ function Index() {
 
     const baseOptions = isVertical
         ? ({
-              vertical: true,
-              width: PAGE_WIDTH,
-              height: PAGE_WIDTH / 2,
-          } as const)
+            vertical: true,
+            width: PAGE_WIDTH,
+            height: PAGE_WIDTH / 2,
+        } as const)
         : ({
-              vertical: false,
-              width: PAGE_WIDTH,
-              height: PAGE_WIDTH / 2,
-          } as const);
+            vertical: false,
+            width: PAGE_WIDTH*0.85,
+            height: PAGE_WIDTH / 2,
+        } as const);
 
     return (
         <View style={{ flex: 1 }}>
             <Carousel
                 {...baseOptions}
-                loop
+                loop={false}
                 ref={ref}
+                style={{ width: "100%" }}
                 autoPlay={isAutoPlay}
                 autoPlayInterval={isFast ? 100 : 2000}
                 data={data}
