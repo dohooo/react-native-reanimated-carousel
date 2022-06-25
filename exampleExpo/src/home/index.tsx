@@ -24,6 +24,9 @@ const LayoutsPage: Array<Record<'name', keyof RootStackParamList>> = [
 
 const CustomAnimations: Array<Record<'name', keyof RootStackParamList>> = [
     {
+        name: 'Tear',
+    },
+    {
         name: 'StackCards',
     },
     {
