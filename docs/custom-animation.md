@@ -5,7 +5,7 @@ After some effort, we finally implemented custom animation in v2, now we just ne
 ## Prepare
 
 ```
-type TAnimationStyle = (value: number) => Animated.AnimatedStyleProp<ViewStyle>;
+type TAnimationStyle = (value: number, index: number, length: number) => Animated.AnimatedStyleProp<ViewStyle>;
 ```
 
 This function will be called in each item and accepts a parameter `value` indicating the position of the current item relative to `window`. The following picture shows the relationship between `value` and position
@@ -13,6 +13,8 @@ This function will be called in each item and accepts a parameter `value` indica
 <img src="././../assets/custom-animation-sketch.png" width="300"/>
 
 After getting the `value`, we only need to describe how the item is displayed in the corresponding position, and the rest is handed over to `Animated` to execute.
+
+In addition, you can also use the current item `index` and the total number of items (`length`) to customize the animation. This allows you to create a custom animation that is dependent on the current item's index (such as aligning the first item differently).
 
 ### Tips
 
