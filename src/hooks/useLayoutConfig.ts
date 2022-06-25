@@ -1,5 +1,5 @@
 import React from 'react';
-import type { TAnimationStyle } from 'src/layouts/BaseLayout';
+import type { TAnimationStyle } from '../layouts/BaseLayout';
 import { Layouts } from '../layouts';
 import type { TInitializeCarouselProps } from './useInitProps';
 

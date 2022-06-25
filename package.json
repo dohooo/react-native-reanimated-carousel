@@ -64,7 +64,6 @@
         "@types/react-native": "^0.66.16",
         "@types/react-native-snap-carousel": "^3.8.5",
         "babel-plugin-inline-dotenv": "^1.6.0",
-        "babel-plugin-module-resolver": "^4.1.0",
         "commitlint": "^11.0.0",
         "cz-conventional-changelog": "^3.3.0",
         "eslint": "^7.2.0",
