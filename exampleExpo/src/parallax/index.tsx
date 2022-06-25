@@ -23,6 +23,8 @@ const colors = [
 
 function Index() {
     const [isVertical, setIsVertical] = React.useState(false);
+    const [isAlignAuto, setIsAlignAuto] = React.useState(false);
+
     const [autoPlay, setAutoPlay] = React.useState(false);
     const [pagingEnabled, setPagingEnabled] = React.useState<boolean>(true);
     const [snapEnabled, setSnapEnabled] = React.useState<boolean>(true);
@@ -59,6 +61,7 @@ function Index() {
                 modeConfig={{
                     parallaxScrollingScale: 0.9,
                     parallaxScrollingOffset: 50,
+                    parallaxAlign: isAlignAuto ? 'auto' : 'center',
                 }}
                 data={colors}
                 renderItem={({ index }) => <SBItem index={index} />}
@@ -121,6 +124,15 @@ function Index() {
                 }}
             >
                 {`snapEnabled:${snapEnabled}`}
+            </SButton>
+            <SButton
+                onPress={() => {
+                    setIsAlignAuto(!isAlignAuto);
+                }}
+            >
+                {isAlignAuto
+                    ? 'Set parallaxAlign: "center"'
+                    : 'Set parallaxAlign: "auto"'}
             </SButton>
         </View>
     );

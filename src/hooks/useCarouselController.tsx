@@ -11,9 +11,9 @@ import type {
     TCarouselProps,
     WithTimingAnimation,
 } from '../types';
-import { dealWithAnimation } from '@/utils/dealWithAnimation';
-import { convertToSharedIndex } from '@/utils/computedWithAutoFillData';
-import { round } from '@/utils/log';
+import { dealWithAnimation } from '../utils/dealWithAnimation';
+import { convertToSharedIndex } from '../utils/computedWithAutoFillData';
+import { round } from '../utils/log';
 
 interface IOpts {
     loop: boolean;

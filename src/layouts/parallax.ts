@@ -22,6 +22,12 @@ export interface ILayoutConfig {
      * @default Math.pow(parallaxScrollingScale, 2)
      */
     parallaxAdjacentItemScale?: number;
+    /**
+     * where to align the active item, relative to the container
+     * 'auto' will align the first item to the left, the last item to the right
+     * @default center
+     */
+    parallaxAlign?: 'center' | 'auto';
 }
 
 export type TParallaxModeProps = ComputedDirectionTypes<{
@@ -41,14 +47,47 @@ export function parallaxLayout(
         parallaxScrollingOffset = 100,
         parallaxScrollingScale = 0.8,
         parallaxAdjacentItemScale = Math.pow(parallaxScrollingScale, 2),
+        parallaxAlign = 'center',
     } = modeConfig;
 
-    return (value: number) => {
+    const alignmentOffset = (size - size * parallaxScrollingScale) / 2;
+
+    return (value: number, index: number, length: number) => {
         'worklet';
+        const isFirstItem = index === 0;
+        const isSecondItem = index === 1;
+        const isLastItem = index === length - 1;
+        const isPreviousToLastItem = index === length - 2;
+
+        const alignmentOffsetStart = -alignmentOffset;
+        const alignmentOffsetEnd = alignmentOffset;
+
+        const shouldAutoAlign = parallaxAlign === 'auto';
+
+        let previousItemX = -size + parallaxScrollingOffset;
+        let currentItemX = 0;
+        let nextItemX = size - parallaxScrollingOffset;
+
+        if (shouldAutoAlign) {
+            if (isFirstItem) {
+                currentItemX = alignmentOffsetStart;
+            }
+            if (isLastItem) {
+                currentItemX = alignmentOffsetEnd;
+                previousItemX -= alignmentOffsetEnd;
+            }
+            if (isSecondItem) {
+                nextItemX += alignmentOffsetStart;
+            }
+            if (isPreviousToLastItem) {
+                previousItemX += alignmentOffsetEnd;
+            }
+        }
+
         const translate = interpolate(
             value,
             [-1, 0, 1],
-            [-size + parallaxScrollingOffset, 0, size - parallaxScrollingOffset]
+            [previousItemX, currentItemX, nextItemX]
         );
 
         const zIndex = interpolate(

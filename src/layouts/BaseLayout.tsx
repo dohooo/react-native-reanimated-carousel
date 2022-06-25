@@ -1,20 +1,19 @@
 import React from 'react';
-import type { ViewStyle } from 'react-native';
 import Animated, {
-    AnimatedStyleProp,
     runOnJS,
     useAnimatedReaction,
     useAnimatedStyle,
     useDerivedValue,
 } from 'react-native-reanimated';
-import { useCheckMounted } from 'src/hooks/useCheckMounted';
+import type { TCarouselProps } from '../types';
+import { useCheckMounted } from '../hooks/useCheckMounted';
 import { IOpts, useOffsetX } from '../hooks/useOffsetX';
 import type { IVisibleRanges } from '../hooks/useVisibleRanges';
 import { LazyView } from '../LazyView';
 import { CTX } from '../store';
 import type { ILayoutConfig } from './stack';
 
-export type TAnimationStyle = (value: number) => AnimatedStyleProp<ViewStyle>;
+export type TAnimationStyle = NonNullable<TCarouselProps['customAnimation']>;
 
 export const BaseLayout: React.FC<{
     index: number;
@@ -70,8 +69,7 @@ export const BaseLayout: React.FC<{
     const x = useOffsetX(offsetXConfig, visibleRanges);
     const animationValue = useDerivedValue(() => x.value / size, [x, size]);
     const animatedStyle = useAnimatedStyle(
-        // @ts-ignore
-        () => animationStyle(x.value / size),
+        () => animationStyle(x.value / size, index, data.length),
         [animationStyle]
     );
 

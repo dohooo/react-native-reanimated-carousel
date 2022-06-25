@@ -5,6 +5,7 @@
     "main": "lib/commonjs/index",
     "types": "lib/typescript/index.d.ts",
     "source": "src/index",
+    "react-native": "src/index.tsx",
     "files": [
         "src",
         "lib",
