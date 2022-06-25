@@ -11,6 +11,8 @@ import NormalComponent from './normal';
 import ParallaxComponent from './parallax';
 import StackComponent from './stack';
 import ComplexComponent from './complex';
+import ComplexFlexComponent from './complex-flex';
+
 import AdvancedParallaxComponent from './advanced-parallax';
 import PauseAdvancedParallaxComponent from './pause-advanced-parallax';
 import ScaleFadeInOutComponent from './scale-fade-in-out';
@@ -48,6 +50,8 @@ export type RootStackParamList = {
     Flow: undefined;
     ParallaxLayers: undefined;
     Complex: undefined;
+    ComplexFlex: undefined;
+
     AdvancedParallax: undefined;
     PauseAdvancedParallax: undefined;
     ScaleFadeInOut: undefined;
@@ -140,6 +144,10 @@ function App() {
                         <Stack.Screen
                             name="Complex"
                             component={ComplexComponent}
+                        />
+                        <Stack.Screen
+                            name="ComplexFlex"
+                            component={ComplexFlexComponent}
                         />
                         <Stack.Screen
                             name="AdvancedParallax"

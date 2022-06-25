@@ -65,6 +65,9 @@ const OtherPage: Array<Record<'name', keyof RootStackParamList>> = [
     {
         name: 'Complex',
     },
+    {
+        name: 'ComplexFlex',
+    },
 ];
 
 if (isIos || isAndroid) {
