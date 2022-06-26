@@ -31,7 +31,7 @@
 | snapEnabled             | ❌                  | true                                                                                                  | boolean                                                                                                                  | 如果启用，松开触摸会滚动到最近的元素，当 pagingEnabled=false 时有效                                                          |
 | enabled                 | ❌                  | true                                                                                                  | boolean                                                                                                                  | 当值为 false 时，轮播图将不会响应任何手势行为                                                                                |
 | customConfig            | ❌                  |                                                                                                       | () => {type?: 'negative' \| 'positive';viewCount?: number;}                                                              | 自定义轮播图内部配置                                                                                                         |
-| customAnimation         | ❌                  |                                                                                                       | (value: number) => Animated.AnimatedStyleProp<ViewStyle>                                                                 | 自定动画，详情见[自定义动画](./custom-animation.zh-CN.md)                                                                    |
+| customAnimation         | ❌                  |                                                                                                       | ( value: number, index: number, length: number ) => Animated.AnimatedStyleProp<ViewStyle>                                | 自定动画，详情见[自定义动画](./custom-animation.zh-CN.md)                                                                    |
 
 ## `modeConfig` Props
 
@@ -42,6 +42,7 @@
 | parallaxScrollingOffset   | ❌       | 100                                                                | number | 控制两侧图片离中间元素的距离     |
 | parallaxScrollingScale    | ❌       | 0.8                                                                | number | 控制前面/当前/后面图片的缩放比例 |
 | parallaxAdjacentItemScale | ❌       | parallaxAdjacentItemScale \|\| Math.pow(parallaxScrollingScale, 2) | number | 控制前面/后面图片的缩放比例      |
+| parallaxAlign             | ❌       | 'center'                                                           | 'center' \| 'auto' | 指定'auto'以使第一个元素与左边对齐，最后一个元素与右边对齐 |
 
 ### Stack
 

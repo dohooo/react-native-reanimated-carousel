@@ -1,5 +1,9 @@
 {
     "compilerOptions": {
+        "baseUrl": "./",
+        "paths": {
+            "react-native-reanimated-carousel": ["./src/index"]
+        },
         "allowUnreachableCode": false,
         "allowUnusedLabels": false,
         "esModuleInterop": true,
