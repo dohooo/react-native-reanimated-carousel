@@ -6,7 +6,7 @@ import { Restart } from 'fiction-expo-restart';
 import { I18nManager, Text, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
-import Home from './home';
+import Home from './Home';
 import NormalComponent from './normal';
 import ParallaxComponent from './parallax';
 import StackComponent from './stack';
@@ -20,6 +20,7 @@ import AnimTabBarComponent from './anim-tab-bar';
 import MarqueeComponent from './marquee';
 import MultipleComponent from './multiple';
 import Flow from './flow';
+import PressSwipe from './press-swipe';
 import Fold from './fold';
 import Tear from './tear';
 import StackCards from './stack-cards';
@@ -45,6 +46,7 @@ export type RootStackParamList = {
     Parallax: undefined;
     Stack: undefined;
 
+    PressSwipe: undefined;
     Tear: undefined;
     StackCards: undefined;
     Fold: undefined;
@@ -135,6 +137,10 @@ function App() {
                         />
                         <Stack.Screen name="Stack" component={StackComponent} />
 
+                        <Stack.Screen
+                            name="PressSwipe"
+                            component={PressSwipe}
+                        />
                         <Stack.Screen name="Tear" component={Tear} />
                         <Stack.Screen
                             name="StackCards"

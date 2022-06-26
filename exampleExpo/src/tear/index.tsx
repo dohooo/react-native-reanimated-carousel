@@ -9,14 +9,9 @@ import Carousel from 'react-native-reanimated-carousel';
 import type { TAnimationStyle } from '../../../src/layouts/BaseLayout';
 import SButton from '../components/SButton';
 import { ElementsText, window } from '../constants';
+import { ImageItems } from '../utils/image-items';
 
 const PAGE_WIDTH = window.width;
-
-const data = [
-    require('../../assets/carousel-0.jpg'),
-    require('../../assets/carousel-1.jpg'),
-    require('../../assets/carousel-2.jpg'),
-];
 
 function Index() {
     const [isAutoPlay, setIsAutoPlay] = React.useState(false);
@@ -42,7 +37,7 @@ function Index() {
                 autoPlay={isAutoPlay}
                 style={{ width: PAGE_WIDTH, height: 240 }}
                 width={PAGE_WIDTH}
-                data={[...data, ...data]}
+                data={[...ImageItems, ...ImageItems]}
                 renderItem={({ index, item, animationValue }) => {
                     return (
                         <Item
