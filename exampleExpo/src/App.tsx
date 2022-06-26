@@ -20,6 +20,7 @@ import AnimTabBarComponent from './anim-tab-bar';
 import MarqueeComponent from './marquee';
 import MultipleComponent from './multiple';
 import Flow from './flow';
+import Cube3D from './cube-3d';
 import PressSwipe from './press-swipe';
 import Fold from './fold';
 import Tear from './tear';
@@ -46,6 +47,7 @@ export type RootStackParamList = {
     Parallax: undefined;
     Stack: undefined;
 
+    Cube3D: undefined;
     PressSwipe: undefined;
     Tear: undefined;
     StackCards: undefined;
@@ -137,6 +139,7 @@ function App() {
                         />
                         <Stack.Screen name="Stack" component={StackComponent} />
 
+                        <Stack.Screen name="Cube3D" component={Cube3D} />
                         <Stack.Screen
                             name="PressSwipe"
                             component={PressSwipe}

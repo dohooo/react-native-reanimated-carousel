@@ -42,6 +42,8 @@
 |                  <a href="./exampleExpo/src/marquee/index.tsx">marquee</a>                  |                <a href="./exampleExpo/src/multiple/index.tsx">multiple</a>                |          <a href="./exampleExpo/src/circular/index.tsx">circular</a>          |
 |                                <img src="assets/fold.gif"/>                                 |                               <img src="assets/tear.gif"/>                                |                      <img src="assets/press-swipe.gif"/>                      |
 |                     <a href="./exampleExpo/src/fold/index.tsx">fold</a>                     |                    <a href="./exampleExpo/src/tear/index.tsx">tear</a>                    |       <a href="./exampleExpo/src/press-swipe/index.tsx">press-swipe</a>       |
+|                                <img src="assets/cube-3d.gif"/>                                 |||
+|                     <a href="./exampleExpo/src/cube-3d/index.tsx">cube-3d</a>                     |||
 |                           <img src="assets/parallax-layers.gif"/>                           |                            <img src="assets/stack-cards.gif"/>                            |                         <img src="assets/flow.gif"/>                          |
 |          <a href="./exampleExpo/src/parallax-layers/index.tsx">parallax-layers</a>          |             <a href="./exampleExpo/src/stack-cards/index.tsx">stack-cards</a>             |              <a href="./exampleExpo/src/flow/index.tsx">flow</a>              |
 
