@@ -1,7 +1,7 @@
 ## About RNRC
 About the internal implementation of RNRC(react-native-reanimated-carousel).
 
-### Theory
+### Working principle
 This is what we expect to see in the execution of RNRC.
 
 1. First we have three images by default and have slid to the second image in the middle

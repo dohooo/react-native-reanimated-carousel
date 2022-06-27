@@ -1,7 +1,7 @@
 ## About RNRC
 关于RNRC(react-native-reanimated-carousel)的内部实现。
 
-### 原理
+### 工作原理
 这是我们期望看到的执行逻辑。
 
 1. 首先我们默认有三张图片，并且已经滑动到了中间第二张
