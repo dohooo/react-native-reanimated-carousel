@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { Extrapolate, interpolate } from 'react-native-reanimated';
+import Animated, {
+    Extrapolate,
+    interpolate,
+    interpolateColor,
+    useAnimatedStyle,
+} from 'react-native-reanimated';
 import Carousel from 'react-native-reanimated-carousel';
 import type { TAnimationStyle } from '../../../src/layouts/BaseLayout';
 import { SBItem } from '../components/SBItem';
@@ -97,11 +102,18 @@ function CubeItem() {
                     alignItems: 'center',
                 }}
                 pagingEnabled={false}
+                snapEnabled={false}
                 width={PAGE_WIDTH}
                 height={PAGE_HEIGHT}
                 data={[...new Array(6).keys()]}
-                renderItem={({ index }) => {
-                    return <CustomItem key={index} index={index} />;
+                renderItem={({ index, animationValue }) => {
+                    return (
+                        <CustomItem
+                            key={index}
+                            index={index}
+                            animationValue={animationValue}
+                        />
+                    );
                 }}
                 customAnimation={animationStyle}
                 scrollAnimationDuration={1200}
@@ -113,8 +125,21 @@ function CubeItem() {
 
 interface ItemProps {
     index: number;
+    animationValue: Animated.SharedValue<number>;
 }
-const CustomItem: React.FC<ItemProps> = ({ index }) => {
+const CustomItem: React.FC<ItemProps> = ({ index, animationValue }) => {
+    const maskStyle = useAnimatedStyle(() => {
+        const backgroundColor = interpolateColor(
+            animationValue.value,
+            [-1, 0, 1],
+            ['#000000dd', 'transparent', '#000000dd']
+        );
+
+        return {
+            backgroundColor,
+        };
+    }, [animationValue]);
+
     return (
         <View style={{ flex: 1 }}>
             <SBItem
@@ -122,6 +147,19 @@ const CustomItem: React.FC<ItemProps> = ({ index }) => {
                 key={index}
                 index={index}
                 style={{ borderRadius: 0 }}
+            />
+            <Animated.View
+                pointerEvents="none"
+                style={[
+                    {
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                    },
+                    maskStyle,
+                ]}
             />
         </View>
     );
