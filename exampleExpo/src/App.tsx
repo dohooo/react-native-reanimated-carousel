@@ -10,6 +10,7 @@ import Home from './Home';
 import NormalComponent from './normal';
 import ParallaxComponent from './parallax';
 import StackComponent from './stack';
+import LeftAlignComponent from './left-align';
 import ComplexComponent from './complex';
 import AdvancedParallaxComponent from './advanced-parallax';
 import PauseAdvancedParallaxComponent from './pause-advanced-parallax';
@@ -44,6 +45,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export type RootStackParamList = {
     Home: undefined;
     Normal: undefined;
+    LeftAlign: undefined;
     Parallax: undefined;
     Stack: undefined;
 
@@ -138,6 +140,10 @@ function App() {
                             component={ParallaxComponent}
                         />
                         <Stack.Screen name="Stack" component={StackComponent} />
+                        <Stack.Screen
+                            name="LeftAlign"
+                            component={LeftAlignComponent}
+                        />
 
                         <Stack.Screen name="Cube3D" component={Cube3D} />
                         <Stack.Screen
