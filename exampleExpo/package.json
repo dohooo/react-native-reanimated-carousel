@@ -3,7 +3,8 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-        "android:pretty": "expo start --android",
+        "android": "expo start -c --android",
+        "android:pretty": "PRETTY=true expo start -c --android",
         "ios": "expo start -c --ios",
         "ios:pretty": "PRETTY=true expo start -c --ios",
         "web": "expo start --web",

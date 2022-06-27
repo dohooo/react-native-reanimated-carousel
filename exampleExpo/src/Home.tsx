@@ -7,78 +7,128 @@ import {
     TouchableHighlight,
 } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import type { RootStackParamList } from './App';
 import { isAndroid, isIos } from './utils';
 
-const LayoutsPage: Array<Record<'name', keyof RootStackParamList>> = [
+import NormalComponent from './normal';
+import ParallaxComponent from './parallax';
+import StackComponent from './stack';
+import LeftAlignComponent from './left-align';
+import ComplexComponent from './complex';
+import AdvancedParallaxComponent from './advanced-parallax';
+import PauseAdvancedParallaxComponent from './pause-advanced-parallax';
+import ScaleFadeInOutComponent from './scale-fade-in-out';
+import RotateInOutComponent from './rotate-in-out';
+import RotateScaleFadeInOutComponent from './rotate-scale-fade-in-out';
+import AnimTabBarComponent from './anim-tab-bar';
+import MarqueeComponent from './marquee';
+import MultipleComponent from './multiple';
+import Flow from './flow';
+import Cube3D from './cube-3d';
+import PressSwipe from './press-swipe';
+import Fold from './fold';
+import Tear from './tear';
+import StackCards from './stack-cards';
+import Circular from './circular';
+import ParallaxLayers from './parallax-layers';
+
+// Not support to WEB (react-native-snap-carousel)
+const SnapCarouselComplexComponent = React.lazy(
+    () => import('./snap-carousel-complex')
+);
+const SnapCarouselLoopComponent = React.lazy(
+    () => import('./snap-carousel-loop')
+);
+
+export const LayoutsPage = [
     {
         name: 'Normal',
+        page: NormalComponent,
     },
     {
         name: 'Parallax',
+        page: ParallaxComponent,
     },
     {
         name: 'Stack',
+        page: StackComponent,
     },
     {
         name: 'LeftAlign',
+        page: LeftAlignComponent,
     },
 ];
 
-const CustomAnimations: Array<Record<'name', keyof RootStackParamList>> = [
+export const CustomAnimations = [
     {
         name: 'Cube3D',
+        page: Cube3D,
     },
     {
         name: 'PressSwipe',
+        page: PressSwipe,
     },
     {
         name: 'Tear',
+        page: Tear,
     },
     {
         name: 'StackCards',
+        page: StackCards,
     },
     {
         name: 'Fold',
+        page: Fold,
     },
     {
         name: 'Circular',
+        page: Circular,
     },
     {
         name: 'Flow',
+        page: Flow,
     },
     {
         name: 'ParallaxLayers',
+        page: ParallaxLayers,
     },
     {
         name: 'AdvancedParallax',
+        page: AdvancedParallaxComponent,
     },
     {
         name: 'PauseAdvancedParallax',
+        page: PauseAdvancedParallaxComponent,
     },
     {
         name: 'ScaleFadeInOut',
+        page: ScaleFadeInOutComponent,
     },
     {
         name: 'RotateInOut',
+        page: RotateInOutComponent,
     },
     {
         name: 'RotateScaleFadeInOut',
+        page: RotateScaleFadeInOutComponent,
     },
     {
         name: 'AnimTabBar',
+        page: AnimTabBarComponent,
     },
     {
         name: 'Marquee',
+        page: MarqueeComponent,
     },
     {
         name: 'Multiple',
+        page: MultipleComponent,
     },
 ];
 
-const OtherPage: Array<Record<'name', keyof RootStackParamList>> = [
+export const OtherPage = [
     {
         name: 'Complex',
+        page: ComplexComponent,
     },
 ];
 
@@ -86,15 +136,19 @@ if (isIos || isAndroid) {
     OtherPage.push(
         {
             name: 'SnapCarouselComplex',
+            // @ts-ignore
+            page: SnapCarouselComplexComponent,
         },
         {
             name: 'SnapCarouselLoop',
+            // @ts-ignore
+            page: SnapCarouselLoopComponent,
         }
     );
 }
 
 const Index = () => {
-    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    const navigation = useNavigation<NavigationProp<any>>();
     return (
         <ScrollView
             style={{ flex: 1 }}
