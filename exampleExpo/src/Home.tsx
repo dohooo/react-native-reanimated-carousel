@@ -20,6 +20,9 @@ const LayoutsPage: Array<Record<'name', keyof RootStackParamList>> = [
     {
         name: 'Stack',
     },
+    {
+        name: 'LeftAlign',
+    },
 ];
 
 const CustomAnimations: Array<Record<'name', keyof RootStackParamList>> = [
