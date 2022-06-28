@@ -113,9 +113,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
                 return;
             }
 
-            const direction =
-                -scrollEndTranslation.value /
-                Math.abs(scrollEndTranslation.value);
+            const direction = -(scrollEndTranslation.value >= 0 ? 1 : -1);
             const computed = direction < 0 ? Math.ceil : Math.floor;
             const page = computed(-translation.value / size);
             let finalPage = page + direction;
