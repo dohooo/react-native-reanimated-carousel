@@ -1,3 +1,10 @@
+## [3.0.3](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.0.1...v3.0.3) (2022-06-28)
+
+
+### Bug Fixes
+
+* carousel crashes when swiping in the opposite direction ([b5fc081](https://github.com/dohooo/react-native-reanimated-carousel/commit/b5fc081fe0f2617ee63f31ac6dcabc6715d465e0)), closes [#215](https://github.com/dohooo/react-native-reanimated-carousel/issues/215)
+
 ## [3.0.1](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.0.0...v3.0.1) (2022-06-20)
 
 
