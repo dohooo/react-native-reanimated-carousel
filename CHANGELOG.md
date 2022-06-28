@@ -1,3 +1,5 @@
+## [3.0.2](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.0.1...v3.0.2) (2022-06-28)
+
 ## [3.0.1](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.0.0...v3.0.1) (2022-06-20)
 
 
