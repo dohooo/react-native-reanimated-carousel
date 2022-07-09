@@ -115,6 +115,8 @@ import Carousel from 'react-native-reanimated-carousel';
     -   Support to RTL mode with no more configuration needed. But in RTL mode, need to manually set the autoPlayReverse props for autoplay to control scrolling direction.
 -   EXPO
     -   If use EXPO managed workflow please ensure that the version is greater than 41.Because the old version not support `Reanimated(v2)`.
+-   Working principle
+    - [About RNRC](./docs/about.md)
 
 ## Reason
 

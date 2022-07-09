@@ -114,6 +114,8 @@ import Carousel from 'react-native-reanimated-carousel';
     -   所有 layout 均完美支持 RTL 模式，并且无需再做任何配置。但在 RTL 模式下使用自动播放时，默认不会自动转换方向，需要结合 autoPlayReverse 来手动控制方向。
 -   EXPO
     -   如果你使用 EXPO 托管工作流，请确定你的 EXPO SDK 版本大于 41，因为旧的版本并不支持`Reanimated(v2)`。
+-   工作原理
+    - [关于RNRC](./docs/about.zh-CN.md)
 
 ## 原因
 
