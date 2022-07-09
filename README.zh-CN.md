@@ -44,8 +44,8 @@
 |                  <a href="./exampleExpo/src/marquee/index.tsx">marquee</a>                  |                <a href="./exampleExpo/src/multiple/index.tsx">multiple</a>                |          <a href="./exampleExpo/src/circular/index.tsx">circular</a>          |
 |                                <img src="assets/fold.gif"/>                                 |                               <img src="assets/tear.gif"/>                                |                      <img src="assets/press-swipe.gif"/>                      |
 |                     <a href="./exampleExpo/src/fold/index.tsx">fold</a>                     |                    <a href="./exampleExpo/src/tear/index.tsx">tear</a>                    |       <a href="./exampleExpo/src/press-swipe/index.tsx">press-swipe</a>       |
-|                               <img src="assets/cube-3d.gif"/>                               |                                                                                           |                                                                               |
-|                  <a href="./exampleExpo/src/cube-3d/index.tsx">cube-3d</a>                  |                                                                                           |                                                                               |
+|                               <img src="assets/cube-3d.gif"/>                               |                           <img src="assets/blur-parallax.gif"/>                           |                                                                               |
+|                  <a href="./exampleExpo/src/cube-3d/index.tsx">cube-3d</a>                  |           <a href="./exampleExpo/src/blur-parallax/index.tsx">blur-parallax</a>           |                                                                               |
 |                           <img src="assets/parallax-layers.gif"/>                           |                            <img src="assets/stack-cards.gif"/>                            |                         <img src="assets/flow.gif"/>                          |
 |          <a href="./exampleExpo/src/parallax-layers/index.tsx">parallax-layers</a>          |             <a href="./exampleExpo/src/stack-cards/index.tsx">stack-cards</a>             |              <a href="./exampleExpo/src/flow/index.tsx">flow</a>              |
 
@@ -114,6 +114,8 @@ import Carousel from 'react-native-reanimated-carousel';
     -   所有 layout 均完美支持 RTL 模式，并且无需再做任何配置。但在 RTL 模式下使用自动播放时，默认不会自动转换方向，需要结合 autoPlayReverse 来手动控制方向。
 -   EXPO
     -   如果你使用 EXPO 托管工作流，请确定你的 EXPO SDK 版本大于 41，因为旧的版本并不支持`Reanimated(v2)`。
+-   工作原理
+    - [关于RNRC](./docs/about.zh-CN.md)
 
 ## 原因
 
