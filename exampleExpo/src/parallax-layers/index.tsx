@@ -9,12 +9,7 @@ import Animated, {
     useAnimatedStyle,
 } from 'react-native-reanimated';
 import { withAnchorPoint } from '../utils/anchor-point';
-
-const fruit_0 = require('../../assets/fruit-0.png');
-const fruit_1 = require('../../assets/fruit-1.png');
-const fruit_2 = require('../../assets/fruit-2.png');
-
-const fruits = [fruit_0, fruit_2, fruit_1];
+import { fruitItems } from '../utils/items';
 
 const colors = ['#fda282', '#fdba4e', '#800015'];
 
@@ -170,7 +165,7 @@ const Card: React.FC<{
             />
 
             <Animated.Image
-                source={fruits[index % 3]}
+                source={fruitItems[index % 3]}
                 style={[
                     {
                         width: WIDTH * 0.8,

@@ -24,6 +24,7 @@ import MarqueeComponent from './marquee';
 import MultipleComponent from './multiple';
 import Flow from './flow';
 import Cube3D from './cube-3d';
+import BlurParallax from './blur-parallax';
 import PressSwipe from './press-swipe';
 import Fold from './fold';
 import Tear from './tear';
@@ -59,6 +60,10 @@ export const LayoutsPage = [
 ];
 
 export const CustomAnimations = [
+    {
+        name: 'BlurParallax',
+        page: BlurParallax,
+    },
     {
         name: 'Cube3D',
         page: Cube3D,
