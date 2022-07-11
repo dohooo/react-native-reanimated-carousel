@@ -5,14 +5,16 @@
 ## 准备
 
 ```
-type TAnimationStyle = (value: number) => Animated.AnimatedStyleProp<ViewStyle>;
+type TAnimationStyle = (value: number, index: number, length: number) => Animated.AnimatedStyleProp<ViewStyle>;
 ```
 
 这个函数会在每个 item 里去调用，并接受一个参数`value`表示当前 item 相对`window`所在的位置，下图展示了`value`和位置的关系
 
 <img src="././../assets/custom-animation-sketch.png" width="300"/>
 
-当拿到`value`后，我们只需要描述 item 在对应位置上如何展示，剩下的就交给`Animated`去执行吧。
+当拿到`value`后，我们只需要描述 item 在对应位置上如何展示，剩下的就交给`Animated`去执行吧。  
+
+此外，你还可以使用当前项目的`index`和项目总数(`length`)来定制动画。这允许您创建一个依赖于当前项索引的自定义动画(例如以不同的方式对齐第一个项)。
 
 ### 小贴士
 

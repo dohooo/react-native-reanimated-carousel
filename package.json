@@ -5,6 +5,7 @@
     "main": "lib/commonjs/index",
     "types": "lib/typescript/index.d.ts",
     "source": "src/index",
+    "react-native": "src/index.tsx",
     "files": [
         "src",
         "lib",
@@ -63,7 +64,6 @@
         "@types/react-native": "^0.66.16",
         "@types/react-native-snap-carousel": "^3.8.5",
         "babel-plugin-inline-dotenv": "^1.6.0",
-        "babel-plugin-module-resolver": "^4.1.0",
         "commitlint": "^11.0.0",
         "cz-conventional-changelog": "^3.3.0",
         "dotenv-cli": "^5.1.0",

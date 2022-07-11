@@ -1,4 +1,4 @@
-import { DATA_LENGTH } from 'src/constants';
+import { DATA_LENGTH } from '../constants';
 
 const { SINGLE_ITEM, DOUBLE_ITEM } = DATA_LENGTH;
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import type { TCarouselProps } from 'src/types';
+import type { TCarouselProps } from '../types';
 
 export function usePropsErrorBoundary(props: TCarouselProps) {
     React.useEffect(() => {

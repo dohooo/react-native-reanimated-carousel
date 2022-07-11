@@ -6,7 +6,7 @@ import Animated, {
     useAnimatedReaction,
     useAnimatedStyle,
 } from 'react-native-reanimated';
-import type { ComputedDirectionTypes } from 'src/types';
+import type { ComputedDirectionTypes } from '../types';
 import { useOffsetX } from '../hooks/useOffsetX';
 import type { IVisibleRanges } from '../hooks/useVisibleRanges';
 import { LazyView } from '../LazyView';
