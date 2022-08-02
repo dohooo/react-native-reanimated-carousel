@@ -2,7 +2,6 @@
     "compilerOptions": {
         "baseUrl": "./",
         "paths": {
-            "@/utils/*": ["./src/utils/*"],
             "react-native-reanimated-carousel": ["./src/index"]
         },
         "allowUnreachableCode": false,

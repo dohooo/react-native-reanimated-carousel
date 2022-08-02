@@ -1,4 +1,4 @@
-import { computedFillDataWithAutoFillData } from '@/utils/computedWithAutoFillData';
+import { computedFillDataWithAutoFillData } from '../utils/computedWithAutoFillData';
 import React from 'react';
 import type { TCarouselProps } from '../types';
 

@@ -1,5 +1,5 @@
 import { Extrapolate, interpolate } from 'react-native-reanimated';
-import type { ComputedDirectionTypes } from 'src/types';
+import type { IComputedDirectionTypes } from 'react-native-reanimated-carousel';
 
 type TBaseConfig = {
     size: number;
@@ -24,7 +24,7 @@ export interface ILayoutConfig {
     parallaxAdjacentItemScale?: number;
 }
 
-export type TParallaxModeProps = ComputedDirectionTypes<{
+export type TParallaxModeProps = IComputedDirectionTypes<{
     /**
      * Carousel Animated transitions.
      */

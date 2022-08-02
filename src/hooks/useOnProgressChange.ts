@@ -2,7 +2,7 @@ import Animated, {
     runOnJS,
     useAnimatedReaction,
 } from 'react-native-reanimated';
-import { computedOffsetXValueWithAutoFillData } from '@/utils/computedWithAutoFillData';
+import { computedOffsetXValueWithAutoFillData } from '../utils/computedWithAutoFillData';
 import type { TCarouselProps } from '../types';
 
 export function useOnProgressChange(

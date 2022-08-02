@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Dimensions, TransformsStyle, ViewStyle } from 'react-native';
 import { Extrapolate, interpolate } from 'react-native-reanimated';
-import type { ComputedDirectionTypes, CustomConfig } from '../types';
+import type { IComputedDirectionTypes, CustomConfig } from '../types';
 
 const screen = Dimensions.get('window');
 
@@ -15,7 +15,7 @@ export interface ILayoutConfig {
     snapDirection?: 'left' | 'right';
 }
 
-export type TStackModeProps = ComputedDirectionTypes<{
+export type TStackModeProps = IComputedDirectionTypes<{
     /**
      * Carousel Animated transitions.
      */

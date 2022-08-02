@@ -7,7 +7,7 @@ import Animated, {
     useAnimatedStyle,
     useDerivedValue,
 } from 'react-native-reanimated';
-import { useCheckMounted } from 'src/hooks/useCheckMounted';
+import { useCheckMounted } from '../hooks/useCheckMounted';
 import { IOpts, useOffsetX } from '../hooks/useOffsetX';
 import type { IVisibleRanges } from '../hooks/useVisibleRanges';
 import { LazyView } from '../LazyView';

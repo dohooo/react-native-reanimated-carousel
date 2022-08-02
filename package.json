@@ -3,6 +3,7 @@
     "version": "3.0.3",
     "description": "Simple carousel component.fully implemented using Reanimated 2.Infinitely scrolling, very smooth.",
     "main": "lib/commonjs/index",
+    "react-native": "src/index.tsx",
     "types": "lib/typescript/index.d.ts",
     "source": "src/index",
     "files": [

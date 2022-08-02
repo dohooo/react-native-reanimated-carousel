@@ -6,14 +6,14 @@ import Animated, {
     useAnimatedReaction,
     useAnimatedStyle,
 } from 'react-native-reanimated';
-import type { ComputedDirectionTypes } from 'src/types';
+import type { IComputedDirectionTypes } from '../types';
 import { useOffsetX } from '../hooks/useOffsetX';
 import type { IVisibleRanges } from '../hooks/useVisibleRanges';
 import { LazyView } from '../LazyView';
 import type { ILayoutConfig } from './parallax';
 
 export const ParallaxLayout: React.FC<
-    ComputedDirectionTypes<
+    IComputedDirectionTypes<
         {
             loop?: boolean;
             handlerOffsetX: Animated.SharedValue<number>;
