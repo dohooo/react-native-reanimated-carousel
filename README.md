@@ -83,14 +83,42 @@ Now we need to install [`react-native-gesture-handler`](https://github.com/kmagi
 ## Usage
 
 ```tsx
+import * as React from 'react';
+import { Dimensions, Text, View } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 
-<Carousel
-    width={300}
-    height={150}
-    data={[1, 2, 3]}
-    renderItem={({ item }) => <AnyElement />}
-/>;
+function Index() {
+    const width = Dimensions.get('window').width;
+    return (
+        <View style={{ flex: 1 }}>
+            <Carousel
+                loop
+                width={width}
+                height={width / 2}
+                autoPlay={true}
+                data={[...new Array(6).keys()]}
+                scrollAnimationDuration={1000}
+                onSnapToItem={(index) => console.log('current index:', index)}
+                renderItem={({ index }) => (
+                    <View
+                        style={{
+                            flex: 1,
+                            borderWidth: 1,
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Text style={{ textAlign: 'center', fontSize: 30 }}>
+                            {index}
+                        </Text>
+                    </View>
+                )}
+            />
+        </View>
+    );
+}
+
+export default Index;
+
 ```
 
 ## Tips
