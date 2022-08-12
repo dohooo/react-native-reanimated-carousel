@@ -1,3 +1,10 @@
+## [3.0.4](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.0.3...v3.0.4) (2022-08-12)
+
+
+### Bug Fixes
+
+* scrollTo is not running properly ([f406258](https://github.com/dohooo/react-native-reanimated-carousel/commit/f406258585e203a880ea82992c4ac79237f16df5)), closes [#222](https://github.com/dohooo/react-native-reanimated-carousel/issues/222)
+
 ## [3.0.3](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.0.1...v3.0.3) (2022-06-28)
 
 
