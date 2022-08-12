@@ -230,14 +230,37 @@ export function useCarouselController(options: IOpts): ICarouselController {
             if (!canSliding()) return;
 
             onScrollBegin?.();
+            // direction -> 1 | -1
+            const direction =
+                handlerOffsetX.value / Math.abs(handlerOffsetX.value);
+            // target offset
+            const offset = i * size * direction;
+            // page width size * page count
+            const totalSize = dataInfo.length * size;
 
-            const offset = handlerOffsetX.value + (index.value - i) * size;
+            let isCloseToNextLoop = false;
+
+            if (loop) {
+                isCloseToNextLoop =
+                    Math.abs(handlerOffsetX.value % totalSize) / totalSize >=
+                    0.5;
+            }
+
+            const finalOffset =
+                (Math.floor(Math.abs(handlerOffsetX.value / totalSize)) +
+                    (isCloseToNextLoop ? 1 : 0)) *
+                    totalSize *
+                    direction +
+                offset;
 
             if (animated) {
                 index.value = i;
-                handlerOffsetX.value = scrollWithTiming(offset, onFinished);
+                handlerOffsetX.value = scrollWithTiming(
+                    finalOffset,
+                    onFinished
+                );
             } else {
-                handlerOffsetX.value = offset;
+                handlerOffsetX.value = finalOffset;
                 index.value = i;
                 onFinished?.();
             }
@@ -248,6 +271,8 @@ export function useCarouselController(options: IOpts): ICarouselController {
             onScrollBegin,
             handlerOffsetX,
             size,
+            dataInfo.length,
+            loop,
             scrollWithTiming,
         ]
     );
@@ -255,7 +280,6 @@ export function useCarouselController(options: IOpts): ICarouselController {
     const scrollTo = React.useCallback(
         (opts: TCarouselActionOptions = {}) => {
             const { index: i, count, animated = false, onFinished } = opts;
-
             if (typeof i === 'number' && i > -1) {
                 to({ i, animated, onFinished });
                 return;

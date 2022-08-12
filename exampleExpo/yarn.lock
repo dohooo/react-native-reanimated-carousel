@@ -1252,6 +1252,27 @@
     xcode "^3.0.1"
     xml2js "0.4.23"
 
+"@expo/config-plugins@~5.0.1":
+  version "5.0.1"
+  resolved "https://registry.npmjs.org/@expo/config-plugins/-/config-plugins-5.0.1.tgz#66bc8d15785bdcd3598e466344f8c0518390179d"
+  integrity sha512-1OfnsOrfeSkB0VZfT01UjQ5Uq6p+yYbq8yNkj0e99K/6NLHpyvIxj+5tZIV0nQXgkOcqBIABL2uA7lwB8CkaBQ==
+  dependencies:
+    "@expo/config-types" "^46.0.0"
+    "@expo/json-file" "8.2.36"
+    "@expo/plist" "0.0.18"
+    "@expo/sdk-runtime-versions" "^1.0.0"
+    "@react-native/normalize-color" "^2.0.0"
+    chalk "^4.1.2"
+    debug "^4.3.1"
+    find-up "~5.0.0"
+    getenv "^1.0.0"
+    glob "7.1.6"
+    resolve-from "^5.0.0"
+    semver "^7.3.5"
+    slash "^3.0.0"
+    xcode "^3.0.1"
+    xml2js "0.4.23"
+
 "@expo/config-types@^42.0.0":
   version "42.0.0"
   resolved "https://registry.npmjs.org/@expo/config-types/-/config-types-42.0.0.tgz#3e3e125ec092c0c34dbfaf19be5480402de3d677"
@@ -1266,6 +1287,11 @@
   version "46.0.1"
   resolved "https://registry.npmjs.org/@expo/config-types/-/config-types-46.0.1.tgz#ba5d6197222039de13aefdf0171d24b027781cd0"
   integrity sha512-LQWGDagQ0YXGSJyLomNDZrYXj/cUP+wczs9y2M8MB9UDoSU6dbLRMiSX0FMhhKKdxBK0p92VQxZyqOzGpIYfSw==
+
+"@expo/config-types@^46.0.1":
+  version "46.0.2"
+  resolved "https://registry.npmjs.org/@expo/config-types/-/config-types-46.0.2.tgz#191f225ebfcbe624868ddc40efae79593f948dd8"
+  integrity sha512-PXkmOgNwRyBfgVT1HmFZhfh3Qm7WKKyV6mk3/5HJ/LzPh1t+Zs2JrWX8U2YncTLV1QzV7nV8tnkyvszzqnZEzQ==
 
 "@expo/config@5.0.9":
   version "5.0.9"
@@ -1309,6 +1335,23 @@
     "@babel/code-frame" "~7.10.4"
     "@expo/config-plugins" "~5.0.0"
     "@expo/config-types" "^46.0.0"
+    "@expo/json-file" "8.2.36"
+    getenv "^1.0.0"
+    glob "7.1.6"
+    require-from-string "^2.0.2"
+    resolve-from "^5.0.0"
+    semver "7.3.2"
+    slugify "^1.3.4"
+    sucrase "^3.20.0"
+
+"@expo/config@7.0.1", "@expo/config@~7.0.1":
+  version "7.0.1"
+  resolved "https://registry.npmjs.org/@expo/config/-/config-7.0.1.tgz#d8e2e5410bb0b8e305690bbc76e6bb76f6a6de31"
+  integrity sha512-4lu0wr45XXJ2MXiLAm2+fmOyy/jjqF3NuDm92fO6nuulRzEEvTP4w3vsibJ690rT81ohtvhpruKhkRs0wSjKWA==
+  dependencies:
+    "@babel/code-frame" "~7.10.4"
+    "@expo/config-plugins" "~5.0.1"
+    "@expo/config-types" "^46.0.1"
     "@expo/json-file" "8.2.36"
     getenv "^1.0.0"
     glob "7.1.6"
@@ -1481,6 +1524,20 @@
     chalk "^4.1.0"
     getenv "^1.0.0"
     metro-react-native-babel-transformer "^0.59.0"
+
+"@expo/metro-config@~0.3.19":
+  version "0.3.22"
+  resolved "https://registry.npmjs.org/@expo/metro-config/-/metro-config-0.3.22.tgz#fa4a0729ec8ecbc9c9fb79c63ecc66a299505c82"
+  integrity sha512-R81sLbaeUBjN8IXcxiVx7GcpSj8z7szILl1b5yJDb38WdIFwxhrseA5wXaTT1yMhI+59w6n99T2qtFV2yD5qYA==
+  dependencies:
+    "@expo/config" "7.0.1"
+    "@expo/json-file" "8.2.36"
+    chalk "^4.1.0"
+    debug "^4.3.2"
+    find-yarn-workspace-root "~2.0.0"
+    getenv "^1.0.0"
+    resolve-from "^5.0.0"
+    sucrase "^3.20.0"
 
 "@expo/osascript@2.0.33", "@expo/osascript@^2.0.31":
   version "2.0.33"
@@ -1794,10 +1851,10 @@
     execa "^1.0.0"
     prompts "^2.4.0"
 
-"@react-native-community/cli-config@^8.0.4":
-  version "8.0.4"
-  resolved "https://registry.npmjs.org/@react-native-community/cli-config/-/cli-config-8.0.4.tgz#40e9e4e12ba70a6e12d1e777373af6fa1ac2e4e6"
-  integrity sha512-0vcrIETka1Tr0blr0AjVkoP/1yynvarJQXi8Yry/XB3BLenrkUFxolqqA3Ff55KFQ7t1IzAuFtfuVZs25LvyDQ==
+"@react-native-community/cli-config@^8.0.6":
+  version "8.0.6"
+  resolved "https://registry.npmjs.org/@react-native-community/cli-config/-/cli-config-8.0.6.tgz#041eee7dd8fdef595bf7a3f24228c173bf294a44"
+  integrity sha512-mjVpVvdh8AviiO8xtqeX+BkjqE//NMDnISwsLWSJUfNCwTAPmdR8PGbhgP5O4hWHyJ3WkepTopl0ya7Tfi3ifw==
   dependencies:
     "@react-native-community/cli-tools" "^8.0.4"
     cosmiconfig "^5.1.0"
@@ -1812,13 +1869,13 @@
   dependencies:
     serve-static "^1.13.1"
 
-"@react-native-community/cli-doctor@^8.0.4":
-  version "8.0.4"
-  resolved "https://registry.npmjs.org/@react-native-community/cli-doctor/-/cli-doctor-8.0.4.tgz#9216867f0d8590868dc5b8035f62bbcac68b3254"
-  integrity sha512-Blw/66qwoEoKrtwn3O9iTtXbt4YWlwqNse5BJeRDzlSdutWTX4PgJu/34gyvOHGysNlrf+GYkeyqqxI/y0s07A==
+"@react-native-community/cli-doctor@^8.0.6":
+  version "8.0.6"
+  resolved "https://registry.npmjs.org/@react-native-community/cli-doctor/-/cli-doctor-8.0.6.tgz#954250155ab2f3a66a54821e071bc4a631d2dfff"
+  integrity sha512-ZQqyT9mJMVeFEVIwj8rbDYGCA2xXjJfsQjWk2iTRZ1CFHfhPSUuUiG8r6mJmTinAP9t+wYcbbIYzNgdSUKnDMw==
   dependencies:
-    "@react-native-community/cli-config" "^8.0.4"
-    "@react-native-community/cli-platform-ios" "^8.0.4"
+    "@react-native-community/cli-config" "^8.0.6"
+    "@react-native-community/cli-platform-ios" "^8.0.6"
     "@react-native-community/cli-tools" "^8.0.4"
     chalk "^4.1.2"
     command-exists "^1.2.8"
@@ -1845,7 +1902,7 @@
     hermes-profile-transformer "^0.0.6"
     ip "^1.1.5"
 
-"@react-native-community/cli-platform-android@^8.0.2", "@react-native-community/cli-platform-android@^8.0.5":
+"@react-native-community/cli-platform-android@^8.0.4", "@react-native-community/cli-platform-android@^8.0.5":
   version "8.0.5"
   resolved "https://registry.npmjs.org/@react-native-community/cli-platform-android/-/cli-platform-android-8.0.5.tgz#da11d2678adeca98e83494d68de80e50571b4af4"
   integrity sha512-z1YNE4T1lG5o9acoQR1GBvf7mq6Tzayqo/za5sHVSOJAC9SZOuVN/gg/nkBa9a8n5U7qOMFXfwhTMNqA474gXA==
@@ -1860,10 +1917,24 @@
     logkitty "^0.7.1"
     slash "^3.0.0"
 
-"@react-native-community/cli-platform-ios@^8.0.2", "@react-native-community/cli-platform-ios@^8.0.4":
+"@react-native-community/cli-platform-ios@^8.0.4":
   version "8.0.4"
   resolved "https://registry.npmjs.org/@react-native-community/cli-platform-ios/-/cli-platform-ios-8.0.4.tgz#15225c09a1218a046f11165a54bf14b59dad7020"
   integrity sha512-7Jdptedfg/J0Xo2rQbJ4jmo+PMYOiIiRcNDCSI5dBcNkQfSq4MMYUnKQx5DdZHgrfxE0O1vE4iNmJdd4wePz8w==
+  dependencies:
+    "@react-native-community/cli-tools" "^8.0.4"
+    chalk "^4.1.2"
+    execa "^1.0.0"
+    glob "^7.1.3"
+    js-yaml "^3.13.1"
+    lodash "^4.17.15"
+    ora "^5.4.1"
+    plist "^3.0.2"
+
+"@react-native-community/cli-platform-ios@^8.0.6":
+  version "8.0.6"
+  resolved "https://registry.npmjs.org/@react-native-community/cli-platform-ios/-/cli-platform-ios-8.0.6.tgz#ab80cd4eb3014b8fcfc9bd1b53ec0a9f8e5d1430"
+  integrity sha512-CMR6mu/LVx6JVfQRDL9uULsMirJT633bODn+IrYmrwSz250pnhON16We8eLPzxOZHyDjm7JPuSgHG3a/BPiRuQ==
   dependencies:
     "@react-native-community/cli-tools" "^8.0.4"
     chalk "^4.1.2"
@@ -1928,15 +1999,15 @@
   dependencies:
     joi "^17.2.1"
 
-"@react-native-community/cli@^8.0.3":
-  version "8.0.5"
-  resolved "https://registry.npmjs.org/@react-native-community/cli/-/cli-8.0.5.tgz#902a13b5336508f7989fddf39e6bf85b63a66de9"
-  integrity sha512-X0AMNK+sKDJQX8eQRkqgddJsZPWlHgLryX7O9usj78UFEK8VqVYtpv08piWecfAhC2mZU4/Lww4bKu9uJ1rdyQ==
+"@react-native-community/cli@^8.0.4":
+  version "8.0.6"
+  resolved "https://registry.npmjs.org/@react-native-community/cli/-/cli-8.0.6.tgz#7aae37843ab8e44b75c477c1de69f4c902e599ef"
+  integrity sha512-E36hU/if3quQCfJHGWVkpsCnwtByRCwORuAX0r6yr1ebKktpKeEO49zY9PAu/Z1gfyxCtgluXY0HfRxjKRFXTg==
   dependencies:
     "@react-native-community/cli-clean" "^8.0.4"
-    "@react-native-community/cli-config" "^8.0.4"
+    "@react-native-community/cli-config" "^8.0.6"
     "@react-native-community/cli-debugger-ui" "^8.0.0"
-    "@react-native-community/cli-doctor" "^8.0.4"
+    "@react-native-community/cli-doctor" "^8.0.6"
     "@react-native-community/cli-hermes" "^8.0.5"
     "@react-native-community/cli-plugin-metro" "^8.0.4"
     "@react-native-community/cli-server-api" "^8.0.4"
@@ -5147,15 +5218,15 @@ expo-updates@^0.4.1:
     fbemitter "^2.1.1"
     uuid "^3.4.0"
 
-expo-updates@~0.14.3:
-  version "0.14.3"
-  resolved "https://registry.npmjs.org/expo-updates/-/expo-updates-0.14.3.tgz#c0e5afe824e8f4a14aefddac97afe152cfa00358"
-  integrity sha512-WmtwHv3xiqlHDVseTANjj0L0PbMd5v+rcud0I5E5Vd1ou14ADgfCrr9c3qheDyj3TKqpA/9+JY9Ls3iq8G1SjQ==
+expo-updates@~0.14.4:
+  version "0.14.4"
+  resolved "https://registry.npmjs.org/expo-updates/-/expo-updates-0.14.4.tgz#5fd6708c8438dabc50c1a68329b3caebc9ec9a65"
+  integrity sha512-+TbhUmsbjkOMHR/fhZEtcIf7xa8d/UbcvicIAr6jD9FfluBoRatB2sXiswBEohQeQov4P4XlfBKyNE5QTpu0Xw==
   dependencies:
     "@expo/code-signing-certificates" "0.0.2"
-    "@expo/config" "~7.0.0"
-    "@expo/config-plugins" "~5.0.0"
-    "@expo/metro-config" "~0.3.18"
+    "@expo/config" "~7.0.1"
+    "@expo/config-plugins" "~5.0.1"
+    "@expo/metro-config" "~0.3.19"
     arg "4.1.0"
     expo-eas-client "~0.3.0"
     expo-manifests "~0.3.0"
@@ -10016,15 +10087,15 @@ react-native-web@~0.18.7:
     postcss-value-parser "^4.2.0"
     styleq "^0.1.2"
 
-react-native@0.69.3:
-  version "0.69.3"
-  resolved "https://registry.npmjs.org/react-native/-/react-native-0.69.3.tgz#8fc7afe0a302294262a6b49ba2089483db734c05"
-  integrity sha512-SyGkcoEUa/BkO+wKVnv4OsnLSNfUM5zLNXS3iT/3eXjKX91/FKBH/nfR9BE1c60X5LQe/P5QYqr6WPX3TRSQkA==
+react-native@0.69.4:
+  version "0.69.4"
+  resolved "https://registry.npmjs.org/react-native/-/react-native-0.69.4.tgz#d66f2a117442a9398b065876afdc568b209dc4da"
+  integrity sha512-rqNMialM/T4pHRKWqTIpOxA65B/9kUjtnepxwJqvsdCeMP9Q2YdSx4VASFR9RoEFYcPRU41yGf6EKrChNfns3g==
   dependencies:
     "@jest/create-cache-key-function" "^27.0.1"
-    "@react-native-community/cli" "^8.0.3"
-    "@react-native-community/cli-platform-android" "^8.0.2"
-    "@react-native-community/cli-platform-ios" "^8.0.2"
+    "@react-native-community/cli" "^8.0.4"
+    "@react-native-community/cli-platform-android" "^8.0.4"
+    "@react-native-community/cli-platform-ios" "^8.0.4"
     "@react-native/assets" "1.0.0"
     "@react-native/normalize-color" "2.0.0"
     "@react-native/polyfills" "2.0.0"
