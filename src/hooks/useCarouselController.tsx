@@ -234,11 +234,11 @@ export function useCarouselController(options: IOpts): ICarouselController {
             const isPositiveZero = Object.is(handlerOffsetX.value, +0);
             const isNegativeZero = Object.is(handlerOffsetX.value, -0);
             const direction = isPositiveZero
-              ? 1
-              : isNegativeZero
-              ? -1
-              : Math.sign(handlerOffsetX.value); 
-              
+                ? 1
+                : isNegativeZero
+                ? -1
+                : Math.sign(handlerOffsetX.value);
+
             // target offset
             const offset = i * size * direction;
             // page width size * page count
