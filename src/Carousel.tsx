@@ -1,5 +1,5 @@
 import React from 'react';
-import Animated, { runOnJS, useDerivedValue } from 'react-native-reanimated';
+import { runOnJS, useDerivedValue } from 'react-native-reanimated';
 
 import { useCarouselController } from './hooks/useCarouselController';
 import { useAutoPlay } from './hooks/useAutoPlay';
@@ -8,7 +8,7 @@ import { ScrollViewGesture } from './ScrollViewGesture';
 import { useVisibleRanges } from './hooks/useVisibleRanges';
 
 import type { ICarouselInstance, TCarouselProps } from './types';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { BaseLayout } from './layouts/BaseLayout';
 import { useLayoutConfig } from './hooks/useLayoutConfig';
 import { useInitProps } from './hooks/useInitProps';
@@ -198,40 +198,29 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
 
         return (
             <CTX.Provider value={{ props, common: commonVariables }}>
-                <View
+                <ScrollViewGesture
+                    key={mode}
+                    size={size}
+                    translation={handlerOffsetX}
                     style={[
                         styles.container,
-                        { width: width || '100%', height: height || '100%' },
+                        {
+                            width: width || '100%',
+                            height: height || '100%',
+                        },
                         style,
+                        vertical
+                            ? styles.itemsVertical
+                            : styles.itemsHorizontal,
                     ]}
                     testID={testID}
+                    onScrollBegin={scrollViewGestureOnScrollBegin}
+                    onScrollEnd={scrollViewGestureOnScrollEnd}
+                    onTouchBegin={scrollViewGestureOnTouchBegin}
+                    onTouchEnd={scrollViewGestureOnTouchEnd}
                 >
-                    <ScrollViewGesture
-                        size={size}
-                        translation={handlerOffsetX}
-                        onScrollBegin={scrollViewGestureOnScrollBegin}
-                        onScrollEnd={scrollViewGestureOnScrollEnd}
-                        onTouchBegin={scrollViewGestureOnTouchBegin}
-                        onTouchEnd={scrollViewGestureOnTouchEnd}
-                    >
-                        <Animated.View
-                            key={mode}
-                            style={[
-                                styles.container,
-                                {
-                                    width: width || '100%',
-                                    height: height || '100%',
-                                },
-                                style,
-                                vertical
-                                    ? styles.itemsVertical
-                                    : styles.itemsHorizontal,
-                            ]}
-                        >
-                            {data.map(renderLayout)}
-                        </Animated.View>
-                    </ScrollViewGesture>
-                </View>
+                    {data.map(renderLayout)}
+                </ScrollViewGesture>
             </CTX.Provider>
         );
     }

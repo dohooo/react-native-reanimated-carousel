@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
 import {
     PanGestureHandler,
     PanGestureHandlerGestureEvent,
@@ -27,11 +27,12 @@ type GestureContext = {
 interface Props {
     size: number;
     infinite?: boolean;
+    testID?: string;
+    style?: StyleProp<ViewStyle>;
     onScrollBegin?: () => void;
     onScrollEnd?: () => void;
     onTouchBegin?: () => void;
     onTouchEnd?: () => void;
-    style?: StyleProp<ViewStyle>;
     translation: Animated.SharedValue<number>;
 }
 
@@ -51,8 +52,10 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
     } = React.useContext(CTX);
 
     const {
-        translation,
         size,
+        translation,
+        testID,
+        style = {},
         onScrollBegin,
         onScrollEnd,
         onTouchBegin,
@@ -269,42 +272,22 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
         ]
     );
 
-    const directionStyle = React.useMemo(() => {
-        return vertical ? styles.contentHorizontal : styles.contentVertical;
-    }, [vertical]);
-
     return (
-        <Animated.View
-            style={[
-                styles.container,
-                directionStyle,
-                { width: '100%', height: '100%' },
-            ]}
-            onTouchStart={onTouchBegin}
-            onTouchEnd={onTouchEnd}
+        <PanGestureHandler
+            {...panGestureHandlerProps}
+            enabled={enabled}
+            onGestureEvent={panGestureEventHandler}
         >
-            <PanGestureHandler
-                {...panGestureHandlerProps}
-                enabled={enabled}
-                onGestureEvent={panGestureEventHandler}
+            <Animated.View
+                testID={testID}
+                style={style}
+                onTouchStart={onTouchBegin}
+                onTouchEnd={onTouchEnd}
             >
                 {props.children}
-            </PanGestureHandler>
-        </Animated.View>
+            </Animated.View>
+        </PanGestureHandler>
     );
 };
 
 export const ScrollViewGesture = IScrollViewGesture;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        overflow: 'hidden',
-    },
-    contentVertical: {
-        flexDirection: 'column',
-    },
-    contentHorizontal: {
-        flexDirection: 'row',
-    },
-});
