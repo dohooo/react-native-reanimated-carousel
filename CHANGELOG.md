@@ -1,3 +1,10 @@
+## [3.0.6](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.0.5...v3.0.6) (2022-09-27)
+
+
+### Bug Fixes
+
+* can't override the carousel styles. e.g. "overflow: visible;" ([2ab0bff](https://github.com/dohooo/react-native-reanimated-carousel/commit/2ab0bff342a286b819039ac4de6ff801c0a2e83a)), closes [#260](https://github.com/dohooo/react-native-reanimated-carousel/issues/260)
+
 ## [3.0.5](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.0.4...v3.0.5) (2022-09-15)
 
 ## [3.0.4](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.0.3...v3.0.4) (2022-08-12)
