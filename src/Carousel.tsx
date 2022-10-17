@@ -144,8 +144,9 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
                 prev,
                 getCurrentIndex,
                 scrollTo,
+                scrollOffset: handlerOffsetX,
             }),
-            [getCurrentIndex, next, prev, scrollTo]
+            [getCurrentIndex, next, prev, scrollTo, handlerOffsetX]
         );
 
         const visibleRanges = useVisibleRanges({
