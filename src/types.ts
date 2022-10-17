@@ -2,6 +2,7 @@ import type { StyleProp, ViewStyle } from 'react-native';
 import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
 import type {
     AnimatedStyleProp,
+    SharedValue,
     WithSpringConfig,
     WithTimingConfig,
 } from 'react-native-reanimated';
@@ -204,6 +205,11 @@ export interface ICarouselInstance {
      * scrollTo(-2) is equivalent to prev(2), scrollTo(2) is equivalent to next(2)
      */
     scrollTo: (opts?: TCarouselActionOptions) => void;
+    /**
+     * Animated value of current scroll / offset-x to extend carousel animation functionality
+     * It's useful when tight animation of custom components to carousel swiping
+     */
+    scrollOffset: SharedValue<number>;
 }
 
 export interface CarouselRenderItemInfo<ItemT> {
