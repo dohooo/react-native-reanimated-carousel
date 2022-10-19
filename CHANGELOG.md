@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.0.6...v3.1.0) (2022-10-19)
+
+
+### Features
+
+* add new props to control or get information for carousel animation ([2a39346](https://github.com/dohooo/react-native-reanimated-carousel/commit/2a3934647ca6558fdd1e213d79f5e64baaff3984)), closes [#285](https://github.com/dohooo/react-native-reanimated-carousel/issues/285)
+
 ## [3.0.6](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.0.5...v3.0.6) (2022-09-27)
 
 
