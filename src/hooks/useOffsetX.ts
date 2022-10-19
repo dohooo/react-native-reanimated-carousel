@@ -8,7 +8,7 @@ import type { IVisibleRanges } from './useVisibleRanges';
 export interface IOpts {
     index: number;
     size: number;
-    handlerOffsetX: Animated.SharedValue<number>;
+    handlerOffset: Animated.SharedValue<number>;
     data: unknown[];
     type?: 'positive' | 'negative';
     viewCount?: number;
@@ -17,7 +17,7 @@ export interface IOpts {
 
 export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
     const {
-        handlerOffsetX,
+        handlerOffset,
         index,
         size,
         loop,
@@ -73,14 +73,14 @@ export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
             ];
 
             return interpolate(
-                handlerOffsetX.value,
+                handlerOffset.value,
                 inputRange,
                 outputRange,
                 Extrapolate.CLAMP
             );
         }
 
-        return handlerOffsetX.value + size * index;
+        return handlerOffset.value + size * index;
     }, [loop, data, viewCount, type, size, visibleRanges]);
 
     return x;

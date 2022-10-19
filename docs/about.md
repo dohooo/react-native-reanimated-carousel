@@ -21,7 +21,7 @@ This is how it works in code.
 
 1. First we need a unit `size` to help us calculate the scroll distance. When horizontal, `size` is equal to the `width` prop setting, when vertical, `size` is equal to the `height` prop setting.
 
-2. Then we need a value `handlerOffsetX`, which is the current scroll distance, and it's a total value, if we scroll two, `handlerOffsetX` is equal to `size` * 2, if we scroll ten, `handlerOffsetX` is equal to `size` * 10.
+2. Then we need a value `handlerOffset`, which is the current scroll distance, and it's a total value, if we scroll two, `handlerOffset` is equal to `size` * 2, if we scroll ten, `handlerOffset` is equal to `size` * 10.
 
 3. Followed by dealing with how to get at the end of the element at the right time to move to the front, this part of logic in `./src/hooks/useOffsetX.ts`. First we need to know the current window size (the total number of elements rendered on one side). The window size defaults to half the total number of elements, i.e. full render.
 ![steps-6](./assets/steps-6.jpg)
@@ -56,7 +56,7 @@ The above logic is translated into code as follows:
         startPos,
     ];
     return interpolate(
-        handlerOffsetX.value,
+        handlerOffset.value,
         inputRange,
         outputRange,
         Extrapolate.CLAMP
@@ -69,7 +69,7 @@ const inputRange = [-1, 0 ,1]
 const outputRange = [-size, 0 ,size]
 return {
     transform: [
-        { translateX: interpolate(handlerOffsetX.value, inputRange, outputRange) },
+        { translateX: interpolate(handlerOffset.value, inputRange, outputRange) },
     ],
 }
 ```

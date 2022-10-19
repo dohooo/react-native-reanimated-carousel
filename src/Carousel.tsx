@@ -48,15 +48,15 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
         } = props;
 
         const commonVariables = useCommonVariables(props);
-        const { size, handlerOffsetX } = commonVariables;
+        const { size, handlerOffset } = commonVariables;
         const dataLength = data.length;
 
         const offsetX = useDerivedValue(() => {
             const totalSize = size * dataLength;
-            const x = handlerOffsetX.value % totalSize;
+            const x = handlerOffset.value % totalSize;
 
             if (!loop) {
-                return handlerOffsetX.value;
+                return handlerOffset.value;
             }
             return isNaN(x) ? 0 : x;
         }, [loop, size, dataLength]);
@@ -76,7 +76,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
             size,
             data,
             autoFillData,
-            handlerOffsetX,
+            handlerOffset,
             withAnimation,
             defaultIndex,
             onScrollEnd: () => runOnJS(_onScrollEnd)(),
@@ -151,7 +151,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
         const visibleRanges = useVisibleRanges({
             total: data.length,
             viewSize: size,
-            translation: handlerOffsetX,
+            translation: handlerOffset,
             windowSize,
         });
 
@@ -170,7 +170,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
                     <BaseLayout
                         key={i}
                         index={i}
-                        handlerOffsetX={offsetX}
+                        handlerOffset={offsetX}
                         visibleRanges={visibleRanges}
                         animationStyle={customAnimation || layoutConfig}
                     >
@@ -201,7 +201,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
                 <ScrollViewGesture
                     key={mode}
                     size={size}
-                    translation={handlerOffsetX}
+                    translation={handlerOffset}
                     style={[
                         styles.container,
                         {
