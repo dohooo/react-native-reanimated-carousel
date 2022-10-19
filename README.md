@@ -4,6 +4,7 @@ English | [简体中文](./README.zh-CN.md)
 
 <img src="assets/home-banner.png" width="100%"/>
 
+![Hacktober Badge](https://img.shields.io/badge/hacktoberfest-2022-blueviolet)
 ![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS%20%7C%20Web-brightgreen.svg?style=flat-square&colorB=191A17)
 [![npm](https://img.shields.io/npm/v/react-native-reanimated-carousel.svg?style=flat-square)](https://www.npmjs.com/package/react-native-reanimated-carousel)
 [![npm](https://img.shields.io/npm/dm/react-native-reanimated-carousel.svg?style=flat-square&colorB=007ec6)](https://www.npmjs.com/package/react-native-reanimated-carousel)
