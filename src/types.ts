@@ -2,6 +2,7 @@ import type { StyleProp, ViewStyle } from 'react-native';
 import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
 import type {
     AnimatedStyleProp,
+    SharedValue,
     WithSpringConfig,
     WithTimingConfig,
 } from 'react-native-reanimated';
@@ -60,6 +61,10 @@ export type WithAnimation = WithSpringAnimation | WithTimingAnimation;
 
 export type TCarouselProps<T = any> = {
     ref?: React.Ref<ICarouselInstance>;
+    /**
+     * The default animated value of the carousel.
+     */
+    defaultScrollOffsetValue?: SharedValue<number>;
     /**
      * Carousel loop playback.
      * @default true
@@ -162,7 +167,7 @@ export type TCarouselProps<T = any> = {
      */
     renderItem: CarouselRenderItem<T>;
     /**
-     * Callback fired when navigating to an item
+     * Callback fired when navigating to an item.
      */
     onSnapToItem?: (index: number) => void;
     /**

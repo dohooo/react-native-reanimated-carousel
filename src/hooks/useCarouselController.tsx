@@ -20,7 +20,7 @@ interface IOpts {
     size: number;
     data: TCarouselProps['data'];
     autoFillData: TCarouselProps['autoFillData'];
-    handlerOffsetX: Animated.SharedValue<number>;
+    handlerOffset: Animated.SharedValue<number>;
     withAnimation?: TCarouselProps['withAnimation'];
     duration?: number;
     defaultIndex?: number;
@@ -41,7 +41,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
         size,
         data,
         loop,
-        handlerOffsetX,
+        handlerOffset,
         withAnimation,
         defaultIndex = 0,
         duration,
@@ -64,16 +64,16 @@ export function useCarouselController(options: IOpts): ICarouselController {
 
     const currentFixedPage = React.useCallback(() => {
         if (loop) {
-            return -Math.round(handlerOffsetX.value / size);
+            return -Math.round(handlerOffset.value / size);
         }
 
-        const fixed = (handlerOffsetX.value / size) % dataInfo.length;
+        const fixed = (handlerOffset.value / size) % dataInfo.length;
         return Math.round(
-            handlerOffsetX.value <= 0
+            handlerOffset.value <= 0
                 ? Math.abs(fixed)
                 : Math.abs(fixed > 0 ? dataInfo.length - fixed : 0)
         );
-    }, [handlerOffsetX, dataInfo, size, loop]);
+    }, [handlerOffset, dataInfo, size, loop]);
 
     function setSharedIndex(newSharedIndex: number) {
         sharedIndex.current = newSharedIndex;
@@ -81,9 +81,9 @@ export function useCarouselController(options: IOpts): ICarouselController {
 
     useAnimatedReaction(
         () => {
-            const handlerOffsetXValue = handlerOffsetX.value;
-            const toInt = round(handlerOffsetXValue / size) % dataInfo.length;
-            const isPositive = handlerOffsetXValue <= 0;
+            const handlerOffsetValue = handlerOffset.value;
+            const toInt = round(handlerOffsetValue / size) % dataInfo.length;
+            const isPositive = handlerOffsetValue <= 0;
             const i = isPositive
                 ? Math.abs(toInt)
                 : Math.abs(toInt > 0 ? dataInfo.length - toInt : 0);
@@ -112,7 +112,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
             index,
             loop,
             autoFillData,
-            handlerOffsetX,
+            handlerOffset,
         ]
     );
 
@@ -169,12 +169,12 @@ export function useCarouselController(options: IOpts): ICarouselController {
             index.value = nextPage;
 
             if (animated) {
-                handlerOffsetX.value = scrollWithTiming(
+                handlerOffset.value = scrollWithTiming(
                     -nextPage * size,
                     onFinished
                 ) as any;
             } else {
-                handlerOffsetX.value = -nextPage * size;
+                handlerOffset.value = -nextPage * size;
                 onFinished?.();
             }
         },
@@ -184,7 +184,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
             index,
             dataInfo,
             onScrollBegin,
-            handlerOffsetX,
+            handlerOffset,
             size,
             scrollWithTiming,
             currentFixedPage,
@@ -202,12 +202,12 @@ export function useCarouselController(options: IOpts): ICarouselController {
             index.value = prevPage;
 
             if (animated) {
-                handlerOffsetX.value = scrollWithTiming(
+                handlerOffset.value = scrollWithTiming(
                     -prevPage * size,
                     onFinished
                 );
             } else {
-                handlerOffsetX.value = -prevPage * size;
+                handlerOffset.value = -prevPage * size;
                 onFinished?.();
             }
         },
@@ -216,7 +216,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
             loop,
             index,
             onScrollBegin,
-            handlerOffsetX,
+            handlerOffset,
             size,
             scrollWithTiming,
             currentFixedPage,
@@ -231,13 +231,13 @@ export function useCarouselController(options: IOpts): ICarouselController {
 
             onScrollBegin?.();
             // direction -> 1 | -1
-            const isPositiveZero = Object.is(handlerOffsetX.value, +0);
-            const isNegativeZero = Object.is(handlerOffsetX.value, -0);
+            const isPositiveZero = Object.is(handlerOffset.value, +0);
+            const isNegativeZero = Object.is(handlerOffset.value, -0);
             const direction = isPositiveZero
                 ? 1
                 : isNegativeZero
                 ? -1
-                : Math.sign(handlerOffsetX.value);
+                : Math.sign(handlerOffset.value);
 
             // target offset
             const offset = i * size * direction;
@@ -248,12 +248,12 @@ export function useCarouselController(options: IOpts): ICarouselController {
 
             if (loop) {
                 isCloseToNextLoop =
-                    Math.abs(handlerOffsetX.value % totalSize) / totalSize >=
+                    Math.abs(handlerOffset.value % totalSize) / totalSize >=
                     0.5;
             }
 
             const finalOffset =
-                (Math.floor(Math.abs(handlerOffsetX.value / totalSize)) +
+                (Math.floor(Math.abs(handlerOffset.value / totalSize)) +
                     (isCloseToNextLoop ? 1 : 0)) *
                     totalSize *
                     direction +
@@ -261,12 +261,9 @@ export function useCarouselController(options: IOpts): ICarouselController {
 
             if (animated) {
                 index.value = i;
-                handlerOffsetX.value = scrollWithTiming(
-                    finalOffset,
-                    onFinished
-                );
+                handlerOffset.value = scrollWithTiming(finalOffset, onFinished);
             } else {
-                handlerOffsetX.value = finalOffset;
+                handlerOffset.value = finalOffset;
                 index.value = i;
                 onFinished?.();
             }
@@ -275,7 +272,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
             index,
             canSliding,
             onScrollBegin,
-            handlerOffsetX,
+            handlerOffset,
             size,
             dataInfo.length,
             loop,

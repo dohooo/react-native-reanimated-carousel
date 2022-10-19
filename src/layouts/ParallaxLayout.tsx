@@ -16,7 +16,7 @@ export const ParallaxLayout: React.FC<
     IComputedDirectionTypes<
         {
             loop?: boolean;
-            handlerOffsetX: Animated.SharedValue<number>;
+            handlerOffset: Animated.SharedValue<number>;
             index: number;
             data: unknown[];
             visibleRanges: IVisibleRanges;
@@ -24,7 +24,7 @@ export const ParallaxLayout: React.FC<
     >
 > = (props) => {
     const {
-        handlerOffsetX,
+        handlerOffset,
         parallaxScrollingOffset = 100,
         parallaxScrollingScale = 0.8,
         parallaxAdjacentItemScale = Math.pow(parallaxScrollingScale, 2),
@@ -44,7 +44,7 @@ export const ParallaxLayout: React.FC<
 
     const x = useOffsetX(
         {
-            handlerOffsetX,
+            handlerOffset: handlerOffset,
             index,
             size,
             data,

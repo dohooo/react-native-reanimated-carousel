@@ -18,7 +18,7 @@ export type TAnimationStyle = (value: number) => AnimatedStyleProp<ViewStyle>;
 
 export const BaseLayout: React.FC<{
     index: number;
-    handlerOffsetX: Animated.SharedValue<number>;
+    handlerOffset: Animated.SharedValue<number>;
     visibleRanges: IVisibleRanges;
     animationStyle: TAnimationStyle;
     children: (ctx: {
@@ -26,7 +26,7 @@ export const BaseLayout: React.FC<{
     }) => React.ReactElement;
 }> = (props) => {
     const mounted = useCheckMounted();
-    const { handlerOffsetX, index, children, visibleRanges, animationStyle } =
+    const { handlerOffset, index, children, visibleRanges, animationStyle } =
         props;
 
     const context = React.useContext(CTX);
@@ -45,7 +45,7 @@ export const BaseLayout: React.FC<{
     const size = vertical ? height : width;
     const [shouldUpdate, setShouldUpdate] = React.useState(false);
     let offsetXConfig: IOpts = {
-        handlerOffsetX,
+        handlerOffset: handlerOffset,
         index,
         size,
         data,
@@ -57,7 +57,7 @@ export const BaseLayout: React.FC<{
         const { snapDirection, showLength } = modeConfig as ILayoutConfig;
 
         offsetXConfig = {
-            handlerOffsetX,
+            handlerOffset: handlerOffset,
             index,
             size,
             data,

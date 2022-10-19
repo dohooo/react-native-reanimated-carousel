@@ -5,25 +5,33 @@ import type { TInitializeCarouselProps } from './useInitProps';
 interface ICommonVariables {
     size: number;
     validLength: number;
-    handlerOffsetX: Animated.SharedValue<number>;
+    handlerOffset: Animated.SharedValue<number>;
 }
 
 export function useCommonVariables(
     props: TInitializeCarouselProps<any>
 ): ICommonVariables {
-    const { vertical, height, width, data, defaultIndex } = props;
+    const {
+        vertical,
+        height,
+        width,
+        data,
+        defaultIndex,
+        defaultScrollOffsetValue,
+    } = props;
     const size = vertical ? height : width;
     const validLength = data.length - 1;
-    const defaultHandlerOffsetX = -Math.abs(defaultIndex * size);
-    const handlerOffsetX = useSharedValue<number>(defaultHandlerOffsetX);
+    const defaultHandlerOffsetValue = -Math.abs(defaultIndex * size);
+    const _handlerOffset = useSharedValue<number>(defaultHandlerOffsetValue);
+    const handlerOffset = defaultScrollOffsetValue ?? _handlerOffset;
 
     React.useEffect(() => {
-        handlerOffsetX.value = defaultHandlerOffsetX;
-    }, [vertical, handlerOffsetX, defaultHandlerOffsetX]);
+        handlerOffset.value = defaultHandlerOffsetValue;
+    }, [vertical, handlerOffset, defaultHandlerOffsetValue]);
 
     return {
         size,
         validLength,
-        handlerOffsetX,
+        handlerOffset,
     };
 }

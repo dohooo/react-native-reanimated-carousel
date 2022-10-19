@@ -21,7 +21,7 @@
 
 1. 首先我们需要一个单位`size`，它用来帮我们计算滚动距离，当水平时`size`等于`width` prop的设置，当垂直时`size`等于`height` prop的设置。
 
-2. 其次我们需要一个值`handlerOffsetX`，用来记录当前的滚动距离，这是一个总值，当我们滚动两张，那`handlerOffsetX`等于size * 2，如果滚动十张那`handlerOffsetX`等于size * 10。
+2. 其次我们需要一个值`handlerOffset`，用来记录当前的滚动距离，这是一个总值，当我们滚动两张，那`handlerOffset`等于size * 2，如果滚动十张那`handlerOffset`等于size * 10。
 
 3. 紧接着是处理如何让末尾的元素在合适的时候挪动到最前面，这部分逻辑在`./src/hooks/useOffsetX.ts`中。首先我们需要知道目前的视窗大小（一侧元素渲染的总数量），视窗大小默认为元素总数量的一半，即全量渲染。
 ![steps-6](./assets/steps-6.jpg)
@@ -56,7 +56,7 @@
         startPos,
     ];
     return interpolate(
-        handlerOffsetX.value,
+        handlerOffset.value,
         inputRange,
         outputRange,
         Extrapolate.CLAMP
@@ -69,7 +69,7 @@ const inputRange = [-1, 0 ,1]
 const outputRange = [-size, 0 ,size]
 return {
     transform: [
-        { translateX: interpolate(handlerOffsetX.value, inputRange, outputRange) },
+        { translateX: interpolate(handlerOffset.value, inputRange, outputRange) },
     ],
 }
 ```
