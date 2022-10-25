@@ -22,9 +22,11 @@
     ],
     "scripts": {
         "gif": "node scripts/makegif.js ./scripts/gif-works-directory",
-        "test": "jest",
+        "test": "vitest run src/**/*",
+        "test:dev": "vitest dev src/**/*",
         "typescript": "tsc --noEmit",
         "lint": "eslint \"src/**/*.{js,ts,tsx}\"",
+        "lint:fix": "eslint \"src/**/*.{js,ts,tsx}\" --fix",
         "dev": "yarn watch 'yarn prepare' ./src",
         "prepare": "bob build",
         "release": "yarn prepare && dotenv release-it --no-git.requireUpstream",
@@ -57,6 +59,7 @@
     "devDependencies": {
         "@babel/plugin-syntax-dynamic-import": "^7.8.3",
         "@commitlint/config-conventional": "^11.0.0",
+        "@dohooo/eslint-config": "^0.0.7",
         "@react-native-community/eslint-config": "^2.0.0",
         "@release-it/conventional-changelog": "^2.0.0",
         "@types/jest": "^26.0.0",
@@ -68,7 +71,7 @@
         "commitlint": "^11.0.0",
         "cz-conventional-changelog": "^3.3.0",
         "dotenv-cli": "^5.1.0",
-        "eslint": "^7.2.0",
+        "eslint": "^8.26.0",
         "eslint-config-prettier": "^7.0.0",
         "eslint-plugin-prettier": "^3.1.3",
         "gifify": "^2.4.3",
@@ -83,7 +86,8 @@
         "react-native-reanimated": "2.8.0",
         "release-it": "^14.2.2",
         "sponsorkit": "^0.1.3",
-        "typescript": "^4.0.8"
+        "typescript": "^4.0.8",
+        "vitest": "^0.24.3"
     },
     "peerDependencies": {
         "react": ">=16.8.0",

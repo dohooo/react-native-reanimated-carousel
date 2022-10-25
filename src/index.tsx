@@ -1,8 +1,8 @@
+import Carousel from "./Carousel";
 export type {
-    TCarouselProps,
-    ICarouselInstance,
-    IComputedDirectionTypes,
-} from './types';
-import Carousel from './Carousel';
+  TCarouselProps,
+  ICarouselInstance,
+  IComputedDirectionTypes,
+} from "./types";
 
 export default Carousel;
