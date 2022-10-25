@@ -1,3 +1,10 @@
+## [3.1.1](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.1.0...v3.1.1) (2022-10-25)
+
+
+### Bug Fixes
+
+* fixed index error then data length changed ([9f343f8](https://github.com/dohooo/react-native-reanimated-carousel/commit/9f343f86906b247e38a4fb0eb5489285ee59d524))
+
 # [3.1.0](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.0.6...v3.1.0) (2022-10-19)
 
 
