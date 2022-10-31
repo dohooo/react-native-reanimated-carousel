@@ -218,6 +218,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
           onScrollEnd={scrollViewGestureOnScrollEnd}
           onTouchBegin={scrollViewGestureOnTouchBegin}
           onTouchEnd={scrollViewGestureOnTouchEnd}
+          maxScrollablePage={maxScrollablePage}
         >
           {data.map(renderLayout)}
         </ScrollViewGesture>
