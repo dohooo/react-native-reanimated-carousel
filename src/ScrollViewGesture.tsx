@@ -35,6 +35,7 @@ interface Props {
   onTouchBegin?: () => void
   onTouchEnd?: () => void
   translation: Animated.SharedValue<number>
+  maxScrollablePage?: number;
 }
 
 const IScrollViewGesture: React.FC<Props> = (props) => {
@@ -49,6 +50,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
       scrollAnimationDuration,
       withAnimation,
       enabled,
+      maxScrollablePage,
     },
   } = React.useContext(CTX);
 
@@ -63,7 +65,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
     onTouchEnd,
   } = props;
 
-  const maxPage = data.length;
+  const maxPage = maxScrollablePage || data.length;
   const isHorizontal = useDerivedValue(() => !vertical, [vertical]);
   const touching = useSharedValue(false);
   const scrollEndTranslation = useSharedValue(0);

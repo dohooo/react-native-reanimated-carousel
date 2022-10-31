@@ -45,6 +45,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       onProgressChange,
       customAnimation,
       defaultIndex,
+      maxScrollablePage,
     } = props;
 
     const commonVariables = useCommonVariables(props);
