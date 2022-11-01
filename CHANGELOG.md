@@ -1,3 +1,10 @@
+## [3.1.2](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.1.1...v3.1.2) (2022-11-01)
+
+
+### Bug Fixes
+
+* fixed a computed error ([b49715c](https://github.com/dohooo/react-native-reanimated-carousel/commit/b49715cd871c4c4f681b0fc4ef5fc02f2e498542)), closes [#291](https://github.com/dohooo/react-native-reanimated-carousel/issues/291) [#294](https://github.com/dohooo/react-native-reanimated-carousel/issues/294)
+
 ## [3.1.1](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.1.0...v3.1.1) (2022-10-25)
 
 
