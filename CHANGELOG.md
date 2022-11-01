@@ -1,3 +1,10 @@
+## [3.1.3](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.1.2...v3.1.3) (2022-11-01)
+
+
+### Bug Fixes
+
+* fixed a bug that be crushed when put in redux data ([a5af02a](https://github.com/dohooo/react-native-reanimated-carousel/commit/a5af02a8135893e7cdd0c815d0c5a11dc7df4a5f)), closes [#296](https://github.com/dohooo/react-native-reanimated-carousel/issues/296)
+
 ## [3.1.2](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.1.1...v3.1.2) (2022-11-01)
 
 
