@@ -37,14 +37,19 @@ export function useCommonVariables(
   }, [vertical, handlerOffset, defaultHandlerOffsetValue]);
 
   useAnimatedReaction(() => {
+    const _data = data.slice();
     const previousLength = prevData.value.length;
-    const currentLength = data.length;
+    const currentLength = _data.length;
     const isLengthChanged = previousLength !== currentLength;
+    const shouldComputed = isLengthChanged && loop;
+
+    if (shouldComputed)
+      prevData.value = _data;
+
     return {
-      shouldComputed: isLengthChanged && loop,
+      shouldComputed,
       previousLength,
       currentLength,
-      data,
     };
   }, ({ shouldComputed, previousLength, currentLength }) => {
     if (shouldComputed) {
@@ -58,12 +63,8 @@ export function useCommonVariables(
         size,
         handlerOffset: handlerOffset.value,
       });
-
-      prevData.value = data;
     }
-  }, [
-    data, loop,
-  ]);
+  }, [data, loop]);
 
   return {
     size,
