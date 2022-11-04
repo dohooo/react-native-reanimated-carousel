@@ -1,3 +1,11 @@
+## [3.1.4](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.1.3...v3.1.4) (2022-11-04)
+
+
+### Bug Fixes
+
+* getCurrentIndex returns wrong value when data count is < 3 ([7f94027](https://github.com/dohooo/react-native-reanimated-carousel/commit/7f94027352debed9e7cb494bb6fa8049cbb9375c)), closes [#299](https://github.com/dohooo/react-native-reanimated-carousel/issues/299)
+* solved the crash error ([7a82994](https://github.com/dohooo/react-native-reanimated-carousel/commit/7a829947a64acab6488516e03bc1de183ada0a87)), closes [#305](https://github.com/dohooo/react-native-reanimated-carousel/issues/305) [#301](https://github.com/dohooo/react-native-reanimated-carousel/issues/301) [#298](https://github.com/dohooo/react-native-reanimated-carousel/issues/298) [#291](https://github.com/dohooo/react-native-reanimated-carousel/issues/291)
+
 ## [3.1.3](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.1.2...v3.1.3) (2022-11-01)
 
 
