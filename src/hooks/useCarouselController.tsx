@@ -20,7 +20,7 @@ import { round } from "../utils/log";
 interface IOpts {
   loop: boolean
   size: number
-  data: TCarouselProps["data"]
+  dataLength: number
   autoFillData: TCarouselProps["autoFillData"]
   handlerOffset: Animated.SharedValue<number>
   withAnimation?: TCarouselProps["withAnimation"]
@@ -41,8 +41,8 @@ export interface ICarouselController {
 export function useCarouselController(options: IOpts): ICarouselController {
   const {
     size,
-    data,
     loop,
+    dataLength,
     handlerOffset,
     withAnimation,
     defaultIndex = 0,
@@ -52,11 +52,11 @@ export function useCarouselController(options: IOpts): ICarouselController {
 
   const dataInfo = React.useMemo(
     () => ({
-      length: data.length,
-      disable: !data.length,
-      originalLength: data.length,
+      length: dataLength,
+      disable: !dataLength,
+      originalLength: dataLength,
     }),
-    [data],
+    [dataLength],
   );
 
   const index = useSharedValue<number>(defaultIndex);

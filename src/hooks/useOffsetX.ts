@@ -11,7 +11,7 @@ export interface IOpts {
   index: number
   size: number
   handlerOffset: Animated.SharedValue<number>
-  data: unknown[]
+  dataLength: number
   type?: "positive" | "negative"
   viewCount?: number
   loop?: boolean
@@ -23,16 +23,17 @@ export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
     index,
     size,
     loop,
-    data,
+    dataLength,
     type = "positive",
-    viewCount = Math.round((data.length - 1) / 2),
+    viewCount: _viewCount,
   } = opts;
 
-  const ITEM_LENGTH = data.length;
+  const ITEM_LENGTH = dataLength;
   const VALID_LENGTH = ITEM_LENGTH - 1;
   const TOTAL_WIDTH = size * ITEM_LENGTH;
   const HALF_WIDTH = 0.5 * size;
 
+  const viewCount = _viewCount ?? Math.round((ITEM_LENGTH - 1) / 2);
   const positiveCount
         = type === "positive" ? viewCount : VALID_LENGTH - viewCount;
 
@@ -81,7 +82,7 @@ export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
     }
 
     return handlerOffset.value + size * index;
-  }, [loop, data, viewCount, type, size, visibleRanges]);
+  }, [loop, dataLength, viewCount, type, size, visibleRanges]);
 
   return x;
 };

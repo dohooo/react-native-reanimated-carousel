@@ -20,17 +20,17 @@ export function useCommonVariables(
     vertical,
     height,
     width,
-    data,
+    dataLength,
     defaultIndex,
     defaultScrollOffsetValue,
     loop,
   } = props;
   const size = vertical ? height : width;
-  const validLength = data.length - 1;
+  const validLength = dataLength - 1;
   const defaultHandlerOffsetValue = -Math.abs(defaultIndex * size);
   const _handlerOffset = useSharedValue<number>(defaultHandlerOffsetValue);
   const handlerOffset = defaultScrollOffsetValue ?? _handlerOffset;
-  const prevDataLength = useSharedValue(data.length);
+  const prevDataLength = useSharedValue(dataLength);
 
   React.useEffect(() => {
     handlerOffset.value = defaultHandlerOffsetValue;
@@ -38,12 +38,12 @@ export function useCommonVariables(
 
   useAnimatedReaction(() => {
     const previousLength = prevDataLength.value;
-    const currentLength = data.length;
+    const currentLength = dataLength;
     const isLengthChanged = previousLength !== currentLength;
     const shouldComputed = isLengthChanged && loop;
 
     if (shouldComputed)
-      prevDataLength.value = data.length;
+      prevDataLength.value = dataLength;
 
     return {
       shouldComputed,
@@ -63,7 +63,7 @@ export function useCommonVariables(
         handlerOffset: handlerOffset.value,
       });
     }
-  }, [data, loop]);
+  }, [dataLength, loop]);
 
   return {
     size,

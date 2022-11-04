@@ -20,7 +20,7 @@ IComputedDirectionTypes<
   loop?: boolean
   handlerOffset: Animated.SharedValue<number>
   index: number
-  data: unknown[]
+  dataLength: number
   visibleRanges: IVisibleRanges
 } & ILayoutConfig
 >
@@ -34,7 +34,7 @@ IComputedDirectionTypes<
     width,
     height,
     loop,
-    data,
+    dataLength,
     children,
     visibleRanges,
     vertical,
@@ -49,7 +49,7 @@ IComputedDirectionTypes<
       handlerOffset,
       index,
       size,
-      data,
+      dataLength,
       loop,
     },
     visibleRanges,

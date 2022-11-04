@@ -41,7 +41,6 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
   const {
     props: {
       vertical,
-      data,
       pagingEnabled,
       snapEnabled,
       panGestureHandlerProps,
@@ -49,6 +48,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
       scrollAnimationDuration,
       withAnimation,
       enabled,
+      dataLength,
     },
   } = React.useContext(CTX);
 
@@ -63,7 +63,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
     onTouchEnd,
   } = props;
 
-  const maxPage = data.length;
+  const maxPage = dataLength;
   const isHorizontal = useDerivedValue(() => !vertical, [vertical]);
   const touching = useSharedValue(false);
   const scrollEndTranslation = useSharedValue(0);

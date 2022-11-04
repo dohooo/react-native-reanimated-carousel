@@ -2,11 +2,10 @@ import React from "react";
 
 import type { TCarouselProps } from "../types";
 
-export function usePropsErrorBoundary(props: TCarouselProps) {
+export function usePropsErrorBoundary(props: TCarouselProps & { dataLength: number }) {
   React.useEffect(() => {
-    const { defaultIndex, data } = props;
+    const { defaultIndex, dataLength: viewCount } = props;
 
-    const viewCount = data.length;
     if (typeof defaultIndex === "number" && viewCount > 0) {
       if (defaultIndex < 0 || defaultIndex >= viewCount) {
         throw new Error(
