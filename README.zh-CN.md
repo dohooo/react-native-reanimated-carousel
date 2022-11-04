@@ -1,3 +1,9 @@
+<hr/>
+<p align="center">🔴</p>
+<p align="center">👨‍💻 最近我太忙了，所以我会离开一段时间，但我会在这个月底回来。</p>
+<p align="center">♥️ 放心，我爱这个项目，我不会放弃的。</p>
+<hr/>
+
 [English](./README.md) | 简体中文
 
 # react-native-reanimated-carousel
