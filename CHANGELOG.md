@@ -1,3 +1,10 @@
+## [3.1.5](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.1.4...v3.1.5) (2022-11-04)
+
+
+### Bug Fixes
+
+* refactoring some code on data prop ([5ff96ab](https://github.com/dohooo/react-native-reanimated-carousel/commit/5ff96ab22c177fb56f962b283cdad3cde7b0937f))
+
 ## [3.1.4](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.1.3...v3.1.4) (2022-11-04)
 
 
