@@ -12,7 +12,7 @@ import type {
   TCarouselProps,
   WithTimingAnimation,
 } from "../types";
-import { convertToSharedIndex } from "../utils/computedWithAutoFillData";
+import { computedRealIndexWithAutoFillData, convertToSharedIndex } from "../utils/computedWithAutoFillData";
 import { dealWithAnimation } from "../utils/dealWithAnimation";
 import { handlerOffsetDirection } from "../utils/handlerOffsetDirection";
 import { round } from "../utils/log";
@@ -118,8 +118,15 @@ export function useCarouselController(options: IOpts): ICarouselController {
   );
 
   const getCurrentIndex = React.useCallback(() => {
-    return index.value;
-  }, [index]);
+    const realIndex = computedRealIndexWithAutoFillData({
+      index: index.value,
+      dataLength: dataInfo.originalLength,
+      loop,
+      autoFillData: autoFillData!,
+    });
+
+    return realIndex;
+  }, [index, autoFillData, dataInfo, loop]);
 
   const canSliding = React.useCallback(() => {
     return !dataInfo.disable;
