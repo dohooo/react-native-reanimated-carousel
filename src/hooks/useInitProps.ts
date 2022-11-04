@@ -46,13 +46,16 @@ export function useInitProps<T>(
   const autoPlayInterval = Math.max(_autoPlayInterval, 0);
 
   const data = React.useMemo<T[]>(
-    () =>
-      computedFillDataWithAutoFillData<T>({
+    () => {
+      const computedData = computedFillDataWithAutoFillData<T>({
         loop,
         autoFillData,
         data: rawData,
         dataLength: rawData.length,
-      }),
+      });
+
+      return Array.from({ length: computedData.length });
+    },
     [rawData, loop, autoFillData],
   );
 
@@ -60,9 +63,9 @@ export function useInitProps<T>(
     if (!props.modeConfig)
       props.modeConfig = {};
 
-    props.modeConfig.showLength
-            = props.modeConfig?.showLength ?? data.length - 1;
+    props.modeConfig.showLength = props.modeConfig?.showLength ?? data.length - 1;
   }
+
   return {
     ...props,
     defaultIndex,
