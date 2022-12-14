@@ -51,8 +51,9 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       onProgressChange,
       customAnimation,
       defaultIndex,
+      HeaderComponent,
+      headerHeight = 0,
     } = props;
-
     const commonVariables = useCommonVariables(props);
     const { size, handlerOffset } = commonVariables;
 
@@ -90,7 +91,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
     });
 
     const { next, prev, scrollTo, getSharedIndex, getCurrentIndex }
-            = carouselController;
+      = carouselController;
 
     const { start: startAutoPlay, pause: pauseAutoPlay } = useAutoPlay({
       autoPlay,
@@ -201,7 +202,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
     );
 
     return (
-      <CTX.Provider value={{ props, common: commonVariables }}>
+      <CTX.Provider value={{ props, common: commonVariables, headerHeight }}>
         <ScrollViewGesture
           key={mode}
           size={size}
@@ -210,7 +211,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
             styles.container,
             {
               width: width || "100%",
-              height: height || "100%",
+              height: (height + headerHeight) || "100%",
             },
             style,
             vertical
@@ -223,6 +224,10 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
           onTouchBegin={scrollViewGestureOnTouchBegin}
           onTouchEnd={scrollViewGestureOnTouchEnd}
         >
+
+          {HeaderComponent && !vertical && (
+            React.isValidElement(HeaderComponent) ? (HeaderComponent) : <HeaderComponent />
+          )}
           {data.map(renderLayout)}
         </ScrollViewGesture>
       </CTX.Provider>

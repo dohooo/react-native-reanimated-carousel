@@ -8,6 +8,7 @@ export interface IContext {
     size: number
     validLength: number
   }
+  headerHeight: number
 }
 
 export const CTX = React.createContext<IContext>({} as IContext);

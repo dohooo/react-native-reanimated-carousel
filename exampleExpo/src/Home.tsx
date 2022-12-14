@@ -21,6 +21,7 @@ import Cube3D from "./cube-3d";
 import Curve from "./curve";
 import Flow from "./flow";
 import Fold from "./fold";
+import HeaderCarouselComponent from "./header-carousel";
 import LeftAlignComponent from "./left-align";
 import MarqueeComponent from "./marquee";
 import MultipleComponent from "./multiple";
@@ -61,6 +62,10 @@ export const LayoutsPage = [
   {
     name: "LeftAlign",
     page: LeftAlignComponent,
+  },
+  {
+    name: "HeaderCarousel",
+    page: HeaderCarouselComponent,
   },
 ];
 
