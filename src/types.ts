@@ -163,9 +163,12 @@ export type TCarouselProps<T = any> = {
      * Must use `worklet`, Details: https://docs.swmansion.com/react-native-reanimated/docs/2.2.0/worklets/
      */
   customAnimation?: (value: number) => AnimatedStyleProp<ViewStyle>
+  /**
+     * Define the height of the header on carousel.
+     */
   headerHeight?: number
   /**
-     * Render carousel header.
+     * Render header on carousel, only support horizontal mode.
      */
   HeaderComponent?:
   | React.ComponentType<any>
