@@ -1,6 +1,6 @@
 {
     "name": "react-native-reanimated-carousel",
-    "version": "3.1.1",
+    "version": "3.1.5",
     "description": "Simple carousel component.fully implemented using Reanimated 2.Infinitely scrolling, very smooth.",
     "main": "lib/commonjs/index",
     "react-native": "src/index.tsx",
@@ -106,7 +106,7 @@
     "husky": {
         "hooks": {
             "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-            "pre-commit": "yarn lint && yarn typescript"
+            "pre-commit": "yarn test && yarn lint && yarn typescript"
         }
     },
     "commitlint": {

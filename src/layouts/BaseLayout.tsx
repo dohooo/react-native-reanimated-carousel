@@ -36,7 +36,7 @@ export const BaseLayout: React.FC<{
   const {
     props: {
       loop,
-      data,
+      dataLength,
       width,
       height,
       vertical,
@@ -51,7 +51,7 @@ export const BaseLayout: React.FC<{
     handlerOffset,
     index,
     size,
-    data,
+    dataLength,
     loop,
     ...(typeof customConfig === "function" ? customConfig() : {}),
   };
@@ -63,7 +63,7 @@ export const BaseLayout: React.FC<{
       handlerOffset,
       index,
       size,
-      data,
+      dataLength,
       loop,
       type: snapDirection === "right" ? "negative" : "positive",
       viewCount: showLength,

@@ -20,6 +20,8 @@ TGetRequiredProps<
 > & {
   // Raw data that has not been processed
   rawData: T[]
+  dataLength: number
+  rawDataLength: number
 };
 
 export function useInitProps<T>(
@@ -46,29 +48,39 @@ export function useInitProps<T>(
   const autoPlayInterval = Math.max(_autoPlayInterval, 0);
 
   const data = React.useMemo<T[]>(
-    () =>
-      computedFillDataWithAutoFillData<T>({
+    () => {
+      return computedFillDataWithAutoFillData<T>({
         loop,
         autoFillData,
         data: rawData,
         dataLength: rawData.length,
-      }),
+      });
+    },
     [rawData, loop, autoFillData],
   );
+
+  const dataLength = data.length;
+  const rawDataLength = rawData.length;
 
   if (props.mode === "vertical-stack" || props.mode === "horizontal-stack") {
     if (!props.modeConfig)
       props.modeConfig = {};
 
-    props.modeConfig.showLength
-            = props.modeConfig?.showLength ?? data.length - 1;
+    props.modeConfig.showLength = props.modeConfig?.showLength ?? dataLength - 1;
   }
+
   return {
     ...props,
     defaultIndex,
     autoFillData,
+    // Fill data with autoFillData
     data,
+    // Length of fill data
+    dataLength,
+    // Raw data that has not been processed
     rawData,
+    // Length of raw data
+    rawDataLength,
     loop,
     enabled,
     autoPlayInterval,

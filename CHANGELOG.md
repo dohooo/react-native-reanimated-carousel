@@ -1,3 +1,32 @@
+## [3.1.5](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.1.4...v3.1.5) (2022-11-04)
+
+
+### Bug Fixes
+
+* refactoring some code on data prop ([5ff96ab](https://github.com/dohooo/react-native-reanimated-carousel/commit/5ff96ab22c177fb56f962b283cdad3cde7b0937f))
+
+## [3.1.4](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.1.3...v3.1.4) (2022-11-04)
+
+
+### Bug Fixes
+
+* getCurrentIndex returns wrong value when data count is < 3 ([7f94027](https://github.com/dohooo/react-native-reanimated-carousel/commit/7f94027352debed9e7cb494bb6fa8049cbb9375c)), closes [#299](https://github.com/dohooo/react-native-reanimated-carousel/issues/299)
+* solved the crash error ([7a82994](https://github.com/dohooo/react-native-reanimated-carousel/commit/7a829947a64acab6488516e03bc1de183ada0a87)), closes [#305](https://github.com/dohooo/react-native-reanimated-carousel/issues/305) [#301](https://github.com/dohooo/react-native-reanimated-carousel/issues/301) [#298](https://github.com/dohooo/react-native-reanimated-carousel/issues/298) [#291](https://github.com/dohooo/react-native-reanimated-carousel/issues/291)
+
+## [3.1.3](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.1.2...v3.1.3) (2022-11-01)
+
+
+### Bug Fixes
+
+* fixed a bug that be crushed when put in redux data ([a5af02a](https://github.com/dohooo/react-native-reanimated-carousel/commit/a5af02a8135893e7cdd0c815d0c5a11dc7df4a5f)), closes [#296](https://github.com/dohooo/react-native-reanimated-carousel/issues/296)
+
+## [3.1.2](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.1.1...v3.1.2) (2022-11-01)
+
+
+### Bug Fixes
+
+* fixed a computed error ([b49715c](https://github.com/dohooo/react-native-reanimated-carousel/commit/b49715cd871c4c4f681b0fc4ef5fc02f2e498542)), closes [#291](https://github.com/dohooo/react-native-reanimated-carousel/issues/291) [#294](https://github.com/dohooo/react-native-reanimated-carousel/issues/294)
+
 ## [3.1.1](https://github.com/dohooo/react-native-reanimated-carousel/compare/v3.1.0...v3.1.1) (2022-10-25)
 
 

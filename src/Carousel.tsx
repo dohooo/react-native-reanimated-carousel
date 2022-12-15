@@ -23,10 +23,16 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
 
     const {
       testID,
-      data,
-      rawData,
       loop,
       autoFillData,
+      // Fill data with autoFillData
+      data,
+      // Length of fill data
+      dataLength,
+      // Raw data that has not been processed
+      rawData,
+      // Length of raw data
+      rawDataLength,
       mode,
       style,
       width,
@@ -50,7 +56,6 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
 
     const commonVariables = useCommonVariables(props);
     const { size, handlerOffset } = commonVariables;
-    const dataLength = data.length;
 
     const offsetX = useDerivedValue(() => {
       const totalSize = size * dataLength;
@@ -62,20 +67,20 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       return isNaN(x) ? 0 : x;
     }, [loop, size, dataLength]);
 
-    usePropsErrorBoundary(props);
+    usePropsErrorBoundary({ ...props, dataLength });
     useOnProgressChange({
       autoFillData,
       loop,
       size,
       offsetX,
-      rawData,
+      rawDataLength,
       onProgressChange,
     });
 
     const carouselController = useCarouselController({
       loop,
       size,
-      data,
+      dataLength,
       autoFillData,
       handlerOffset,
       withAnimation,
@@ -100,7 +105,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
 
       const realIndex = computedRealIndexWithAutoFillData({
         index: _sharedIndex,
-        dataLength: rawData.length,
+        dataLength: rawDataLength,
         loop,
         autoFillData,
       });
@@ -113,7 +118,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
     }, [
       loop,
       autoFillData,
-      rawData.length,
+      rawDataLength,
       getSharedIndex,
       onSnapToItem,
       onScrollEnd,
@@ -149,7 +154,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
     );
 
     const visibleRanges = useVisibleRanges({
-      total: data.length,
+      total: dataLength,
       viewSize: size,
       translation: handlerOffset,
       windowSize,
@@ -161,7 +166,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       (item: any, i: number) => {
         const realIndex = computedRealIndexWithAutoFillData({
           index: i,
-          dataLength: rawData.length,
+          dataLength: rawDataLength,
           loop,
           autoFillData,
         });

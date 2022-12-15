@@ -13,13 +13,11 @@ export function useOnProgressChange(
     autoFillData: boolean
     loop: boolean
     offsetX: Animated.SharedValue<number>
-    rawData: TCarouselProps["data"]
+    rawDataLength: number
   } & Pick<TCarouselProps, "onProgressChange">,
 ) {
-  const { autoFillData, loop, offsetX, rawData, size, onProgressChange }
+  const { autoFillData, loop, offsetX, size, rawDataLength, onProgressChange }
         = opts;
-
-  const rawDataLength = rawData.length;
 
   useAnimatedReaction(
     () => offsetX.value,

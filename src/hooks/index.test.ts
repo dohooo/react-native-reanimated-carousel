@@ -68,4 +68,15 @@ describe("should work as expected", () => {
 
     expect(handlerOffset / size).toBe(4 * negative);
   });
+
+  it("Changing length of data set from 0 to 3, the index remains original.", async () => {
+    const handlerOffset = computeNewIndexWhenDataChanges(params({
+      currentIndex: 0,
+      direction: "positive",
+      previousLength: 0,
+      currentLength: 3,
+    }));
+
+    expect(handlerOffset / size).toBe(0 * positive);
+  });
 });
