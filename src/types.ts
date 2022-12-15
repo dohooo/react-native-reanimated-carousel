@@ -191,7 +191,7 @@ export type TCarouselProps<T = any> = {
   /**
      * The last page we're allowed to scroll to.
      */
-   maxScrollablePage: number
+  maxScrollablePage?: number
 } & (TParallaxModeProps | TStackModeProps);
 
 export interface ICarouselInstance {

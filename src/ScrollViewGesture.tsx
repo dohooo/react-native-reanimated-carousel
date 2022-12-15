@@ -35,7 +35,7 @@ interface Props {
   onTouchBegin?: () => void
   onTouchEnd?: () => void
   translation: Animated.SharedValue<number>
-  maxScrollablePage?: number;
+  maxScrollablePage?: number
 }
 
 const IScrollViewGesture: React.FC<Props> = (props) => {
