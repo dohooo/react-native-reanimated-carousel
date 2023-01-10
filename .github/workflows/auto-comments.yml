@@ -1,21 +1,21 @@
-name: AUTO-COMMENTS
-on:
-  issues:
-    types:
-      - opened
+# name: AUTO-COMMENTS
+# on:
+#   issues:
+#     types:
+#       - opened
 
-jobs:
-  testCreate:
-    runs-on: ubuntu-latest
-    steps:
-       - name: Create comment
-         uses: peter-evans/create-or-update-comment@v2
-         with:
-            issue-number: 1
-            body: |
-              <hr/>
-              <p align="center">🔴</p>
-              <p align="center">👨‍💻 I'm so busy recently, so I'm going away for a little while, but I'll come back by the end of this month.</p>
-              <p align="center">♥️ Rest assured, I love this project, I will not give up.</p>
-              <p align="right">2022.11.xx</p>
-              <hr/>
+# jobs:
+#   testCreate:
+#     runs-on: ubuntu-latest
+#     steps:
+#        - name: Create comment
+#          uses: peter-evans/create-or-update-comment@v2
+#          with:
+#             issue-number: 1
+#             body: |
+#               <hr/>
+#               <p align="center">🔴</p>
+#               <p align="center">👨‍💻 I'm so busy recently, so I'm going away for a little while, but I'll come back by the end of this month.</p>
+#               <p align="center">♥️ Rest assured, I love this project, I will not give up.</p>
+#               <p align="right">2022.11.xx</p>
+#               <hr/>
