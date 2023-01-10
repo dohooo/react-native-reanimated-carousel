@@ -26,6 +26,7 @@
     "@unimodules/react-native-adapter": "^6.3.9",
     "babel-loader": "^8.2.3",
     "expo": "^46.0.0",
+    "expo-cli": "^6.1.0",
     "expo-blur": "~11.2.0",
     "expo-constants": "~13.2.4",
     "expo-status-bar": "~1.4.0",
