@@ -39,7 +39,9 @@
         "android:pretty": "yarn --cwd exampleExpo android:pretty",
         "pods": "cd exampleExpo && pod-install --quiet",
         "bootstrap": "yarn && yarn pods",
-        "deploy": "cd exampleExpo && yarn deploy"
+        "deploy": "cd exampleExpo && yarn deploy",
+        "publish": "yarn run prepare && changeset publish",
+        "version": "changeset version"
     },
     "keywords": [
         "react-native",
