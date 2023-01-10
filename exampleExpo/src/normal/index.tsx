@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import * as React from "react";
 import { View } from "react-native";
 import type { ICarouselInstance } from "react-native-reanimated-carousel";
