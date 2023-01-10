@@ -58,6 +58,8 @@
     },
     "devDependencies": {
         "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+        "@changesets/cli": "^2.26.0",
+        "@changesets/changelog-git": "^0.1.14",
         "@commitlint/config-conventional": "^11.0.0",
         "@dohooo/eslint-config": "^0.0.7",
         "@react-native-community/eslint-config": "^2.0.0",
