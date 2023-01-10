@@ -5,7 +5,7 @@ on:
       - main
 env:
   CI: true
-  PNPM_CACHE_FOLDER: .pnpm-store
+  
 jobs:
   version:
     timeout-minutes: 15
@@ -21,22 +21,28 @@ jobs:
         with:
           node-version: 16
 
-      - name: install pnpm
-        run: npm i pnpm@latest -g
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
 
-      - name: setup pnpm config
-        run: pnpm config set store-dir $PNPM_CACHE_FOLDER
+      - uses: actions/cache@v1
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+            path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+            restore-keys: |
+                ${{ runner.os }}-yarn-
 
       - name: install dependencies
-        run: pnpm install
+        run: yarn install
 
       - name: create and publish versions
         uses: changesets/action@v1
         with:
-          version: pnpm run version
+          version: yarn run version
           commit: "chore: update versions"
           title: "chore: update versions"
-          publish: pnpm run publish
+          publish: yarn run publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
