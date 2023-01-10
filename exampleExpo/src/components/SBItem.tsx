@@ -1,36 +1,41 @@
-import React from 'react';
-import { LongPressGestureHandler } from 'react-native-gesture-handler';
-import { SBImageItem } from './SBImageItem';
-import { SBTextItem } from './SBTextItem';
-import Constants from 'expo-constants';
-import Animated, { AnimateProps } from 'react-native-reanimated';
-import type { StyleProp, ViewStyle } from 'react-native';
-import type { ViewProps } from 'react-native';
+import React from "react";
+import type { StyleProp, ViewStyle, ViewProps } from "react-native";
+import { LongPressGestureHandler } from "react-native-gesture-handler";
+import type { AnimateProps } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
+
+import Constants from "expo-constants";
+
+import { SBImageItem } from "./SBImageItem";
+import { SBTextItem } from "./SBTextItem";
 
 interface Props extends AnimateProps<ViewProps> {
-    style?: StyleProp<ViewStyle>;
-    index: number;
-    pretty?: boolean;
+  style?: StyleProp<ViewStyle>
+  index: number
+  pretty?: boolean
 }
 
 export const SBItem: React.FC<Props> = (props) => {
-    const { style, index, pretty, ...animatedViewProps } = props;
-    // @ts-ignore
-    const enablePretty = Constants.manifest.extra.enablePretty;
-    const [isPretty, setIsPretty] = React.useState(pretty || enablePretty);
-    return (
-        <LongPressGestureHandler
-            onActivated={() => {
-                setIsPretty(!isPretty);
-            }}
-        >
-            <Animated.View style={{ flex: 1 }} {...animatedViewProps}>
-                {isPretty ? (
-                    <SBImageItem style={style} index={index} />
-                ) : (
-                    <SBTextItem style={style} index={index} />
-                )}
-            </Animated.View>
-        </LongPressGestureHandler>
-    );
+  const { style, index, pretty, ...animatedViewProps } = props;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
+  const enablePretty = Constants.manifest.extra.enablePretty;
+  const [isPretty, setIsPretty] = React.useState(pretty || enablePretty);
+  return (
+    <LongPressGestureHandler
+      onActivated={() => {
+        setIsPretty(!isPretty);
+      }}
+    >
+      <Animated.View style={{ flex: 1 }} {...animatedViewProps}>
+        {isPretty
+          ? (
+            <SBImageItem style={style} index={index} />
+          )
+          : (
+            <SBTextItem style={style} index={index} />
+          )}
+      </Animated.View>
+    </LongPressGestureHandler>
+  );
 };

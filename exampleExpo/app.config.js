@@ -1,5 +1,5 @@
 export default {
-    extra: {
-        enablePretty: process.env.PRETTY === 'true',
-    },
+  extra: {
+    enablePretty: process.env.PRETTY === "true",
+  },
 };

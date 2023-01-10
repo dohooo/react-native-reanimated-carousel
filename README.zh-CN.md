@@ -1,10 +1,3 @@
-<hr/>
-<p align="center">🔴</p>
-<p align="center">👨‍💻 最近我太忙了，所以我会离开一段时间，但我会在这个月底回来。</p>
-<p align="center">♥️ 放心，我爱这个项目，我不会放弃的。</p>
-<p align="right">2022.11.4</p>
-<hr/>
-
 [English](./README.md) | 简体中文
 
 # react-native-reanimated-carousel
@@ -91,38 +84,38 @@ npm install react-native-reanimated-carousel
 ## 使用
 
 ```tsx
-import * as React from 'react';
-import { Dimensions, Text, View } from 'react-native';
-import Carousel from 'react-native-reanimated-carousel';
+import * as React from "react";
+import { Dimensions, Text, View } from "react-native";
+import Carousel from "react-native-reanimated-carousel";
 
 function Index() {
-    const width = Dimensions.get('window').width;
-    return (
-        <View style={{ flex: 1 }}>
-            <Carousel
-                loop
-                width={width}
-                height={width / 2}
-                autoPlay={true}
-                data={[...new Array(6).keys()]}
-                scrollAnimationDuration={1000}
-                onSnapToItem={(index) => console.log('current index:', index)}
-                renderItem={({ index }) => (
-                    <View
-                        style={{
-                            flex: 1,
-                            borderWidth: 1,
-                            justifyContent: 'center',
-                        }}
-                    >
-                        <Text style={{ textAlign: 'center', fontSize: 30 }}>
-                            {index}
-                        </Text>
-                    </View>
-                )}
-            />
-        </View>
-    );
+  const width = Dimensions.get("window").width;
+  return (
+    <View style={{ flex: 1 }}>
+      <Carousel
+        loop
+        width={width}
+        height={width / 2}
+        autoPlay={true}
+        data={[...new Array(6).keys()]}
+        scrollAnimationDuration={1000}
+        onSnapToItem={index => console.log("current index:", index)}
+        renderItem={({ index }) => (
+          <View
+            style={{
+              flex: 1,
+              borderWidth: 1,
+              justifyContent: "center",
+            }}
+          >
+            <Text style={{ textAlign: "center", fontSize: 30 }}>
+              {index}
+            </Text>
+          </View>
+        )}
+      />
+    </View>
+  );
 }
 
 export default Index;
