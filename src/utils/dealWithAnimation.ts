@@ -8,16 +8,12 @@ export function dealWithAnimation(
   "worklet";
   switch (withAnimation.type) {
     case "spring":
-      return (value, cb) => {
-        return withSpring(value, withAnimation.config, isFinished =>
-          cb(isFinished as boolean),
-        );
-      };
+      return (value, cb) => withSpring(value, withAnimation.config, isFinished =>
+        cb(isFinished as boolean),
+      );
     case "timing":
-      return (value, cb) => {
-        return withTiming(value, withAnimation.config, isFinished =>
-          cb(isFinished as boolean),
-        );
-      };
+      return (value, cb) => withTiming(value, withAnimation.config, isFinished =>
+        cb(isFinished as boolean),
+      );
   }
 }

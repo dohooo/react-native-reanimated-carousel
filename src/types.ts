@@ -132,15 +132,14 @@ export type TCarouselProps<T = any> = {
   /**
      * If enabled, releasing the touch will scroll to the nearest item.
      * valid when pagingEnabled=false
-     * @deprecated please use snapEnabled instead
-     */
-  enableSnap?: boolean
-  /**
-     * If enabled, releasing the touch will scroll to the nearest item.
-     * valid when pagingEnabled=false
      * @default true
      */
   snapEnabled?: boolean
+  /**
+     * If enabled, items will scroll to the first placement when scrolling past the edge rather than closing to the last. (previous conditions: loop=false)
+     * @default true
+     */
+  overscrollEnabled?: boolean
   /**
      * If false, Carousel will not respond to any gestures.
      * @default true
@@ -188,6 +187,14 @@ export type TCarouselProps<T = any> = {
     offsetProgress: number,
     absoluteProgress: number
   ) => void
+
+  // ============================== deprecated props ==============================
+  /**
+     * If enabled, releasing the touch will scroll to the nearest item.
+     * valid when pagingEnabled=false
+     * @deprecated please use snapEnabled instead
+     */
+  enableSnap?: boolean
 } & (TParallaxModeProps | TStackModeProps);
 
 export interface ICarouselInstance {
