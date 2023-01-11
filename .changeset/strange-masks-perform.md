@@ -1,5 +1,5 @@
 ---
-'react-native-reanimated-carousel': patch
+'react-native-reanimated-carousel': minor
 ---
 
 🚀 Support to test.

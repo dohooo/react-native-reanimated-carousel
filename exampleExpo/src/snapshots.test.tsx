@@ -22,7 +22,7 @@ jest.mock("@faker-js/faker", () => ({
   },
 }));
 
-describe("<Carousel />", () => {
+describe("Test all cases.", () => {
   const originalMathRandom = Math.random;
 
   beforeEach(() => {
