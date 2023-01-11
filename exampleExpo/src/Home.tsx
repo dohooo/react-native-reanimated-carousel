@@ -11,37 +11,37 @@ import {
 import type { NavigationProp } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 
-import AdvancedParallaxComponent from "./advanced-parallax";
-import AnimTabBarComponent from "./anim-tab-bar";
-import BlurParallax from "./blur-parallax";
-import Circular from "./circular";
-import ComplexComponent from "./complex";
-import Cube3D from "./cube-3d";
-import Curve from "./curve";
-import Flow from "./flow";
-import Fold from "./fold";
-import LeftAlignComponent from "./left-align";
-import MarqueeComponent from "./marquee";
-import MultipleComponent from "./multiple";
-import NormalComponent from "./normal";
-import ParallaxComponent from "./parallax";
-import ParallaxLayers from "./parallax-layers";
-import PauseAdvancedParallaxComponent from "./pause-advanced-parallax";
-import PressSwipe from "./press-swipe";
-import RotateInOutComponent from "./rotate-in-out";
-import RotateScaleFadeInOutComponent from "./rotate-scale-fade-in-out";
-import ScaleFadeInOutComponent from "./scale-fade-in-out";
-import StackComponent from "./stack";
-import StackCards from "./stack-cards";
-import Tear from "./tear";
+import AdvancedParallaxComponent from "./pages/advanced-parallax";
+import AnimTabBarComponent from "./pages/anim-tab-bar";
+import BlurParallax from "./pages/blur-parallax";
+import Circular from "./pages/circular";
+import ComplexComponent from "./pages/complex";
+import Cube3D from "./pages/cube-3d";
+import Curve from "./pages/curve";
+import Flow from "./pages/flow";
+import Fold from "./pages/fold";
+import LeftAlignComponent from "./pages/left-align";
+import MarqueeComponent from "./pages/marquee";
+import MultipleComponent from "./pages/multiple";
+import NormalComponent from "./pages/normal";
+import ParallaxComponent from "./pages/parallax";
+import ParallaxLayers from "./pages/parallax-layers";
+import PauseAdvancedParallaxComponent from "./pages/pause-advanced-parallax";
+import PressSwipe from "./pages/press-swipe";
+import RotateInOutComponent from "./pages/rotate-in-out";
+import RotateScaleFadeInOutComponent from "./pages/rotate-scale-fade-in-out";
+import ScaleFadeInOutComponent from "./pages/scale-fade-in-out";
+import StackComponent from "./pages/stack";
+import StackCards from "./pages/stack-cards";
+import Tear from "./pages/tear";
 import { isAndroid, isIos } from "./utils";
 
 // Not support to WEB (react-native-snap-carousel)
 const SnapCarouselComplexComponent = React.lazy(
-  () => import("./snap-carousel-complex"),
+  () => import("./pages/snap-carousel-complex"),
 );
 const SnapCarouselLoopComponent = React.lazy(
-  () => import("./snap-carousel-loop"),
+  () => import("./pages/snap-carousel-loop"),
 );
 
 export const LayoutsPage = [

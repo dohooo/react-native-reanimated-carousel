@@ -16,10 +16,8 @@ interface Props extends AnimateProps<ViewProps> {
 }
 
 export const SBItem: React.FC<Props> = (props) => {
-  const { style, index, pretty, ...animatedViewProps } = props;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
-  const enablePretty = Constants.manifest.extra.enablePretty;
+  const { style, index, pretty, testID, ...animatedViewProps } = props;
+  const enablePretty = Constants?.manifest?.extra?.enablePretty || false;
   const [isPretty, setIsPretty] = React.useState(pretty || enablePretty);
   return (
     <LongPressGestureHandler
@@ -27,7 +25,7 @@ export const SBItem: React.FC<Props> = (props) => {
         setIsPretty(!isPretty);
       }}
     >
-      <Animated.View style={{ flex: 1 }} {...animatedViewProps}>
+      <Animated.View testID={testID} style={{ flex: 1 }} {...animatedViewProps}>
         {isPretty
           ? (
             <SBImageItem style={style} index={index} />
