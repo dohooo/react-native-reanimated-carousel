@@ -10,6 +10,7 @@ module.exports = function (api) {
     "react-native-reanimated/plugin",
     "inline-dotenv",
     "@babel/plugin-syntax-dynamic-import",
+    "import-glob",
   ];
 
   if (!isProd) {

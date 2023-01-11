@@ -1,5 +1,3 @@
-import { describe, expect, it } from "vitest";
-
 import { computeNewIndexWhenDataChanges } from "./computeNewIndexWhenDataChanges";
 
 describe("should work as expected", () => {

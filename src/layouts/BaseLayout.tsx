@@ -30,7 +30,7 @@ export const BaseLayout: React.FC<{
 }> = (props) => {
   const mounted = useCheckMounted();
   const { handlerOffset, index, children, visibleRanges, animationStyle }
-        = props;
+  = props;
 
   const context = React.useContext(CTX);
   const {
@@ -109,6 +109,12 @@ export const BaseLayout: React.FC<{
         },
         animatedStyle,
       ]}
+      /**
+       * We use this testID to know when the carousel item is ready to be tested in test.
+       * e.g.
+       *  The testID of first item will be changed to __CAROUSEL_ITEM_0_READY__ from __CAROUSEL_ITEM_0_NOT_READY__ when the item is ready.
+       * */
+      testID={`__CAROUSEL_ITEM_${index}_${shouldUpdate ? "READY" : "NOT_READY"}__`}
     >
       <LazyView shouldUpdate={shouldUpdate}>
         {children({ animationValue })}

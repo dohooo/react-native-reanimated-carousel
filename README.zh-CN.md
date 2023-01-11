@@ -144,6 +144,14 @@ export default Index;
     -   如果你使用 EXPO 托管工作流，请确定你的 EXPO SDK 版本大于 41，因为旧的版本并不支持`Reanimated(v2)`。
 -   工作原理
     - [关于RNRC](./docs/about.zh-CN.md)
+-  如何运行`exampleExpo`的测试
+    ```shell 
+    $ yarn prepare
+    $ yarn link --global
+    $ cd ./exampleExpo
+    $ yarn link react-native-reanimated-carousel --global
+    $ yarn test
+    ```
 
 ## 原因
 

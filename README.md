@@ -148,6 +148,15 @@ export default Index;
 -   Working principle
     -   [About RNRC](./docs/about.md)
 
+-  How to run tests in `exampleExpo`
+    ```shell 
+    $ yarn prepare
+    $ yarn link --global
+    $ cd ./exampleExpo
+    $ yarn link react-native-reanimated-carousel --global
+    $ yarn test
+    ```
+
 ## Reason
 
 <details>

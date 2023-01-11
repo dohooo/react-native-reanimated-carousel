@@ -11,7 +11,11 @@
     "web": "expo start --web",
     "web:pretty": "PRETTY=true expo start --web",
     "start": "expo start",
-    "test": "jest",
+    "test": "jest --watch --coverage=false --changedSince=origin/main",
+    "test:debug": "jest -o --watch --coverage=false",
+    "test:final": "jest",
+    "test:updateSnapshots": "jest -u --coverage=false",
+    "test:updateSnapshots:watch": "jest -u --watch --coverage=false",
     "build:web": "expo build:web",
     "deploy": "gh-pages -d web-build",
     "predeploy": "yarn build:web"
@@ -26,11 +30,13 @@
     "@unimodules/react-native-adapter": "^6.3.9",
     "babel-loader": "^8.2.3",
     "expo": "^46.0.0",
-    "expo-cli": "^6.1.0",
     "expo-blur": "~11.2.0",
+    "expo-cli": "^6.1.0",
     "expo-constants": "~13.2.4",
     "expo-status-bar": "~1.4.0",
     "expo-updates": "~0.14.7",
+    "jest": "^26.6.3",
+    "jest-expo": "^47.0.1",
     "metro-config": "^0.71.1",
     "react": "18.0.0",
     "react-dom": "18.0.0",
@@ -47,8 +53,11 @@
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/runtime": "^7.9.6",
     "@expo/webpack-config": "^0.17.0",
+    "@testing-library/jest-native": "^5.4.1",
+    "@testing-library/react-native": "^11.5.0",
     "@types/react": "~17.0.0",
     "@types/react-native-snap-carousel": "^3.8.5",
+    "babel-plugin-import-glob": "^2.0.0",
     "babel-plugin-inline-dotenv": "^1.6.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "babel-plugin-react-native-web": "^0.17.5",
@@ -61,5 +70,18 @@
   "resolutions": {
     "@types/react": "^17",
     "react-error-overlay": "6.0.9"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "setupFilesAfterEnv": [
+      "./test/jest-setup.js",
+      "@testing-library/jest-native/extend-expect"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)"
+    ],
+    "moduleDirectories": [
+      "<rootDir>/node_modules"
+    ]
   }
 }
