@@ -101,7 +101,7 @@ const CustomItem = ({ index, animationValue }) => {
 
 ### 缩放渐入渐出效果
 
-<a href="../exampleExpo/src/scale-fade-in-out/index.tsx">
+<a href="../exampleExpo/src/pages/scale-fade-in-out/index.tsx">
     <img src="././../assets/scale-fade-in-out.gif" width="300"/>  
 </a>
 

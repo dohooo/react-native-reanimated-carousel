@@ -121,7 +121,7 @@ How to add a new animation effect?
 
 We recommend you to use ['customAnimation'](./custom-animation.zh-cn.md) prop to do this, as this is a more flexible and easy way to do it.
 
-1. In `./exampleExpo/src/[new example]`reference other examples to create a new animation and give it a name (kebab-case dash name).
-2. In the `./exampleExpo/src/Home.tsx ` file to add the entrance route.
+1. In `./exampleExpo/src/pages/[new example]`reference other examples to create a new animation and give it a name (kebab-case dash name).
+2. In the `./exampleExpo/src/pages/Home.tsx ` file to add the entrance route.
 3. Record the demo animation. We recommend that you record the demo animation at a size of 1.8:1, usually in the same proportion as other demo GIF. Running 'yarn gif' in the root directory will automatically generate GIF files in this directory.
 4. Put the GIF files into the `./assets` directory and update the `README.md` and `README.zh-cn. md` files according to their types.

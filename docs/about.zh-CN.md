@@ -123,8 +123,8 @@ return {
 
 我们鼓励大家使用[`customAnimation`](./custom-animation.zh-CN.md) prop来完成它，因为这是一个更加灵活且简单的方式。 
 
-1. 在`./exampleExpo/src/[new example]`中参考其它的example来制作一个新的动画效果，并给它起一个名字（kebab-case 短横线命名）。
-2. 在`./exampleExpo/src/Home.tsx`文件中来添加入口路由。
+1. 在`./exampleExpo/src/pages/[new example]`中参考其它的example来制作一个新的动画效果，并给它起一个名字（kebab-case 短横线命名）。
+2. 在`./exampleExpo/src/pages/Home.tsx`文件中来添加入口路由。
 3. 录制演示动画，我们推荐大家按照1.8:1的大小来进行录制，一般来说按照其他演示gif的比例即可，最后将录制的动画放到`./scripts/gif-works-directory`中，执行`yarn gif`将会自动在此目录生成gif文件。
 4. 将gif文件放到`./assets`目录中，并按照类型更新`README.md`与`README.zh-CN.md`文件。
 
