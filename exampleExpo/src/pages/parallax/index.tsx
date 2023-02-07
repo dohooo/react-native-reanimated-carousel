@@ -31,7 +31,7 @@ function Index() {
   const baseOptions = isVertical
     ? ({
       vertical: true,
-      width: PAGE_WIDTH,
+      width: PAGE_WIDTH * 0.86,
       height: PAGE_WIDTH * 0.6,
     } as const)
     : ({
@@ -48,6 +48,9 @@ function Index() {
     >
       <Carousel
         {...baseOptions}
+        style={{
+           width: PAGE_WIDTH * 0.86,
+        }}
         loop
         pagingEnabled={pagingEnabled}
         snapEnabled={snapEnabled}
