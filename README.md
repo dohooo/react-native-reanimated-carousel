@@ -1,3 +1,7 @@
+<p align="center">I’m working on another important thing. Maybe until 31/03/2023. Sry.</p>
+<p align="center">Looking for a remote job. <a href="mailto:zhaodonghao586@outlook.com">email</a></p>
+
+---
 English | [简体中文](./README.zh-CN.md)
 
 # react-native-reanimated-carousel
