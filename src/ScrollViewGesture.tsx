@@ -134,21 +134,29 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
         const offset = -(scrollEndTranslation.value >= 0 ? 1 : -1); // 1 or -1
         const computed = offset < 0 ? Math.ceil : Math.floor;
         const page = computed(-translation.value / size);
-
-        if (infinite) {
-          const finalPage = page + offset;
+        if (snapEnabled) {
+          const maxFinalPage = -Math.round((origin + velocity * 0.4) / size);
+          let adjacentPage = page + offset;
+          if (!infinite)
+            adjacentPage = Math.min(maxPage - 1, Math.max(0, adjacentPage));
+          const computeFinalPage = offset < 0 ? Math.max : Math.min;
+          // Final page is either the current page or the adjacent page
+          const finalPage = computeFinalPage(adjacentPage, maxFinalPage);
           finalTranslation = withSpring(withProcessTranslation(-finalPage * size), onFinished);
         }
         else {
-          const finalPage = Math.min(maxPage - 1, Math.max(0, page + offset));
+          let finalPage = page + offset;
+          if (!infinite)
+            finalPage = Math.min(maxPage - 1, Math.max(0, page + offset));
           finalTranslation = withSpring(withProcessTranslation(-finalPage * size), onFinished);
         }
       }
-
-      if (!pagingEnabled && snapEnabled) {
-        // scroll to the nearest item
-        const nextPage = Math.round((origin + velocity * 0.4) / size) * size;
-        finalTranslation = withSpring(withProcessTranslation(nextPage), onFinished);
+      else {
+        if (snapEnabled) {
+          // scroll to the nearest item
+          const nextPage = Math.round((origin + velocity * 0.4) / size) * size;
+          finalTranslation = withSpring(withProcessTranslation(nextPage), onFinished);
+        }
       }
 
       translation.value = finalTranslation;
