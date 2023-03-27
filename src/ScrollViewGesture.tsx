@@ -1,14 +1,14 @@
 import React from "react";
 import type { StyleProp, ViewStyle } from "react-native";
-import type { PanGestureHandlerGestureEvent } from "react-native-gesture-handler";
+import type { GestureStateChangeEvent, PanGestureHandlerEventPayload } from "react-native-gesture-handler";
 import {
-  PanGestureHandler,
+  Gesture,
+  GestureDetector,
 } from "react-native-gesture-handler";
 import Animated, {
   cancelAnimation,
   measure,
   runOnJS,
-  useAnimatedGestureHandler,
   useAnimatedReaction,
   useAnimatedRef,
   useDerivedValue,
@@ -20,12 +20,6 @@ import { Easing } from "./constants";
 import { CTX } from "./store";
 import type { WithTimingAnimation } from "./types";
 import { dealWithAnimation } from "./utils/dealWithAnimation";
-
-interface GestureContext extends Record<string, unknown> {
-  validStart: boolean
-  panOffset: number
-  max: number
-}
 
 interface Props {
   size: number
@@ -45,7 +39,6 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
       vertical,
       pagingEnabled,
       snapEnabled,
-      panGestureHandlerProps,
       loop: infinite,
       scrollAnimationDuration,
       withAnimation,
@@ -68,7 +61,10 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
 
   const maxPage = dataLength;
   const isHorizontal = useDerivedValue(() => !vertical, [vertical]);
+  const max = useSharedValue(0);
+  const panOffset = useSharedValue(0);
   const touching = useSharedValue(false);
+  const validStart = useSharedValue(false);
   const scrollEndTranslation = useSharedValue(0);
   const scrollEndVelocity = useSharedValue(0);
   const containerRef = useAnimatedRef<Animated.View>();
@@ -240,78 +236,66 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
     [pagingEnabled, resetBoundary],
   );
 
-  const panGestureEventHandler = useAnimatedGestureHandler<
-  PanGestureHandlerGestureEvent,
-  GestureContext
-  >(
-    {
-      onStart: (_, ctx) => {
-        touching.value = true;
-        ctx.validStart = true;
-        onScrollBegin && runOnJS(onScrollBegin)();
+  const onGestureBegin = () => {
+    'worklet';
 
-        ctx.max = (maxPage - 1) * size;
-        if (!infinite && !overscrollEnabled)
-          ctx.max = getLimit();
+    touching.value = true;
+    validStart.value = true;
+    onScrollBegin && runOnJS(onScrollBegin)();
 
-        ctx.panOffset = translation.value;
-      },
-      onActive: (e, ctx) => {
-        if (ctx.validStart) {
-          ctx.validStart = false;
-          cancelAnimation(translation);
-        }
-        touching.value = true;
-        const { translationX, translationY } = e;
-        const panTranslation = isHorizontal.value
-          ? translationX
-          : translationY;
-        if (!infinite) {
-          if ((translation.value > 0 || translation.value < -ctx.max)) {
-            const boundary = translation.value > 0 ? 0 : -ctx.max;
-            const fixed = boundary - ctx.panOffset;
-            const dynamic = panTranslation - fixed;
-            translation.value = boundary + dynamic * 0.5;
-            return;
-          }
-        }
+    max.value = (maxPage - 1) * size;
+    if (!infinite && !overscrollEnabled)
+      max.value = getLimit();
 
-        const translationValue = ctx.panOffset + panTranslation;
-        translation.value = translationValue;
-      },
-      onEnd: (e) => {
-        const { velocityX, velocityY, translationX, translationY } = e;
-        scrollEndVelocity.value = isHorizontal.value
-          ? velocityX
-          : velocityY;
-        scrollEndTranslation.value = isHorizontal.value
-          ? translationX
-          : translationY;
+    panOffset.value = translation.value;
+  };
+  const onGestureUpdate = (e: PanGestureHandlerEventPayload) => {
+    'worklet';
 
-        endWithSpring(onScrollEnd);
+    if (validStart.value) {
+      validStart.value = false;
+      cancelAnimation(translation);
+    }
+    touching.value = true;
+    const { translationX, translationY } = e;
+    const panTranslation = isHorizontal.value
+      ? translationX
+      : translationY;
+    if (!infinite) {
+      if ((translation.value > 0 || translation.value < -max.value)) {
+        const boundary = translation.value > 0 ? 0 : -max.value;
+        const fixed = boundary - panOffset.value;
+        const dynamic = panTranslation - fixed;
+        translation.value = boundary + dynamic * 0.5;
+        return;
+      }
+    }
 
-        if (!infinite)
-          touching.value = false;
-      },
-    },
-    [
-      pagingEnabled,
-      isHorizontal.value,
-      infinite,
-      maxPage,
-      size,
-      snapEnabled,
-      onScrollBegin,
-      onScrollEnd,
-    ],
-  );
+    const translationValue = panOffset.value + panTranslation;
+    translation.value = translationValue;
+  };
+  const onGestureFinish = (e: GestureStateChangeEvent<PanGestureHandlerEventPayload>) => {
+    'worklet';
+
+    const { velocityX, velocityY, translationX, translationY } = e;
+    scrollEndVelocity.value = isHorizontal.value
+      ? velocityX
+      : velocityY;
+    scrollEndTranslation.value = isHorizontal.value
+      ? translationX
+      : translationY;
+
+    endWithSpring(onScrollEnd);
+
+    if (!infinite)
+      touching.value = false;
+  };
+
+  const gesture = Gesture.Pan().onBegin(onGestureBegin).onUpdate(onGestureUpdate).onEnd(onGestureFinish);
+  const GestureContainer = enabled ? GestureDetector : React.Fragment;
 
   return (
-    <PanGestureHandler
-      {...panGestureHandlerProps}
-      enabled={enabled}
-      onGestureEvent={panGestureEventHandler}
-    >
+    <GestureContainer gesture={gesture}>
       <Animated.View
         ref={containerRef}
         testID={testID}
@@ -321,7 +305,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
       >
         {props.children}
       </Animated.View>
-    </PanGestureHandler>
+    </GestureContainer>
   );
 };
 

@@ -86,7 +86,7 @@
         "react": "16.13.1",
         "react-native": "0.63.4",
         "react-native-builder-bob": "^0.18.1",
-        "react-native-gesture-handler": "^1.10.3",
+        "react-native-gesture-handler": "^2.9.0",
         "react-native-reanimated": "2.8.0",
         "release-it": "^14.2.2",
         "sponsorkit": "^0.1.3",
