@@ -7,7 +7,8 @@
     "types": "lib/typescript/index.d.ts",
     "source": "src/index",
     "files": [
-        "lib"
+        "lib",
+        "src"
     ],
     "scripts": {
         "gif": "node scripts/makegif.js ./scripts/gif-works-directory",
