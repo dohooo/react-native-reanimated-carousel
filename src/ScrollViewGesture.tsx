@@ -237,7 +237,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
   );
 
   const onGestureBegin = () => {
-    'worklet';
+    "worklet";
 
     touching.value = true;
     validStart.value = true;
@@ -250,7 +250,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
     panOffset.value = translation.value;
   };
   const onGestureUpdate = (e: PanGestureHandlerEventPayload) => {
-    'worklet';
+    "worklet";
 
     if (validStart.value) {
       validStart.value = false;
@@ -275,7 +275,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
     translation.value = translationValue;
   };
   const onGestureFinish = (e: GestureStateChangeEvent<PanGestureHandlerEventPayload>) => {
-    'worklet';
+    "worklet";
 
     const { velocityX, velocityY, translationX, translationY } = e;
     scrollEndVelocity.value = isHorizontal.value

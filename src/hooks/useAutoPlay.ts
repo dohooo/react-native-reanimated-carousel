@@ -16,7 +16,7 @@ export function useAutoPlay(opts: {
   } = opts;
 
   const { prev, next } = carouselController;
-  const timer = React.useRef<NodeJS.Timer>();
+  const timer = React.useRef<number>();
   const stopped = React.useRef<boolean>(!autoPlay);
 
   const play = React.useCallback(() => {
