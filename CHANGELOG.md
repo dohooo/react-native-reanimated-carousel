@@ -1,5 +1,11 @@
 # react-native-reanimated-carousel
 
+## 3.3.2
+
+### Patch Changes
+
+-   0237ae8: Solved the crush issue.
+
 ## 3.3.1
 
 ### Patch Changes
