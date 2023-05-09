@@ -7,18 +7,7 @@
     "types": "lib/typescript/index.d.ts",
     "source": "src/index",
     "files": [
-        "src",
-        "lib",
-        "android",
-        "ios",
-        "cpp",
-        "react-native-reanimated-carousel.podspec",
-        "!lib/typescript/example",
-        "!android/build",
-        "!ios/build",
-        "!**/__tests__",
-        "!**/__fixtures__",
-        "!**/__mocks__"
+        "lib"
     ],
     "scripts": {
         "gif": "node scripts/makegif.js ./scripts/gif-works-directory",
