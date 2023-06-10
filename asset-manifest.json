@@ -1,21 +1,21 @@
 {
   "files": {
-    "static/js/0.99b5d1eb.chunk.js": "/static/js/0.99b5d1eb.chunk.js",
-    "static/js/0.99b5d1eb.chunk.js.map": "/static/js/0.99b5d1eb.chunk.js.map",
-    "app.js": "/static/js/app.2206e5ee.chunk.js",
-    "app.js.map": "/static/js/app.2206e5ee.chunk.js.map",
-    "runtime~app.js": "/static/js/runtime~app.21a4413c.js",
-    "runtime~app.js.map": "/static/js/runtime~app.21a4413c.js.map",
-    "static/js/3.f2628244.chunk.js": "/static/js/3.f2628244.chunk.js",
-    "static/js/3.f2628244.chunk.js.map": "/static/js/3.f2628244.chunk.js.map",
-    "static/js/4.df95e1f9.chunk.js": "/static/js/4.df95e1f9.chunk.js",
-    "static/js/4.df95e1f9.chunk.js.map": "/static/js/4.df95e1f9.chunk.js.map",
-    "static/js/5.49e698f4.chunk.js": "/static/js/5.49e698f4.chunk.js",
-    "static/js/5.49e698f4.chunk.js.map": "/static/js/5.49e698f4.chunk.js.map",
+    "static/js/0.d178f041.chunk.js": "/static/js/0.d178f041.chunk.js",
+    "static/js/0.d178f041.chunk.js.map": "/static/js/0.d178f041.chunk.js.map",
+    "app.js": "/static/js/app.ff38e007.chunk.js",
+    "app.js.map": "/static/js/app.ff38e007.chunk.js.map",
+    "runtime~app.js": "/static/js/runtime~app.4eebd110.js",
+    "runtime~app.js.map": "/static/js/runtime~app.4eebd110.js.map",
+    "static/js/3.ea9c5831.chunk.js": "/static/js/3.ea9c5831.chunk.js",
+    "static/js/3.ea9c5831.chunk.js.map": "/static/js/3.ea9c5831.chunk.js.map",
+    "static/js/4.87463066.chunk.js": "/static/js/4.87463066.chunk.js",
+    "static/js/4.87463066.chunk.js.map": "/static/js/4.87463066.chunk.js.map",
+    "static/js/5.dd045b1c.chunk.js": "/static/js/5.dd045b1c.chunk.js",
+    "static/js/5.dd045b1c.chunk.js.map": "/static/js/5.dd045b1c.chunk.js.map",
     "index.html": "/index.html",
     "manifest.json": "/manifest.json",
     "serve.json": "/serve.json",
-    "static/js/3.f2628244.chunk.js.LICENSE.txt": "/static/js/3.f2628244.chunk.js.LICENSE.txt",
+    "static/js/3.ea9c5831.chunk.js.LICENSE.txt": "/static/js/3.ea9c5831.chunk.js.LICENSE.txt",
     "static/media/arrow-up.png": "/static/media/arrow-up.c373468b.png",
     "static/media/carousel-0.jpg": "/static/media/carousel-0.9471f20b.jpg",
     "static/media/carousel-1.jpg": "/static/media/carousel-1.ee8b345e.jpg",
@@ -26,8 +26,8 @@
     "static/media/web-example-qrcode.png": "/static/media/web-example-qrcode.0190b8c9.png"
   },
   "entrypoints": [
-    "static/js/runtime~app.21a4413c.js",
-    "static/js/3.f2628244.chunk.js",
-    "static/js/app.2206e5ee.chunk.js"
+    "static/js/runtime~app.4eebd110.js",
+    "static/js/3.ea9c5831.chunk.js",
+    "static/js/app.ff38e007.chunk.js"
   ]
 }
