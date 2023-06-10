@@ -26,31 +26,31 @@
 
 |              <img src="assets/normal-horizontal.gif"/>               |                <img src="assets/normal-vertical.gif"/>                |              <img src="assets/parallax-horizontal.gif"/>               |
 | :------------------------------------------------------------------: | :-------------------------------------------------------------------: | :--------------------------------------------------------------------: |
-|  <a href="./exampleExpo/src/normal/index.tsx">normal-horizontal</a>  |   <a href="./exampleExpo/src/normal/index.tsx">normal-vertical</a>    | <a href="./exampleExpo/src/parallax/index.tsx">parallax-horizontal</a> |
+|  <a href="./exampleExpo/src/pages/normal/index.tsx">normal-horizontal</a>  |   <a href="./exampleExpo/src/pages/normal/index.tsx">normal-vertical</a>    | <a href="./exampleExpo/src/pages/parallax/index.tsx">parallax-horizontal</a> |
 |              <img src="assets/parallax-vertical.gif"/>               |             <img src="assets/stack-horizontal-left.gif"/>             |             <img src="assets/stack-horizontal-right.gif"/>             |
-| <a href="./exampleExpo/src/parallax/index.tsx">parallax-vertical</a> | <a href="./exampleExpo/src/stack/index.tsx">stack-horizontal-left</a> | <a href="./exampleExpo/src/stack/index.tsx">stack-horizontal-right</a> |
+| <a href="./exampleExpo/src/pages/parallax/index.tsx">parallax-vertical</a> | <a href="./exampleExpo/src/pages/stack/index.tsx">stack-horizontal-left</a> | <a href="./exampleExpo/src/pages/stack/index.tsx">stack-horizontal-right</a> |
 |             <img src="assets/stack-vertical-left.gif"/>              |             <img src="assets/stack-vertical-right.gif"/>              |             <img src="assets/stack-horizontal-right.gif"/>             |
-| <a href="./exampleExpo/src/stack/index.tsx">stack-vertical-left</a>  | <a href="./exampleExpo/src/stack/index.tsx">stack-vertical-right</a>  | <a href="./exampleExpo/src/stack/index.tsx">stack-horizontal-right</a> |
+| <a href="./exampleExpo/src/pages/stack/index.tsx">stack-vertical-left</a>  | <a href="./exampleExpo/src/pages/stack/index.tsx">stack-vertical-right</a>  | <a href="./exampleExpo/src/pages/stack/index.tsx">stack-horizontal-right</a> |
 |                  <img src="assets/left-align.gif"/>                  |
-|   <a href="./exampleExpo/src/left-align/index.tsx">left-align</a>    |
+|   <a href="./exampleExpo/src/pages/left-align/index.tsx">left-align</a>    |
 
 > 现在你可以和我们一起来制作酷炫的动画了！ 非常简单! [[详情]](./docs/custom-animation.zh-CN.md)
 
 |                          <img src="assets/advanced-parallax.gif"/>                          |                      <img src="assets/pause-advanced-parallax.gif"/>                      |                   <img src="assets/scale-fade-in-out.gif"/>                   |
 | :-----------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------: |
-|        <a href="./exampleExpo/src/advanced-parallax/index.tsx">advanced-parallax</a>        | <a href="./exampleExpo/src/pause-advanced-parallax/index.tsx">pause-advanced-parallax</a> | <a href="./exampleExpo/src/scale-fade-in-out/index.tsx">scale-fade-in-out</a> |
+|        <a href="./exampleExpo/src/pages/advanced-parallax/index.tsx">advanced-parallax</a>        | <a href="./exampleExpo/src/pause-advanced-parallax/index.tsx">pause-advanced-parallax</a> | <a href="./exampleExpo/src/pages/scale-fade-in-out/index.tsx">scale-fade-in-out</a> |
 |                      <img src="assets/rotate-scale-fade-in-out.gif"/>                       |                           <img src="assets/rotate-in-out.gif"/>                           |                     <img src="assets/anim-tab-bar.gif"/>                      |
-| <a href="./exampleExpo/src/rotate-scale-fade-in-out/index.tsx">rotate-scale-fade-in-out</a> |           <a href="./exampleExpo/src/rotate-in-out/index.tsx">rotate-in-out</a>           |      <a href="./exampleExpo/src/anim-tab-bar/index.tsx">anim-tab-bar</a>      |
+| <a href="./exampleExpo/src/pages/rotate-scale-fade-in-out/index.tsx">rotate-scale-fade-in-out</a> |           <a href="./exampleExpo/src/pages/rotate-in-out/index.tsx">rotate-in-out</a>           |      <a href="./exampleExpo/src/pages/anim-tab-bar/index.tsx">anim-tab-bar</a>      |
 |                               <img src="assets/marquee.gif"/>                               |                             <img src="assets/multiple.gif"/>                              |                       <img src="assets/circular.gif"/>                        |
-|                  <a href="./exampleExpo/src/marquee/index.tsx">marquee</a>                  |                <a href="./exampleExpo/src/multiple/index.tsx">multiple</a>                |          <a href="./exampleExpo/src/circular/index.tsx">circular</a>          |
+|                  <a href="./exampleExpo/src/pages/marquee/index.tsx">marquee</a>                  |                <a href="./exampleExpo/src/pages/multiple/index.tsx">multiple</a>                |          <a href="./exampleExpo/src/pages/circular/index.tsx">circular</a>          |
 |                                <img src="assets/fold.gif"/>                                 |                               <img src="assets/tear.gif"/>                                |                      <img src="assets/press-swipe.gif"/>                      |
-|                     <a href="./exampleExpo/src/fold/index.tsx">fold</a>                     |                    <a href="./exampleExpo/src/tear/index.tsx">tear</a>                    |       <a href="./exampleExpo/src/press-swipe/index.tsx">press-swipe</a>       |
+|                     <a href="./exampleExpo/src/pages/fold/index.tsx">fold</a>                     |                    <a href="./exampleExpo/src/tear/index.tsx">tear</a>                    |       <a href="./exampleExpo/src/pages/press-swipe/index.tsx">press-swipe</a>       |
 |                               <img src="assets/cube-3d.gif"/>                               |                           <img src="assets/blur-parallax.gif"/>                           |                   <img src="assets/curve.gif"/>                               |
-|                  <a href="./exampleExpo/src/cube-3d/index.tsx">cube-3d</a>                  |           <a href="./exampleExpo/src/blur-parallax/index.tsx">blur-parallax</a>           |               <a href="./exampleExpo/src/curve/index.tsx">curve</a>           |
+|                  <a href="./exampleExpo/src/pages/cube-3d/index.tsx">cube-3d</a>                  |           <a href="./exampleExpo/src/pages/blur-parallax/index.tsx">blur-parallax</a>           |               <a href="./exampleExpo/src/pages/curve/index.tsx">curve</a>           |
 |                           <img src="assets/parallax-layers.gif"/>                           |                            <img src="assets/stack-cards.gif"/>                            |                         <img src="assets/flow.gif"/>                          |
-|          <a href="./exampleExpo/src/parallax-layers/index.tsx">parallax-layers</a>          |             <a href="./exampleExpo/src/stack-cards/index.tsx">stack-cards</a>             |              <a href="./exampleExpo/src/flow/index.tsx">flow</a>              |
+|          <a href="./exampleExpo/src/pages/parallax-layers/index.tsx">parallax-layers</a>          |             <a href="./exampleExpo/src/pages/stack-cards/index.tsx">stack-cards</a>             |              <a href="./exampleExpo/src/pages/flow/index.tsx">flow</a>              |
 |                           <img src="assets/blur-rotate.gif"/>                           |                               |  |
-|          <a href="./exampleExpo/src/blur-rotate/index.tsx">blur-rotate</a>          |                          |                            |
+|          <a href="./exampleExpo/src/pages/blur-rotate/index.tsx">blur-rotate</a>          |                          |                            |
 
 ## 目录
 
@@ -127,9 +127,9 @@ export default Index;
 
 -   优化
     -   当渲染大量元素时，可使用`windowSize`属性，来控制当前元素的两侧渲染数量，默认为全量渲染。经测试不加此属性，渲染 200 个空 view 时会出现掉帧情况，设置此属性后渲染 1000 个空 view 依旧流畅。（具体数量与测试的手机型号相关）
--   在`ScrollView/FlastList`中使用
+-   在`ScrollView/FlatList`中使用
 
-    -   **[#143](https://github.com/dohooo/react-native-reanimated-carousel/issues/143) - Carousel suppresses ScrollView/FlastList scroll gesture handler:** 当轮播图被放置在 ScrollView/FlatList 中时，轮播图的部分将无法控制列表滚动，解决办法是我们只允许手势系统识别某一方向，而不是所有方向，在下方例子中我们为了让列表可以向下滑动，所以我们使用[activeOffsetX](https://docs.swmansion.com/react-native-gesture-handler/docs/1.10.3/api/gesture-handlers/pan-gh/#activeoffsetx)属性来控制轮播图只识别横向手势:
+    -   **[#143](https://github.com/dohooo/react-native-reanimated-carousel/issues/143) - Carousel suppresses ScrollView/FlatList scroll gesture handler:** 当轮播图被放置在 ScrollView/FlatList 中时，轮播图的部分将无法控制列表滚动，解决办法是我们只允许手势系统识别某一方向，而不是所有方向，在下方例子中我们为了让列表可以向下滑动，所以我们使用[activeOffsetX](https://docs.swmansion.com/react-native-gesture-handler/docs/1.10.3/api/gesture-handlers/pan-gh/#activeoffsetx)属性来控制轮播图只识别横向手势:
 
         ```tsx
         <Carousel
