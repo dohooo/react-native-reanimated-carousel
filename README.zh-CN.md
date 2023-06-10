@@ -49,6 +49,8 @@
 |                  <a href="./exampleExpo/src/pages/cube-3d/index.tsx">cube-3d</a>                  |           <a href="./exampleExpo/src/pages/blur-parallax/index.tsx">blur-parallax</a>           |               <a href="./exampleExpo/src/pages/curve/index.tsx">curve</a>           |
 |                           <img src="assets/parallax-layers.gif"/>                           |                            <img src="assets/stack-cards.gif"/>                            |                         <img src="assets/flow.gif"/>                          |
 |          <a href="./exampleExpo/src/pages/parallax-layers/index.tsx">parallax-layers</a>          |             <a href="./exampleExpo/src/pages/stack-cards/index.tsx">stack-cards</a>             |              <a href="./exampleExpo/src/pages/flow/index.tsx">flow</a>              |
+|                           <img src="assets/blur-rotate.gif"/>                           |                               |  |
+|          <a href="./exampleExpo/src/pages/blur-rotate/index.tsx">blur-rotate</a>          |                          |                            |
 
 ## 目录
 
