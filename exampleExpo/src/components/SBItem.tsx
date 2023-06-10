@@ -11,7 +11,7 @@ import { SBTextItem } from "./SBTextItem";
 
 interface Props extends AnimateProps<ViewProps> {
   style?: StyleProp<ViewStyle>
-  index: number
+  index?: number
   pretty?: boolean
 }
 
@@ -28,7 +28,7 @@ export const SBItem: React.FC<Props> = (props) => {
       <Animated.View testID={testID} style={{ flex: 1 }} {...animatedViewProps}>
         {isPretty
           ? (
-            <SBImageItem style={style} index={index} />
+            <SBImageItem style={style} index={index} showIndex={typeof index === "number"} />
           )
           : (
             <SBTextItem style={style} index={index} />

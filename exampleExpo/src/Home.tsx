@@ -14,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import AdvancedParallaxComponent from "./pages/advanced-parallax";
 import AnimTabBarComponent from "./pages/anim-tab-bar";
 import BlurParallax from "./pages/blur-parallax";
+import BlurRotate from "./pages/blur-rotate";
 import Circular from "./pages/circular";
 import ComplexComponent from "./pages/complex";
 import Cube3D from "./pages/cube-3d";
@@ -64,6 +65,10 @@ export const LayoutsPage = [
 ];
 
 export const CustomAnimations = [
+  {
+    name: "BlurRotate",
+    page: BlurRotate,
+  },
   {
     name: "Curve",
     page: Curve,

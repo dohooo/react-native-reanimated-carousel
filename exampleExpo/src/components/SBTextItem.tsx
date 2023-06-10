@@ -4,13 +4,13 @@ import { StyleSheet, Text, View } from "react-native";
 
 interface Props {
   style?: StyleProp<ViewStyle>
-  index: number
+  index?: number
 }
 
 export const SBTextItem: React.FC<Props> = ({ style, index }) => {
   return (
     <View style={[styles.container, style]}>
-      <Text style={{ fontSize: 30, color: "black" }}>{index}</Text>
+      {typeof index === "number" && <Text style={{ fontSize: 30, color: "black" }}>{index}</Text>}
     </View>
   );
 };
