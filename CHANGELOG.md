@@ -1,5 +1,11 @@
 # react-native-reanimated-carousel
 
+## 3.4.0
+
+### Minor Changes
+
+-   8ea24ca: Added `maxScrollDistancePerSwipe` props.
+
 ## 3.3.2
 
 ### Patch Changes
