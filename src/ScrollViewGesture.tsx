@@ -52,6 +52,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
       enabled,
       dataLength,
       overscrollEnabled,
+      maxScrollDistancePerSwipe,
     },
   } = React.useContext(CTX);
 
@@ -122,33 +123,39 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
       // Default to scroll in the direction of the slide (with deceleration)
       let finalTranslation: number = withDecay({ velocity, deceleration: 0.999 });
 
+      // If the distance of the swipe exceeds the max scroll distance, keep the view at the current position
+      if (typeof maxScrollDistancePerSwipe === "number" && Math.abs(scrollEndTranslation.value) > maxScrollDistancePerSwipe) {
+        finalTranslation = origin;
+      }
+      else {
       /**
        * The page size is the same as the item size.
        * If direction is vertical, the page size is the height of the item.
        * If direction is horizontal, the page size is the width of the item.
-       *
-       * `page size` equals to `size` variable.
-       * */
-      if (pagingEnabled) {
-        // distance with direction
-        const offset = -(scrollEndTranslation.value >= 0 ? 1 : -1); // 1 or -1
-        const computed = offset < 0 ? Math.ceil : Math.floor;
-        const page = computed(-translation.value / size);
+      *
+      * `page size` equals to `size` variable.
+      * */
+        if (pagingEnabled) {
+          // distance with direction
+          const offset = -(scrollEndTranslation.value >= 0 ? 1 : -1); // 1 or -1
+          const computed = offset < 0 ? Math.ceil : Math.floor;
+          const page = computed(-translation.value / size);
 
-        if (infinite) {
-          const finalPage = page + offset;
-          finalTranslation = withSpring(withProcessTranslation(-finalPage * size), onFinished);
+          if (infinite) {
+            const finalPage = page + offset;
+            finalTranslation = withSpring(withProcessTranslation(-finalPage * size), onFinished);
+          }
+          else {
+            const finalPage = Math.min(maxPage - 1, Math.max(0, page + offset));
+            finalTranslation = withSpring(withProcessTranslation(-finalPage * size), onFinished);
+          }
         }
-        else {
-          const finalPage = Math.min(maxPage - 1, Math.max(0, page + offset));
-          finalTranslation = withSpring(withProcessTranslation(-finalPage * size), onFinished);
-        }
-      }
 
-      if (!pagingEnabled && snapEnabled) {
-        // scroll to the nearest item
-        const nextPage = Math.round((origin + velocity * 0.4) / size) * size;
-        finalTranslation = withSpring(withProcessTranslation(nextPage), onFinished);
+        if (!pagingEnabled && snapEnabled) {
+          // scroll to the nearest item
+          const nextPage = Math.round((origin + velocity * 0.4) / size) * size;
+          finalTranslation = withSpring(withProcessTranslation(nextPage), onFinished);
+        }
       }
 
       translation.value = finalTranslation;
@@ -164,15 +171,16 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
       }
     },
     [
-      translation,
-      scrollEndVelocity.value,
-      pagingEnabled,
-      size,
-      scrollEndTranslation.value,
-      infinite,
       withSpring,
-      snapEnabled,
+      size,
       maxPage,
+      infinite,
+      snapEnabled,
+      translation,
+      pagingEnabled,
+      scrollEndVelocity.value,
+      maxScrollDistancePerSwipe,
+      scrollEndTranslation.value,
     ],
   );
 
@@ -240,6 +248,18 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
     [pagingEnabled, resetBoundary],
   );
 
+  function withProcessTranslation(translation: number) {
+    "worklet";
+
+    if (!infinite && !overscrollEnabled) {
+      const limit = getLimit();
+      const sign = Math.sign(translation);
+      return sign * Math.max(0, Math.min(limit, Math.abs(translation)));
+    }
+
+    return translation;
+  }
+
   const panGestureEventHandler = useAnimatedGestureHandler<
   PanGestureHandlerGestureEvent,
   GestureContext
@@ -262,10 +282,19 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
           cancelAnimation(translation);
         }
         touching.value = true;
-        const { translationX, translationY } = e;
-        const panTranslation = isHorizontal.value
-          ? translationX
-          : translationY;
+        let { translationX, translationY } = e;
+
+        const totalTranslation = isHorizontal.value ? translationX : translationY;
+
+        if (typeof maxScrollDistancePerSwipe === "number" && Math.abs(totalTranslation) > maxScrollDistancePerSwipe) {
+          const overSwipe = Math.abs(totalTranslation) - maxScrollDistancePerSwipe;
+          const dampedTranslation = maxScrollDistancePerSwipe + overSwipe * 0.5;
+
+          translationX = isHorizontal.value ? dampedTranslation * Math.sign(translationX) : translationX;
+          translationY = !isHorizontal.value ? dampedTranslation * Math.sign(translationY) : translationY;
+        }
+
+        const panTranslation = isHorizontal.value ? translationX : translationY;
         if (!infinite) {
           if ((translation.value > 0 || translation.value < -ctx.max)) {
             const boundary = translation.value > 0 ? 0 : -ctx.max;
@@ -277,9 +306,10 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
         }
 
         const translationValue = ctx.panOffset + panTranslation;
+
         translation.value = translationValue;
       },
-      onEnd: (e) => {
+      onEnd: (e, ctx) => {
         const { velocityX, velocityY, translationX, translationY } = e;
         scrollEndVelocity.value = isHorizontal.value
           ? velocityX
@@ -288,7 +318,15 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
           ? translationX
           : translationY;
 
-        endWithSpring(onScrollEnd);
+        const totalTranslation = isHorizontal.value ? translationX : translationY;
+
+        if (typeof maxScrollDistancePerSwipe === "number" && Math.abs(totalTranslation) > maxScrollDistancePerSwipe) {
+          const nextPage = Math.round((ctx.panOffset + maxScrollDistancePerSwipe * Math.sign(totalTranslation)) / size) * size;
+          translation.value = withSpring(withProcessTranslation(nextPage), onScrollEnd);
+        }
+        else {
+          endWithSpring(onScrollEnd);
+        }
 
         if (!infinite)
           touching.value = false;
