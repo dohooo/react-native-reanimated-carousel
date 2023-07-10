@@ -17,7 +17,7 @@ interface Props extends AnimateProps<ViewProps> {
 
 export const SBItem: React.FC<Props> = (props) => {
   const { style, index, pretty, testID, ...animatedViewProps } = props;
-  const enablePretty = Constants?.manifest?.extra?.enablePretty || false;
+  const enablePretty = Constants?.expoConfig?.extra?.enablePretty || false;
   const [isPretty, setIsPretty] = React.useState(pretty || enablePretty);
   return (
     <LongPressGestureHandler

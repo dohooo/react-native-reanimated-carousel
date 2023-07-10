@@ -1,22 +1,10 @@
-const path = require('path');
-const pak = require('../package.json');
-
 module.exports = function (api) {
   api.cache(true);
-
   return {
-    presets: ['module:metro-react-native-babel-preset'],
+    presets: ["babel-preset-expo"],
     plugins: [
-      [
-        'module-resolver',
-        {
-          extensions: ['.tsx', '.ts', '.js', '.json'],
-          alias: {
-            [pak.name]: path.join(__dirname, '..', pak.main),
-          },
-        },
-      ],
-      'react-native-reanimated/plugin',
+      "@babel/plugin-proposal-export-namespace-from",
+      "react-native-reanimated/plugin",
     ],
   };
 };

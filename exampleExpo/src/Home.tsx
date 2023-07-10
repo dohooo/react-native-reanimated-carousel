@@ -166,6 +166,7 @@ if (isIos || isAndroid) {
 
 const Index = () => {
   const navigation = useNavigation<NavigationProp<any>>();
+
   return (
     <ScrollView
       style={{ flex: 1 }}
@@ -176,7 +177,7 @@ const Index = () => {
       ]}
     >
       <View style={styles.section}>
-        <Text style={styles.sectionText}>{"Layouts"}</Text>
+        <Text style={styles.sectionText}>Layouts</Text>
       </View>
       {LayoutsPage.map(({ name }, index) => {
         return (
