@@ -1,21 +1,12 @@
 import * as React from "react";
-import { I18nManager, Text, View } from "react-native";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-import { Restart } from "fiction-expo-restart";
-
-import { QRCode } from "./components/QRCode";
 import { window } from "./constants";
-import Home, { CustomAnimations, LayoutsPage, OtherPage } from "./Home";
+import { RootNavigator } from "./navigation/root";
 import { isWeb } from "./utils";
 
-const Stack = createNativeStackNavigator();
-
-const WebContainer: React.FC = ({ children }) => {
+const WebContainer: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   return (
     <View
       style={{
@@ -30,66 +21,12 @@ const WebContainer: React.FC = ({ children }) => {
 };
 
 function App() {
-  const [isRTL, setIsRTL] = React.useState(I18nManager.isRTL);
-
   const app = (
     <React.Suspense fallback={null}>
       <View style={{ flex: 1 }}>
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="Home"
-            screenOptions={{
-              contentStyle: {
-                flex: 1,
-                backgroundColor: "white",
-              },
-              headerRight: ({ tintColor }) => (
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
-                >
-                  {isWeb && (
-                    <>
-                      <QRCode tintColor={tintColor} />
-                      <Text style={{ color: tintColor }}>
-                        {" "}
-                                                |{" "}
-                      </Text>
-                    </>
-                  )}
-                  <TouchableWithoutFeedback
-                    onPress={() => {
-                      I18nManager.forceRTL(!isRTL);
-                      setIsRTL(!isRTL);
-                      Restart();
-                    }}
-                  >
-                    <Text style={{ color: tintColor }}>
-                      {isRTL ? "LTR" : "RTL"}
-                    </Text>
-                  </TouchableWithoutFeedback>
-                </View>
-              ),
-            }}
-          >
-            <Stack.Screen name="Home" component={Home} />
-            {[
-              ...LayoutsPage,
-              ...CustomAnimations,
-              ...OtherPage,
-            ].map((item) => {
-              return (
-                <Stack.Screen
-                  key={item.name}
-                  name={item.name}
-                  component={item.page}
-                />
-              );
-            })}
-          </Stack.Navigator>
-        </NavigationContainer>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <RootNavigator/>
+        </GestureHandlerRootView>
       </View>
     </React.Suspense>
   );
