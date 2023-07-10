@@ -16,9 +16,9 @@
     "test:final": "jest",
     "test:updateSnapshots": "jest -u --coverage=false",
     "test:updateSnapshots:watch": "jest -u --watch --coverage=false",
-    "build:web": "expo build:web",
+    "build:web": "expo export:web",
     "deploy": "gh-pages -d web-build",
-    "predeploy": "yarn build:web"
+    "predeploy": "yarn export:web"
   },
   "dependencies": {
     "@faker-js/faker": "^6.0.0-beta.0",
