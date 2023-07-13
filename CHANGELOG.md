@@ -1,5 +1,11 @@
 # react-native-reanimated-carousel
 
+## 3.5.0
+
+### Minor Changes
+
+-   c117a3a: Reducing default seetings for Android. (gestureHandlerRootHOC)
+
 ## 3.4.0
 
 ### Minor Changes
