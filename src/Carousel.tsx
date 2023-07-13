@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import React from "react";
 import { StyleSheet } from "react-native";
+import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 import { runOnJS, useDerivedValue } from "react-native-reanimated";
 
 import { useAutoPlay } from "./hooks/useAutoPlay";
@@ -230,7 +231,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
   },
 );
 
-export default Carousel as <T extends any>(
+export default gestureHandlerRootHOC(Carousel as any) as any as <T extends any>(
   props: React.PropsWithChildren<TCarouselProps<T>>
 ) => React.ReactElement;
 

@@ -1,9 +1,7 @@
 import React from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import type { PanGestureHandlerGestureEvent } from "react-native-gesture-handler";
-import {
-  PanGestureHandler,
-} from "react-native-gesture-handler";
+import { PanGestureHandler } from "react-native-gesture-handler";
 import Animated, {
   cancelAnimation,
   measure,
