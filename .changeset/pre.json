@@ -4,5 +4,7 @@
   "initialVersions": {
     "react-native-reanimated-carousel": "3.5.1"
   },
-  "changesets": []
+  "changesets": [
+    "proud-zebras-jump"
+  ]
 }
