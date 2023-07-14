@@ -1,5 +1,11 @@
 # react-native-reanimated-carousel
 
+## 3.5.1
+
+### Patch Changes
+
+-   870b130: Fixed ref unsable issue.
+
 ## 3.5.0
 
 ### Minor Changes
