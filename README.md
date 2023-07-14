@@ -76,12 +76,13 @@ Or if you use npm:
 npm install react-native-reanimated-carousel
 ```
 
-Now we need to install [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler) and [`react-native-reanimated(>=2.0.0)`](https://github.com/kmagiera/react-native-reanimated).
+Now we need to install [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler) and [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated).
 
 |                                        | react-native-reanimated | react-native-gesture-handler |
 | -------------------------------------- | ----------------------- | ---------------------------- |
-| react-native-reanimated-carousel < v3  | <2.7.0                  | \*                           |
-| react-native-reanimated-carousel >= v3 | >=2.7.0                 | \*                           |
+| react-native-reanimated-carousel v1、v2  | >=2.0 & <2.7.0                  | <2.9.0                           |
+| react-native-reanimated-carousel v3 | >=2.7.0 & < 3.x               | <2.9.0                          |
+| react-native-reanimated-carousel v4 | >=3.x                 | >=2.9.0                          |
 
 ## Usage
 

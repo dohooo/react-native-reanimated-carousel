@@ -77,11 +77,13 @@ yarn add react-native-reanimated-carousel
 npm install react-native-reanimated-carousel
 ```
 
-并且我们需要安装 [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler) 、[`react-native-reanimated(>=2.0.0)`](https://github.com/kmagiera/react-native-reanimated)，安装步骤可参考各自文档。
-| | react-native-reanimated | react-native-gesture-handler |
+并且我们需要安装 [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler) 、[`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated)，安装步骤可参考各自文档。
+|                                        | react-native-reanimated | react-native-gesture-handler |
 | -------------------------------------- | ----------------------- | ---------------------------- |
-| react-native-reanimated-carousel < v3 | <2.7.0 | \* |
-| react-native-reanimated-carousel >= v3 | >=2.7.0 | \* |
+| react-native-reanimated-carousel v1、v2  | >=2.0 & <2.7.0                  | <2.9.0                           |
+| react-native-reanimated-carousel v3 | >=2.7.0 & < 3.x               | <2.9.0                          |
+| react-native-reanimated-carousel v4 | >=3.x                 | >=2.9.0                          |
+
 
 ## 使用
 
