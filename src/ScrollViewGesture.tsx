@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "react";
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import type { GestureStateChangeEvent, PanGestureHandlerEventPayload } from "react-native-gesture-handler";
 import {
@@ -70,6 +70,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
   const scrollEndTranslation = useSharedValue(0);
   const scrollEndVelocity = useSharedValue(0);
   const containerRef = useAnimatedRef<Animated.View>();
+  const maxScrollDistancePerSwipeIsSet = typeof maxScrollDistancePerSwipe === "number";
 
   // Get the limit of the scroll.
   const getLimit = React.useCallback(() => {
@@ -121,7 +122,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       let finalTranslation: number = withDecay({ velocity, deceleration: 0.999 });
 
       // If the distance of the swipe exceeds the max scroll distance, keep the view at the current position
-      if (typeof maxScrollDistancePerSwipe === "number" && Math.abs(scrollEndTranslation.value) > maxScrollDistancePerSwipe) {
+      if (maxScrollDistancePerSwipeIsSet && Math.abs(scrollEndTranslation.value) > maxScrollDistancePerSwipe) {
         finalTranslation = origin;
       }
       else {
@@ -178,6 +179,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       scrollEndVelocity.value,
       maxScrollDistancePerSwipe,
       scrollEndTranslation.value,
+      maxScrollDistancePerSwipeIsSet,
     ],
   );
 
@@ -245,7 +247,19 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
     [pagingEnabled, resetBoundary],
   );
 
-  const onGestureBegin = () => {
+  function withProcessTranslation(translation: number) {
+    "worklet";
+
+    if (!infinite && !overscrollEnabled) {
+      const limit = getLimit();
+      const sign = Math.sign(translation);
+      return sign * Math.max(0, Math.min(limit, Math.abs(translation)));
+    }
+
+    return translation;
+  }
+
+  const onGestureBegin = useCallback(() => {
     "worklet";
 
     touching.value = true;
@@ -257,8 +271,21 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       max.value = getLimit();
 
     panOffset.value = translation.value;
-  };
-  const onGestureUpdate = (e: PanGestureHandlerEventPayload) => {
+  }, [
+    max,
+    size,
+    maxPage,
+    infinite,
+    touching,
+    panOffset,
+    validStart,
+    translation,
+    overscrollEnabled,
+    getLimit,
+    onScrollBegin,
+  ]);
+
+  const onGestureUpdate = useCallback((e: PanGestureHandlerEventPayload) => {
     "worklet";
 
     if (validStart.value) {
@@ -282,8 +309,18 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
 
     const translationValue = panOffset.value + panTranslation;
     translation.value = translationValue;
-  };
-  const onGestureFinish = (e: GestureStateChangeEvent<PanGestureHandlerEventPayload>) => {
+  }, [
+    isHorizontal,
+    max,
+    panOffset,
+    infinite,
+    overscrollEnabled,
+    translation,
+    validStart,
+    touching,
+  ]);
+
+  const onGestureFinish = useCallback((e: GestureStateChangeEvent<PanGestureHandlerEventPayload>) => {
     "worklet";
 
     const { velocityX, velocityY, translationX, translationY } = e;
@@ -294,13 +331,39 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       ? translationX
       : translationY;
 
-    endWithSpring(onScrollEnd);
+    const totalTranslation = scrollEndVelocity.value + scrollEndTranslation.value;
+
+    if (maxScrollDistancePerSwipeIsSet && Math.abs(totalTranslation) > maxScrollDistancePerSwipe) {
+      const nextPage = Math.round((panOffset.value + maxScrollDistancePerSwipe * Math.sign(totalTranslation)) / size) * size;
+      translation.value = withSpring(withProcessTranslation(nextPage), onScrollEnd);
+    }
+    else {
+      endWithSpring(onScrollEnd);
+    }
 
     if (!infinite)
       touching.value = false;
-  };
+  }, [
+    size,
+    infinite,
+    touching,
+    panOffset,
+    translation,
+    isHorizontal,
+    scrollEndVelocity,
+    scrollEndTranslation,
+    maxScrollDistancePerSwipeIsSet,
+    maxScrollDistancePerSwipe,
+    endWithSpring,
+    withSpring,
+    onScrollEnd,
+  ]);
 
-  const gesture = Gesture.Pan().onBegin(onGestureBegin).onUpdate(onGestureUpdate).onEnd(onGestureFinish);
+  const gesture = useMemo(() => Gesture.Pan().onBegin(onGestureBegin).onUpdate(onGestureUpdate).onEnd(onGestureFinish), [
+    onGestureBegin,
+    onGestureUpdate,
+    onGestureFinish,
+  ]);
   const GestureContainer = enabled ? GestureDetector : React.Fragment;
 
   return (
