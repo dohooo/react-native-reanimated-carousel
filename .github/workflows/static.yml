@@ -40,14 +40,19 @@ jobs:
         uses: borales/actions-yarn@v4
         with:
           cmd: install
-      - name: Build bundle
+      - run: cd ./exampleExpo
+      - name: Run install
         uses: borales/actions-yarn@v4
         with:
-          cmd: cd ./exampleExpo && yarn install && yarn build:web
+          cmd: install
+      - name: Run install
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: build:web
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: './exampleExpo/web-build'
+          path: './web-build'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
