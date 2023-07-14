@@ -31,28 +31,35 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
       - name: Setup Pages
         uses: actions/configure-pages@v3
+
       - uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
-      - name: Run install
-        uses: borales/actions-yarn@v4
+            node-version: '18.x'
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v1
+        id: yarn-cache
         with:
-          cmd: install
-      - run: cd ./exampleExpo
-      - name: Run install
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: install
-      - name: Run install
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: build:web
+            path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+            restore-keys: |
+                ${{ runner.os }}-yarn-
+
+      - run: yarn install
+
+      - run: cd ./exampleExpo && yarn install && yarn build:web
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
           path: './web-build'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
