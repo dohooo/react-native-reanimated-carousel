@@ -58,7 +58,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: './web-build'
+          path: './exampleExpo/web-build'
 
       - name: Deploy to GitHub Pages
         id: deployment
