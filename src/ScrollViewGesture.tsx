@@ -1,3 +1,4 @@
+import type { PropsWithChildren } from "react";
 import React from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import type { PanGestureHandlerGestureEvent } from "react-native-gesture-handler";
@@ -37,7 +38,7 @@ interface Props {
   translation: Animated.SharedValue<number>
 }
 
-const IScrollViewGesture: React.FC<Props> = (props) => {
+const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
   const {
     props: {
       vertical,

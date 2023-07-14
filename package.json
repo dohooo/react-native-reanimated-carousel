@@ -57,6 +57,7 @@
         "@react-native-community/eslint-config": "^2.0.0",
         "@release-it/conventional-changelog": "^2.0.0",
         "@types/jest": "^29.2.5",
+        "@types/react": "^18.2.15",
         "@types/react-native": "^0.66.16",
         "@types/react-native-snap-carousel": "^3.8.5",
         "babel-plugin-inline-dotenv": "^1.6.0",
