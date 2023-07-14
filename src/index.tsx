@@ -3,8 +3,8 @@ export type {
   TCarouselProps,
   ICarouselInstance,
   IComputedDirectionTypes,
-  CarouselRenderItem
+  CarouselRenderItem,
 } from "./types";
-export {ILayoutConfig} from './layouts/stack'
+export { ILayoutConfig } from "./layouts/stack";
 
 export default Carousel;

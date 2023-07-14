@@ -1,3 +1,4 @@
+import type { PropsWithChildren } from "react";
 import React from "react";
 import Animated, {
   Extrapolate,
@@ -14,8 +15,7 @@ import type { IVisibleRanges } from "../hooks/useVisibleRanges";
 import { LazyView } from "../LazyView";
 import type { IComputedDirectionTypes } from "../types";
 
-export const ParallaxLayout: React.FC<
-IComputedDirectionTypes<
+export const ParallaxLayout: React.FC<PropsWithChildren<IComputedDirectionTypes<
 {
   loop?: boolean
   handlerOffset: Animated.SharedValue<number>
@@ -23,8 +23,7 @@ IComputedDirectionTypes<
   dataLength: number
   visibleRanges: IVisibleRanges
 } & ILayoutConfig
->
-> = (props) => {
+>>> = (props) => {
   const {
     handlerOffset,
     parallaxScrollingOffset = 100,
