@@ -1,12 +1,13 @@
+import type { PropsWithChildren } from "react";
 import React from "react";
 import { View, Text } from "react-native";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native-gesture-handler";
 export interface ISButtonProps {
   visible?: boolean
   onPress?: () => void
 }
 
-const SButton: React.FC<ISButtonProps> = (props) => {
+const SButton: React.FC<PropsWithChildren<ISButtonProps>> = (props) => {
   const { children, visible = true, onPress } = props;
 
   if (!visible)
@@ -20,7 +21,7 @@ const SButton: React.FC<ISButtonProps> = (props) => {
         justifyContent: "center",
       }}
     >
-      <TouchableWithoutFeedback onPress={onPress}>
+      <TouchableOpacity onPress={onPress}>
         <View
           style={{
             marginTop: 20,
@@ -32,7 +33,7 @@ const SButton: React.FC<ISButtonProps> = (props) => {
         >
           <Text style={{ color: "white" }}>{children}</Text>
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     </View>
   );
 };

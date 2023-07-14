@@ -1,29 +1,33 @@
-const path = require('path');
-const blacklist = require('metro-config/src/defaults/exclusionList');
-const escape = require('escape-string-regexp');
-const pak = require('../package.json');
+const fs = require("fs");
+const path = require("path");
 
-const root = path.resolve(__dirname, '..');
+const escape = require("escape-string-regexp");
+const exclusionList = require("metro-config/src/defaults/exclusionList");
 
-const modules = Object.keys({
-  ...pak.peerDependencies,
-});
+const root = path.resolve(__dirname, "..");
+const rootPak = JSON.parse(
+  fs.readFileSync(path.join(root, "package.json"), "utf8"),
+);
+
+const modules = [
+  "@babel/runtime",
+  ...Object.keys({
+    ...rootPak.dependencies,
+    ...rootPak.peerDependencies,
+  }),
+];
 
 module.exports = {
   projectRoot: __dirname,
   watchFolders: [root],
 
-  // We need to make sure that only one version is loaded for peerDependencies
-  // So we blacklist them at the root, and alias them to the versions in example's node_modules
   resolver: {
-    blacklistRE: blacklist(
-      modules.map(
-        m => new RegExp(`^${escape(path.join(root, 'node_modules', m))}\\/.*$`),
-      ),
-    ),
+    blacklistRE: exclusionList([
+      new RegExp(`^${escape(path.join(root, "node_modules"))}\\/.*$`),
+    ]),
 
     extraNodeModules: modules.reduce((acc, name) => {
-      acc[name] = path.join(__dirname, 'node_modules', name);
+      acc[name] = path.join(__dirname, "node_modules", name);
       return acc;
     }, {}),
   },

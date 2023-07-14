@@ -154,6 +154,12 @@ export type TCarouselProps<T = any> = {
      */
   testID?: string
   /**
+    * Maximum offset value for once scroll.
+    * props.vertical = true => maxScrollDistancePerSwipeY
+    * props.vertical = false => maxScrollDistancePerSwipeX
+    * */
+  maxScrollDistancePerSwipe?: number
+  /**
      * Custom carousel config.
      */
   customConfig?: () => CustomConfig

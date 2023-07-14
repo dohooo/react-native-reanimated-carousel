@@ -1,7 +1,3 @@
-<p align="center">I’m working on another important thing. Maybe until 31/03/2023. Sry.</p>
-<p align="center">And I'm Looking for a remote job. 🍻 <a href="mailto:zhaodonghao586@outlook.com">email</a></p>
-
----
 English | [简体中文](./README.zh-CN.md)
 
 # react-native-reanimated-carousel
@@ -54,6 +50,8 @@ English | [简体中文](./README.zh-CN.md)
 |                  <a href="./exampleExpo/src/pages/cube-3d/index.tsx">cube-3d</a>                  |           <a href="./exampleExpo/src/pages/blur-parallax/index.tsx">blur-parallax</a>           |               <a href="./exampleExpo/src/pages/curve/index.tsx">curve</a>           |
 |                           <img src="assets/parallax-layers.gif"/>                           |                            <img src="assets/stack-cards.gif"/>                            |                         <img src="assets/flow.gif"/>                          |
 |          <a href="./exampleExpo/src/pages/parallax-layers/index.tsx">parallax-layers</a>          |             <a href="./exampleExpo/src/stack-cards/index.tsx">stack-cards</a>             |              <a href="./exampleExpo/src/pages/flow/index.tsx">flow</a>              |
+|                           <img src="assets/blur-rotate.gif"/>                           |                            ||
+|          <a href="./exampleExpo/src/pages/blur-rotate/index.tsx">blur-rotate</a>          |                          |                            |
 
 ## Table of contents
 

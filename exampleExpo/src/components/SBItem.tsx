@@ -11,13 +11,13 @@ import { SBTextItem } from "./SBTextItem";
 
 interface Props extends AnimateProps<ViewProps> {
   style?: StyleProp<ViewStyle>
-  index: number
+  index?: number
   pretty?: boolean
 }
 
 export const SBItem: React.FC<Props> = (props) => {
   const { style, index, pretty, testID, ...animatedViewProps } = props;
-  const enablePretty = Constants?.manifest?.extra?.enablePretty || false;
+  const enablePretty = Constants?.expoConfig?.extra?.enablePretty || false;
   const [isPretty, setIsPretty] = React.useState(pretty || enablePretty);
   return (
     <LongPressGestureHandler
@@ -28,7 +28,7 @@ export const SBItem: React.FC<Props> = (props) => {
       <Animated.View testID={testID} style={{ flex: 1 }} {...animatedViewProps}>
         {isPretty
           ? (
-            <SBImageItem style={style} index={index} />
+            <SBImageItem style={style} index={index} showIndex={typeof index === "number"} />
           )
           : (
             <SBTextItem style={style} index={index} />

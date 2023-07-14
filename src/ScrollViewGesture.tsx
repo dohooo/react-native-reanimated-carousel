@@ -1,3 +1,4 @@
+import type { PropsWithChildren } from "react";
 import React from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import type { GestureStateChangeEvent, PanGestureHandlerEventPayload } from "react-native-gesture-handler";
@@ -33,7 +34,7 @@ interface Props {
   translation: Animated.SharedValue<number>
 }
 
-const IScrollViewGesture: React.FC<Props> = (props) => {
+const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
   const {
     props: {
       vertical,
@@ -45,6 +46,7 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
       enabled,
       dataLength,
       overscrollEnabled,
+      maxScrollDistancePerSwipe,
     },
   } = React.useContext(CTX);
 
@@ -118,33 +120,39 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
       // Default to scroll in the direction of the slide (with deceleration)
       let finalTranslation: number = withDecay({ velocity, deceleration: 0.999 });
 
+      // If the distance of the swipe exceeds the max scroll distance, keep the view at the current position
+      if (typeof maxScrollDistancePerSwipe === "number" && Math.abs(scrollEndTranslation.value) > maxScrollDistancePerSwipe) {
+        finalTranslation = origin;
+      }
+      else {
       /**
        * The page size is the same as the item size.
        * If direction is vertical, the page size is the height of the item.
        * If direction is horizontal, the page size is the width of the item.
-       *
-       * `page size` equals to `size` variable.
-       * */
-      if (pagingEnabled) {
-        // distance with direction
-        const offset = -(scrollEndTranslation.value >= 0 ? 1 : -1); // 1 or -1
-        const computed = offset < 0 ? Math.ceil : Math.floor;
-        const page = computed(-translation.value / size);
+      *
+      * `page size` equals to `size` variable.
+      * */
+        if (pagingEnabled) {
+          // distance with direction
+          const offset = -(scrollEndTranslation.value >= 0 ? 1 : -1); // 1 or -1
+          const computed = offset < 0 ? Math.ceil : Math.floor;
+          const page = computed(-translation.value / size);
 
-        if (infinite) {
-          const finalPage = page + offset;
-          finalTranslation = withSpring(withProcessTranslation(-finalPage * size), onFinished);
+          if (infinite) {
+            const finalPage = page + offset;
+            finalTranslation = withSpring(withProcessTranslation(-finalPage * size), onFinished);
+          }
+          else {
+            const finalPage = Math.min(maxPage - 1, Math.max(0, page + offset));
+            finalTranslation = withSpring(withProcessTranslation(-finalPage * size), onFinished);
+          }
         }
-        else {
-          const finalPage = Math.min(maxPage - 1, Math.max(0, page + offset));
-          finalTranslation = withSpring(withProcessTranslation(-finalPage * size), onFinished);
-        }
-      }
 
-      if (!pagingEnabled && snapEnabled) {
-        // scroll to the nearest item
-        const nextPage = Math.round((origin + velocity * 0.4) / size) * size;
-        finalTranslation = withSpring(withProcessTranslation(nextPage), onFinished);
+        if (!pagingEnabled && snapEnabled) {
+          // scroll to the nearest item
+          const nextPage = Math.round((origin + velocity * 0.4) / size) * size;
+          finalTranslation = withSpring(withProcessTranslation(nextPage), onFinished);
+        }
       }
 
       translation.value = finalTranslation;
@@ -160,15 +168,16 @@ const IScrollViewGesture: React.FC<Props> = (props) => {
       }
     },
     [
-      translation,
-      scrollEndVelocity.value,
-      pagingEnabled,
-      size,
-      scrollEndTranslation.value,
-      infinite,
       withSpring,
-      snapEnabled,
+      size,
       maxPage,
+      infinite,
+      snapEnabled,
+      translation,
+      pagingEnabled,
+      scrollEndVelocity.value,
+      maxScrollDistancePerSwipe,
+      scrollEndTranslation.value,
     ],
   );
 

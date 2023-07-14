@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import React from "react";
 import { StyleSheet } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { runOnJS, useDerivedValue } from "react-native-reanimated";
 
 import { useAutoPlay } from "./hooks/useAutoPlay";
@@ -201,31 +202,33 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
     );
 
     return (
-      <CTX.Provider value={{ props, common: commonVariables }}>
-        <ScrollViewGesture
-          key={mode}
-          size={size}
-          translation={handlerOffset}
-          style={[
-            styles.container,
-            {
-              width: width || "100%",
-              height: height || "100%",
-            },
-            style,
-            vertical
-              ? styles.itemsVertical
-              : styles.itemsHorizontal,
-          ]}
-          testID={testID}
-          onScrollBegin={scrollViewGestureOnScrollBegin}
-          onScrollEnd={scrollViewGestureOnScrollEnd}
-          onTouchBegin={scrollViewGestureOnTouchBegin}
-          onTouchEnd={scrollViewGestureOnTouchEnd}
-        >
-          {data.map(renderLayout)}
-        </ScrollViewGesture>
-      </CTX.Provider>
+      <GestureHandlerRootView>
+        <CTX.Provider value={{ props, common: commonVariables }}>
+          <ScrollViewGesture
+            key={mode}
+            size={size}
+            translation={handlerOffset}
+            style={[
+              styles.container,
+              {
+                width: width || "100%",
+                height: height || "100%",
+              },
+              style,
+              vertical
+                ? styles.itemsVertical
+                : styles.itemsHorizontal,
+            ]}
+            testID={testID}
+            onScrollBegin={scrollViewGestureOnScrollBegin}
+            onScrollEnd={scrollViewGestureOnScrollEnd}
+            onTouchBegin={scrollViewGestureOnTouchBegin}
+            onTouchEnd={scrollViewGestureOnTouchEnd}
+          >
+            {data.map(renderLayout)}
+          </ScrollViewGesture>
+        </CTX.Provider>
+      </GestureHandlerRootView>
     );
   },
 );
