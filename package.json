@@ -3,6 +3,7 @@
     "version": "4.0.0-alpha.0",
     "description": "Simple carousel component.fully implemented using Reanimated 2.Infinitely scrolling, very smooth.",
     "main": "lib/commonjs/index",
+    "module": "lib/module/index",
     "react-native": "src/index.tsx",
     "types": "lib/typescript/index.d.ts",
     "source": "src/index",
@@ -85,10 +86,20 @@
         "watch": "^1.0.2"
     },
     "peerDependencies": {
+        "@types/react": "*",
+        "@types/react-native": "*",
         "react": ">=18.0.0",
         "react-native": ">=0.70.3",
         "react-native-gesture-handler": ">=2.9.0",
         "react-native-reanimated": ">=3.0.0"
+    },
+    "peerDependenciesMeta": {
+      "@types/react-native": {
+        "optional": true
+      },
+      "@types/react": {
+        "optional": true
+      }
     },
     "jest": {
         "preset": "react-native",
@@ -141,27 +152,18 @@
         }
     },
     "react-native-builder-bob": {
-        "source": "src",
-        "output": "lib",
-        "targets": [
-            [
-                "commonjs",
-                {
-                    "configFile": "./babel.config.js"
-                }
-            ],
-            "module",
-            [
-                "typescript",
-                {
-                    "project": "tsconfig.build.json"
-                }
-            ]
-        ]
+      "source": "src",
+      "output": "lib",
+      "targets": [
+        "commonjs",
+        "module",
+        "typescript"
+      ]
     },
     "config": {
         "commitizen": {
             "path": "./node_modules/cz-conventional-changelog"
         }
-    }
+    },
+    "dependencies": {}
 }

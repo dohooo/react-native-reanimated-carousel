@@ -53,12 +53,12 @@ jobs:
 
       - run: yarn install
 
-      - run: cd ./exampleExpo && yarn install && yarn build:web
+      - run: cd ./example/expo && yarn install && yarn build:web
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: './exampleExpo/web-build'
+          path: './example/expo/web-build'
 
       - name: Deploy to GitHub Pages
         id: deployment

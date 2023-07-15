@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from "react";
 import {
   View,
@@ -36,14 +35,6 @@ import StackComponent from "./pages/stack";
 import StackCards from "./pages/stack-cards";
 import Tear from "./pages/tear";
 import { isAndroid, isIos } from "./utils";
-
-// Not support to WEB (react-native-snap-carousel)
-const SnapCarouselComplexComponent = React.lazy(
-  () => import("./pages/snap-carousel-complex"),
-);
-const SnapCarouselLoopComponent = React.lazy(
-  () => import("./pages/snap-carousel-loop"),
-);
 
 export const LayoutsPage = [
   {
@@ -151,9 +142,18 @@ export const OtherPage = [
 ];
 
 if (isIos || isAndroid) {
+  // Not support to WEB (react-native-snap-carousel)
+  const SnapCarouselComplexComponent = React.lazy(
+    () => import("./pages/snap-carousel-complex"),
+  );
+  const SnapCarouselLoopComponent = React.lazy(
+    () => import("./pages/snap-carousel-loop"),
+  );
+
   OtherPage.push(
     {
       name: "SnapCarouselComplex",
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
       page: SnapCarouselComplexComponent,
     },

@@ -5,6 +5,6 @@ export type {
   IComputedDirectionTypes,
   CarouselRenderItem,
 } from "./types";
-export { ILayoutConfig } from "./layouts/stack";
+export type { ILayoutConfig } from "./layouts/stack";
 
 export default Carousel;

@@ -1,4 +1,6 @@
 {
     "extends": "@dohooo",
-    "rules": {}
+    "rules": {
+        "@typescript-eslint/no-use-before-define": "off",
+    }
 }

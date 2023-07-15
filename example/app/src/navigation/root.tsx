@@ -1,14 +1,23 @@
 import React from "react";
-import { I18nManager, Text, View } from "react-native";
+import { I18nManager, Text, View, Platform } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import RNRestart from "react-native-restart";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import * as Updates from "expo-updates";
 
 import { QRCode } from "../components/QRCode";
 import Home, { CustomAnimations, LayoutsPage, OtherPage } from "../Home";
 import { isWeb } from "../utils";
+
+const Restart = () => {
+  if (Platform.OS === "web")
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    window.location.reload();
+  else
+    Updates.reloadAsync();
+};
 
 const Stack = createStackNavigator<any>();
 
@@ -44,7 +53,7 @@ export const RootNavigator = () => {
                 onPress={() => {
                   I18nManager.forceRTL(!isRTL);
                   setIsRTL(!isRTL);
-                  RNRestart.restart();
+                  Restart();
                 }}
               >
                 <Text style={{ color: tintColor }}>

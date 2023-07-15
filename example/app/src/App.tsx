@@ -13,6 +13,7 @@ const WebContainer: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
         height: "100%",
         width: window.width,
         alignSelf: "center",
+        margin: "auto",
       }}
     >
       {children}
