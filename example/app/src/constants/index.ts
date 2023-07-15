@@ -12,6 +12,6 @@ export const ElementsText = {
 export const window: ScaledSize = isWeb
   ? {
     ...Dimensions.get("window"),
-    width: 375,
+    width: 700,
   }
   : Dimensions.get("window");

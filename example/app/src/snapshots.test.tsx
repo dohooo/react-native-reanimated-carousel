@@ -5,7 +5,7 @@ import { withReanimatedTimer, advanceAnimationByTime } from "react-native-reanim
 
 // @ts-expect-error, eslint-disable-next-line import/no-webpack-loader-syntax, @typescript-eslint/ban-ts-comment
 // eslint-disable-next-line import/no-webpack-loader-syntax
-import * as Carousels from "./pages/!\(snap-carousel-*\)/index.tsx";
+import * as Carousels from "./pages/!(snap-carousel-*)/index.js";
 
 jest.mock("@faker-js/faker", () => ({
   faker: {

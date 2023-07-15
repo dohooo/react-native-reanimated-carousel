@@ -1,0 +1,10 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "paths": {
+      "react-native-reanimated-carousel": ["../../src/index"],
+      "react-native-reanimated-carousel-example-app": ["../app/src/index"]
+    },
+    "strict": true
+  }
+}
