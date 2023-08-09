@@ -39,8 +39,15 @@ export function useVisibleRanges(options: {
       positiveRange[0] = 0;
     }
     if (positiveRange[0] > positiveRange[1]) {
-      negativeRange[1] = total - 1;
-      positiveRange[0] = 0;
+      if (positiveRange[1] == 0) {
+        negativeRange[1] = total - 1;
+        positiveRange[0] = total - 1;
+        positiveRange[1] = total - 1;
+      } else if (positiveRange[1] == 1) {
+        negativeRange[1] = positiveRange[0]
+        positiveRange[0] = 0;
+        positiveRange[1] = 1;
+      }
     }
     return { negativeRange, positiveRange };
   }, [total, windowSize, translation]);
