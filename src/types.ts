@@ -130,6 +130,12 @@ export type TCarouselProps<T = any> = {
      */
   pagingEnabled?: boolean
   /**
+     * Number of units needed to scroll to the next item in any direction.
+     * Must be a positive value.
+     * valid when pagingEnabled=true
+     */
+  pagingThreshold?: number
+  /**
      * If enabled, releasing the touch will scroll to the nearest item.
      * valid when pagingEnabled=false
      * @default true
@@ -154,10 +160,10 @@ export type TCarouselProps<T = any> = {
      */
   testID?: string
   /**
-    * Maximum offset value for once scroll.
-    * props.vertical = true => maxScrollDistancePerSwipeY
-    * props.vertical = false => maxScrollDistancePerSwipeX
-    * */
+     * Maximum offset value for once scroll.
+     * props.vertical = true => maxScrollDistancePerSwipeY
+     * props.vertical = false => maxScrollDistancePerSwipeX
+     * */
   maxScrollDistancePerSwipe?: number
   /**
      * Custom carousel config.
