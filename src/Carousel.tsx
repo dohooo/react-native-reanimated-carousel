@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
-import React from "react";
+import React, { Fragment } from "react";
 import { StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { runOnJS, useDerivedValue } from "react-native-reanimated";
@@ -13,6 +12,7 @@ import { useOnProgressChange } from "./hooks/useOnProgressChange";
 import { usePropsErrorBoundary } from "./hooks/usePropsErrorBoundary";
 import { useVisibleRanges } from "./hooks/useVisibleRanges";
 import { BaseLayout } from "./layouts/BaseLayout";
+import { LazyView } from "./LazyView";
 import { ScrollViewGesture } from "./ScrollViewGesture";
 import { CTX } from "./store";
 import type { ICarouselInstance, TCarouselProps } from "./types";
@@ -171,9 +171,10 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
           autoFillData,
         });
 
-        return (
+        const isLazy = !!windowSize;
+
+        const content = (
           <BaseLayout
-            key={i}
             index={i}
             handlerOffset={offsetX}
             visibleRanges={visibleRanges}
@@ -188,6 +189,8 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
             }
           </BaseLayout>
         );
+
+        return isLazy ? <LazyView key={i} index={i} visibleRanges={visibleRanges}>{content}</LazyView> : <Fragment key={i}>{content}</Fragment>;
       },
       [
         loop,
@@ -198,6 +201,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
         renderItem,
         layoutConfig,
         customAnimation,
+        windowSize,
       ],
     );
 

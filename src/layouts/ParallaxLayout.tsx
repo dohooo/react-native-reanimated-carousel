@@ -3,8 +3,6 @@ import React from "react";
 import Animated, {
   Extrapolate,
   interpolate,
-  runOnJS,
-  useAnimatedReaction,
   useAnimatedStyle,
 } from "react-native-reanimated";
 
@@ -12,7 +10,6 @@ import type { ILayoutConfig } from "./parallax";
 
 import { useOffsetX } from "../hooks/useOffsetX";
 import type { IVisibleRanges } from "../hooks/useVisibleRanges";
-import { LazyView } from "../LazyView";
 import type { IComputedDirectionTypes } from "../types";
 
 export const ParallaxLayout: React.FC<PropsWithChildren<IComputedDirectionTypes<
@@ -38,8 +35,6 @@ export const ParallaxLayout: React.FC<PropsWithChildren<IComputedDirectionTypes<
     visibleRanges,
     vertical,
   } = props;
-
-  const [shouldUpdate, setShouldUpdate] = React.useState(false);
 
   const size = props.vertical ? props.height : props.width;
 
@@ -103,27 +98,6 @@ export const ParallaxLayout: React.FC<PropsWithChildren<IComputedDirectionTypes<
     };
   }, [loop, vertical, parallaxScrollingOffset]);
 
-  const updateView = React.useCallback(
-    (negativeRange: number[], positiveRange: number[]) => {
-      setShouldUpdate(
-        (index >= negativeRange[0] && index <= negativeRange[1])
-                    || (index >= positiveRange[0] && index <= positiveRange[1]),
-      );
-    },
-    [index],
-  );
-
-  useAnimatedReaction(
-    () => visibleRanges.value,
-    () => {
-      runOnJS(updateView)(
-        visibleRanges.value.negativeRange,
-        visibleRanges.value.positiveRange,
-      );
-    },
-    [visibleRanges.value],
-  );
-
   return (
     <Animated.View
       style={[
@@ -135,7 +109,7 @@ export const ParallaxLayout: React.FC<PropsWithChildren<IComputedDirectionTypes<
         offsetXStyle,
       ]}
     >
-      <LazyView shouldUpdate={shouldUpdate}>{children}</LazyView>
+      {children}
     </Animated.View>
   );
 };
