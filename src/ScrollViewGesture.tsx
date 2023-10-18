@@ -364,10 +364,10 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
     onGestureUpdate,
     onGestureFinish,
   ]);
-  const GestureContainer = enabled ? GestureDetector : React.Fragment;
+  const GestureContainer = (props: PropsWithChildren) => enabled ? (<GestureDetector gesture={gesture}>{props.children}</GestureDetector>) : (<>{props.children}</>);
 
   return (
-    <GestureContainer gesture={gesture}>
+    <GestureContainer>
       <Animated.View
         ref={containerRef}
         testID={testID}
