@@ -5,7 +5,7 @@ import type {
   GestureStateChangeEvent,
   PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler';
-import { Gesture, GestureDetector, PanGesture } from 'react-native-gesture-handler';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   cancelAnimation,
   measure,
@@ -357,47 +357,38 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = props => {
 
     const {
       activateAfterLongPress,
-      activeOffsetXEnd,
-      activeOffsetXStart,
-      activeOffsetYEnd,
-      activeOffsetYStart,
+      activeOffsetX,
+      activeOffsetY,
       avgTouches,
-      cancelsTouchesInView,
-      enabled,
       enableTrackpadTwoFingerGesture,
-      failOffsetXEnd,
-      failOffsetXStart,
-      failOffsetYEnd,
-      failOffsetYStart,
-      hitSlop,
-      manualActivation,
+      failOffsetY,
+      failOffsetX,
       maxPointers,
       minDist,
       minPointers,
       minVelocity,
       minVelocityX,
       minVelocityY,
-      shouldCancelWhenOutside,
     } = panGestureHandlerProps ?? {};
 
     if (typeof activateAfterLongPress === 'number') {
       panGesture.activateAfterLongPress(activateAfterLongPress);
     }
 
-    if (typeof activeOffsetXStart === 'number' || typeof activeOffsetXEnd === 'number') {
-      panGesture.activeOffsetX([activeOffsetXStart ?? 0, activeOffsetXEnd ?? 0]);
+    if (typeof activeOffsetX === 'number') {
+      panGesture.activeOffsetX([-activeOffsetX, activeOffsetX]);
+    } else if (Array.isArray(activeOffsetX)) {
+      panGesture.activeOffsetX(activeOffsetX);
     }
 
-    if (typeof activeOffsetYStart === 'number' || typeof activeOffsetYEnd === 'number') {
-      panGesture.activeOffsetY([activeOffsetYStart ?? 0, activeOffsetYEnd ?? 0]);
+    if (typeof activeOffsetY === 'number') {
+      panGesture.activeOffsetY([-activeOffsetY, activeOffsetY]);
+    } else if (Array.isArray(activeOffsetY)) {
+      panGesture.activeOffsetX(activeOffsetY);
     }
 
     if (typeof avgTouches === 'boolean') {
       panGesture.averageTouches(avgTouches);
-    }
-
-    if (typeof cancelsTouchesInView === 'boolean') {
-      panGesture.cancelsTouchesInView(cancelsTouchesInView);
     }
 
     if (typeof enabled === 'boolean') {
@@ -408,20 +399,16 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = props => {
       panGesture.enableTrackpadTwoFingerGesture(enableTrackpadTwoFingerGesture);
     }
 
-    if (typeof failOffsetXStart === 'number' || typeof failOffsetXEnd === 'number') {
-      panGesture.failOffsetX([failOffsetXStart ?? -1, failOffsetXEnd ?? 1]);
+    if (typeof failOffsetX === 'number') {
+      panGesture.failOffsetX([-failOffsetX, failOffsetX]);
+    } else if (Array.isArray(failOffsetX)) {
+      panGesture.activeOffsetX(failOffsetX);
     }
 
-    if (typeof failOffsetYStart === 'number' || typeof failOffsetYEnd === 'number') {
-      panGesture.failOffsetY([failOffsetYStart ?? -1, failOffsetYEnd ?? 1]);
-    }
-
-    if (typeof hitSlop === 'number') {
-      panGesture.hitSlop(hitSlop);
-    }
-
-    if (typeof manualActivation === 'boolean') {
-      panGesture.manualActivation(manualActivation);
+    if (typeof failOffsetY === 'number') {
+      panGesture.failOffsetY([-failOffsetY, failOffsetY]);
+    } else if (Array.isArray(failOffsetY)) {
+      panGesture.activeOffsetX(failOffsetY);
     }
 
     if (typeof maxPointers === 'number') {
@@ -434,10 +421,6 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = props => {
 
     if (typeof minPointers === 'number') {
       panGesture.minPointers(minPointers);
-    }
-
-    if (typeof shouldCancelWhenOutside === 'boolean') {
-      panGesture.shouldCancelWhenOutside(shouldCancelWhenOutside);
     }
 
     if (typeof minVelocity === 'number') {
@@ -457,7 +440,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = props => {
   const GestureContainer = enabled ? GestureDetector : React.Fragment;
 
   return (
-    <GestureContainer gesture={gesture} userSelect={panGestureHandlerProps?.userSelect}>
+    <GestureContainer gesture={gesture}>
       <Animated.View
         ref={containerRef}
         testID={testID}

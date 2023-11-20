@@ -1,15 +1,14 @@
 import type { StyleProp, ViewStyle } from 'react-native';
+import { PanGestureHandlerProps } from 'react-native-gesture-handler';
+import type Animated from 'react-native-reanimated';
 import type {
   AnimatedStyleProp,
   SharedValue,
   WithSpringConfig,
   WithTimingConfig,
 } from 'react-native-reanimated';
-import type Animated from 'react-native-reanimated';
-
 import type { TParallaxModeProps } from './layouts/parallax';
 import type { TStackModeProps } from './layouts/stack';
-import { PanGestureConfig } from 'react-native-gesture-handler/src/handlers/PanGestureHandler';
 
 export type IComputedDirectionTypes<T, VP = {}, HP = {}> =
   | (T &
@@ -114,7 +113,7 @@ export type TCarouselProps<T = any> = {
   /**
    * PanGestureHandler props
    */
-  panGestureHandlerProps?: PanGestureConfig;
+  panGestureHandlerProps?: PanGestureHandlerProps;
   /**
    * Determines the maximum number of items will respond to pan gesture events,
    * windowSize={11} will active visible item plus up to 5 items above and 5 below the viewpor,
