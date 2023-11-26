@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { I18nManager, Text, View, Platform } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
-import { NavigationContainer } from "@react-navigation/native";
+import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as Updates from "expo-updates";
 
 import { QRCode } from "../components/QRCode";
 import Home, { CustomAnimations, LayoutsPage, OtherPage } from "../Home";
 import { isWeb } from "../utils";
+import { useColor } from "../hooks/useColor";
+import { useWebContext } from "../store/WebProvider";
 
 const Restart = () => {
   if (Platform.OS === "web")
@@ -22,18 +24,34 @@ const Restart = () => {
 const Stack = createStackNavigator<any>();
 
 export const RootNavigator = () => {
+  const headerShown = !useWebContext()?.page
+  const { isDark, colors } = useColor()
   const [isRTL, setIsRTL] = React.useState(I18nManager.isRTL);
 
+  const theme = useMemo(() => {
+    const { background, text } = colors
+    DefaultTheme.colors = {
+      ...DefaultTheme.colors,
+      card: background,
+      border: background,
+      background,
+      text,
+    };
+
+    return { ...DefaultTheme };
+  }, [isDark, colors]);
+
+
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={theme}>
       <Stack.Navigator
         initialRouteName="Home"
         screenOptions={{
           cardStyle: {
             flex: 1,
-            backgroundColor: "white",
           },
-          headerRight: ({ tintColor }) => (
+          headerShown,
+          headerRight: ({ tintColor }: { tintColor: string }) => (
             <View
               style={{
                 flexDirection: "row",
@@ -45,7 +63,7 @@ export const RootNavigator = () => {
                   <QRCode tintColor={tintColor} />
                   <Text style={{ color: tintColor }}>
                     {" "}
-                                        |{" "}
+                    |{" "}
                   </Text>
                 </>
               )}

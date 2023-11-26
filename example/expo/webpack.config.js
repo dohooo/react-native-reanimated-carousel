@@ -8,8 +8,11 @@ const node_modules = path.join(__dirname, 'node_modules');
 
 module.exports = async function (env, argv) {
   const config = await createExpoWebpackConfigAsync(env, argv);
+  const isDev = process.env.NODE_ENV === 'development';
 
-  config.output.publicPath = "/react-native-reanimated-carousel";
+  if(!isDev){
+    config.output.publicPath = "/react-native-reanimated-carousel";
+  }
   
   config.module.rules.push({
     test: /\.(js|jsx|ts|tsx)$/,

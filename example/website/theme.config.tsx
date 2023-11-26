@@ -3,7 +3,7 @@ import React from "react";
 import type { DocsThemeConfig } from "nextra-theme-docs";
 
 const config: DocsThemeConfig = {
-  logo: <span>React Native Reanimated Carousel</span>,
+  logo: <span>RNRC 🎠</span>,
   project: {
     link: "https://github.com/dohooo/react-native-reanimated-carousel",
   },

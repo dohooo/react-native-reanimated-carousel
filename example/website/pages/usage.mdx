@@ -1,0 +1,61 @@
+---
+id: usage
+title: Usage
+sidebar_label: Getting Started
+description: The react-native-reanimated-carousel usage guide. 📖
+keywords:
+  - react-native-reanimated-carousel
+  - reanimated-carousel
+  - reanimated carousel
+  - react-native
+  - snap-carousel
+  - react native
+  - snap carousel
+  - ios
+  - android
+  - carousel
+  - snap
+  - reanimated
+image: 
+slug: /usage
+---
+
+Here is a simple usage of the **React Native Reanimated Carousel**. For more scrollable usage please read [Scrollables](./scrollables).
+
+```tsx
+import * as React from 'react';
+import { Dimensions, Text, View } from 'react-native';
+import Carousel from 'react-native-reanimated-carousel';
+
+function App() {
+    const width = Dimensions.get('window').width;
+    return (
+        <View style={{ flex: 1 }}>
+            <Carousel
+                loop
+                width={width}
+                height={width / 2}
+                autoPlay={true}
+                data={[...new Array(6).keys()]}
+                scrollAnimationDuration={1000}
+                onSnapToItem={(index) => console.log('current index:', index)}
+                renderItem={({ index }) => (
+                    <View
+                        style={{
+                            flex: 1,
+                            borderWidth: 1,
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Text style={{ textAlign: 'center', fontSize: 30 }}>
+                            {index}
+                        </Text>
+                    </View>
+                )}
+            />
+        </View>
+    );
+}
+
+export default App;
+```

@@ -1,0 +1,9 @@
+#summary-item div {
+  max-height: 180px;
+  overflow: hidden;
+}
+
+#summary-item img {
+  width: 100%;
+  height: auto;
+}

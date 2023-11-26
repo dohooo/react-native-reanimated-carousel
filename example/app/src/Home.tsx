@@ -7,7 +7,9 @@ import {
   TouchableHighlight,
 } from "react-native";
 
+// @ts-ignore
 import type { NavigationProp } from "@react-navigation/native";
+// @ts-ignore
 import { useNavigation } from "@react-navigation/native";
 
 import AdvancedParallaxComponent from "./pages/advanced-parallax";
@@ -35,108 +37,111 @@ import StackComponent from "./pages/stack";
 import StackCards from "./pages/stack-cards";
 import Tear from "./pages/tear";
 import { isAndroid, isIos } from "./utils";
+import { useWebContext } from "./store/WebProvider";
+import { convertName } from "./utils/helpers";
+import { useColor } from "./hooks/useColor";
 
 export const LayoutsPage = [
   {
-    name: "Normal",
+    name: "normal",
     page: NormalComponent,
   },
   {
-    name: "Parallax",
+    name: "parallax",
     page: ParallaxComponent,
   },
   {
-    name: "Stack",
+    name: 'stack',
     page: StackComponent,
   },
   {
-    name: "LeftAlign",
+    name: "left-align",
     page: LeftAlignComponent,
   },
 ];
 
 export const CustomAnimations = [
   {
-    name: "BlurRotate",
+    name: 'blur-rotate',
     page: BlurRotate,
   },
   {
-    name: "Curve",
+    name: "curve",
     page: Curve,
   },
   {
-    name: "BlurParallax",
+    name: "blur-parallax",
     page: BlurParallax,
   },
   {
-    name: "Cube3D",
+    name: "cube-3d",
     page: Cube3D,
   },
   {
-    name: "PressSwipe",
+    name: "press-swipe",
     page: PressSwipe,
   },
   {
-    name: "Tear",
+    name: "tear",
     page: Tear,
   },
   {
-    name: "StackCards",
+    name: "stack-cards",
     page: StackCards,
   },
   {
-    name: "Fold",
+    name: "fold",
     page: Fold,
   },
   {
-    name: "Circular",
+    name: "circular",
     page: Circular,
   },
   {
-    name: "Flow",
+    name: "flow",
     page: Flow,
   },
   {
-    name: "ParallaxLayers",
+    name: "parallax-layers",
     page: ParallaxLayers,
   },
   {
-    name: "AdvancedParallax",
+    name: "advanced-parallax",
     page: AdvancedParallaxComponent,
   },
   {
-    name: "PauseAdvancedParallax",
+    name: "pause-advanced-parallax",
     page: PauseAdvancedParallaxComponent,
   },
   {
-    name: "ScaleFadeInOut",
+    name: "scale-fade-in-out",
     page: ScaleFadeInOutComponent,
   },
   {
-    name: "RotateInOut",
+    name: 'rotate-in-out',
     page: RotateInOutComponent,
   },
   {
-    name: "RotateScaleFadeInOut",
+    name: "rotate-scale-fade-in-out",
     page: RotateScaleFadeInOutComponent,
   },
   {
-    name: "AnimTabBar",
+    name: "anim-tab-bar",
     page: AnimTabBarComponent,
   },
   {
-    name: "Marquee",
+    name: "marquee",
     page: MarqueeComponent,
   },
   {
-    name: "Multiple",
+    name: "multiple",
     page: MultipleComponent,
   },
 ];
 
 export const OtherPage = [
   {
-    name: "Complex",
+    name: "complex",
     page: ComplexComponent,
   },
 ];
@@ -152,75 +157,68 @@ if (isIos || isAndroid) {
 
   OtherPage.push(
     {
-      name: "SnapCarouselComplex",
+      name: "snap-carousel-complex",
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
       page: SnapCarouselComplexComponent,
     },
     {
-      name: "SnapCarouselLoop",
+      name: "snap-carousel-loop",
       page: SnapCarouselLoopComponent,
     },
   );
 }
 
+const ListItem = ({ name, onPress, color }: { name: string; onPress: () => void; color: string }) => (
+  <TouchableHighlight onPress={onPress}>
+    <View style={styles.listItem}>
+      <Text style={[styles.text, { color: color }]}>{convertName(name)}</Text>
+    </View>
+  </TouchableHighlight>
+);
+
+const SectionHeader = ({ title, color }: { title: string; color: any }) => (
+  <View style={[styles.section, { backgroundColor: color.background }]}>
+    <View style={{ width: 5, height: 20, backgroundColor: color.text, marginRight: 12 }} />
+    <Text style={[styles.sectionText, { color: color.text }]}>{title}</Text>
+  </View>
+);
+
+interface PageItem {
+  name: string;
+  page: React.FC;
+}
+
 const Index = () => {
+  const webCtx = useWebContext();
+  const { colors } = useColor()
   const navigation = useNavigation<NavigationProp<any>>();
 
+  React.useEffect(() => {
+    if (webCtx?.page) {
+      navigation.navigate(webCtx.page)
+    }
+  }, [webCtx])
+
+  const renderSection = (title: string, data: PageItem[]) => (
+    <>
+      <SectionHeader title={title} color={colors} />
+      {data.map((item, index) => (
+        <ListItem
+          key={index}
+          name={item.name}
+          onPress={() => navigation.navigate(item.name)}
+          color={colors.text}
+        />
+      ))}
+    </>
+  );
+
   return (
-    <ScrollView
-      style={{ flex: 1 }}
-      stickyHeaderIndices={[
-        0,
-        LayoutsPage.length + 1,
-        LayoutsPage.length + CustomAnimations.length + 2,
-      ]}
-    >
-      <View style={styles.section}>
-        <Text style={styles.sectionText}>Layouts</Text>
-      </View>
-      {LayoutsPage.map(({ name }, index) => {
-        return (
-          <TouchableHighlight
-            key={index}
-            onPress={() => navigation.navigate(name)}
-          >
-            <View style={styles.listItem}>
-              <Text style={styles.text}>{name}</Text>
-            </View>
-          </TouchableHighlight>
-        );
-      })}
-      <View style={styles.section}>
-        <Text style={styles.sectionText}>{"CustomAnimations"}</Text>
-      </View>
-      {CustomAnimations.map(({ name }, index) => {
-        return (
-          <TouchableHighlight
-            key={index}
-            onPress={() => navigation.navigate(name)}
-          >
-            <View style={styles.listItem}>
-              <Text style={styles.text}>{name}</Text>
-            </View>
-          </TouchableHighlight>
-        );
-      })}
-      <View style={styles.section}>
-        <Text style={styles.sectionText}>{"Others"}</Text>
-      </View>
-      {OtherPage.map(({ name }, index) => {
-        return (
-          <TouchableHighlight
-            key={index}
-            onPress={() => navigation.navigate(name)}
-          >
-            <View style={styles.listItem}>
-              <Text style={styles.text}>{name}</Text>
-            </View>
-          </TouchableHighlight>
-        );
-      })}
+    <ScrollView style={{ flex: 1 }} stickyHeaderIndices={[0, LayoutsPage.length + 1, LayoutsPage.length + CustomAnimations.length + 2]}>
+      {renderSection('Layouts', LayoutsPage)}
+      {renderSection('CustomAnimations', CustomAnimations)}
+      {renderSection('Others', OtherPage)}
     </ScrollView>
   );
 };
@@ -233,7 +231,6 @@ const styles = StyleSheet.create({
     borderColor: "#e8ecf0",
     borderBottomWidth: 0.5,
     padding: 16,
-    backgroundColor: "#fff",
   },
   text: {
     fontSize: 16,
@@ -242,10 +239,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: "#e8ecf0",
+    alignItems: "center",
   },
   sectionText: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: "bold",
   },
 });
