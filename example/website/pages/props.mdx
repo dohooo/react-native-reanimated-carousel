@@ -1,0 +1,429 @@
+---
+id: props
+title: Props
+sidebar_label: Getting Started
+description: The react-native-reanimated-carousel props guide. 📖
+keywords:
+  - react-native-reanimated-carousel
+  - reanimated-carousel
+  - reanimated carousel
+  - react-native
+  - snap-carousel
+  - react native
+  - snap carousel
+  - ios
+  - android
+  - carousel
+  - snap
+  - reanimated
+image: 
+slug: /props
+---
+
+# Props
+---
+
+import { Callout } from 'nextra/components'
+
+## Basic
+
+<Callout emoji="🙋‍♂️">
+Basically, each props should have a corresponding example, which is more intuitive, but due to time constraints, it has not been done for the time being. It is expected that someone can contribute to submit PR.
+</Callout>
+
+### `data`
+
+Carousel items data set
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| T[] | -     | ✅      |
+
+### `renderItem`
+
+Render carousel item
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| \(info: \{ item: T, index: number, animationValue: SharedValue\<number\> \}\) =\> React.ReactElement | -     | ✅      |
+
+### `defaultScrollOffsetValue`
+
+The default animated value of the carousel.
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| useSharedValue\<number\>\(0\) | -     | ❌      |
+
+### `autoFillData`
+
+Auto fill data array to allow loop playback when the loop props is true.\(\[1\] \=\> \[1, 1, 1\]；\[1, 2\] \=\> \[1, 2, 1, 2\]\)
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| boolean | true     | ❌      |
+
+### `vertical`
+
+Layout items vertically instead of horizontally
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| boolean | false     | ❌      |
+
+### `width`
+
+Specified carousel item width
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| number \| undefined | '100%'     | ❌      |
+
+### `height`
+
+Specified carousel item height
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| number \| undefined | '100%'     | ❌      |
+
+### `mode`
+
+Carousel Animated transitions
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| 'horizontal-stack'\|'vertical-stack'\|'parallax' | default     | ❌      |
+
+### `modeConfig`
+
+Different modes correspond to different configurations. For details, see below\[modeConfig\]\(#`modeConfig` Props\)
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| \{moveSize\?: number;stackInterval\?: number;scaleInterval\?: number;rotateZDeg\?: number;snapDirection\?: 'left' \| 'right';\} | -     | ❌      |
+
+### `style`
+
+Carousel container style
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| ViewStyle | \{\}     | ❌      |
+
+### `defaultIndex`
+
+Default index
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| number | 0     | ❌      |
+
+### `autoPlay`
+
+Auto play
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| boolean | false     | ❌      |
+
+### `autoPlayReverse`
+
+Auto play reverse playback
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| boolean | false     | ❌      |
+
+### `autoPlayInterval`
+
+Auto play playback interval
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| number | 1000     | ❌      |
+
+### `scrollAnimationDuration`
+
+Time a scroll animation takes to finish
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| number | 500     | ❌      |
+
+### `loop`
+
+Carousel loop playback
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| boolean | true     | ❌      |
+
+### `testID`
+
+Used to locate this view in end-to-end tests
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| string | -     | ❌      |
+
+### `onSnapToItem`
+
+Callback fired when navigating to an item
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| \(index: number\) => void | -     | ❌      |
+
+### `onScrollBegin`
+
+Callback fired when scroll begin
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| \(\) => void | -     | ❌      |
+
+### `onScrollEnd`
+
+Callback fired when scroll end
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| \(index: number\) => void | -     | ❌      |
+
+### `withAnimation`
+
+Specifies the scrolling animation effect
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| \{type: 'spring';config: WithSpringConfig;\} \| \{type: 'timing';config: WithTimingConfig;\} | -     | ❌      |
+
+### `panGestureHandlerProps`
+
+PanGestureHandler props
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| Omit\<Partial\<PanGestureHandlerProps\>,'onHandlerStateChange'\> | \{\}     | ❌      |
+
+### `windowSize`
+
+The maximum number of items that can respond to pan gesture events, `0` means all items will respond to pan gesture events
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| number | 0     | ❌      |
+
+### `onProgressChange`
+
+On progress change. `offsetProgress`:Total of offset distance \(0 390 780 ...\); `absoluteProgress`:Convert to index \(0 1 2 ...\)
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| onProgressChange?: \(offsetProgress: number,absoluteProgress: number\) => void | -     | ❌      |
+
+### `modeConfig`
+
+Stack layout animation style
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| \{moveSize\?: number;stackInterval\?: number;scaleInterval\?: number;rotateZDeg\?: number;snapDirection\?: 'left' \| 'right';\} | \{ snapDirection: 'left',moveSize: window.width,stackInterval: 30,scaleInterval: 0.08,rotateZDeg: 135\}     | ❌      |
+
+### `pagingEnabled`
+
+When true, the scroll view stops on multiples of the scroll view's size when scrolling
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| boolean | true     | ❌      |
+
+### `overscrollEnabled`
+
+If enabled, the item will scroll to the first placement when scrolling past the edge rather than closing to the last. (previous conditions: loop=false)
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| boolean | true     | ❌      |
+
+### `snapEnabled`
+
+If enabled, releasing the touch will scroll to the nearest item, valid when pagingEnabled=false
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| boolean | true     | ❌      |
+
+### `enabled`
+
+when false, Carousel will not respond to any gestures
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| boolean | true     | ❌      |
+
+### `customConfig`
+
+Custom carousel config
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| \(\) => \{type\?: 'negative' \| 'positive';viewCount\?: number;} | -     | ❌      |
+
+### `customAnimation`
+
+Custom animations. For details, see below\[custom animation\]\(.\/custom-animation.md\)
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| \(value: number\) => Animated.AnimatedStyleProp\<ViewStyle\> | -     | ❌      |
+
+### `maxScrollDistancePerSwipe`
+
+Maximum offset value for one scroll. If `props.vertical = true`, this will be `maxScrollDistancePerSwipeY`. If `props.vertical = false`, this will be `maxScrollDistancePerSwipeX`.
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| number | -     | ❌      |
+
+## Parallax Mode
+
+```tsx copy
+<Carousel
+    {...restProps}
+    mode="parallax"
+    modeConfig={{
+        parallaxScrollingScale: 0.9,
+        parallaxScrollingOffset: 50,
+        parallaxAdjacentItemScale: 0.8,
+    }}
+/>
+```
+
+### `parallaxScrollingOffset`
+
+control prev/next item offset
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| number | 100     | ❌      |
+
+### `parallaxScrollingScale`
+
+control prev/current/next item scale
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| number | 0.8     | ❌      |
+
+### `parallaxAdjacentItemScale`
+
+control prev/next item scale
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| number | parallaxAdjacentItemScale \|\| Math.pow\(parallaxScrollingScale, 2\)     | ❌      |
+
+## Stack Mode
+
+```tsx copy
+<Carousel
+    {...restProps}
+    mode="stack"
+    modeConfig={{
+        moveSize: 200,
+        stackInterval: 30,
+        scaleInterval: 0.08,
+        rotateZDeg: 135,
+        snapDirection: 'left',
+    }}
+/>
+```
+
+### `stackInterval`
+
+The spacing of each item
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| number | 18     | ❌      |
+
+### `moveSize`
+
+Item translate size
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| number | screen.width     | ❌      |
+
+### `scaleInterval`
+
+The scale of each item
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| number | 0.04     | ❌      |
+
+### `opacityInterval`
+
+The opacity of each item
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| number | 0.1     | ❌      |
+
+### `rotateZDeg`
+
+The item rotation Angle
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| number | 30     | ❌      |
+
+### `snapDirection`
+
+Slide direction
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| 'left'\|'right' | 'left'     | ❌      |
+
+
+## Ref
+
+### `prev`
+
+Scroll to previous item, it takes one optional argument \(count\), which allows you to specify how many items to cross
+
+| type   |
+| ------ |
+| \(\{ count: number, animated: boolean, onFinished?: \(\) => void \}\) \=\> void |
+
+### `next`
+
+Scroll to next item, it takes one optional argument \(count\), which allows you to specify how many items to cross
+
+| type   |
+| ------ |
+| \(\{ count: number, animated: boolean, onFinished?: \(\) => void \}\) => void |
+
+### `scrollTo`
+
+```tsx copy
+scrollTo({ count: -2 })
+```
+
+Use count to scroll to a position where relative to the current position, scrollTo\(\{count:-2\}\) is equivalent to prev\(2\), scrollTo\(\{count:2\}\) is equivalent to next\(2\). And also can jump to specific position.
+
+| type   |
+| ------ |
+| \(\{ index: number, count: number, animated: boolean, onFinished\?: \(\) => void \}\) => void |
+
+### `getCurrentIndex`
+
+Get current item index
+
+| type   |
+| ------ |
+| \(\)=>number |
