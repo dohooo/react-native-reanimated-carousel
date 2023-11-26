@@ -34,7 +34,7 @@ const config: DocsThemeConfig = {
       <meta name="twitter:creator" content="@caspian_1016"/>
       <meta name="twitter:title" content="react-native-reanimated-carousel"/>
       <meta name="twitter:description" content="A performant carousel for React Native powered by Reanimated."/>
-      <meta name="twitter:image" content="https://reanimated-carousel.dev/site-icon.png"/>
+      <meta name="twitter:image" content="https://reanimated-carousel.dev/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fhome-banner.3b31d4aa.png&w=3840&q=75"/>
       <link rel="icon" href="https://reanimated-carousel.dev/site-icon.png"/>
     </>
   ),
