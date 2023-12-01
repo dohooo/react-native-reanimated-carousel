@@ -1,9 +1,10 @@
 {
   "index": "Getting Started",
-  "contact": {
-    "title": "Contact ↗",
-    "type": "page",
-    "href": "https://twitter.com/caspian_1016",
-    "newWindow": true
-  }
+  "props": "Props",
+  "usage": "Usage",
+  "Examples": "Examples",
+  "custom-animations": "Custom Animations",
+  "concepts": "How it works?",
+  "compare": "Compare",
+  "faq": "FAQ"
 }
