@@ -1,5 +1,11 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-alpha.2
+
+### Patch Changes
+
+-   [#494](https://github.com/dohooo/react-native-reanimated-carousel/pull/494) [`6b849ec`](https://github.com/dohooo/react-native-reanimated-carousel/commit/6b849ecf1ab0ce265278ec6f925b556de4d15353) Thanks [@dohooo](https://github.com/dohooo)! - Removed the reset logic when user change the defaultIndex prop. (We couldn't update the handlerOffset value when user change the defaultIndex. Because the carousel component already be a non-controlled component. So the subsequent changes of defaultIndex will be ignored.)
+
 ## 4.0.0-alpha.1
 
 ### Patch Changes
