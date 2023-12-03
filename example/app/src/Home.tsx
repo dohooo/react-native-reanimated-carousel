@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  TouchableHighlight,
 } from "react-native";
 
 // @ts-ignore
@@ -40,6 +39,7 @@ import { isAndroid, isIos } from "./utils";
 import { useWebContext } from "./store/WebProvider";
 import { convertName } from "./utils/helpers";
 import { useColor } from "./hooks/useColor";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export const LayoutsPage = [
   {
@@ -170,11 +170,11 @@ if (isIos || isAndroid) {
 }
 
 const ListItem = ({ name, onPress, color }: { name: string; onPress: () => void; color: string }) => (
-  <TouchableHighlight onPress={onPress}>
+  <TouchableOpacity onPress={onPress}>
     <View style={styles.listItem}>
       <Text style={[styles.text, { color: color }]}>{convertName(name)}</Text>
     </View>
-  </TouchableHighlight>
+  </TouchableOpacity>
 );
 
 const SectionHeader = ({ title, color }: { title: string; color: any }) => (
@@ -201,21 +201,21 @@ const Index = () => {
   }, [webCtx])
 
   const renderSection = (title: string, data: PageItem[]) => (
-    <>
-      <SectionHeader title={title} color={colors} />
-      {data.map((item, index) => (
+    [
+      <SectionHeader key={title} title={title} color={colors} />,
+      ...(data.map((item, index) => (
         <ListItem
           key={index}
           name={item.name}
           onPress={() => navigation.navigate(item.name)}
           color={colors.text}
         />
-      ))}
-    </>
+      )))
+    ]
   );
 
   return (
-    <ScrollView style={{ flex: 1 }} stickyHeaderIndices={[0, LayoutsPage.length + 1, LayoutsPage.length + CustomAnimations.length + 2]}>
+    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 64 }} stickyHeaderIndices={[0, LayoutsPage.length + 1, LayoutsPage.length + CustomAnimations.length + 2]}>
       {renderSection('Layouts', LayoutsPage)}
       {renderSection('CustomAnimations', CustomAnimations)}
       {renderSection('Others', OtherPage)}

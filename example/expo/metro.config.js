@@ -15,6 +15,7 @@ const appPak = JSON.parse(
 
 const modules = [
   '@babel/runtime',
+  'metro-runtime',
   ...Object.keys({
     ...rootPak.dependencies,
     ...rootPak.peerDependencies,

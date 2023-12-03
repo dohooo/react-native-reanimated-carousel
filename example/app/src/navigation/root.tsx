@@ -74,7 +74,7 @@ export const RootNavigator = () => {
                   Restart();
                 }}
               >
-                <Text style={{ color: tintColor }}>
+                <Text style={{ color: tintColor, marginRight: 12 }}>
                   {isRTL ? "LTR" : "RTL"}
                 </Text>
               </TouchableWithoutFeedback>
