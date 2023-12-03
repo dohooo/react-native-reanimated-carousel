@@ -5,6 +5,8 @@
     "react-native-reanimated-carousel": "3.5.1"
   },
   "changesets": [
-    "proud-zebras-jump"
+    "poor-pets-eat",
+    "proud-zebras-jump",
+    "yellow-bottles-itch"
   ]
 }

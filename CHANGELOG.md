@@ -1,5 +1,23 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-alpha.1
+
+### Patch Changes
+
+-   [#492](https://github.com/dohooo/react-native-reanimated-carousel/pull/492) [`978b59f`](https://github.com/dohooo/react-native-reanimated-carousel/commit/978b59f0f2d8a96fe1d1de1a1c9fb205fd051cfb) Thanks [@dohooo](https://github.com/dohooo)! - feat: change the way of PanGestureHandler modification from panGestureHandlerProps to onConfigurePanGesture.
+
+    e.g.
+
+    ```tsx
+    <Carousel
+        onConfigurePanGesture={(gestureChain) => {
+            gestureChain.activeOffsetX([-10, 10]);
+        }}
+    />
+    ```
+
+-   [#492](https://github.com/dohooo/react-native-reanimated-carousel/pull/492) [`c015873`](https://github.com/dohooo/react-native-reanimated-carousel/commit/c015873b7a8f4f357b7342c250220ea9968d8b58) Thanks [@dohooo](https://github.com/dohooo)! - Fixed an issue where the enable props couldn't set to false.
+
 ## 4.0.0-alpha.0
 
 ### Major Changes
