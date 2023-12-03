@@ -35,13 +35,14 @@ function Index() {
       <Carousel
         {...baseOptions}
         loop
+        enabled // Default is true, just for demo
         ref={ref}
         testID={"xxx"}
         style={{ width: "100%" }}
         autoPlay={isAutoPlay}
         autoPlayInterval={isFast ? 100 : 2000}
         data={data}
-        onConfigurePanGesture={g => g.enabled(true)} // default is true, just for demo
+        onConfigurePanGesture={g => g.enabled(true)} // Default is true, just for demo
         pagingEnabled={isPagingEnabled}
         onSnapToItem={index => console.log("current index:", index)}
         renderItem={({ index }) => <SBItem key={index} index={index} />}

@@ -18,6 +18,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { Easing } from "../constants";
+import { useUpdateGestureConfig } from "../hooks/useUpdateGestureConfig";
 import { CTX } from "../store";
 import type { WithTimingAnimation } from "../types";
 import { dealWithAnimation } from "../utils/deal-with-animation";
@@ -377,10 +378,11 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
     onGestureFinish,
     onConfigurePanGesture,
   ]);
-  const GestureContainer = enabled ? GestureDetector : React.Fragment;
+
+  useUpdateGestureConfig(gesture, { enabled });
 
   return (
-    <GestureContainer gesture={gesture}>
+    <GestureDetector gesture={gesture}>
       <Animated.View
         ref={containerRef}
         testID={testID}
@@ -390,7 +392,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       >
         {props.children}
       </Animated.View>
-    </GestureContainer>
+    </GestureDetector>
   );
 };
 
