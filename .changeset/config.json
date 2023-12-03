@@ -1,6 +1,11 @@
 {
-  "$schema": "https://unpkg.com/@changesets/config@2.3.0/schema.json",
-  "changelog": "@changesets/changelog-git",
+  "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
+  "changelog": [
+    "@changesets/changelog-github",
+    {
+      "repo": "dohooo/react-native-reanimated-carousel"
+    }
+  ],
   "commit": false,
   "fixed": [],
   "linked": [],
