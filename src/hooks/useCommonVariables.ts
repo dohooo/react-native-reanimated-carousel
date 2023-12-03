@@ -1,4 +1,3 @@
-import React from "react";
 import type Animated from "react-native-reanimated";
 import { useSharedValue, useAnimatedReaction } from "react-native-reanimated";
 
@@ -26,16 +25,14 @@ export function useCommonVariables(
     loop,
   } = props;
   const size = vertical ? height : width;
-  const validLength = dataLength - 1;
   const defaultHandlerOffsetValue = -Math.abs(defaultIndex * size);
   const _handlerOffset = useSharedValue<number>(defaultHandlerOffsetValue);
   const handlerOffset = defaultScrollOffsetValue ?? _handlerOffset;
   const prevDataLength = useSharedValue(dataLength);
 
-  React.useEffect(() => {
-    handlerOffset.value = defaultHandlerOffsetValue;
-  }, [vertical, handlerOffset, defaultHandlerOffsetValue]);
-
+  /**
+   * When data changes, we need to compute new index for handlerOffset
+  */
   useAnimatedReaction(() => {
     const previousLength = prevDataLength.value;
     const currentLength = dataLength;
@@ -67,7 +64,7 @@ export function useCommonVariables(
 
   return {
     size,
-    validLength,
+    validLength: dataLength - 1,
     handlerOffset,
   };
 }
