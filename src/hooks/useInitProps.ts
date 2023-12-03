@@ -1,7 +1,7 @@
 import React from "react";
 
 import type { TCarouselProps } from "../types";
-import { computedFillDataWithAutoFillData } from "../utils/computedWithAutoFillData";
+import { computedFillDataWithAutoFillData } from "../utils/computed-with-auto-fill-data";
 
 type TGetRequiredProps<P extends keyof TCarouselProps> = Record<
 P,
@@ -34,7 +34,6 @@ export function useInitProps<T>(
     autoPlayInterval: _autoPlayInterval = 1000,
     scrollAnimationDuration = 500,
     style = {},
-    panGestureHandlerProps = {},
     autoFillData = true,
     // switchers
     enabled = true,
@@ -88,7 +87,6 @@ export function useInitProps<T>(
     autoPlayInterval,
     scrollAnimationDuration,
     style,
-    panGestureHandlerProps,
     pagingEnabled,
     snapEnabled,
     overscrollEnabled,

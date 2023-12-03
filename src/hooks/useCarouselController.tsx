@@ -12,9 +12,9 @@ import type {
   TCarouselProps,
   WithTimingAnimation,
 } from "../types";
-import { computedRealIndexWithAutoFillData, convertToSharedIndex } from "../utils/computedWithAutoFillData";
-import { dealWithAnimation } from "../utils/dealWithAnimation";
-import { handlerOffsetDirection } from "../utils/handlerOffsetDirection";
+import { computedRealIndexWithAutoFillData, convertToSharedIndex } from "../utils/computed-with-auto-fill-data";
+import { dealWithAnimation } from "../utils/deal-with-animation";
+import { handlerOffsetDirection } from "../utils/handleroffset-direction";
 import { round } from "../utils/log";
 
 interface IOpts {

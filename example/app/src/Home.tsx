@@ -139,7 +139,7 @@ export const CustomAnimations = [
   },
 ];
 
-export const OtherPage = [
+export const ExperimentPage = [
   {
     name: "complex",
     page: ComplexComponent,
@@ -155,7 +155,7 @@ if (isIos || isAndroid) {
     () => import("./pages/snap-carousel-loop"),
   );
 
-  OtherPage.push(
+  ExperimentPage.push(
     {
       name: "snap-carousel-complex",
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -218,7 +218,7 @@ const Index = () => {
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 64 }} stickyHeaderIndices={[0, LayoutsPage.length + 1, LayoutsPage.length + CustomAnimations.length + 2]}>
       {renderSection('Layouts', LayoutsPage)}
       {renderSection('CustomAnimations', CustomAnimations)}
-      {renderSection('Others', OtherPage)}
+      {renderSection('Experiment', ExperimentPage)}
     </ScrollView>
   );
 };

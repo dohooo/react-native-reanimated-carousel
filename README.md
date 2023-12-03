@@ -36,7 +36,7 @@ Check out [the documentation website](https://reanimated-carousel.dev).
 |   <a href="./example/app/src/pages/left-align/index.tsx">left-align</a>    |
 
 
-> You can make cool animations with custom animation API [[Details]](./docs/custom-animation.md)
+> You can make cool animations with custom animation API [[Details]](https://reanimated-carousel.dev/custom-animations)
 
 |                          <img src="assets/advanced-parallax.gif"/>                          |                      <img src="assets/pause-advanced-parallax.gif"/>                      |                   <img src="assets/scale-fade-in-out.gif"/>                   |
 | :-----------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------: |

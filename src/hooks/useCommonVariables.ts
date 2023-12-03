@@ -2,10 +2,10 @@ import React from "react";
 import type Animated from "react-native-reanimated";
 import { useSharedValue, useAnimatedReaction } from "react-native-reanimated";
 
-import { computeNewIndexWhenDataChanges } from "./computeNewIndexWhenDataChanges";
 import type { TInitializeCarouselProps } from "./useInitProps";
 
-import { handlerOffsetDirection } from "../utils/handlerOffsetDirection";
+import { computeNewIndexWhenDataChanges } from "../utils/computeNewIndexWhenDataChanges";
+import { handlerOffsetDirection } from "../utils/handleroffset-direction";
 
 interface ICommonVariables {
   size: number

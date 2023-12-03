@@ -199,13 +199,13 @@ Specifies the scrolling animation effect
 | ------ | ------- | -------- |
 | \{type: 'spring';config: WithSpringConfig;\} \| \{type: 'timing';config: WithTimingConfig;\} | -     | ❌      |
 
-### `panGestureHandlerProps`
+### `onConfigurePanGesture`
 
-PanGestureHandler props
+PanGesture config
 
 | type   | default | required |
 | ------ | ------- | -------- |
-| Omit\<Partial\<PanGestureHandlerProps\>,'onHandlerStateChange'\> | \{\}     | ❌      |
+| onConfigurePanGesture?: \(panGesture: PanGesture\) => void | -     | ❌      |
 
 ### `windowSize`
 
