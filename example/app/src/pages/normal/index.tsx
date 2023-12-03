@@ -35,12 +35,14 @@ function Index() {
       <Carousel
         {...baseOptions}
         loop
+        enabled // Default is true, just for demo
         ref={ref}
         testID={"xxx"}
         style={{ width: "100%" }}
         autoPlay={isAutoPlay}
         autoPlayInterval={isFast ? 100 : 2000}
         data={data}
+        onConfigurePanGesture={g => g.enabled(true)} // Default is true, just for demo
         pagingEnabled={isPagingEnabled}
         onSnapToItem={index => console.log("current index:", index)}
         renderItem={({ index }) => <SBItem key={index} index={index} />}
@@ -79,7 +81,7 @@ function Index() {
             setIsPagingEnabled(!isPagingEnabled);
           }}
         >
-                PagingEnabled:{isPagingEnabled.toString()}
+          PagingEnabled:{isPagingEnabled.toString()}
         </SButton>
         <SButton
           onPress={() => {
@@ -93,7 +95,7 @@ function Index() {
             console.log(ref.current?.getCurrentIndex());
           }}
         >
-                Log current index
+          Log current index
         </SButton>
         <SButton
           onPress={() => {
@@ -104,21 +106,21 @@ function Index() {
             );
           }}
         >
-                Change data length to:{data.length === 6 ? 8 : 6}
+          Change data length to:{data.length === 6 ? 8 : 6}
         </SButton>
         <SButton
           onPress={() => {
             ref.current?.scrollTo({ count: -1, animated: true });
           }}
         >
-                prev
+          prev
         </SButton>
         <SButton
           onPress={() => {
             ref.current?.scrollTo({ count: 1, animated: true });
           }}
         >
-                next
+          next
         </SButton>
       </ScrollView>
     </SafeAreaView>

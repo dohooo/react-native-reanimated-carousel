@@ -1,3 +1,4 @@
+import { isWeb } from "../utils";
 import { useWebContext } from "../store/WebProvider"
 
 export const useColor = () => {
@@ -5,8 +6,10 @@ export const useColor = () => {
     const background = isDark ? "#121212" : "#ffffff";
     const text = isDark ? "#ffffff" : "#121212";
 
-    // @ts-ignore
-    document && (document.body.style.backgroundColor = background);
+    if (isWeb) {
+        // @ts-ignore
+        document && (document.body.style.backgroundColor = background);
+    }
 
     return {
         isDark,
@@ -15,6 +18,5 @@ export const useColor = () => {
             background,
             text
         }
-
     }
 }

@@ -9,12 +9,12 @@
   },
   "dependencies": {
     "expo": "~48.0.18",
+    "expo-splash-screen": "~0.18.2",
     "expo-status-bar": "~1.4.4",
     "react": "18.2.0",
     "react-native": "0.71.11",
     "react-native-gesture-handler": "~2.9.0",
-    "react-native-reanimated": "~3.2.0",
-    "expo-splash-screen": "~0.18.2"
+    "react-native-reanimated": "~3.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

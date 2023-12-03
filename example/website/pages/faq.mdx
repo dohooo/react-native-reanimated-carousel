@@ -34,9 +34,9 @@ When rendering a large number of elements, you can use the 'windowSize' property
 ```tsx copy
 <Carousel
   {...}
-  panGestureHandlerProps={{
-    activeOffsetX: [-10, 10],
-  }}
+  onConfigurePanGesture={gestureChain => (
+    gestureChain.activeOffsetX([-10, 10])
+  )}
 />
 ```
 

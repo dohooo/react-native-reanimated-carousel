@@ -10,9 +10,9 @@ import Animated, {
 
 import type { ILayoutConfig } from "./parallax";
 
+import { LazyView } from "../components/LazyView";
 import { useOffsetX } from "../hooks/useOffsetX";
 import type { IVisibleRanges } from "../hooks/useVisibleRanges";
-import { LazyView } from "../LazyView";
 import type { IComputedDirectionTypes } from "../types";
 
 export const ParallaxLayout: React.FC<PropsWithChildren<IComputedDirectionTypes<

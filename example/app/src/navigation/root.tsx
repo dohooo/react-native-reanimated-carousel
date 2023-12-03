@@ -7,7 +7,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import * as Updates from "expo-updates";
 
 import { QRCode } from "../components/QRCode";
-import Home, { CustomAnimations, LayoutsPage, OtherPage } from "../Home";
+import Home, { CustomAnimations, LayoutsPage, ExperimentPage } from "../Home";
 import { isWeb } from "../utils";
 import { useColor } from "../hooks/useColor";
 import { useWebContext } from "../store/WebProvider";
@@ -74,7 +74,7 @@ export const RootNavigator = () => {
                   Restart();
                 }}
               >
-                <Text style={{ color: tintColor }}>
+                <Text style={{ color: tintColor, marginRight: 12 }}>
                   {isRTL ? "LTR" : "RTL"}
                 </Text>
               </TouchableWithoutFeedback>
@@ -87,7 +87,7 @@ export const RootNavigator = () => {
         {[
           ...LayoutsPage,
           ...CustomAnimations,
-          ...OtherPage,
+          ...ExperimentPage,
         ].map((item) => {
           return (
             <Stack.Screen
