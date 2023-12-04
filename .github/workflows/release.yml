@@ -36,13 +36,12 @@ jobs:
       - name: install dependencies
         run: yarn install
 
-      - name: create and publish versions
+
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
         uses: changesets/action@v1
         with:
-          version: yarn run version
-          commit: "chore: update versions"
-          title: "chore: update versions"
-          publish: yarn run publish
+          publish: npx changeset publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
