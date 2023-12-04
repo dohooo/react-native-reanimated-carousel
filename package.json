@@ -29,7 +29,8 @@
         "pods": "cd exampleExpo && pod-install --quiet",
         "bootstrap": "yarn && yarn pods",
         "deploy": "cd exampleExpo && yarn deploy",
-        "publish": "yarn run prepare && changeset publish",
+        "clean": "del-cli lib",
+        "postinstall": "yarn clean && yarn prepare",
         "version": "changeset version"
     },
     "keywords": [
@@ -37,7 +38,10 @@
         "ios",
         "android"
     ],
-    "repository": "https://github.com/dohooo/react-native-reanimated-carousel",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/dohooo/react-native-reanimated-carousel.git"
+    },
     "author": "Doho <zhaodonghao586@outlook.com> (https://github.com/dohooo)",
     "license": "MIT",
     "bugs": {
@@ -66,6 +70,7 @@
         "babel-plugin-module-resolver": "^4.1.0",
         "commitlint": "^11.0.0",
         "cz-conventional-changelog": "^3.3.0",
+        "del-cli": "^5.0.0",
         "eslint": "^8.26.0",
         "eslint-config-prettier": "^7.0.0",
         "eslint-plugin-prettier": "^3.1.3",
