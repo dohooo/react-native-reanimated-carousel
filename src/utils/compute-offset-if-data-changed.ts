@@ -6,7 +6,7 @@ export function omitZero(a: number, b: number) {
   return b;
 }
 
-export function computeNewIndexWhenDataChanges(params: {
+export function computeOffsetIfDataChanged(params: {
   direction: number
   handlerOffset: number
   size: number

@@ -3,7 +3,8 @@ import { useSharedValue, useAnimatedReaction } from "react-native-reanimated";
 
 import type { TInitializeCarouselProps } from "./useInitProps";
 
-import { computeNewIndexWhenDataChanges } from "../utils/computeNewIndexWhenDataChanges";
+import { computeOffsetIfDataChanged } from "../utils/compute-offset-if-data-changed";
+import { computeOffsetIfSizeChanged } from "../utils/compute-offset-if-size-changed";
 import { handlerOffsetDirection } from "../utils/handleroffset-direction";
 
 interface ICommonVariables {
@@ -29,6 +30,7 @@ export function useCommonVariables(
   const _handlerOffset = useSharedValue<number>(defaultHandlerOffsetValue);
   const handlerOffset = defaultScrollOffsetValue ?? _handlerOffset;
   const prevDataLength = useSharedValue(dataLength);
+  const prevSize = useSharedValue(size);
 
   /**
    * When data changes, we need to compute new index for handlerOffset
@@ -37,7 +39,7 @@ export function useCommonVariables(
     const previousLength = prevDataLength.value;
     const currentLength = dataLength;
     const isLengthChanged = previousLength !== currentLength;
-    const shouldComputed = isLengthChanged && loop;
+    const shouldComputed = (isLengthChanged && loop);
 
     if (shouldComputed)
       prevDataLength.value = dataLength;
@@ -52,7 +54,7 @@ export function useCommonVariables(
       // direction -> 1 | -1
       const direction = handlerOffsetDirection(handlerOffset);
 
-      handlerOffset.value = computeNewIndexWhenDataChanges({
+      handlerOffset.value = computeOffsetIfDataChanged({
         direction,
         previousLength,
         currentLength,
@@ -61,6 +63,32 @@ export function useCommonVariables(
       });
     }
   }, [dataLength, loop]);
+
+  /**
+   * When size changes, we need to compute new index for handlerOffset
+  */
+  useAnimatedReaction(() => {
+    const previousSize = prevSize.value;
+    const isSizeChanged = previousSize !== size;
+    const shouldComputed = isSizeChanged;
+
+    if (shouldComputed)
+      prevSize.value = size;
+
+    return {
+      shouldComputed,
+      previousSize,
+      size,
+    };
+  }, ({ shouldComputed, previousSize, size }) => {
+    if (shouldComputed) {
+      handlerOffset.value = computeOffsetIfSizeChanged({
+        handlerOffset: handlerOffset.value,
+        prevSize: previousSize,
+        size,
+      });
+    }
+  }, [size]);
 
   return {
     size,

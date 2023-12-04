@@ -1,4 +1,4 @@
-import { computeNewIndexWhenDataChanges } from "./computeNewIndexWhenDataChanges";
+import { computeOffsetIfDataChanged } from "./compute-offset-if-data-changed";
 
 describe("should work as expected", () => {
   const size = 375;
@@ -24,7 +24,7 @@ describe("should work as expected", () => {
 
   it("The direction is negative, And changing length of data set from 4 to 3, the new index will to be 2.", async () => {
     const currentIndex = 1;
-    const handlerOffset = computeNewIndexWhenDataChanges(params({
+    const handlerOffset = computeOffsetIfDataChanged(params({
       currentIndex,
       direction: "negative",
       previousLength: 4,
@@ -35,7 +35,7 @@ describe("should work as expected", () => {
   });
 
   it("The direction is negative, Changing length of data set from 4 to 3, the index remains original.", async () => {
-    const handlerOffset = computeNewIndexWhenDataChanges(params({
+    const handlerOffset = computeOffsetIfDataChanged(params({
       currentIndex: 2,
       direction: "negative",
       previousLength: 4,
@@ -46,7 +46,7 @@ describe("should work as expected", () => {
   });
 
   it("The direction is positive, Changing length of data set from 4 to 5, the index remains original.", async () => {
-    const handlerOffset = computeNewIndexWhenDataChanges(params({
+    const handlerOffset = computeOffsetIfDataChanged(params({
       currentIndex: 3,
       direction: "positive",
       previousLength: 4,
@@ -57,7 +57,7 @@ describe("should work as expected", () => {
   });
 
   it("The direction is negative, Changing length of data set from 4 to 5, the index remains original.", async () => {
-    const handlerOffset = computeNewIndexWhenDataChanges(params({
+    const handlerOffset = computeOffsetIfDataChanged(params({
       currentIndex: 3,
       direction: "negative",
       previousLength: 4,
@@ -68,7 +68,7 @@ describe("should work as expected", () => {
   });
 
   it("Changing length of data set from 0 to 3, the index remains original.", async () => {
-    const handlerOffset = computeNewIndexWhenDataChanges(params({
+    const handlerOffset = computeOffsetIfDataChanged(params({
       currentIndex: 0,
       direction: "positive",
       previousLength: 0,

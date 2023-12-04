@@ -4014,17 +4014,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-native-snap-carousel@npm:^3.8.5":
-  version: 3.8.5
-  resolution: "@types/react-native-snap-carousel@npm:3.8.5"
-  dependencies:
-    "@types/react": "npm:*"
-    "@types/react-native": "npm:*"
-  checksum: d716c815860babf4399ac98c09ac861ffa6d71293a023cd3bbde5864b8803a60bd09156b14eca60941275186a89cdcad6cf20c3006f6fa31db5b5dcb1aed5c87
-  languageName: node
-  linkType: hard
-
-"@types/react-native@npm:*, @types/react-native@npm:^0.66.16":
+"@types/react-native@npm:^0.66.16":
   version: 0.66.16
   resolution: "@types/react-native@npm:0.66.16"
   dependencies:
@@ -12578,7 +12568,6 @@ __metadata:
     "@types/jest": "npm:^29.2.5"
     "@types/react": "npm:^18.2.15"
     "@types/react-native": "npm:^0.66.16"
-    "@types/react-native-snap-carousel": "npm:^3.8.5"
     "@types/react-test-renderer": "npm:^18.0.7"
     babel-plugin-module-resolver: "npm:^4.1.0"
     commitlint: "npm:^11.0.0"

@@ -7,10 +7,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { SBItem } from "../../components/SBItem";
 import SButton from "../../components/SButton";
 import { ElementsText, window } from "../../constants";
+import { useWindowDimensions } from "react-native";
 
 const PAGE_WIDTH = window.width;
 
 function Index() {
+  const windowWidth = useWindowDimensions().width;
+
   const [data, setData] = React.useState([...new Array(4).keys()]);
   const [isVertical, setIsVertical] = React.useState(false);
   const [isFast, setIsFast] = React.useState(false);
@@ -21,12 +24,12 @@ function Index() {
   const baseOptions = isVertical
     ? ({
       vertical: true,
-      width: PAGE_WIDTH,
+      width: windowWidth,
       height: PAGE_WIDTH / 2,
     } as const)
     : ({
       vertical: false,
-      width: PAGE_WIDTH,
+      width: windowWidth,
       height: PAGE_WIDTH / 2,
     } as const);
 
