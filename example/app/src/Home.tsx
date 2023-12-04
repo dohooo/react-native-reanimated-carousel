@@ -35,7 +35,6 @@ import ScaleFadeInOutComponent from "./pages/scale-fade-in-out";
 import StackComponent from "./pages/stack";
 import StackCards from "./pages/stack-cards";
 import Tear from "./pages/tear";
-import { isAndroid, isIos } from "./utils";
 import { useWebContext } from "./store/WebProvider";
 import { convertName } from "./utils/helpers";
 import { useColor } from "./hooks/useColor";
@@ -145,29 +144,6 @@ export const ExperimentPage = [
     page: ComplexComponent,
   },
 ];
-
-if (isIos || isAndroid) {
-  // Not support to WEB (react-native-snap-carousel)
-  const SnapCarouselComplexComponent = React.lazy(
-    () => import("./pages/snap-carousel-complex"),
-  );
-  const SnapCarouselLoopComponent = React.lazy(
-    () => import("./pages/snap-carousel-loop"),
-  );
-
-  ExperimentPage.push(
-    {
-      name: "snap-carousel-complex",
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      page: SnapCarouselComplexComponent,
-    },
-    {
-      name: "snap-carousel-loop",
-      page: SnapCarouselLoopComponent,
-    },
-  );
-}
 
 const ListItem = ({ name, onPress, color }: { name: string; onPress: () => void; color: string }) => (
   <TouchableOpacity onPress={onPress}>
