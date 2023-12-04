@@ -5,6 +5,7 @@
     "react-native-reanimated-carousel": "3.5.1"
   },
   "changesets": [
+    "hungry-actors-grab",
     "mighty-pianos-pull",
     "poor-pets-eat",
     "proud-zebras-jump",
