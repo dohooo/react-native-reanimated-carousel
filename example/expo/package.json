@@ -52,7 +52,6 @@
     "@types/react": "~18.2.14",
     "@types/react-native-snap-carousel": "^3.8.5",
     "babel-plugin-import-glob": "^2.0.0",
-    "babel-plugin-inline-dotenv": "^1.6.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "gh-pages": "^3.2.3",
     "react-error-overlay": "6.0.9",
