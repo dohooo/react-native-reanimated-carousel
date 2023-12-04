@@ -1,5 +1,11 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-alpha.4
+
+### Patch Changes
+
+-   [#498](https://github.com/dohooo/react-native-reanimated-carousel/pull/498) [`096ac75`](https://github.com/dohooo/react-native-reanimated-carousel/commit/096ac756a28aea1ff771b046282320cdac356af8) Thanks [@dohooo](https://github.com/dohooo)! - re-calculate when window size changed in browser. (re-bump for alpha.3)
+
 ## 4.0.0-alpha.3
 
 ### Patch Changes
