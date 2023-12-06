@@ -20,17 +20,8 @@
         "lint:fix": "eslint 'src/**/*.{js,ts,tsx}' --fix",
         "dev": "watch 'yarn prepare' ./src",
         "prepare": "bob build",
-        "ios": "yarn --cwd exampleExpo ios",
-        "ios:pretty": "yarn --cwd exampleExpo ios:pretty",
-        "web": "yarn --cwd exampleExpo web",
-        "web:pretty": "yarn --cwd exampleExpo web:pretty",
-        "android": "yarn --cwd exampleExpo android",
-        "android:pretty": "yarn --cwd exampleExpo android:pretty",
-        "pods": "cd exampleExpo && pod-install --quiet",
-        "bootstrap": "yarn && yarn pods",
-        "deploy": "cd exampleExpo && yarn deploy",
+        "bootstrap": "yarn install && yarn clean && yarn prepare",
         "clean": "del-cli lib",
-        "postinstall": "yarn clean && yarn prepare",
         "version": "changeset version"
     },
     "keywords": [
