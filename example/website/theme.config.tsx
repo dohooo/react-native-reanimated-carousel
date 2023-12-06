@@ -17,6 +17,9 @@ const config: DocsThemeConfig = {
   footer: {
     text: "Copyright © 2023 Caspian. Built with Nextra.",
   },
+  sidebar: {
+    defaultMenuCollapseLevel: 1,
+  },
   darkMode: true,
   useNextSeoProps() {
     return {
