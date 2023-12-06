@@ -1,5 +1,11 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-alpha.5
+
+### Patch Changes
+
+-   [#503](https://github.com/dohooo/react-native-reanimated-carousel/pull/503) [`03dba70`](https://github.com/dohooo/react-native-reanimated-carousel/commit/03dba70a857d6531eceb1ea4d2fd034e3090fe48) Thanks [@dohooo](https://github.com/dohooo)! - remove the postinstall script.
+
 ## 4.0.0-alpha.4
 
 ### Patch Changes
