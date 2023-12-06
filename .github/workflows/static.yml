@@ -51,7 +51,7 @@ jobs:
             restore-keys: |
                 ${{ runner.os }}-yarn-
 
-      - run: yarn bootstrap
+      - run: yarn run bootstrap
 
       - run: cd ./example/expo && yarn install && yarn build:web
 
