@@ -20,7 +20,6 @@
         "lint:fix": "eslint 'src/**/*.{js,ts,tsx}' --fix",
         "dev": "watch 'yarn prepare' ./src",
         "prepare": "bob build",
-        "bootstrap": "yarn install && yarn clean && yarn prepare",
         "clean": "del-cli lib",
         "version": "changeset version"
     },
