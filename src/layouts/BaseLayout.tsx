@@ -82,7 +82,7 @@ export const BaseLayout: React.FC<{
       mounted.current
                 && setShouldUpdate(
                   (index >= negativeRange[0] && index <= negativeRange[1])
-                        || (index >= positiveRange[0] && index <= positiveRange[1]),
+                        || (index >= positiveRange[0] && index < positiveRange[1]),
                 );
     },
     [index, mounted],

@@ -107,7 +107,7 @@ export const ParallaxLayout: React.FC<PropsWithChildren<IComputedDirectionTypes<
     (negativeRange: number[], positiveRange: number[]) => {
       setShouldUpdate(
         (index >= negativeRange[0] && index <= negativeRange[1])
-                    || (index >= positiveRange[0] && index <= positiveRange[1]),
+                    || (index >= positiveRange[0] && index < positiveRange[1]),
       );
     },
     [index],
