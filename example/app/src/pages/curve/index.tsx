@@ -38,29 +38,6 @@ function Index() {
         alignItems: "center",
       }}
     >
-      <View
-        style={{
-          position: "absolute",
-          width: 50,
-          height: 51,
-          backgroundColor: "white",
-          borderRadius: 35,
-          transform: [{ scaleX: 10 }, { scaleY: 2 }],
-          zIndex: 2,
-        }}
-      />
-      <View
-        style={{
-          position: "absolute",
-          width: 50,
-          height: 51,
-          backgroundColor: "white",
-          borderRadius: 35,
-          transform: [{ scaleX: 10 }, { scaleY: 2 }],
-          zIndex: 2,
-          top: 145,
-        }}
-      />
       <Carousel
         {...baseOptions}
         loop
