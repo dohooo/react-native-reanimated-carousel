@@ -5,6 +5,8 @@
     "react-native-reanimated-carousel": "3.5.1"
   },
   "changesets": [
+    "bright-socks-change",
+    "brown-onions-wave",
     "hungry-actors-grab",
     "loud-cars-hunt",
     "mighty-pianos-pull",
