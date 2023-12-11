@@ -49,10 +49,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { SBItem } from "../../components/SBItem";
 import SButton from "../../components/SButton";
 import { ElementsText, window } from "../../constants";
+import { useWindowDimensions } from "react-native";
+import { useSharedValue } from "react-native-reanimated";
 
 const PAGE_WIDTH = window.width;
 
 function Index() {
+  const windowWidth = useWindowDimensions().width;
+
   const [data, setData] = React.useState([...new Array(4).keys()]);
   const [isVertical, setIsVertical] = React.useState(false);
   const [isFast, setIsFast] = React.useState(false);
@@ -63,26 +67,31 @@ function Index() {
   const baseOptions = isVertical
     ? ({
       vertical: true,
-      width: PAGE_WIDTH,
+      width: windowWidth,
       height: PAGE_WIDTH / 2,
     } as const)
     : ({
       vertical: false,
-      width: PAGE_WIDTH,
+      width: windowWidth,
       height: PAGE_WIDTH / 2,
     } as const);
+
+  const a = useSharedValue<number>(0);
 
   return (
     <SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
       <Carousel
         {...baseOptions}
         loop
+        enabled // Default is true, just for demo
         ref={ref}
+        defaultScrollOffsetValue={a}
         testID={"xxx"}
         style={{ width: "100%" }}
         autoPlay={isAutoPlay}
         autoPlayInterval={isFast ? 100 : 2000}
         data={data}
+        onConfigurePanGesture={g => g.enabled(false)}
         pagingEnabled={isPagingEnabled}
         onSnapToItem={index => console.log("current index:", index)}
         renderItem={({ index }) => <SBItem key={index} index={index} />}
@@ -121,7 +130,7 @@ function Index() {
             setIsPagingEnabled(!isPagingEnabled);
           }}
         >
-                PagingEnabled:{isPagingEnabled.toString()}
+          PagingEnabled:{isPagingEnabled.toString()}
         </SButton>
         <SButton
           onPress={() => {
@@ -135,7 +144,7 @@ function Index() {
             console.log(ref.current?.getCurrentIndex());
           }}
         >
-                Log current index
+          Log current index
         </SButton>
         <SButton
           onPress={() => {
@@ -146,21 +155,21 @@ function Index() {
             );
           }}
         >
-                Change data length to:{data.length === 6 ? 8 : 6}
+          Change data length to:{data.length === 6 ? 8 : 6}
         </SButton>
         <SButton
           onPress={() => {
             ref.current?.scrollTo({ count: -1, animated: true });
           }}
         >
-                prev
+          prev
         </SButton>
         <SButton
           onPress={() => {
             ref.current?.scrollTo({ count: 1, animated: true });
           }}
         >
-                next
+          next
         </SButton>
       </ScrollView>
     </SafeAreaView>
