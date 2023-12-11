@@ -158,6 +158,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       viewSize: size,
       translation: handlerOffset,
       windowSize,
+      loop,
     });
 
     const layoutConfig = useLayoutConfig({ ...props, size });

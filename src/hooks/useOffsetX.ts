@@ -35,7 +35,7 @@ export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
 
   const viewCount = _viewCount ?? Math.round((ITEM_LENGTH - 1) / 2);
   const positiveCount
-        = type === "positive" ? viewCount : VALID_LENGTH - viewCount;
+    = type === "positive" ? viewCount : VALID_LENGTH - viewCount;
 
   let startPos = size * index;
   if (index > positiveCount)
@@ -46,42 +46,44 @@ export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
 
   const x = useDerivedValue(() => {
     const { negativeRange, positiveRange } = visibleRanges.value;
+
     if (
-      (index < negativeRange[0] || index > negativeRange[1])
-            && (index < positiveRange[0] || index > positiveRange[1])
-    )
-      return Number.MAX_SAFE_INTEGER;
+      (index >= negativeRange[0] && index <= negativeRange[1])
+      || (index >= positiveRange[0] && index <= positiveRange[1])
+    ) {
+      if (loop) {
+        const inputRange = [
+          -TOTAL_WIDTH,
+          MIN - HALF_WIDTH - startPos - Number.MIN_VALUE,
+          MIN - HALF_WIDTH - startPos,
+          0,
+          MAX + HALF_WIDTH - startPos,
+          MAX + HALF_WIDTH - startPos + Number.MIN_VALUE,
+          TOTAL_WIDTH,
+        ];
 
-    if (loop) {
-      const inputRange = [
-        -TOTAL_WIDTH,
-        MIN - HALF_WIDTH - startPos - Number.MIN_VALUE,
-        MIN - HALF_WIDTH - startPos,
-        0,
-        MAX + HALF_WIDTH - startPos,
-        MAX + HALF_WIDTH - startPos + Number.MIN_VALUE,
-        TOTAL_WIDTH,
-      ];
+        const outputRange = [
+          startPos,
+          MAX + HALF_WIDTH - Number.MIN_VALUE,
+          MIN - HALF_WIDTH,
+          startPos,
+          MAX + HALF_WIDTH,
+          MIN - HALF_WIDTH + Number.MIN_VALUE,
+          startPos,
+        ];
 
-      const outputRange = [
-        startPos,
-        MAX + HALF_WIDTH - Number.MIN_VALUE,
-        MIN - HALF_WIDTH,
-        startPos,
-        MAX + HALF_WIDTH,
-        MIN - HALF_WIDTH + Number.MIN_VALUE,
-        startPos,
-      ];
+        return interpolate(
+          handlerOffset.value,
+          inputRange,
+          outputRange,
+          Extrapolate.CLAMP,
+        );
+      }
 
-      return interpolate(
-        handlerOffset.value,
-        inputRange,
-        outputRange,
-        Extrapolate.CLAMP,
-      );
+      return handlerOffset.value + size * index;
     }
 
-    return handlerOffset.value + size * index;
+    return Number.MAX_SAFE_INTEGER;
   }, [loop, dataLength, viewCount, type, size, visibleRanges]);
 
   return x;

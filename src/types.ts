@@ -158,6 +158,11 @@ export type TCarouselProps<T = any> = {
      * */
   maxScrollDistancePerSwipe?: number
   /**
+     * @experimental This API will be changed in the future.
+     * If positive, the carousel will scroll to the positive direction and vice versa.
+     * */
+  fixedDirection?: "positive" | "negative"
+  /**
       * Custom carousel config.
       */
   customConfig?: () => CustomConfig

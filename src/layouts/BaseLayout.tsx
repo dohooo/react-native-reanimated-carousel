@@ -30,7 +30,7 @@ export const BaseLayout: React.FC<{
 }> = (props) => {
   const mounted = useCheckMounted();
   const { handlerOffset, index, children, visibleRanges, animationStyle }
-  = props;
+    = props;
 
   const context = React.useContext(CTX);
   const {
@@ -73,17 +73,19 @@ export const BaseLayout: React.FC<{
   const x = useOffsetX(offsetXConfig, visibleRanges);
   const animationValue = useDerivedValue(() => x.value / size, [x, size]);
   const animatedStyle = useAnimatedStyle(
-    () => animationStyle(x.value / size),
+    () => {
+      return animationStyle(x.value / size);
+    },
     [animationStyle],
   );
 
   const updateView = React.useCallback(
     (negativeRange: number[], positiveRange: number[]) => {
       mounted.current
-                && setShouldUpdate(
-                  (index >= negativeRange[0] && index <= negativeRange[1])
-                        || (index >= positiveRange[0] && index <= positiveRange[1]),
-                );
+        && setShouldUpdate(
+          (index >= negativeRange[0] && index <= negativeRange[1])
+          || (index >= positiveRange[0] && index <= positiveRange[1]),
+        );
     },
     [index, mounted],
   );
