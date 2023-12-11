@@ -8,6 +8,7 @@ import { SBItem } from "../../components/SBItem";
 import SButton from "../../components/SButton";
 import { ElementsText, window } from "../../constants";
 import { useWindowDimensions } from "react-native";
+import { useSharedValue } from "react-native-reanimated";
 
 const PAGE_WIDTH = window.width;
 
@@ -33,6 +34,8 @@ function Index() {
       height: PAGE_WIDTH / 2,
     } as const);
 
+  const a = useSharedValue<number>(0);
+
   return (
     <SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
       <Carousel
@@ -40,12 +43,13 @@ function Index() {
         loop
         enabled // Default is true, just for demo
         ref={ref}
+        defaultScrollOffsetValue={a}
         testID={"xxx"}
         style={{ width: "100%" }}
         autoPlay={isAutoPlay}
         autoPlayInterval={isFast ? 100 : 2000}
         data={data}
-        onConfigurePanGesture={g => g.enabled(true)} // Default is true, just for demo
+        onConfigurePanGesture={g => g.enabled(false)}
         pagingEnabled={isPagingEnabled}
         onSnapToItem={index => console.log("current index:", index)}
         renderItem={({ index }) => <SBItem key={index} index={index} />}

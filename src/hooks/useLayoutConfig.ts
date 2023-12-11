@@ -2,8 +2,8 @@ import React from "react";
 
 import type { TInitializeCarouselProps } from "./useInitProps";
 
+import type { TAnimationStyle } from "../components/BaseLayout";
 import { Layouts } from "../layouts";
-import type { TAnimationStyle } from "../layouts/BaseLayout";
 
 type TLayoutConfigOpts<T> = TInitializeCarouselProps<T> & { size: number };
 

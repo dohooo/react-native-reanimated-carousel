@@ -30,20 +30,20 @@ This is what we expect to see in the execution of RNRC.
 
 1. First we have three images by default and have slid to the second image in the middle
 
-![steps-1](../assets/steps-1.png)
+![steps-1](/steps-1.png)
 2. When we drag the image to the right
 
-![steps-2](../assets/steps-2.png)
+![steps-2](/steps-2.png)
 
-![steps-3](../assets/steps-3.png)
+![steps-3](/steps-3.png)
 
 3. When the first image is partially in the viewport, we move the last image to the front
 
-![steps-4](../assets/steps-4.png)
+![steps-4](/steps-4.png)
 
 4. So we've done a circular scroll to one side and the other way around. It works by sliding and appending, and relies on reanimated, so the whole processing logic is still done in the UI thread, and moving images doesn't cause animation to freeze.
 
-![steps-5](../assets/steps-5.png)
+![steps-5](/steps-5.png)
 
 This is how it works in code.
 
@@ -56,15 +56,15 @@ This is how it works in code.
 
 3. Followed by dealing with how to get at the end of the element at the right time to move to the front, this part of logic in `./src/hooks/useOffsetX.ts`. First we need to know the current window size (the total number of elements rendered on one side). The window size defaults to half the total number of elements, i.e. full render.
 
-![steps-6](../assets/steps-6.jpg)
+![steps-6](/steps-6.jpg)
 
 From the value of the window size we can calculate the position of the end of the forward or reverse element.
 
-![steps-7](../assets/steps-7.jpg)
+![steps-7](/steps-7.jpg)
 
 Then we need to find the boundary (see if the image moves to the front). Currently we set this position to the total length of the side plus half the size of the element. This position is affected by the `windowSize` and can be changed using `windowSize` prop. For example, if `windowSize` is not set and the data length is 5, then one side length is size * (5-1)/2 = size * 2, then the boundary is size * 2 + size * 0.5, if `windowSize` is set to 3, then the boundary is size * 2 + size * 0.5. Size * (3-1)/2 = size * 1, size * 1 + size * 0.5
 
-![steps-8](../assets/steps-8.jpeg)
+![steps-8](/steps-8.jpeg)
 
 In order to control the position of the elements more intuitively, we place the elements at the origin, and they all overlap at the origin, `translateX:0`. In this case, we need to calculate the base position of each element `startPos` based on the index of the element, for example, the base position of the first image is 0, the base position of the second image is SIZE, the base position of the third image is size * 2, and so on. Then, keeping the position of each element relative to each other, we subtract each element from its base position `startPos` and add the minimum boundary value `number.min_value`, so that we have the logic to change position immediately if we cross the `boundary`. It will be converted automatically by `outputRange`.
 
@@ -132,7 +132,6 @@ So when the first one is at the origin `translateX:0`, the next one is at the or
 ├── index.tsx
 ├── layouts # Some basic layouts are defined
 │   ├── BaseLayout.tsx
-│   ├── ParallaxLayout.tsx
 │   ├── index.tsx # Layout entry file that returns the various animationStyles defined.
 │   ├── normal.ts
 │   ├── parallax.ts

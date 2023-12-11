@@ -49,7 +49,7 @@ function Index() {
       <Carousel
         {...baseOptions}
         style={{
-           width: PAGE_WIDTH * 0.86,
+           width: PAGE_WIDTH,
         }}
         loop
         pagingEnabled={pagingEnabled}

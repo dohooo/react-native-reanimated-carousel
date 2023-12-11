@@ -11,12 +11,14 @@ export function useVisibleRanges(options: {
   viewSize: number
   windowSize?: number
   translation: Animated.SharedValue<number>
+  loop?: boolean
 }): IVisibleRanges {
   const {
     total = 0,
     viewSize,
     translation,
     windowSize: _windowSize = 0,
+    loop,
   } = options;
 
   const windowSize = total <= _windowSize ? total : _windowSize;
@@ -24,16 +26,29 @@ export function useVisibleRanges(options: {
   const ranges = useDerivedValue(() => {
     const positiveCount = Math.round(windowSize / 2);
     const negativeCount = windowSize - positiveCount;
-    let curIndex = Math.round(-translation.value / viewSize);
-    curIndex = curIndex < 0 ? (curIndex % total) + total : curIndex;
+
+    let currentIndex = Math.round(-translation.value / viewSize);
+    currentIndex = currentIndex < 0 ? (currentIndex % total) + total : currentIndex;
+
+    if (!loop) {
+      // Adjusting negative range if the carousel is not loopable.
+      // So, It will be only displayed the positive items.
+      return {
+        negativeRange: [0 + currentIndex - (windowSize - 1), 0 + currentIndex],
+        positiveRange: [0 + currentIndex, windowSize - 1 + currentIndex],
+      };
+    }
+
     const negativeRange = [
-      (curIndex - negativeCount + total) % total,
-      (curIndex - 1 + total) % total,
+      (currentIndex - negativeCount + total) % total,
+      (currentIndex - 1 + total) % total,
     ];
+
     const positiveRange = [
-      (curIndex + total) % total,
-      (curIndex + positiveCount + total) % total,
+      (currentIndex + total) % total,
+      (currentIndex + positiveCount + total) % total,
     ];
+
     if (negativeRange[0] < total && negativeRange[0] > negativeRange[1]) {
       negativeRange[1] = total - 1;
       positiveRange[0] = 0;
@@ -42,8 +57,9 @@ export function useVisibleRanges(options: {
       negativeRange[1] = total - 1;
       positiveRange[0] = 0;
     }
+
     return { negativeRange, positiveRange };
-  }, [total, windowSize, translation]);
+  }, [loop, total, windowSize, translation]);
 
   return ranges;
 }
