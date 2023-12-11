@@ -1,5 +1,15 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-alpha.6
+
+### Minor Changes
+
+-   [#507](https://github.com/dohooo/react-native-reanimated-carousel/pull/507) [`c6d58e5`](https://github.com/dohooo/react-native-reanimated-carousel/commit/c6d58e5f099145b1d74a18c4b73a5d3dc1c515e3) Thanks [@dohooo](https://github.com/dohooo)! - Support to fix the scroll direction through new API, fixedDirection.
+
+### Patch Changes
+
+-   [#507](https://github.com/dohooo/react-native-reanimated-carousel/pull/507) [`353fdce`](https://github.com/dohooo/react-native-reanimated-carousel/commit/353fdce59c1b38796801e4180f6ac8dde879f936) Thanks [@dohooo](https://github.com/dohooo)! - remove postinstall script.
+
 ## 4.0.0-alpha.5
 
 ### Patch Changes
