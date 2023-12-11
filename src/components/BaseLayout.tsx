@@ -8,13 +8,13 @@ import Animated, {
   useDerivedValue,
 } from "react-native-reanimated";
 
-import type { ILayoutConfig } from "./stack";
+import { LazyView } from "./LazyView";
 
-import { LazyView } from "../components/LazyView";
 import { useCheckMounted } from "../hooks/useCheckMounted";
 import type { IOpts } from "../hooks/useOffsetX";
 import { useOffsetX } from "../hooks/useOffsetX";
 import type { IVisibleRanges } from "../hooks/useVisibleRanges";
+import type { ILayoutConfig } from "../layouts/stack";
 import { CTX } from "../store";
 
 export type TAnimationStyle = (value: number) => AnimatedStyleProp<ViewStyle>;

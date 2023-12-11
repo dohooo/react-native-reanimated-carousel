@@ -3,6 +3,7 @@ import { StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { runOnJS, useDerivedValue } from "react-native-reanimated";
 
+import { BaseLayout } from "./BaseLayout";
 import { ScrollViewGesture } from "./ScrollViewGesture";
 
 import { useAutoPlay } from "../hooks/useAutoPlay";
@@ -13,7 +14,6 @@ import { useLayoutConfig } from "../hooks/useLayoutConfig";
 import { useOnProgressChange } from "../hooks/useOnProgressChange";
 import { usePropsErrorBoundary } from "../hooks/usePropsErrorBoundary";
 import { useVisibleRanges } from "../hooks/useVisibleRanges";
-import { BaseLayout } from "../layouts/BaseLayout";
 import { CTX } from "../store";
 import type { ICarouselInstance, TCarouselProps } from "../types";
 import { computedRealIndexWithAutoFillData } from "../utils/computed-with-auto-fill-data";
