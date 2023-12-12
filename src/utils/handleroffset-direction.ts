@@ -1,15 +1,18 @@
 import type { SharedValue } from "react-native-reanimated";
 
-export function handlerOffsetDirection(handlerOffset: SharedValue<number>): -1 | 1 {
+import type { TCarouselProps } from "../types";
+
+export function handlerOffsetDirection(handlerOffset: SharedValue<number>, fixedDirection?: TCarouselProps["fixedDirection"]): -1 | 1 {
   "worklet";
 
-  const isPositiveZero = Object.is(handlerOffset.value, +0);
-  const isNegativeZero = Object.is(handlerOffset.value, -0);
-  const direction = isPositiveZero
-    ? 1
-    : isNegativeZero
-      ? -1
-      : Math.sign(handlerOffset.value) as -1 | 1;
+  if (fixedDirection === "negative")
+    return -1;
 
-  return direction;
+  if (fixedDirection === "positive")
+    return 1;
+
+  if (handlerOffset.value === 0)
+    return -1;
+
+  return Math.sign(handlerOffset.value) as -1 | 1;
 }

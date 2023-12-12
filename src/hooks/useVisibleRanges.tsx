@@ -17,11 +17,11 @@ export function useVisibleRanges(options: {
     total = 0,
     viewSize,
     translation,
-    windowSize: _windowSize = 0,
+    windowSize: _windowSize,
     loop,
   } = options;
 
-  const windowSize = total <= _windowSize ? total : _windowSize;
+  const windowSize = _windowSize ?? total;
 
   const ranges = useDerivedValue(() => {
     const positiveCount = Math.round(windowSize / 2);
@@ -35,7 +35,7 @@ export function useVisibleRanges(options: {
       // So, It will be only displayed the positive items.
       return {
         negativeRange: [0 + currentIndex - (windowSize - 1), 0 + currentIndex],
-        positiveRange: [0 + currentIndex, windowSize - 1 + currentIndex],
+        positiveRange: [0 + currentIndex, currentIndex + (windowSize - 1)],
       };
     }
 
@@ -57,7 +57,7 @@ export function useVisibleRanges(options: {
       negativeRange[1] = total - 1;
       positiveRange[0] = 0;
     }
-
+    // console.log({ negativeRange, positiveRange ,total,windowSize,a:total <= _windowSize})
     return { negativeRange, positiveRange };
   }, [loop, total, windowSize, translation]);
 

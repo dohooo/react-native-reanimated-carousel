@@ -12,13 +12,17 @@ const img_8 = require('../../assets/bg-images/8.jpg')
 const img_9 = require('../../assets/bg-images/9.jpg')
 
 export function getImages(length: number = 10): ImageSourcePropType[] {
-    if (length > 10) {
-        length = 10
-    }
-
+    const imageList = [img_0, img_1, img_2, img_3, img_4, img_5, img_6, img_7, img_8, img_9];
     if (length < 1) {
-        length = 1
+        return []
     }
 
-    return [img_0, img_1, img_2, img_3, img_4, img_5, img_6, img_7, img_8, img_9].slice(0, length - 1)
+    if (length > imageList.length) {
+        return [
+            ...Array.from({ length: length / imageList.length }, () => imageList).flat(),
+            ...imageList.slice(0, length % imageList.length)
+        ]
+    }
+
+    return imageList.slice(0, length - 1)
 }

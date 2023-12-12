@@ -3,27 +3,30 @@ import type {
   StyleProp,
   ViewStyle,
   ImageURISource,
+  ImageSourcePropType,
 } from "react-native";
 import {
   StyleSheet,
   View,
   ActivityIndicator,
-  Image,
   Text,
 } from "react-native";
+import { Image } from 'expo-image';
 
 interface Props {
   style?: StyleProp<ViewStyle>
   index?: number
   showIndex?: boolean
+  img?: ImageSourcePropType
 }
 
 export const SBImageItem: React.FC<Props> = ({
   style,
   index: _index,
   showIndex = true,
+  img
 }) => {
-  const index = (_index || 0) + 1;
+  const index = _index ?? 0;
   const source = React.useRef<ImageURISource>({
     uri: `https://picsum.photos/id/${index}/400/300`,
   }).current;
@@ -31,21 +34,23 @@ export const SBImageItem: React.FC<Props> = ({
   return (
     <View style={[styles.container, style]}>
       <ActivityIndicator size="small" />
-      <Image key={index} style={styles.image} source={source} />
-      <Text
-        style={{
-          position: "absolute",
-          color: "white",
-          fontSize: 40,
-          backgroundColor: "#333333",
-          borderRadius: 5,
-          overflow: "hidden",
-          paddingHorizontal: 10,
-          paddingTop: 2,
-        }}
-      >
-        {showIndex ? index : ""}
-      </Text>
+      <Image cachePolicy={'memory-disk'} key={index} style={styles.image} source={img ?? source} />
+      {
+        showIndex && <Text
+          style={{
+            position: "absolute",
+            color: "#6E6E6E",
+            fontSize: 40,
+            backgroundColor: "#EAEAEA",
+            borderRadius: 5,
+            overflow: "hidden",
+            paddingHorizontal: 10,
+            paddingTop: 2,
+          }}
+        >
+          {index}
+        </Text>
+      }
     </View>
   );
 };
@@ -55,15 +60,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "transparent",
     borderRadius: 8,
     overflow: "hidden",
   },
   image: {
+    width: "100%",
+    height: "100%",
     position: "absolute",
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
   },
 });

@@ -14,7 +14,7 @@ const PAGE_WIDTH = window.width;
 
 function Index() {
   const windowWidth = useWindowDimensions().width;
-
+  const scrollOffsetValue = useSharedValue<number>(0);
   const [data, setData] = React.useState([...new Array(4).keys()]);
   const [isVertical, setIsVertical] = React.useState(false);
   const [isFast, setIsFast] = React.useState(false);
@@ -34,8 +34,6 @@ function Index() {
       height: PAGE_WIDTH / 2,
     } as const);
 
-  const a = useSharedValue<number>(0);
-
   return (
     <SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
       <Carousel
@@ -43,7 +41,7 @@ function Index() {
         loop
         enabled // Default is true, just for demo
         ref={ref}
-        defaultScrollOffsetValue={a}
+        defaultScrollOffsetValue={scrollOffsetValue}
         testID={"xxx"}
         style={{ width: "100%" }}
         autoPlay={isAutoPlay}

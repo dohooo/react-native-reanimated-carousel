@@ -36,6 +36,7 @@ import ScaleFadeInOutComponent from "./pages/scale-fade-in-out";
 import StackComponent from "./pages/stack";
 import StackCards from "./pages/stack-cards";
 import Tear from "./pages/tear";
+import QuickSwipe from "./pages/quick-swipe";
 import { useWebContext } from "./store/WebProvider";
 import { convertName } from "./utils/helpers";
 import { useColor } from "./hooks/useColor";
@@ -61,6 +62,10 @@ export const LayoutsPage = [
 ];
 
 export const CustomAnimations = [
+  {
+    name: 'quick-swipe',
+    page: QuickSwipe,
+  },
   {
     name: 'tinder',
     page: Tinder,
@@ -153,7 +158,7 @@ export const ExperimentPage = [
 const ListItem = ({ name, onPress, color }: { name: string; onPress: () => void; color: string }) => (
   <TouchableOpacity onPress={onPress}>
     <View style={styles.listItem}>
-      <Text style={[styles.text, { color: color }]}>{convertName(name)}</Text>
+      <Text style={[styles.text, { color: color }]}>{name.split('-').join(' ')}</Text>
     </View>
   </TouchableOpacity>
 );
