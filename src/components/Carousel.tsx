@@ -45,6 +45,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       autoPlayInterval,
       scrollAnimationDuration,
       withAnimation,
+      fixedDirection,
       renderItem,
       onScrollEnd,
       onSnapToItem,
@@ -85,9 +86,10 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       handlerOffset,
       withAnimation,
       defaultIndex,
+      fixedDirection,
+      duration: scrollAnimationDuration,
       onScrollEnd: () => runOnJS(_onScrollEnd)(),
       onScrollBegin: () => !!onScrollBegin && runOnJS(onScrollBegin)(),
-      duration: scrollAnimationDuration,
     });
 
     const { next, prev, scrollTo, getSharedIndex, getCurrentIndex }

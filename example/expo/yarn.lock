@@ -6495,6 +6495,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-haptics@npm:~12.4.0":
+  version: 12.4.0
+  resolution: "expo-haptics@npm:12.4.0"
+  peerDependencies:
+    expo: "*"
+  checksum: 2578a44baf7b5517a1440d0af60124f0f45157f0e425dcc9a6a10997da734692c8425214ce299dee82cdfdb4b954c96489eef3bb2535a9a62e7460d6f517a52a
+  languageName: node
+  linkType: hard
+
+"expo-image@npm:~1.3.5":
+  version: 1.3.5
+  resolution: "expo-image@npm:1.3.5"
+  peerDependencies:
+    expo: "*"
+  checksum: 54949e3c92f55e91531d593c35cfc462f4bd320b8aa5860e63825b85a46872fe0f4d82f31c2a82f04b999ec7e1edc1bb89c8163ff73cc520df8940254c390ede
+  languageName: node
+  linkType: hard
+
 "expo-json-utils@npm:~0.7.0":
   version: 0.7.1
   resolution: "expo-json-utils@npm:0.7.1"
@@ -11647,6 +11665,8 @@ __metadata:
     expo: ^49.0.21
     expo-blur: ~12.4.1
     expo-constants: ~14.4.2
+    expo-haptics: ~12.4.0
+    expo-image: ~1.3.5
     expo-status-bar: ~1.6.0
     expo-updates: ~0.18.17
     gh-pages: ^3.2.3

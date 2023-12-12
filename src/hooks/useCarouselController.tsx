@@ -21,9 +21,10 @@ interface IOpts {
   loop: boolean
   size: number
   dataLength: number
-  autoFillData: TCarouselProps["autoFillData"]
   handlerOffset: Animated.SharedValue<number>
+  autoFillData: TCarouselProps["autoFillData"]
   withAnimation?: TCarouselProps["withAnimation"]
+  fixedDirection?: TCarouselProps["fixedDirection"]
   duration?: number
   defaultIndex?: number
   onScrollBegin?: () => void
@@ -48,6 +49,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
     defaultIndex = 0,
     duration,
     autoFillData,
+    fixedDirection,
   } = options;
 
   const dataInfo = React.useMemo(
@@ -241,7 +243,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
 
       onScrollBegin?.();
       // direction -> 1 | -1
-      const direction = handlerOffsetDirection(handlerOffset);
+      const direction = handlerOffsetDirection(handlerOffset, fixedDirection);
 
       // target offset
       const offset = i * size * direction;
@@ -252,16 +254,16 @@ export function useCarouselController(options: IOpts): ICarouselController {
 
       if (loop) {
         isCloseToNextLoop
-                    = Math.abs(handlerOffset.value % totalSize) / totalSize
-                    >= 0.5;
+          = Math.abs(handlerOffset.value % totalSize) / totalSize
+          >= 0.5;
       }
 
       const finalOffset
-                = (Math.floor(Math.abs(handlerOffset.value / totalSize))
-                    + (isCloseToNextLoop ? 1 : 0))
-                    * totalSize
-                    * direction
-                + offset;
+        = (Math.floor(Math.abs(handlerOffset.value / totalSize))
+          + (isCloseToNextLoop ? 1 : 0))
+        * totalSize
+        * direction
+        + offset;
 
       if (animated) {
         index.value = i;
@@ -274,13 +276,14 @@ export function useCarouselController(options: IOpts): ICarouselController {
       }
     },
     [
+      size,
+      loop,
       index,
+      fixedDirection,
+      handlerOffset,
+      dataInfo.length,
       canSliding,
       onScrollBegin,
-      handlerOffset,
-      size,
-      dataInfo.length,
-      loop,
       scrollWithTiming,
     ],
   );
