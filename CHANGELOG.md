@@ -1,5 +1,13 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-alpha.7
+
+### Patch Changes
+
+-   [#510](https://github.com/dohooo/react-native-reanimated-carousel/pull/510) [`b3cc591`](https://github.com/dohooo/react-native-reanimated-carousel/commit/b3cc591dcee83cf240864051018c4aa8403c3f86) Thanks [@dohooo](https://github.com/dohooo)! - Support to specific direction to auto play.
+
+-   [#510](https://github.com/dohooo/react-native-reanimated-carousel/pull/510) [`b3cc591`](https://github.com/dohooo/react-native-reanimated-carousel/commit/b3cc591dcee83cf240864051018c4aa8403c3f86) Thanks [@dohooo](https://github.com/dohooo)! - Modify the preority of windowSize settings. If you define the windowSize prop, Carousel will ignore the itemsCount. (windowSize > itemsCount)
+
 ## 4.0.0-alpha.6
 
 ### Minor Changes
