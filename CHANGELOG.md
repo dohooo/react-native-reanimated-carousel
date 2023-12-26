@@ -1,5 +1,11 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-alpha.8
+
+### Patch Changes
+
+-   [#517](https://github.com/dohooo/react-native-reanimated-carousel/pull/517) [`9f3a3d6`](https://github.com/dohooo/react-native-reanimated-carousel/commit/9f3a3d6be31a251528fce89613b6308c5382fa93) Thanks [@dohooo](https://github.com/dohooo)! - Reduce the amount of work done when rendering data.
+
 ## 4.0.0-alpha.7
 
 ### Patch Changes
