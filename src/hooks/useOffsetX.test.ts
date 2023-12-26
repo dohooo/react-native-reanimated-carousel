@@ -12,7 +12,7 @@ describe("useSharedValue", () => {
       const range = useSharedValue({
         negativeRange: [7, 9],
         positiveRange: [0, 3],
-      });
+      }) as IVisibleRanges;
       const inputs: Array<{
         config: IOpts
         range: IVisibleRanges

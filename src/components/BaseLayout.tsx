@@ -2,15 +2,10 @@ import React from "react";
 import type { ViewStyle } from "react-native";
 import type { AnimatedStyleProp } from "react-native-reanimated";
 import Animated, {
-  runOnJS,
-  useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
 } from "react-native-reanimated";
 
-import { LazyView } from "./LazyView";
-
-import { useCheckMounted } from "../hooks/useCheckMounted";
 import type { IOpts } from "../hooks/useOffsetX";
 import { useOffsetX } from "../hooks/useOffsetX";
 import type { IVisibleRanges } from "../hooks/useVisibleRanges";
@@ -28,7 +23,6 @@ export const BaseLayout: React.FC<{
     animationValue: Animated.SharedValue<number>
   }) => React.ReactElement
 }> = (props) => {
-  const mounted = useCheckMounted();
   const { handlerOffset, index, children, visibleRanges, animationStyle }
     = props;
 
@@ -46,7 +40,7 @@ export const BaseLayout: React.FC<{
     },
   } = context;
   const size = vertical ? height : width;
-  const [shouldUpdate, setShouldUpdate] = React.useState(false);
+
   let offsetXConfig: IOpts = {
     handlerOffset,
     index,
@@ -79,28 +73,6 @@ export const BaseLayout: React.FC<{
     [animationStyle],
   );
 
-  const updateView = React.useCallback(
-    (negativeRange: number[], positiveRange: number[]) => {
-      mounted.current
-        && setShouldUpdate(
-          (index >= negativeRange[0] && index <= negativeRange[1])
-          || (index >= positiveRange[0] && index <= positiveRange[1]),
-        );
-    },
-    [index, mounted],
-  );
-
-  useAnimatedReaction(
-    () => visibleRanges.value,
-    () => {
-      runOnJS(updateView)(
-        visibleRanges.value.negativeRange,
-        visibleRanges.value.positiveRange,
-      );
-    },
-    [visibleRanges.value],
-  );
-
   return (
     <Animated.View
       style={[
@@ -116,11 +88,9 @@ export const BaseLayout: React.FC<{
        * e.g.
        *  The testID of first item will be changed to __CAROUSEL_ITEM_0_READY__ from __CAROUSEL_ITEM_0_NOT_READY__ when the item is ready.
        * */
-      testID={`__CAROUSEL_ITEM_${index}_${shouldUpdate ? "READY" : "NOT_READY"}__`}
+      testID={`__CAROUSEL_ITEM_${index}__`}
     >
-      <LazyView shouldUpdate={shouldUpdate}>
-        {children({ animationValue })}
-      </LazyView>
+      {children({ animationValue })}
     </Animated.View>
   );
 };
