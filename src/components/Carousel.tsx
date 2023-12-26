@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { runOnJS, useDerivedValue } from "react-native-reanimated";
 
-import { BaseLayout } from "./BaseLayout";
+import { ItemRenderer } from "./ItemRenderer";
 import { ScrollViewGesture } from "./ScrollViewGesture";
 
 import { useAutoPlay } from "../hooks/useAutoPlay";
@@ -13,7 +13,6 @@ import { useInitProps } from "../hooks/useInitProps";
 import { useLayoutConfig } from "../hooks/useLayoutConfig";
 import { useOnProgressChange } from "../hooks/useOnProgressChange";
 import { usePropsErrorBoundary } from "../hooks/usePropsErrorBoundary";
-import { useVisibleRanges } from "../hooks/useVisibleRanges";
 import { CTX } from "../store";
 import type { ICarouselInstance, TCarouselProps } from "../types";
 import { computedRealIndexWithAutoFillData } from "../utils/computed-with-auto-fill-data";
@@ -30,8 +29,6 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       data,
       // Length of fill data
       dataLength,
-      // Raw data that has not been processed
-      rawData,
       // Length of raw data
       rawDataLength,
       mode,
@@ -155,54 +152,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       [getCurrentIndex, next, prev, scrollTo],
     );
 
-    const visibleRanges = useVisibleRanges({
-      total: dataLength,
-      viewSize: size,
-      translation: handlerOffset,
-      windowSize,
-      loop,
-    });
-
     const layoutConfig = useLayoutConfig({ ...props, size });
-
-    const renderLayout = React.useCallback(
-      (item: any, i: number) => {
-        const realIndex = computedRealIndexWithAutoFillData({
-          index: i,
-          dataLength: rawDataLength,
-          loop,
-          autoFillData,
-        });
-
-        return (
-          <BaseLayout
-            key={i}
-            index={i}
-            handlerOffset={offsetX}
-            visibleRanges={visibleRanges}
-            animationStyle={customAnimation || layoutConfig}
-          >
-            {({ animationValue }) =>
-              renderItem({
-                item,
-                index: realIndex,
-                animationValue,
-              })
-            }
-          </BaseLayout>
-        );
-      },
-      [
-        loop,
-        rawData,
-        offsetX,
-        visibleRanges,
-        autoFillData,
-        renderItem,
-        layoutConfig,
-        customAnimation,
-      ],
-    );
 
     return (
       <GestureHandlerRootView>
@@ -228,7 +178,20 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
             onTouchBegin={scrollViewGestureOnTouchBegin}
             onTouchEnd={scrollViewGestureOnTouchEnd}
           >
-            {data.map(renderLayout)}
+            <ItemRenderer
+              data={data}
+              dataLength={dataLength}
+              rawDataLength={rawDataLength}
+              loop={loop}
+              size={size}
+              windowSize={windowSize}
+              autoFillData={autoFillData}
+              offsetX={offsetX}
+              handlerOffset={handlerOffset}
+              layoutConfig={layoutConfig}
+              renderItem={renderItem}
+              customAnimation={customAnimation}
+            />
           </ScrollViewGesture>
         </CTX.Provider>
       </GestureHandlerRootView>
