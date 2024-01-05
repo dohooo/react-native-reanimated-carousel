@@ -52,7 +52,7 @@ function Index() {
           setIsPagingEnabled(!isPagingEnabled);
         }}
       >
-                PagingEnabled:{isPagingEnabled.toString()}
+        PagingEnabled:{isPagingEnabled.toString()}
       </SButton>
       <SButton
         onPress={() => {
@@ -66,7 +66,7 @@ function Index() {
           console.log(ref.current?.getCurrentIndex());
         }}
       >
-                Log current index
+        Log current index
       </SButton>
       <SButton
         onPress={() => {
@@ -77,21 +77,21 @@ function Index() {
           );
         }}
       >
-                Change data length to:{data.length === 6 ? 8 : 6}
+        Change data length to:{data.length === 6 ? 8 : 6}
       </SButton>
       <SButton
         onPress={() => {
           ref.current?.scrollTo({ count: -1, animated: true });
         }}
       >
-                prev
+        prev
       </SButton>
       <SButton
         onPress={() => {
           ref.current?.scrollTo({ count: 1, animated: true });
         }}
       >
-                next
+        next
       </SButton>
     </View>
   );
