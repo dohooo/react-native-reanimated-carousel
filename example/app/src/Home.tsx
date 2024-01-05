@@ -59,6 +59,10 @@ export const LayoutsPage = [
     name: "left-align",
     page: LeftAlignComponent,
   },
+  {
+    name: "right-align",
+    page: LeftAlignComponent
+  }
 ];
 
 export const CustomAnimations = [
