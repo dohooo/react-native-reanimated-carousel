@@ -34,6 +34,8 @@ Check out [the documentation website](https://reanimated-carousel.dev).
 | <a href="./example/app/src/pages/stack/index.tsx">stack-vertical-left</a>  | <a href="./example/app/src/pages/stack/index.tsx">stack-vertical-right</a>  | <a href="./example/app/src/pages/stack/index.tsx">stack-horizontal-right</a> |
 |                  <img src="assets/left-align.gif"/>                  |
 |   <a href="./example/app/src/pages/left-align/index.tsx">left-align</a>    |
+              |                  <img src="assets/right-align.gif"/>                  |
+|   <a href="./example/app/src/pages/right-align/index.tsx">right-align</a>    |
 
 
 > You can make cool animations with custom animation API [[Details]](https://reanimated-carousel.dev/custom-animations)
