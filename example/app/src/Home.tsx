@@ -23,6 +23,7 @@ import Curve from "./pages/curve";
 import Flow from "./pages/flow";
 import Fold from "./pages/fold";
 import LeftAlignComponent from "./pages/left-align";
+import RightAlignComponent from "./pages/right-align";
 import MarqueeComponent from "./pages/marquee";
 import MultipleComponent from "./pages/multiple";
 import NormalComponent from "./pages/normal";
@@ -61,7 +62,7 @@ export const LayoutsPage = [
   },
   {
     name: "right-align",
-    page: LeftAlignComponent
+    page: RightAlignComponent
   }
 ];
 
