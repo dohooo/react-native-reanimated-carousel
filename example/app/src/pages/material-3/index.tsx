@@ -1,24 +1,23 @@
 import * as React from "react";
-import { ScrollView } from "react-native-gesture-handler";
 import type { ICarouselInstance } from "react-native-reanimated-carousel";
 import Carousel from "react-native-reanimated-carousel";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getImages } from "../../utils/get-images";
 
-
 import SButton from "../../components/SButton";
 import { ElementsText, window } from "../../constants";
-import { useWindowDimensions, View, Image, StyleSheet } from "react-native";
-import  Animated, { useSharedValue, useAnimatedStyle } from "react-native-reanimated";
+import { useWindowDimensions, View, FlatList, StyleSheet } from "react-native";
+import  Animated, { Extrapolation, interpolate, useSharedValue, useAnimatedStyle } from "react-native-reanimated";
 
 const PAGE_WIDTH = window.width;
-const PAGE_HEIGHT = window.height * 0.3;
+const LARGE_IMAGE_WIDTH = PAGE_WIDTH * 0.5;
+const MEDIUM_IMAGE_WIDTH = LARGE_IMAGE_WIDTH * 0.5;
+const SMALL_IMAGE_WIDTH = MEDIUM_IMAGE_WIDTH * 0.5;
 
 const data = getImages();
 
 function Index() {
   const windowWidth = useWindowDimensions().width;
-  const scrollOffsetValue = useSharedValue<number>(0);
   const [isAutoPlay, setIsAutoPlay] = React.useState(false);
   const ref = React.useRef<ICarouselInstance>(null);
 
@@ -37,22 +36,35 @@ function Index() {
 
   return (
     <SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
+        {/* <FlatList 
+            horizontal
+            style={{ width: "100%" }}
+            data={data}
+            onScroll={onScroll}
+            scrollEventThrottle={16}
+            showHorizontalScrollIndicator={false}
+            renderItem={({ index, item }: any) => (
+                <Item
+                    id={index}
+                    img={item}
+                    scrollX={scrollX}
+                />
+            )}
+        /> */}
       <Carousel
         {...baseOptions}
         loop
         enabled // Default is true, just for demo
         ref={ref}
-        defaultScrollOffsetValue={scrollOffsetValue}
-        testID={"xxx"}
-        style={{ width: "100%" }}
+        style={{ width: '100%' }}
         autoPlay={isAutoPlay}
         data={data}
         onConfigurePanGesture={g => g.enabled(false)}
-        onSnapToItem={(elem: any) => console.log("current element:", elem)}
         renderItem={({ index, item }: any) => (
           <Item
-            key={index}
+            id={index}
             img={item}
+            scrollX={scrollX}
           />
         )}
       />
@@ -83,16 +95,32 @@ function Index() {
   );
 }
 
-const Item: React.FC<{ img: ImageSourcePropType }> = ({ img }) => {
-  const animatedStyle = useAnimatedStyle(() => ({}));
+const Item = ({ id, img, scrollX }: { id: number, img: ImageSourcePropType, scrollX: any }) => {
+    const inputRange = [
+        (id - 2) * SMALL_IMAGE_WIDTH, 
+        (id - 1) * SMALL_IMAGE_WIDTH,
+        id * SMALL_IMAGE_WIDTH, 
+        (id + 1) * SMALL_IMAGE_WIDTH
+    ];
+
+    const outputRange = [
+        SMALL_IMAGE_WIDTH,
+        MEDIUM_IMAGE_WIDTH,
+        LARGE_IMAGE_WIDTH,
+        SMALL_IMAGE_WIDTH
+    ];
+    
+    const animatedStyle = useAnimatedStyle(() => ({
+        width: interpolate(scrollX.value, inputRange, outputRange, Extrapolation.CLAMP)
+    }));
 
   return (
-        <View style={styles.container}>
-            <Animated.Image 
-                source={img} 
-                style={[ styles.image, animatedStyle]} 
-            />
-        </View>
+    <View style={styles.container}>
+        <Animated.Image 
+            source={img} 
+            style={[styles.image, animatedStyle]} 
+        />
+    </View>
     );
 };
 
@@ -105,6 +133,7 @@ const styles = StyleSheet.create({
       width: PAGE_WIDTH * 0.5,
       height: 250,
       borderRadius: 20,
+      marginRight: 10
     }
 });
 
