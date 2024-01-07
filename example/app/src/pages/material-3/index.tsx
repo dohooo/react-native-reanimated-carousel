@@ -13,6 +13,7 @@ const PAGE_WIDTH = window.width;
 const LARGE_IMAGE_WIDTH = PAGE_WIDTH * 0.5;
 const MEDIUM_IMAGE_WIDTH = LARGE_IMAGE_WIDTH * 0.5;
 const SMALL_IMAGE_WIDTH = MEDIUM_IMAGE_WIDTH * 0.5;
+const COUNT = 3;
 
 const data = getImages();
 
@@ -23,15 +24,18 @@ function Index() {
 
   const baseOptions = {
       vertical: false,
-      width: windowWidth * 0.5,
+      width: windowWidth * 0.45,
       height: PAGE_WIDTH / 1.5,
+      style: {
+        width: PAGE_WIDTH,
+      }
     } as const;
 
   //* Custom animation
   const scrollX = useSharedValue<number>(0);
 
-  const onScroll = (e: any) => {
-    scrollX.value = e.nativeEvent.contentOffset.x;
+  const onScroll = (offsetProgress: number) => {
+    scrollX.value = offsetProgress * -1;
   };
 
   return (
@@ -56,10 +60,9 @@ function Index() {
         loop
         enabled // Default is true, just for demo
         ref={ref}
-        style={{ width: '100%' }}
         autoPlay={isAutoPlay}
         data={data}
-        onConfigurePanGesture={g => g.enabled(false)}
+        onProgressChange={onScroll}
         renderItem={({ index, item }: any) => (
           <Item
             id={index}
@@ -126,11 +129,10 @@ const Item = ({ id, img, scrollX }: { id: number, img: ImageSourcePropType, scro
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
       marginVertical: 10,
     },
     image: {
-      width: PAGE_WIDTH * 0.5,
+      width: PAGE_WIDTH,
       height: 250,
       borderRadius: 20,
       marginRight: 10
