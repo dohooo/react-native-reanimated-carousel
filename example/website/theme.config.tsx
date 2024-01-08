@@ -15,7 +15,7 @@ const config: DocsThemeConfig = {
   },
   docsRepositoryBase: "https://github.com/shuding/nextra-docs-template",
   footer: {
-    text: "Copyright © 2023 Caspian. Built with Nextra.",
+    text: "Copyright © 2024 Caspian. Built with Nextra.",
   },
   sidebar: {
     defaultMenuCollapseLevel: 1,

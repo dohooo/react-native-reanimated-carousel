@@ -38,6 +38,7 @@ import StackComponent from "./pages/stack";
 import StackCards from "./pages/stack-cards";
 import Tear from "./pages/tear";
 import QuickSwipe from "./pages/quick-swipe";
+import Material3 from "./pages/material-3";
 import { useWebContext } from "./store/WebProvider";
 import { convertName } from "./utils/helpers";
 import { useColor } from "./hooks/useColor";
@@ -78,6 +79,10 @@ export const CustomAnimations = [
   {
     name: 'blur-rotate',
     page: BlurRotate,
+  },
+  {
+    name: 'material-3',
+    page: Material3
   },
   {
     name: "curve",
