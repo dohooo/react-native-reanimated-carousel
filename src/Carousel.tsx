@@ -153,6 +153,11 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       [getCurrentIndex, next, prev, scrollTo],
     );
 
+    React.useEffect(() => {
+      // add onSnapToItem call when component is first mounted
+      onSnapToItem?.(defaultIndex || 0);
+    }, []);
+
     const visibleRanges = useVisibleRanges({
       total: dataLength,
       viewSize: size,

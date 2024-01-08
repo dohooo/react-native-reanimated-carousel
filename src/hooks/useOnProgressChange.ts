@@ -42,6 +42,9 @@ export function useOnProgressChange(
       if (value > 0)
         absoluteProgress = rawDataLength - absoluteProgress;
 
+      if (absoluteProgress > (rawDataLength - 0.5)) // threshold set as half of the size
+        absoluteProgress = 0;
+
       if (onProgressChange)
         runOnJS(onProgressChange)(value, absoluteProgress);
     },
