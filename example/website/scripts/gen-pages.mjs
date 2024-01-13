@@ -9,6 +9,7 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 const pagesDir = join(__dirname, "../../app/src/pages");
 const externalPages = [
+  "material-3",
   "complex",
   "snap-carousel-loop",
   "snap-carousel-complex",

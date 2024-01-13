@@ -51,8 +51,8 @@ import Animated, {
 import Carousel from "react-native-reanimated-carousel";
 
 import { window } from "../../constants";
-import { TAnimationStyle } from "../../../../../src/layouts/BaseLayout";
 import { getImages } from "../../utils/get-images";
+import { TAnimationStyle } from "../../../../../src/components/BaseLayout";
 
 const data = getImages()
 
@@ -88,8 +88,9 @@ function Index() {
 
       const zIndex = interpolate(
         value,
-        [-1, 0],
-        [100, 0]
+        [0, 1, 2, 3, 4],
+        [0, 1, 2, 3, 4].map((v) => (data.length - v) * 10),
+        Extrapolate.CLAMP
       )
 
       const scale = interpolate(
