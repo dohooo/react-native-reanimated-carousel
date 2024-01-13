@@ -1,5 +1,13 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-alpha.9
+
+### Patch Changes
+
+-   [#528](https://github.com/dohooo/react-native-reanimated-carousel/pull/528) [`139d5e5`](https://github.com/dohooo/react-native-reanimated-carousel/commit/139d5e5f7706e1da8800ff10b933d1010835f52f) Thanks [@dohooo](https://github.com/dohooo)! - Exported TAnimationStyle types.
+
+-   [#528](https://github.com/dohooo/react-native-reanimated-carousel/pull/528) [`b654f43`](https://github.com/dohooo/react-native-reanimated-carousel/commit/b654f439e905bc1d45f5cbb1fd291f3a82848368) Thanks [@dohooo](https://github.com/dohooo)! - Replaced 'onScrollBegin' with 'onScrollStart' to better match gesture callback.
+
 ## 4.0.0-alpha.8
 
 ### Patch Changes
