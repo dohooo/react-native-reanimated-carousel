@@ -180,9 +180,9 @@ export type TCarouselProps<T = any> = {
       */
   onSnapToItem?: (index: number) => void
   /**
-      * On scroll begin
+      * On scroll start
       */
-  onScrollBegin?: () => void
+  onScrollStart?: () => void
   /**
       * On scroll end
       */

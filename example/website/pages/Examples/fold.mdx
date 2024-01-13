@@ -45,11 +45,10 @@ import { StyleSheet, Text, View } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import type Animated from "react-native-reanimated";
 import { Extrapolate, interpolate } from "react-native-reanimated";
-import Carousel from "react-native-reanimated-carousel";
+import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import { faker } from "@faker-js/faker";
 
-import type { TAnimationStyle } from "../../../../src/layouts/BaseLayout";
 import { SBImageItem } from "../../components/SBImageItem";
 import SButton from "../../components/SButton";
 import { ElementsText, window } from "../../constants";
@@ -196,7 +195,7 @@ const Item: React.FC<{
             textAlign: "center",
           }}
         >
-          {faker.name.findName().slice(0, 2).toUpperCase()}
+          {faker.name.fullName().slice(0, 2).toUpperCase()}
         </Text>
       </View>
     </TouchableWithoutFeedback>

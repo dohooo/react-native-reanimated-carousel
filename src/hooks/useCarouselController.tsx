@@ -27,7 +27,7 @@ interface IOpts {
   fixedDirection?: TCarouselProps["fixedDirection"]
   duration?: number
   defaultIndex?: number
-  onScrollBegin?: () => void
+  onScrollStart?: () => void
   onScrollEnd?: () => void
 }
 
@@ -138,8 +138,8 @@ export function useCarouselController(options: IOpts): ICarouselController {
     options.onScrollEnd?.();
   }, [options]);
 
-  const onScrollBegin = React.useCallback(() => {
-    options.onScrollBegin?.();
+  const onScrollStart = React.useCallback(() => {
+    options.onScrollStart?.();
   }, [options]);
 
   const scrollWithTiming = React.useCallback(
@@ -173,7 +173,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
       if (!canSliding() || (!loop && index.value >= dataInfo.length - 1))
         return;
 
-      onScrollBegin?.();
+      onScrollStart?.();
 
       const nextPage = currentFixedPage() + count;
       index.value = nextPage;
@@ -194,7 +194,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
       loop,
       index,
       dataInfo,
-      onScrollBegin,
+      onScrollStart,
       handlerOffset,
       size,
       scrollWithTiming,
@@ -207,7 +207,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
       const { count = 1, animated = true, onFinished } = opts;
       if (!canSliding() || (!loop && index.value <= 0)) return;
 
-      onScrollBegin?.();
+      onScrollStart?.();
 
       const prevPage = currentFixedPage() - count;
       index.value = prevPage;
@@ -227,7 +227,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
       canSliding,
       loop,
       index,
-      onScrollBegin,
+      onScrollStart,
       handlerOffset,
       size,
       scrollWithTiming,
@@ -241,7 +241,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
       if (i === index.value) return;
       if (!canSliding()) return;
 
-      onScrollBegin?.();
+      onScrollStart?.();
       // direction -> 1 | -1
       const direction = handlerOffsetDirection(handlerOffset, fixedDirection);
 
@@ -283,7 +283,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
       handlerOffset,
       dataInfo.length,
       canSliding,
-      onScrollBegin,
+      onScrollStart,
       scrollWithTiming,
     ],
   );

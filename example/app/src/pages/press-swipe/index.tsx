@@ -7,9 +7,8 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import Carousel from "react-native-reanimated-carousel";
+import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
-import type { TAnimationStyle } from "../../../../src/layouts/BaseLayout";
 import SButton from "../../components/SButton";
 import { ElementsText, window } from "../../constants";
 import { ImageItems } from "../../utils/items";
@@ -46,7 +45,7 @@ function Index() {
         style={{ width: PAGE_WIDTH, height: 240 }}
         width={PAGE_WIDTH}
         data={[...ImageItems, ...ImageItems]}
-        onScrollBegin={() => {
+        onScrollStart={() => {
           pressAnim.value = withTiming(1);
         }}
         onScrollEnd={() => {
