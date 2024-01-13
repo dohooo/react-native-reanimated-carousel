@@ -87,7 +87,7 @@ function Index() {
         style={{ width: PAGE_WIDTH, height: 240 }}
         width={PAGE_WIDTH}
         data={[...ImageItems, ...ImageItems]}
-        onScrollBegin={() => {
+        onScrollStart={() => {
           pressAnim.value = withTiming(1);
         }}
         onScrollEnd={() => {

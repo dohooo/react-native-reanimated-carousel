@@ -47,6 +47,9 @@ function Index() {
         autoPlay={isAutoPlay}
         autoPlayInterval={isFast ? 100 : 2000}
         data={data}
+        onScrollStart={()=>{console.log('===1')}}
+        onScrollEnd={()=>{console.log('===2')}}
+
         onConfigurePanGesture={g => g.enabled(false)}
         pagingEnabled={isPagingEnabled}
         onSnapToItem={index => console.log("current index:", index)}

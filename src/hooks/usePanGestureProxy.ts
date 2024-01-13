@@ -8,7 +8,7 @@ import { useUpdateGestureConfig } from "./useUpdateGestureConfig";
 export const usePanGestureProxy = (
   customization: {
     onConfigurePanGesture?: (gesture: PanGesture) => void
-    onGestureBegin: (event: GestureStateChangeEvent<PanGestureHandlerEventPayload>) => void
+    onGestureStart: (event: GestureStateChangeEvent<PanGestureHandlerEventPayload>) => void
     onGestureUpdate: (event: GestureUpdateEvent<PanGestureHandlerEventPayload>) => void
     onGestureEnd: (event: GestureStateChangeEvent<PanGestureHandlerEventPayload>, success: boolean) => void
     options?: GestureConfig
@@ -16,7 +16,7 @@ export const usePanGestureProxy = (
 ) => {
   const {
     onConfigurePanGesture,
-    onGestureBegin,
+    onGestureStart,
     onGestureUpdate,
     onGestureEnd,
     options = {},
@@ -27,25 +27,25 @@ export const usePanGestureProxy = (
 
     // Save the original gesture callbacks
     const originalGestures = {
-      onBegin: gesture.onBegin,
+      onStart: gesture.onStart,
       onUpdate: gesture.onUpdate,
       onEnd: gesture.onEnd,
     };
 
     // Save the user defined gesture callbacks
     const userDefinedConflictGestures: {
-      onBegin?: Parameters<(typeof gesture)["onBegin"]>[0]
+      onStart?: Parameters<(typeof gesture)["onStart"]>[0]
       onUpdate?: Parameters<(typeof gesture)["onUpdate"]>[0]
       onEnd?: Parameters<(typeof gesture)["onEnd"]>[0]
     } = {
-      onBegin: undefined,
+      onStart: undefined,
       onUpdate: undefined,
       onEnd: undefined,
     };
 
-    const fakeOnBegin: typeof gesture.onBegin = (cb) => {
-      // Using fakeOnBegin to save the user defined callback
-      userDefinedConflictGestures.onBegin = cb;
+    const fakeOnStart: typeof gesture.onStart = (cb) => {
+      // Using fakeOnStart to save the user defined callback
+      userDefinedConflictGestures.onStart = cb;
       return gesture;
     };
 
@@ -62,7 +62,7 @@ export const usePanGestureProxy = (
     };
 
     // Setup the fake callbacks
-    gesture.onBegin = fakeOnBegin;
+    gesture.onStart = fakeOnStart;
     gesture.onUpdate = fakeOnUpdate;
     gesture.onEnd = fakeOnEnd;
 
@@ -71,17 +71,17 @@ export const usePanGestureProxy = (
       onConfigurePanGesture(gesture);
 
     // Restore the original callbacks
-    gesture.onBegin = originalGestures.onBegin;
+    gesture.onStart = originalGestures.onStart;
     gesture.onUpdate = originalGestures.onUpdate;
     gesture.onEnd = originalGestures.onEnd;
 
     // Setup the original callbacks with the user defined callbacks
     gesture
-      .onBegin((e) => {
-        onGestureBegin(e);
+      .onStart((e) => {
+        onGestureStart(e);
 
-        if (userDefinedConflictGestures.onBegin)
-          userDefinedConflictGestures.onBegin(e);
+        if (userDefinedConflictGestures.onStart)
+          userDefinedConflictGestures.onStart(e);
       })
       .onUpdate((e) => {
         onGestureUpdate(e);
@@ -98,7 +98,7 @@ export const usePanGestureProxy = (
 
     return gesture;
   }, [
-    onGestureBegin,
+    onGestureStart,
     onGestureUpdate,
     onGestureEnd,
     onConfigurePanGesture,

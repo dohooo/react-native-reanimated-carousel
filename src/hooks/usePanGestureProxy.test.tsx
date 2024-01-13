@@ -46,14 +46,13 @@ describe("Using RNGH v2 gesture API", () => {
       onConfigurePanGesture: (gesture: PanGesture) => {
         // This is user's customizations
         gesture
-          .onStart(treatStartAsUpdate ? handlers.active : handlers.start)
           .onBegin(handlersFromUser.begin)
           .onUpdate(handlersFromUser.active)
           .onEnd(handlersFromUser.end)
           .onFinalize(handlers.finish)
           .withTestId("pan");
       },
-      onGestureBegin: handlers.begin,
+      onGestureStart: treatStartAsUpdate ? handlers.active : handlers.start,
       onGestureUpdate: handlers.active,
       onGestureEnd: handlers.end,
       options: { enabled: true },
@@ -82,10 +81,11 @@ describe("Using RNGH v2 gesture API", () => {
     const pan = usePanGestureProxy({
       onConfigurePanGesture: (_: PanGesture) => {
         _
+          .onBegin(panHandlers.begin)
           .onFinalize(panHandlers.finish)
           .withTestId("pan");
       },
-      onGestureBegin: panHandlers.begin,
+      onGestureStart: panHandlers.start,
       onGestureUpdate: panHandlers.active,
       onGestureEnd: panHandlers.end,
       options: { enabled: true },
@@ -153,14 +153,13 @@ describe("Event list validation", () => {
     const pan = usePanGestureProxy({
       onConfigurePanGesture: (_: PanGesture) => {
         _
-          .onStart(treatStartAsUpdate ? handlers.active : handlers.start)
           .onBegin(handlersFromUser.begin)
           .onUpdate(handlersFromUser.active)
           .onEnd(handlersFromUser.end)
           .onFinalize(handlers.finish)
           .withTestId("pan");
       },
-      onGestureBegin: handlers.begin,
+      onGestureStart: treatStartAsUpdate ? handlers.active : handlers.start,
       onGestureUpdate: handlers.active,
       onGestureEnd: handlers.end,
       options: { enabled: true },
@@ -233,11 +232,11 @@ describe("Filling event list with defaults", () => {
     const pan = usePanGestureProxy({
       onConfigurePanGesture: (_: PanGesture) => {
         _
-          .onStart(treatStartAsUpdate ? handlers.active : handlers.start)
+          .onBegin(handlers.begin)
           .onFinalize(handlers.finish)
           .withTestId("pan");
       },
-      onGestureBegin: handlers.begin,
+      onGestureStart: treatStartAsUpdate ? handlers.active : handlers.start,
       onGestureUpdate: handlers.active,
       onGestureEnd: handlers.end,
       options: { enabled: true },

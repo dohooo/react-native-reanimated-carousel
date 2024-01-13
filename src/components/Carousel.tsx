@@ -46,7 +46,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       renderItem,
       onScrollEnd,
       onSnapToItem,
-      onScrollBegin,
+      onScrollStart,
       onProgressChange,
       customAnimation,
       defaultIndex,
@@ -86,7 +86,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       fixedDirection,
       duration: scrollAnimationDuration,
       onScrollEnd: () => runOnJS(_onScrollEnd)(),
-      onScrollBegin: () => !!onScrollBegin && runOnJS(onScrollBegin)(),
+      onScrollStart: () => !!onScrollStart && runOnJS(onScrollStart)(),
     });
 
     const { next, prev, scrollTo, getSharedIndex, getCurrentIndex }
@@ -123,10 +123,10 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       onScrollEnd,
     ]);
 
-    const scrollViewGestureOnScrollBegin = React.useCallback(() => {
+    const scrollViewGestureOnScrollStart = React.useCallback(() => {
       pauseAutoPlay();
-      onScrollBegin?.();
-    }, [onScrollBegin, pauseAutoPlay]);
+      onScrollStart?.();
+    }, [onScrollStart, pauseAutoPlay]);
 
     const scrollViewGestureOnScrollEnd = React.useCallback(() => {
       startAutoPlay();
@@ -173,7 +173,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
                 : styles.itemsHorizontal,
             ]}
             testID={testID}
-            onScrollBegin={scrollViewGestureOnScrollBegin}
+            onScrollStart={scrollViewGestureOnScrollStart}
             onScrollEnd={scrollViewGestureOnScrollEnd}
             onTouchBegin={scrollViewGestureOnTouchBegin}
             onTouchEnd={scrollViewGestureOnTouchEnd}

@@ -25,7 +25,7 @@ interface Props {
   infinite?: boolean
   testID?: string
   style?: StyleProp<ViewStyle>
-  onScrollBegin?: () => void
+  onScrollStart?: () => void
   onScrollEnd?: () => void
   onTouchBegin?: () => void
   onTouchEnd?: () => void
@@ -55,7 +55,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
     translation,
     testID,
     style = {},
-    onScrollBegin,
+    onScrollStart,
     onScrollEnd,
     onTouchBegin,
     onTouchEnd,
@@ -259,12 +259,12 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
     return translation;
   }
 
-  const onGestureBegin = useCallback((_: PanGestureHandlerEventPayload) => {
+  const onGestureStart = useCallback((_: PanGestureHandlerEventPayload) => {
     "worklet";
 
     touching.value = true;
     validStart.value = true;
-    onScrollBegin && runOnJS(onScrollBegin)();
+    onScrollStart && runOnJS(onScrollStart)();
 
     max.value = (maxPage - 1) * size;
     if (!loop && !overscrollEnabled)
@@ -282,7 +282,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
     translation,
     overscrollEnabled,
     getLimit,
-    onScrollBegin,
+    onScrollStart,
   ]);
 
   const onGestureUpdate = useCallback((e: PanGestureHandlerEventPayload) => {
@@ -380,7 +380,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
 
   const gesture = usePanGestureProxy({
     onConfigurePanGesture,
-    onGestureBegin,
+    onGestureStart,
     onGestureUpdate,
     onGestureEnd,
     options: { enabled },
