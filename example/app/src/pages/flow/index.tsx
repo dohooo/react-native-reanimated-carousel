@@ -1,12 +1,11 @@
 import * as React from "react";
 import { Text, View, Image } from "react-native";
 import { interpolate } from "react-native-reanimated";
-import Carousel from "react-native-reanimated-carousel";
+import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import { faker } from "@faker-js/faker";
 import { BlurView } from "expo-blur";
 
-import type { TAnimationStyle } from "../../../../src/layouts/BaseLayout";
 import { window } from "../../constants";
 
 function Index() {

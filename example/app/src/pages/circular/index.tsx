@@ -2,11 +2,10 @@ import * as React from "react";
 import { Text, View } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { interpolate } from "react-native-reanimated";
-import Carousel from "react-native-reanimated-carousel";
+import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import { faker } from "@faker-js/faker";
 
-import type { TAnimationStyle } from "../../../../src/layouts/BaseLayout";
 import { SBImageItem } from "../../components/SBImageItem";
 import SButton from "../../components/SButton";
 import { ElementsText, window } from "../../constants";
@@ -30,9 +29,9 @@ function Index() {
       );
 
       const translateX
-                = interpolate(value, [-1, 0, 1], [-itemSize, 0, itemSize])
-                + centerOffset
-                - itemGap;
+        = interpolate(value, [-1, 0, 1], [-itemSize, 0, itemSize])
+        + centerOffset
+        - itemGap;
 
       const translateY = interpolate(
         value,
@@ -109,8 +108,8 @@ function Index() {
                   fontSize: 40,
                 }}
               >
-                {faker.name
-                  .findName()
+                {faker.person.
+                  fullName()
                   .slice(0, 2)
                   .toUpperCase()}
               </Text>
