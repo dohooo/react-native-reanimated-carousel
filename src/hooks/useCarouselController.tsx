@@ -29,6 +29,8 @@ interface IOpts {
   defaultIndex?: number
   onScrollStart?: () => void
   onScrollEnd?: () => void
+  containerWidth: number
+  overscrollEnabled?: boolean
 }
 
 export interface ICarouselController {
@@ -50,6 +52,8 @@ export function useCarouselController(options: IOpts): ICarouselController {
     duration,
     autoFillData,
     fixedDirection,
+    containerWidth,
+    overscrollEnabled,
   } = options;
 
   const dataInfo = React.useMemo(
@@ -177,15 +181,16 @@ export function useCarouselController(options: IOpts): ICarouselController {
 
       const nextPage = currentFixedPage() + count;
       index.value = nextPage;
+      let value = -nextPage * size;
+      if (!loop && !overscrollEnabled) {
+        value = Math.max(value, -(dataLength * size - containerWidth));
+      }
 
       if (animated) {
-        handlerOffset.value = scrollWithTiming(
-          -nextPage * size,
-          onFinished,
-        ) as any;
+        handlerOffset.value = scrollWithTiming(value, onFinished) as any;
       }
       else {
-        handlerOffset.value = -nextPage * size;
+        handlerOffset.value = value;
         onFinished?.();
       }
     },
