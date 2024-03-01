@@ -210,21 +210,31 @@ export function useCarouselController(options: IOpts): ICarouselController {
   const prev = React.useCallback(
     (opts: TCarouselActionOptions = {}) => {
       const { count = 1, animated = true, onFinished } = opts;
-      if (!canSliding() || (!loop && index.value <= 0)) return;
+      /* Checking handlerOffset.value === 0 because if going to the next item doesn't
+         clear the first element (can happen if overscrollEnabled = false), then we wouldn't 
+         be allowed to go to the previous item
+      */
+      if (!canSliding() || (!loop && index.value <= 0 && handlerOffset.value === 0)) return;
 
       onScrollStart?.();
 
       const prevPage = currentFixedPage() - count;
       index.value = prevPage;
 
+      let value = -prevPage * size;
+      // Avoid overscrolling the first item
+      if(!loop && value > 0){
+        value = 0
+      }
+
       if (animated) {
         handlerOffset.value = scrollWithTiming(
-          -prevPage * size,
+          value,
           onFinished,
         );
       }
       else {
-        handlerOffset.value = -prevPage * size;
+        handlerOffset.value = value;
         onFinished?.();
       }
     },
