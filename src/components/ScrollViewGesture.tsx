@@ -46,6 +46,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       dataLength,
       overscrollEnabled,
       maxScrollDistancePerSwipe,
+      minScrollDistancePerSwipe,
       fixedDirection,
     },
   } = React.useContext(CTX);
@@ -71,6 +72,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
   const scrollEndVelocity = useSharedValue(0);
   const containerRef = useAnimatedRef<Animated.View>();
   const maxScrollDistancePerSwipeIsSet = typeof maxScrollDistancePerSwipe === "number";
+  const minScrollDistancePerSwipeIsSet = typeof minScrollDistancePerSwipe === "number";
 
   // Get the limit of the scroll.
   const getLimit = React.useCallback(() => {
@@ -351,8 +353,24 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
 
     const totalTranslation = scrollEndVelocity.value + scrollEndTranslation.value;
 
-    if (maxScrollDistancePerSwipeIsSet && Math.abs(totalTranslation) > maxScrollDistancePerSwipe) {
+    /**
+     * If the maximum scroll distance is set and the translation `exceeds the maximum scroll distance`,
+     * the carousel will keep the view at the current position.
+    */
+    if (
+      maxScrollDistancePerSwipeIsSet && Math.abs(totalTranslation) > maxScrollDistancePerSwipe
+    ) {
       const nextPage = Math.round((panOffset.value + maxScrollDistancePerSwipe * Math.sign(totalTranslation)) / size) * size;
+      translation.value = withSpring(withProcessTranslation(nextPage), onScrollEnd);
+    }
+    /**
+     * If the minimum scroll distance is set and the translation `didn't exceeds the minimum scroll distance`,
+     * the carousel will keep the view at the current position.
+    */
+    else if (
+      minScrollDistancePerSwipeIsSet && Math.abs(totalTranslation) < minScrollDistancePerSwipe
+    ) {
+      const nextPage = Math.round((panOffset.value + minScrollDistancePerSwipe * Math.sign(totalTranslation)) / size) * size;
       translation.value = withSpring(withProcessTranslation(nextPage), onScrollEnd);
     }
     else {
@@ -373,6 +391,8 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
     fixedDirection,
     maxScrollDistancePerSwipeIsSet,
     maxScrollDistancePerSwipe,
+    maxScrollDistancePerSwipeIsSet,
+    minScrollDistancePerSwipe,
     endWithSpring,
     withSpring,
     onScrollEnd,

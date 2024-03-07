@@ -289,7 +289,15 @@ Custom animations. For details, see below\[custom animation\]\(.\/custom-animati
 
 ### `maxScrollDistancePerSwipe`
 
-Maximum offset value for one scroll. If `props.vertical = true`, this will be `maxScrollDistancePerSwipeY`. If `props.vertical = false`, this will be `maxScrollDistancePerSwipeX`.
+Maximum offset value for one scroll. Carousel cannot scroll over than this value.
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| number | -     | ❌      |
+
+### `minScrollDistancePerSwipe`
+
+Minimum offset value for once scroll. If the translation value is less than this value, the carousel will not scroll.
 
 | type   | default | required |
 | ------ | ------- | -------- |
