@@ -19,6 +19,7 @@ import { computedRealIndexWithAutoFillData } from "../utils/computed-with-auto-f
 
 const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
   (_props, ref) => {
+    const [containerWidth, setContainerWidth] = React.useState(0);
     const props = useInitProps(_props);
 
     const {
@@ -87,6 +88,8 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       duration: scrollAnimationDuration,
       onScrollEnd: () => runOnJS(_onScrollEnd)(),
       onScrollStart: () => !!onScrollStart && runOnJS(onScrollStart)(),
+      containerWidth,
+      overscrollEnabled: props.overscrollEnabled,
     });
 
     const { next, prev, scrollTo, getSharedIndex, getCurrentIndex }
@@ -155,7 +158,12 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
     const layoutConfig = useLayoutConfig({ ...props, size });
 
     return (
-      <GestureHandlerRootView>
+      <GestureHandlerRootView
+        onLayout={(event) => {
+          const { width } = event.nativeEvent.layout;
+          setContainerWidth(width);
+        }}
+      >
         <CTX.Provider value={{ props, common: commonVariables }}>
           <ScrollViewGesture
             key={mode}
