@@ -153,10 +153,14 @@ export type TCarouselProps<T = any> = {
   testID?: string
   /**
      * Maximum offset value for once scroll.
-     * props.vertical = true => maxScrollDistancePerSwipeY
-     * props.vertical = false => maxScrollDistancePerSwipeX
+     * Carousel cannot scroll over than this value.
      * */
   maxScrollDistancePerSwipe?: number
+  /**
+    * Minimum offset value for once scroll.
+    * If the translation value is less than this value, the carousel will not scroll.
+    * */
+  minScrollDistancePerSwipe?: number
   /**
      * @experimental This API will be changed in the future.
      * If positive, the carousel will scroll to the positive direction and vice versa.
