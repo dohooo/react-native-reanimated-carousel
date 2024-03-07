@@ -1,5 +1,11 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-alpha.10
+
+### Patch Changes
+
+-   [#560](https://github.com/dohooo/react-native-reanimated-carousel/pull/560) [`c181174`](https://github.com/dohooo/react-native-reanimated-carousel/commit/c1811746e951ca32bf94bc2acca450fb2e58f55c) Thanks [@dohooo](https://github.com/dohooo)! - Add a new props `minScrollDistancePerSwipe` to set the minimum scroll instance to make carousel scroll.
+
 ## 4.0.0-alpha.9
 
 ### Patch Changes
