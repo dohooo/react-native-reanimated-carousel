@@ -135,13 +135,27 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
         *
         * `page size` equals to `size` variable.
         * */
+
+        // calculate target "nextPage" based on the final pan position and the velocity of
+        // the pan gesture at termination; this allows for a quick "flick" to indicate a far
+        // off page change.
+        const nextPage = -Math.round((origin + velocity * 2) / size);
+
         if (pagingEnabled) {
+          // we'll never go further than a single page away from the current page when paging
+          // is enabled.
+
           // distance with direction
           const offset = -(scrollEndTranslation.value >= 0 ? 1 : -1); // 1 or -1
           const computed = offset < 0 ? Math.ceil : Math.floor;
           const page = computed(-translation.value / size);
 
-          if (loop) {
+          if (page === nextPage) {
+            // not going anywhere! Velocity was insufficient to overcome the distance to get to a
+            // further page. Let's reset gently to the current page.
+            finalTranslation = withSpring(withProcessTranslation(-nextPage * size), onFinished);
+          }
+          else if (loop) {
             const finalPage = page + offset;
             finalTranslation = withSpring(withProcessTranslation(-finalPage * size), onFinished);
           }
@@ -153,8 +167,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
 
         if (!pagingEnabled && snapEnabled) {
           // scroll to the nearest item
-          const nextPage = Math.round((origin + velocity * 0.4) / size) * size;
-          finalTranslation = withSpring(withProcessTranslation(nextPage), onFinished);
+          finalTranslation = withSpring(withProcessTranslation(-nextPage * size), onFinished);
         }
       }
 
