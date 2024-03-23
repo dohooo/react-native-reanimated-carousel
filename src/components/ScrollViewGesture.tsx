@@ -150,10 +150,11 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
           const computed = offset < 0 ? Math.ceil : Math.floor;
           const page = computed(-translation.value / size);
 
-          if (page === nextPage) {
+          const velocityDirection = -Math.sign(velocity);
+          if (page === nextPage || velocityDirection !== offset) {
             // not going anywhere! Velocity was insufficient to overcome the distance to get to a
             // further page. Let's reset gently to the current page.
-            finalTranslation = withSpring(withProcessTranslation(-nextPage * size), onFinished);
+            finalTranslation = withSpring(withProcessTranslation(-page * size), onFinished);
           }
           else if (loop) {
             const finalPage = page + offset;
