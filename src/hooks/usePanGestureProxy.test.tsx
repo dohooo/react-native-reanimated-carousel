@@ -140,6 +140,29 @@ describe("Using RNGH v2 gesture API", () => {
       expect.objectContaining({ translationX: 20 }),
     );
   });
+
+  it("does not include console.error in the output", () => {
+    // if react-native-gesture-handler detects that some handlers are
+    // workletized and some are not, it will log an error to the
+    // console. We'd like to make sure that this doesn't happen.
+
+    // The error that would be shown looks like:
+    // [react-native-gesture-handler] Some of the callbacks in the gesture are worklets and some are not. Either make sure that all calbacks are marked as 'worklet' if you wish to run them on the UI thread or use '.runOnJS(true)' modifier on the gesture explicitly to run all callbacks on the JS thread.
+
+    const panHandlers = mockedEventHandlers();
+    const panHandlersFromUser = mockedEventHandlersFromUser();
+
+    jest.spyOn(console, "error");
+
+    render(<SingleHandler handlers={panHandlers} handlersFromUser={panHandlersFromUser} treatStartAsUpdate />);
+    fireGestureHandler<PanGesture>(getByGestureTestId("pan"), [
+      { state: State.BEGAN },
+      { state: State.ACTIVE },
+      { state: State.END },
+    ]);
+
+    expect(console.error).not.toBeCalled();
+  });
 });
 
 describe("Event list validation", () => {
