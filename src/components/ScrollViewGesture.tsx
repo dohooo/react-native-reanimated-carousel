@@ -299,7 +299,8 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       // Keeping this value as `undefined` when it is not active protects us
       // from the situation where we may use the previous value for panOffset
       // instead; this would cause a visual flicker in the carousel.
-      console.warn("onGestureUpdate: panOffset is undefined");
+
+      // console.warn("onGestureUpdate: panOffset is undefined");
       return;
     }
 
@@ -348,7 +349,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
     "worklet";
 
     if (panOffset.value === undefined) {
-      console.warn("onGestureEnd: panOffset is undefined");
+      // console.warn("onGestureEnd: panOffset is undefined");
       return;
     }
 
