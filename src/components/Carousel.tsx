@@ -59,14 +59,13 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       const totalSize = size * dataLength;
       const x = handlerOffset.value % totalSize;
 
-      if (!loop)
-        return handlerOffset.value;
+      if (!loop) return handlerOffset.value;
 
       return isNaN(x) ? 0 : x;
     }, [loop, size, dataLength]);
 
     usePropsErrorBoundary({ ...props, dataLength });
-    useOnProgressChange({
+    const progressValue = useOnProgressChange({
       autoFillData,
       loop,
       size,
@@ -89,8 +88,8 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       onScrollStart: () => !!onScrollStart && runOnJS(onScrollStart)(),
     });
 
-    const { next, prev, scrollTo, getSharedIndex, getCurrentIndex }
-            = carouselController;
+    const { next, prev, scrollTo, getSharedIndex, getCurrentIndex } =
+      carouselController;
 
     const { start: startAutoPlay, pause: pauseAutoPlay } = useAutoPlay({
       autoPlay,
@@ -109,11 +108,9 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
         autoFillData,
       });
 
-      if (onSnapToItem)
-        onSnapToItem(realIndex);
+      if (onSnapToItem) onSnapToItem(realIndex);
 
-      if (onScrollEnd)
-        onScrollEnd(realIndex);
+      if (onScrollEnd) onScrollEnd(realIndex);
     }, [
       loop,
       autoFillData,
@@ -148,6 +145,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
         prev,
         getCurrentIndex,
         scrollTo,
+        progressValue,
       }),
       [getCurrentIndex, next, prev, scrollTo],
     );
@@ -168,9 +166,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
                 height: height || "100%",
               },
               style,
-              vertical
-                ? styles.itemsVertical
-                : styles.itemsHorizontal,
+              vertical ? styles.itemsVertical : styles.itemsHorizontal,
             ]}
             testID={testID}
             onScrollStart={scrollViewGestureOnScrollStart}
@@ -200,7 +196,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
 );
 
 export default Carousel as <T extends any>(
-  props: React.PropsWithChildren<TCarouselProps<T>>
+  props: React.PropsWithChildren<TCarouselProps<T>>,
 ) => React.ReactElement;
 
 const styles = StyleSheet.create({

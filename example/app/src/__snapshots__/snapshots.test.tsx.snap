@@ -854,7 +854,7 @@ exports[`<Carousel /> renders animTabBar correctly 1`] = `
                 }
               }
             >
-              周一
+              Mon
             </Text>
           </View>
         </View>

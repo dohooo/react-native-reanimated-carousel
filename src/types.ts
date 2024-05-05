@@ -195,11 +195,13 @@ export type TCarouselProps<T = any> = {
       * On progress change
       * @param offsetProgress Total of offset distance (0 390 780 ...)
       * @param absoluteProgress Convert to index (0 1 2 ...)
+      *
+      * If you want to update a shared value automatically, you can use the shared value as a parameter directly.
       */
-  onProgressChange?: (
+  onProgressChange?: ((
     offsetProgress: number,
     absoluteProgress: number
-  ) => void
+  ) => void) | SharedValue<number>
 
   // ============================== deprecated props ==============================
   /**
@@ -212,23 +214,23 @@ export type TCarouselProps<T = any> = {
 
 export interface ICarouselInstance {
   /**
-      * Scroll to previous item, it takes one optional argument (count),
-      * which allows you to specify how many items to cross
-      */
+     * Scroll to previous item, it takes one optional argument (count),
+     * which allows you to specify how many items to cross
+     */
   prev: (opts?: Omit<TCarouselActionOptions, "index">) => void
   /**
-      * Scroll to next item, it takes one optional argument (count),
-      * which allows you to specify how many items to cross
-      */
+     * Scroll to next item, it takes one optional argument (count),
+     * which allows you to specify how many items to cross
+     */
   next: (opts?: Omit<TCarouselActionOptions, "index">) => void
   /**
-      * Get current item index
-      */
+     * Get current item index
+     */
   getCurrentIndex: () => number
   /**
-      * Use value to scroll to a position where relative to the current position,
-      * scrollTo(-2) is equivalent to prev(2), scrollTo(2) is equivalent to next(2)
-      */
+     * Use value to scroll to a position where relative to the current position,
+     * scrollTo({count: -2}) is equivalent to prev(2), scrollTo({count: 2}) is equivalent to next(2)
+     */
   scrollTo: (opts?: TCarouselActionOptions) => void
 }
 

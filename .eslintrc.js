@@ -5,10 +5,6 @@ module.exports = {
     "quotes": "off",
     "@typescript-eslint/quotes": "error",
     "operator-linebreak": "off",
-    "@stylistic/js/operator-linebreak": ["error", "before"],
   },
-  plugins: [
-    "jest",
-    "@stylistic/js",
-  ],
+  plugins: ["jest"],
 };

@@ -217,7 +217,8 @@ The maximum number of items that can respond to pan gesture events, `0` means al
 
 ### `onProgressChange`
 
-On progress change. `offsetProgress`:Total of offset distance \(0 390 780 ...\); `absoluteProgress`:Convert to index \(0 1 2 ...\)
+This callback is called when the carousel is scrolled. If you want to update a shared value automatically, you can use the shared value as a parameter directly.
+The callback provides two parameters: `offsetProgress`:Total of offset distance \(0 390 780 ...\); `absoluteProgress`:Convert to index \(0 1 2 ...\)
 
 | type   | default | required |
 | ------ | ------- | -------- |
