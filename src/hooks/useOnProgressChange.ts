@@ -42,8 +42,13 @@ export function useOnProgressChange(
       if (value > 0)
         absoluteProgress = rawDataLength - absoluteProgress;
 
-      if (onProgressChange)
-        runOnJS(onProgressChange)(value, absoluteProgress);
+      if (onProgressChange) {
+        if (typeof onProgressChange === "function")
+          runOnJS(onProgressChange)(value, absoluteProgress);
+
+        else
+          onProgressChange.value = absoluteProgress;
+      }
     },
     [loop, autoFillData, rawDataLength, onProgressChange],
   );

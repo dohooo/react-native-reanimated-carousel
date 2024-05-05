@@ -25,39 +25,67 @@ slug: /usage
 
 Here is a simple usage of the **React Native Reanimated Carousel**. For more scrollable usage please read [Scrollables](./faq#used-in-scrollviewflatlist).
 
+<video  width="320" height="240" autoPlay loop style={{border:'1px solid gray', margin:"0 auto",borderRadius:10,marginTop:10}}>
+  <source src="/parallax-pagination.mov" type="video/mp4"/>
+</video>
+
 ```tsx
-import * as React from 'react';
-import { Dimensions, Text, View } from 'react-native';
-import Carousel from 'react-native-reanimated-carousel';
+import * as React from "react";
+import { Dimensions, Text, View } from "react-native";
+import { useSharedValue } from "react-native-reanimated";
+import Carousel, {
+  ICarouselInstance,
+  Pagination,
+} from "react-native-reanimated-carousel";
+
+const data = [...new Array(6).keys()];
+const width = Dimensions.get("window").width;
 
 function App() {
-    const width = Dimensions.get('window').width;
-    return (
-        <View style={{ flex: 1 }}>
-            <Carousel
-                loop
-                width={width}
-                height={width / 2}
-                autoPlay={true}
-                data={[...new Array(6).keys()]}
-                scrollAnimationDuration={1000}
-                onSnapToItem={(index) => console.log('current index:', index)}
-                renderItem={({ index }) => (
-                    <View
-                        style={{
-                            flex: 1,
-                            borderWidth: 1,
-                            justifyContent: 'center',
-                        }}
-                    >
-                        <Text style={{ textAlign: 'center', fontSize: 30 }}>
-                            {index}
-                        </Text>
-                    </View>
-                )}
-            />
-        </View>
-    );
+  const ref = React.useRef<ICarouselInstance>(null);
+  const progress = useSharedValue<number>(0);
+  
+  const onPressPagination = (index: number) => {
+    ref.current?.scrollTo({
+      /**
+       * Calculate the difference between the current index and the target index
+       * to ensure that the carousel scrolls to the nearest index
+       */
+      count: index - progress.value,
+      animated: true,
+    });
+  };
+
+  return (
+    <View style={{ flex: 1 }}>
+      <Carousel
+        ref={ref}
+        width={width}
+        height={width / 2}
+        data={data}
+        onProgressChange={progress}
+        renderItem={({ index }) => (
+          <View
+            style={{
+              flex: 1,
+              borderWidth: 1,
+              justifyContent: "center",
+            }}
+          >
+            <Text style={{ textAlign: "center", fontSize: 30 }}>{index}</Text>
+          </View>
+        )}
+      />
+
+      <Pagination.Basic
+        progress={progress}
+        data={data}
+        dotStyle={{ backgroundColor: "rgba(0,0,0,0.2)", borderRadius: 50 }}
+        containerStyle={{ gap: 5, marginTop: 10 }}
+        onPress={onPressPagination}
+      />
+    </View>
+  );
 }
 
 export default App;

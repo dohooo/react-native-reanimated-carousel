@@ -1,12 +1,10 @@
 import * as React from "react";
 import { View } from "react-native";
-import Animated, {
-  Extrapolate,
-  interpolate,
-  useAnimatedStyle,
-  useSharedValue,
-} from "react-native-reanimated";
-import Carousel from "react-native-reanimated-carousel";
+import { useSharedValue } from "react-native-reanimated";
+import Carousel, {
+  ICarouselInstance,
+  Pagination,
+} from "react-native-reanimated-carousel";
 
 import { SBItem } from "../../components/SBItem";
 import SButton from "../../components/SButton";
@@ -27,18 +25,31 @@ function Index() {
   const [autoPlay, setAutoPlay] = React.useState(false);
   const [pagingEnabled, setPagingEnabled] = React.useState<boolean>(true);
   const [snapEnabled, setSnapEnabled] = React.useState<boolean>(true);
-  const progressValue = useSharedValue<number>(0);
+  const progress = useSharedValue<number>(0);
   const baseOptions = isVertical
     ? ({
-      vertical: true,
-      width: PAGE_WIDTH * 0.86,
-      height: PAGE_WIDTH * 0.6,
-    } as const)
+        vertical: true,
+        width: PAGE_WIDTH * 0.86,
+        height: PAGE_WIDTH * 0.6,
+      } as const)
     : ({
-      vertical: false,
-      width: PAGE_WIDTH,
-      height: PAGE_WIDTH * 0.6,
-    } as const);
+        vertical: false,
+        width: PAGE_WIDTH,
+        height: PAGE_WIDTH * 0.6,
+      } as const);
+
+  const ref = React.useRef<ICarouselInstance>(null);
+
+  const onPressPagination = (index: number) => {
+    ref.current?.scrollTo({
+      /**
+       * Calculate the difference between the current index and the target index
+       * to ensure that the carousel scrolls to the nearest index
+       */
+      count: index - progress.value,
+      animated: true,
+    });
+  };
 
   return (
     <View
@@ -47,18 +58,17 @@ function Index() {
       }}
     >
       <Carousel
+        ref={ref}
         {...baseOptions}
         style={{
-           width: PAGE_WIDTH,
+          width: PAGE_WIDTH,
         }}
         loop
         pagingEnabled={pagingEnabled}
         snapEnabled={snapEnabled}
         autoPlay={autoPlay}
         autoPlayInterval={1500}
-        onProgressChange={(_, absoluteProgress) =>
-          (progressValue.value = absoluteProgress)
-        }
+        onProgressChange={progress}
         mode="parallax"
         modeConfig={{
           parallaxScrollingScale: 0.9,
@@ -67,41 +77,108 @@ function Index() {
         data={colors}
         renderItem={({ index }) => <SBItem index={index} />}
       />
-      {!!progressValue && (
-        <View
-          style={
-            isVertical
-              ? {
-                flexDirection: "column",
-                justifyContent: "space-between",
-                width: 10,
-                alignSelf: "center",
+
+      <Pagination.Basic
+        progress={progress}
+        data={colors}
+        dotStyle={{ backgroundColor: "rgba(0,0,0,0.2)" }}
+        containerStyle={{ gap: 5, marginBottom: 10 }}
+        onPress={onPressPagination}
+      />
+
+      <Pagination.Basic<{ color: string }>
+        progress={progress}
+        data={colors.map((color) => ({ color }))}
+        dotStyle={{
+          width: 25,
+          height: 4,
+          backgroundColor: "rgba(0,0,0,0.2)",
+        }}
+        activeDotStyle={{
+          overflow: "hidden",
+        }}
+        containerStyle={[
+          isVertical
+            ? {
                 position: "absolute",
+                width: 25,
                 right: 5,
                 top: 40,
               }
-              : {
-                flexDirection: "row",
-                justifyContent: "space-between",
-                width: 100,
-                alignSelf: "center",
+            : undefined,
+          {
+            gap: 10,
+            marginBottom: 10,
+          },
+        ]}
+        horizontal={!isVertical}
+        onPress={onPressPagination}
+      />
+
+      <Pagination.Basic<{ color: string }>
+        progress={progress}
+        data={colors.map((color) => ({ color }))}
+        size={20}
+        dotStyle={{
+          borderRadius: 100,
+          backgroundColor: "rgba(0,0,0,0.2)",
+        }}
+        activeDotStyle={{
+          borderRadius: 100,
+          overflow: "hidden",
+        }}
+        containerStyle={[
+          isVertical
+            ? {
+                position: "absolute",
+                width: 20,
+                right: 5,
+                top: 40,
               }
-          }
-        >
-          {colors.map((backgroundColor, index) => {
-            return (
-              <PaginationItem
-                backgroundColor={backgroundColor}
-                animValue={progressValue}
-                index={index}
-                key={index}
-                isRotate={isVertical}
-                length={colors.length}
-              />
-            );
-          })}
-        </View>
-      )}
+            : undefined,
+          {
+            gap: 5,
+            marginBottom: 10,
+          },
+        ]}
+        horizontal={!isVertical}
+        onPress={onPressPagination}
+      />
+
+      <Pagination.Basic<{ color: string }>
+        progress={progress}
+        data={colors.map((color) => ({ color }))}
+        size={20}
+        dotStyle={{
+          borderRadius: 100,
+          backgroundColor: "rgba(0,0,0,0.2)",
+        }}
+        activeDotStyle={{
+          borderRadius: 100,
+          overflow: "hidden",
+        }}
+        containerStyle={[
+          isVertical
+            ? {
+                position: "absolute",
+                width: 20,
+                right: 5,
+                top: 40,
+              }
+            : undefined,
+        ]}
+        horizontal={!isVertical}
+        renderItem={(item) => (
+          <View
+            style={{
+              backgroundColor: item.color,
+              flex: 1,
+            }}
+          />
+        )}
+        onPress={onPressPagination}
+      />
+
       <SButton
         onPress={() => setAutoPlay(!autoPlay)}
       >{`${ElementsText.AUTOPLAY}:${autoPlay}`}</SButton>
@@ -129,66 +206,5 @@ function Index() {
     </View>
   );
 }
-
-const PaginationItem: React.FC<{
-  index: number
-  backgroundColor: string
-  length: number
-  animValue: Animated.SharedValue<number>
-  isRotate?: boolean
-}> = (props) => {
-  const { animValue, index, length, backgroundColor, isRotate } = props;
-  const width = 10;
-
-  const animStyle = useAnimatedStyle(() => {
-    let inputRange = [index - 1, index, index + 1];
-    let outputRange = [-width, 0, width];
-
-    if (index === 0 && animValue?.value > length - 1) {
-      inputRange = [length - 1, length, length + 1];
-      outputRange = [-width, 0, width];
-    }
-
-    return {
-      transform: [
-        {
-          translateX: interpolate(
-            animValue?.value,
-            inputRange,
-            outputRange,
-            Extrapolate.CLAMP,
-          ),
-        },
-      ],
-    };
-  }, [animValue, index, length]);
-  return (
-    <View
-      style={{
-        backgroundColor: "white",
-        width,
-        height: width,
-        borderRadius: 50,
-        overflow: "hidden",
-        transform: [
-          {
-            rotateZ: isRotate ? "90deg" : "0deg",
-          },
-        ],
-      }}
-    >
-      <Animated.View
-        style={[
-          {
-            borderRadius: 50,
-            backgroundColor,
-            flex: 1,
-          },
-          animStyle,
-        ]}
-      />
-    </View>
-  );
-};
 
 export default Index;
