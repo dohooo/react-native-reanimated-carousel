@@ -17,7 +17,7 @@ import { useToggleButton } from "../../hooks/useToggleButton";
 
 const PAGE_WIDTH = 60;
 const PAGE_HEIGHT = 40;
-const DATA = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
+const DATA = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 function Index() {
   const r = React.useRef<ICarouselInstance>(null);

@@ -1,9 +1,0 @@
-{
-    "extends": "@dohooo",
-    "rules": {
-        "@typescript-eslint/no-use-before-define": "off"
-    },
-    "plugins": [
-        "jest"
-    ]
-}
