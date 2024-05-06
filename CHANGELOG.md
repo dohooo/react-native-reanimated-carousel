@@ -1,5 +1,11 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-alpha.12
+
+### Patch Changes
+
+- [#574](https://github.com/dohooo/react-native-reanimated-carousel/pull/574) [`86da6ac`](https://github.com/dohooo/react-native-reanimated-carousel/commit/86da6acb823ec2deaa71f4cb90d392d1cccf48b5) Thanks [@nmassey](https://github.com/nmassey)! - Fixed an issue where endWithSpring used outdated data from useSharedValue after onGestureEnd, causing incorrect carousel behavior on direction reversal.
+
 ## 4.0.0-alpha.11
 
 ### Patch Changes
