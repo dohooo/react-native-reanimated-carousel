@@ -16,26 +16,37 @@ export function useAutoPlay(opts: {
   } = opts;
 
   const { prev, next } = carouselController;
-  const timer = React.useRef<ReturnType<typeof setTimeout>>();
+  const lastTimestampRef = React.useRef<number | null>(null);
   const stopped = React.useRef<boolean>(!autoPlay);
 
   const play = React.useCallback(() => {
     if (stopped.current)
       return;
 
-    timer.current && clearTimeout(timer.current);
-    timer.current = setTimeout(() => {
-      autoPlayReverse
-        ? prev({ onFinished: play })
-        : next({ onFinished: play });
-    }, autoPlayInterval);
+    const currentTimestamp = Date.now();
+
+    if (lastTimestampRef.current) {
+      const elapsed = currentTimestamp - lastTimestampRef.current;
+
+      if (elapsed >= (autoPlayInterval ?? 1000)) {
+        autoPlayReverse
+          ? prev({ onFinished: play })
+          : next({ onFinished: play });
+        lastTimestampRef.current = currentTimestamp;
+      }
+    }
+    else {
+      lastTimestampRef.current = currentTimestamp;
+    }
+
+    requestAnimationFrame(play);
   }, [autoPlayReverse, autoPlayInterval, prev, next]);
 
   const pause = React.useCallback(() => {
     if (!autoPlay)
       return;
 
-    timer.current && clearTimeout(timer.current);
+    lastTimestampRef.current = null;
     stopped.current = true;
   }, [autoPlay]);
 
@@ -44,7 +55,8 @@ export function useAutoPlay(opts: {
       return;
 
     stopped.current = false;
-    play();
+    lastTimestampRef.current = Date.now();
+    requestAnimationFrame(play);
   }, [play, autoPlay]);
 
   React.useEffect(() => {
@@ -53,7 +65,10 @@ export function useAutoPlay(opts: {
     else
       pause();
 
-    return pause;
+    return () => {
+      lastTimestampRef.current = null;
+      stopped.current = true;
+    };
   }, [pause, start, autoPlay]);
 
   return {
