@@ -88,7 +88,7 @@ export function horizontalStackLayout(modeConfig: ILayoutConfig = {}) {
       rotateZ = `${interpolate(
         value,
         inputRange,
-        [-rotateZDeg, 0, 0],
+        [0, value * rotateZDeg, value * rotateZDeg],
         Extrapolate.CLAMP,
       )}deg`;
     }
@@ -108,7 +108,7 @@ export function horizontalStackLayout(modeConfig: ILayoutConfig = {}) {
       rotateZ = `${interpolate(
         value,
         inputRange,
-        [0, 0, rotateZDeg],
+        [value * rotateZDeg, value * rotateZDeg, 0],
         Extrapolate.CLAMP,
       )}deg`;
     }
