@@ -19,6 +19,10 @@ export function useOnProgressChange(
   const { autoFillData, loop, offsetX, size, rawDataLength, onProgressChange }
         = opts;
 
+  // remember this here because we can't check it inside useAnimatedReaction
+  // because of how reanimated's threading works.
+  const isFunc = typeof onProgressChange === "function";
+
   useAnimatedReaction(
     () => offsetX.value,
     (_value) => {
@@ -43,7 +47,7 @@ export function useOnProgressChange(
         absoluteProgress = rawDataLength - absoluteProgress;
 
       if (onProgressChange) {
-        if (typeof onProgressChange === "function")
+        if (isFunc)
           runOnJS(onProgressChange)(value, absoluteProgress);
 
         else
