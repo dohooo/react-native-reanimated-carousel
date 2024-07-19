@@ -153,7 +153,12 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
     const layoutConfig = useLayoutConfig({ ...props, size });
 
     return (
-      <GestureHandlerRootView>
+      <GestureHandlerRootView
+        style={{
+          width: width || "100%",
+          height: height || "100%",
+        }}
+      >
         <CTX.Provider value={{ props, common: commonVariables }}>
           <ScrollViewGesture
             key={mode}
@@ -161,10 +166,6 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
             translation={handlerOffset}
             style={[
               styles.container,
-              {
-                width: width || "100%",
-                height: height || "100%",
-              },
               style,
               vertical ? styles.itemsVertical : styles.itemsHorizontal,
             ]}
@@ -202,6 +203,7 @@ export default Carousel as <T extends any>(
 const styles = StyleSheet.create({
   container: {
     overflow: "hidden",
+    flex: 1,
   },
   itemsHorizontal: {
     flexDirection: "row",
