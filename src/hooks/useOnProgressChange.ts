@@ -19,8 +19,10 @@ export function useOnProgressChange(
   const { autoFillData, loop, offsetX, size, rawDataLength, onProgressChange }
         = opts;
 
-  // remember this here because we can't check it inside useAnimatedReaction
-  // because of how reanimated's threading works.
+  // remember `isFunc` here because we can't accurately check typeof
+  // from within useAnimatedReaction because its code has been workletized;
+  // the `onProgressChange` value will be typeof "object" from within
+  // the worklet code even if it's a function.
   const isFunc = typeof onProgressChange === "function";
 
   useAnimatedReaction(
