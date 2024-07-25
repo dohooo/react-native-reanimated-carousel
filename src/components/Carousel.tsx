@@ -47,6 +47,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       onScrollEnd,
       onSnapToItem,
       onScrollStart,
+      onEndWithSpring,
       onProgressChange,
       customAnimation,
       defaultIndex,
@@ -86,6 +87,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       duration: scrollAnimationDuration,
       onScrollEnd: () => runOnJS(_onScrollEnd)(),
       onScrollStart: () => !!onScrollStart && runOnJS(onScrollStart)(),
+      onEndWithSpring: (index: number) => !!onEndWithSpring && runOnJS(onEndWithSpring)(index),
     });
 
     const { next, prev, scrollTo, getSharedIndex, getCurrentIndex } =
@@ -98,15 +100,19 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       carouselController,
     });
 
+    const getRealIndex = React.useCallback((index: number) => {
+      return computedRealIndexWithAutoFillData({
+        index,
+        dataLength: rawDataLength,
+        loop,
+        autoFillData: autoFillData!,
+      });
+    }, [rawDataLength]);
+
     const _onScrollEnd = React.useCallback(() => {
       const _sharedIndex = Math.round(getSharedIndex());
 
-      const realIndex = computedRealIndexWithAutoFillData({
-        index: _sharedIndex,
-        dataLength: rawDataLength,
-        loop,
-        autoFillData,
-      });
+      const realIndex = getRealIndex(_sharedIndex);
 
       if (onSnapToItem) onSnapToItem(realIndex);
 
@@ -115,7 +121,9 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       loop,
       autoFillData,
       rawDataLength,
+      getCurrentIndex,
       getSharedIndex,
+      getRealIndex,
       onSnapToItem,
       onScrollEnd,
     ]);
@@ -137,6 +145,11 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
     const scrollViewGestureOnTouchEnd = React.useCallback(startAutoPlay, [
       startAutoPlay,
     ]);
+
+    const scrollViewEndWithSpring = React.useCallback((index: number) => {
+      const realIndex = getRealIndex(index);
+      onEndWithSpring?.(realIndex);
+    }, [onEndWithSpring, getRealIndex]);
 
     React.useImperativeHandle(
       ref,
@@ -173,6 +186,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
             onScrollEnd={scrollViewGestureOnScrollEnd}
             onTouchBegin={scrollViewGestureOnTouchBegin}
             onTouchEnd={scrollViewGestureOnTouchEnd}
+            onEndWithSpring={scrollViewEndWithSpring}
           >
             <ItemRenderer
               data={data}

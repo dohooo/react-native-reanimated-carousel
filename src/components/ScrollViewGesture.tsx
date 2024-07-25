@@ -29,6 +29,7 @@ interface Props {
   onScrollEnd?: () => void
   onTouchBegin?: () => void
   onTouchEnd?: () => void
+  onEndWithSpring?: (index: number) => void
   translation: Animated.SharedValue<number>
 }
 
@@ -60,6 +61,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
     onScrollEnd,
     onTouchBegin,
     onTouchEnd,
+    onEndWithSpring,
   } = props;
 
   const maxPage = dataLength;
@@ -119,6 +121,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
     (scrollEndTranslationValue: number,
       scrollEndVelocityValue: number,
       onFinished?: () => void,
+      onEndWithSpring?: (index: number) => void,
     ) => {
       "worklet";
       const origin = translation.value;
@@ -147,17 +150,21 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
           if (loop) {
             const finalPage = page + offset;
             finalTranslation = withSpring(withProcessTranslation(-finalPage * size), onFinished);
+            onEndWithSpring?.(finalPage);
           }
           else {
             const finalPage = Math.min(maxPage - 1, Math.max(0, page + offset));
             finalTranslation = withSpring(withProcessTranslation(-finalPage * size), onFinished);
+            onEndWithSpring?.(finalPage);
           }
         }
 
         if (!pagingEnabled && snapEnabled) {
           // scroll to the nearest item
-          const nextPage = Math.round((origin + velocity * 0.4) / size) * size;
-          finalTranslation = withSpring(withProcessTranslation(nextPage), onFinished);
+          const nextPage = -Math.round((origin + velocity * 0.4) / size);
+          const nextTranslation = -nextPage * size;
+          finalTranslation = withSpring(withProcessTranslation(nextTranslation), onFinished);
+          onEndWithSpring?.(nextPage);
         }
       }
 
@@ -376,7 +383,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       translation.value = withSpring(withProcessTranslation(nextPage), onScrollEnd);
     }
     else {
-      endWithSpring(panTranslation, scrollEndVelocityValue, onScrollEnd);
+      endWithSpring(panTranslation, scrollEndVelocityValue, onScrollEnd, onEndWithSpring);
     }
 
     if (!loop)
@@ -398,6 +405,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
     endWithSpring,
     withSpring,
     onScrollEnd,
+    onEndWithSpring,
   ]);
 
   const gesture = usePanGestureProxy({
