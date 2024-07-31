@@ -46,9 +46,9 @@ PropsWithChildren<{
     children,
     customReanimatedStyle,
   } = props;
-  const customReanimatedStyleRef = useSharedValue({});
+  const customReanimatedStyleRef = useSharedValue<DefaultStyle>({});
   const handleCustomAnimation = (progress: number) => {
-    customReanimatedStyleRef.value = customReanimatedStyle(progress, index, count) ?? {};
+    customReanimatedStyleRef.value = customReanimatedStyle?.(progress, index, count) ?? {};
   }
 
   useDerivedValue(() => {
