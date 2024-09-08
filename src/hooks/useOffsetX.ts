@@ -1,6 +1,6 @@
 import type Animated from "react-native-reanimated";
 import {
-  Extrapolate,
+  Extrapolation,
   interpolate,
   useDerivedValue,
 } from "react-native-reanimated";
@@ -76,7 +76,7 @@ export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
           handlerOffset.value,
           inputRange,
           outputRange,
-          Extrapolate.CLAMP,
+          Extrapolation.CLAMP,
         );
       }
 

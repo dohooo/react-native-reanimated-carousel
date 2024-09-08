@@ -1,4 +1,4 @@
-import { Extrapolate, interpolate } from "react-native-reanimated";
+import { Extrapolation, interpolate } from "react-native-reanimated";
 
 import type { IComputedDirectionTypes } from "../types";
 
@@ -56,7 +56,7 @@ export function parallaxLayout(
       value,
       [-1, 0, 1],
       [0, size, 0],
-      Extrapolate.CLAMP,
+      Extrapolation.CLAMP,
     );
 
     const scale = interpolate(
@@ -67,7 +67,7 @@ export function parallaxLayout(
         parallaxScrollingScale,
         parallaxAdjacentItemScale,
       ],
-      Extrapolate.CLAMP,
+      Extrapolation.CLAMP,
     );
 
     return {
