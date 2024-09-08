@@ -1,6 +1,6 @@
 import React from "react";
-import type { StyleProp, ViewStyle, TouchableWithoutFeedback } from "react-native";
-import { View } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { View, TouchableWithoutFeedback } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 
 import type { DotStyle } from "./PaginationItem";
