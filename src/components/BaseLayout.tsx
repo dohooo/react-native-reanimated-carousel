@@ -1,6 +1,6 @@
 import React from "react";
 import type { ViewStyle } from "react-native";
-import type { AnimatedStyleProp } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 import Animated, {
   useAnimatedStyle,
   useDerivedValue,
@@ -12,19 +12,19 @@ import type { IVisibleRanges } from "../hooks/useVisibleRanges";
 import type { ILayoutConfig } from "../layouts/stack";
 import { CTX } from "../store";
 
-export type TAnimationStyle = (value: number) => AnimatedStyleProp<ViewStyle>;
+export type TAnimationStyle = (value: number) => ViewStyle;
 
 export const BaseLayout: React.FC<{
-  index: number
-  handlerOffset: Animated.SharedValue<number>
-  visibleRanges: IVisibleRanges
-  animationStyle: TAnimationStyle
+  index: number;
+  handlerOffset: SharedValue<number>;
+  visibleRanges: IVisibleRanges;
+  animationStyle: TAnimationStyle;
   children: (ctx: {
-    animationValue: Animated.SharedValue<number>
-  }) => React.ReactElement
+    animationValue: Animated.SharedValue<number>;
+  }) => React.ReactElement;
 }> = (props) => {
-  const { handlerOffset, index, children, visibleRanges, animationStyle }
-    = props;
+  const { handlerOffset, index, children, visibleRanges, animationStyle } =
+    props;
 
   const context = React.useContext(CTX);
   const {
@@ -66,10 +66,8 @@ export const BaseLayout: React.FC<{
 
   const x = useOffsetX(offsetXConfig, visibleRanges);
   const animationValue = useDerivedValue(() => x.value / size, [x, size]);
-  const animatedStyle = useAnimatedStyle(
-    () => {
-      return animationStyle(x.value / size);
-    },
+  const animatedStyle = useAnimatedStyle<ViewStyle>(
+    () => animationStyle(x.value / size),
     [animationStyle],
   );
 

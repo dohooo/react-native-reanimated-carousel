@@ -27,7 +27,7 @@ describe("useSharedValue", () => {
 
     expect(
       typeof wrapper.root.children[0] !== "string"
-        ? wrapper.root.children[0].props.style.animatedStyle.current.value.opacity
+        ? wrapper.root.children[0].props.style.jestAnimatedStyle.current.value.opacity
         : false,
     ).toBe(initialValue);
 
@@ -36,7 +36,7 @@ describe("useSharedValue", () => {
 
     expect(
       typeof wrapper.root.children[0] !== "string"
-        ? wrapper.root.children[0].props.style.animatedStyle.current.value.opacity
+        ? wrapper.root.children[0].props.style.jestAnimatedStyle.current.value.opacity
         : false,
     ).toBe(initialValue);
   });

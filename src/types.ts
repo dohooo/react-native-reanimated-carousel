@@ -1,7 +1,6 @@
 import type { StyleProp, ViewStyle } from "react-native";
 import type { PanGesture } from "react-native-gesture-handler";
 import type {
-  AnimatedStyleProp,
   SharedValue,
   WithSpringConfig,
   WithTimingConfig,
@@ -174,7 +173,7 @@ export type TCarouselProps<T = any> = {
       * Custom animations.
       * Must use `worklet`, Details: https://docs.swmansion.com/react-native-reanimated/docs/2.2.0/worklets/
       */
-  customAnimation?: (value: number) => AnimatedStyleProp<ViewStyle>
+  customAnimation?: (value: number) => ViewStyle
   /**
       * Render carousel item.
       */
