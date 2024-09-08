@@ -25,12 +25,12 @@ export type TStackModeProps = IComputedDirectionTypes<{
   /**
      * Stack animation style.
      * @default
-     *     mode: 'vertical',
      *     snapDirection: 'right',
      *     moveSize: window.width,
      *     stackInterval: 30,
      *     scaleInterval: 0.08,
      *     rotateZDeg: 135,
+     *     opacityInterval: 0.1,
      */
   modeConfig?: ILayoutConfig
 }>;
