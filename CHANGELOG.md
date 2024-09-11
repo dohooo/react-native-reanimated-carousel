@@ -4,9 +4,9 @@
 
 ### Patch Changes
 
-- [#666](https://github.com/dohooo/react-native-reanimated-carousel/pull/666) [`2982fcd`](https://github.com/dohooo/react-native-reanimated-carousel/commit/2982fcdcfa42852f96198f2e8e9cda48a617c705) Thanks [@dohooo](https://github.com/dohooo)! - fix: typescript error where MeasuredDimension can be null
+- [#629](https://github.com/dohooo/react-native-reanimated-carousel/pull/629) [`80ec737`](https://github.com/dohooo/react-native-reanimated-carousel/commit/80ec737b726c1522f2af0308afb9b95ad6f9be4d) Thanks [@nickoelsner](https://github.com/nickoelsner)! - fix: typescript error where MeasuredDimension can be null
 
-- [#666](https://github.com/dohooo/react-native-reanimated-carousel/pull/666) [`32c8c36`](https://github.com/dohooo/react-native-reanimated-carousel/commit/32c8c36c4f70885f2a49ab9156ce13e674391f4c) Thanks [@dohooo](https://github.com/dohooo)! - Add <Pagination.Custom/> dot animation.
+- [#652](https://github.com/dohooo/react-native-reanimated-carousel/pull/652) [`2916a26`](https://github.com/dohooo/react-native-reanimated-carousel/commit/2916a26eb0392b600aa06e3b8b4bf419c68f0723) Thanks [@bdtren](https://github.com/bdtren)! - Add <Pagination.Custom/> dot animation.
 
 - [#577](https://github.com/dohooo/react-native-reanimated-carousel/pull/577) [`17621ca`](https://github.com/dohooo/react-native-reanimated-carousel/commit/17621ca772cc3f166094e1445253f77a0967a201) Thanks [@nmassey](https://github.com/nmassey)! - fix: make gesture onStart/onUpdate/onEnd (et al) callbacks run as worklets again
 
