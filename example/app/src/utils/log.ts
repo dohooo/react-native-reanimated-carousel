@@ -1,6 +1,6 @@
 /**
  * In worklet
- * e.g. runOnJS(lop)(...);
+ * e.g. runOnJS(log)(...);
  */
 export function log(...msg: any) {
   console.log(...msg);
