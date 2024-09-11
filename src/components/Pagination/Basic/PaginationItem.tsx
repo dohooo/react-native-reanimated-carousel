@@ -3,7 +3,7 @@ import React from "react";
 import type { ViewStyle } from "react-native";
 import { View } from "react-native";
 import Animated, {
-  Extrapolate,
+  Extrapolation,
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated";
@@ -71,7 +71,7 @@ PropsWithChildren<{
             animValue?.value,
             inputRange,
             outputRange,
-            Extrapolate.CLAMP,
+            Extrapolation.CLAMP,
           ),
         },
       ],

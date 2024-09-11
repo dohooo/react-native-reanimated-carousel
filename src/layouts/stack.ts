@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import type { TransformsStyle, ViewStyle } from "react-native";
 import { Dimensions } from "react-native";
-import { Extrapolate, interpolate } from "react-native-reanimated";
+import { Extrapolation, interpolate } from "react-native-reanimated";
 
 import type { IComputedDirectionTypes, CustomConfig } from "../types";
 
@@ -25,12 +25,12 @@ export type TStackModeProps = IComputedDirectionTypes<{
   /**
      * Stack animation style.
      * @default
-     *     mode: 'vertical',
      *     snapDirection: 'right',
      *     moveSize: window.width,
      *     stackInterval: 30,
      *     scaleInterval: 0.08,
      *     rotateZDeg: 135,
+     *     opacityInterval: 0.1,
      */
   modeConfig?: ILayoutConfig
 }>;
@@ -77,19 +77,19 @@ export function horizontalStackLayout(modeConfig: ILayoutConfig = {}) {
         value,
         inputRange,
         [-moveSize, 0, validLength * stackInterval],
-        Extrapolate.CLAMP,
+        Extrapolation.CLAMP,
       );
       scale = interpolate(
         value,
         inputRange,
         [1, 1, 1 - validLength * scaleInterval],
-        Extrapolate.CLAMP,
+        Extrapolation.CLAMP,
       );
       rotateZ = `${interpolate(
         value,
         inputRange,
         [-rotateZDeg, 0, 0],
-        Extrapolate.CLAMP,
+        Extrapolation.CLAMP,
       )}deg`;
     }
     else if (snapDirection === "right") {
@@ -97,19 +97,19 @@ export function horizontalStackLayout(modeConfig: ILayoutConfig = {}) {
         value,
         inputRange,
         [-validLength * stackInterval, 0, moveSize],
-        Extrapolate.CLAMP,
+        Extrapolation.CLAMP,
       );
       scale = interpolate(
         value,
         inputRange,
         [1 - validLength * scaleInterval, 1, 1],
-        Extrapolate.CLAMP,
+        Extrapolation.CLAMP,
       );
       rotateZ = `${interpolate(
         value,
         inputRange,
         [0, 0, rotateZDeg],
-        Extrapolate.CLAMP,
+        Extrapolation.CLAMP,
       )}deg`;
     }
 
@@ -193,25 +193,25 @@ export function verticalStackLayout(modeConfig: ILayoutConfig = {}) {
         value,
         inputRange,
         [-moveSize, 0, 0],
-        Extrapolate.CLAMP,
+        Extrapolation.CLAMP,
       );
       scale = interpolate(
         value,
         inputRange,
         [1, 1, 1 - validLength * scaleInterval],
-        Extrapolate.CLAMP,
+        Extrapolation.CLAMP,
       );
       rotateZ = `${interpolate(
         value,
         inputRange,
         [-rotateZDeg, 0, 0],
-        Extrapolate.CLAMP,
+        Extrapolation.CLAMP,
       )}deg`;
       translateY = interpolate(
         value,
         inputRange,
         [0, 0, validLength * stackInterval],
-        Extrapolate.CLAMP,
+        Extrapolation.CLAMP,
       );
     }
     else if (snapDirection === "right") {
@@ -219,25 +219,25 @@ export function verticalStackLayout(modeConfig: ILayoutConfig = {}) {
         value,
         inputRange,
         [0, 0, moveSize],
-        Extrapolate.CLAMP,
+        Extrapolation.CLAMP,
       );
       scale = interpolate(
         value,
         inputRange,
         [1 - validLength * scaleInterval, 1, 1],
-        Extrapolate.CLAMP,
+        Extrapolation.CLAMP,
       );
       rotateZ = `${interpolate(
         value,
         inputRange,
         [0, 0, rotateZDeg],
-        Extrapolate.CLAMP,
+        Extrapolation.CLAMP,
       )}deg`;
       translateY = interpolate(
         value,
         inputRange,
         [validLength * stackInterval, 0, 0],
-        Extrapolate.CLAMP,
+        Extrapolation.CLAMP,
       );
     }
 

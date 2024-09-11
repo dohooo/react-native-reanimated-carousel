@@ -31,7 +31,7 @@ After some effort, we finally implemented custom animation in v2, now we just ne
 ### Prepare
 
 ```
-type TAnimationStyle = (value: number) => Animated.AnimatedStyleProp<ViewStyle>;
+type TAnimationStyle = (value: number) => ViewStyle;
 ```
 
 This function will be called in each item and accepts a parameter `value` indicating the position of the current item relative to `window`. The following picture shows the relationship between `value` and position

@@ -65,7 +65,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
   const maxPage = dataLength;
   const isHorizontal = useDerivedValue(() => !vertical, [vertical]);
   const max = useSharedValue(0);
-  const panOffset = useSharedValue(0);
+  const panOffset = useSharedValue<number | undefined>(undefined); // set to undefined when not actively in a pan gesture
   const touching = useSharedValue(false);
   const validStart = useSharedValue(false);
   const scrollEndTranslation = useSharedValue(0);
@@ -79,7 +79,8 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
     "worklet";
 
     if (!loop && !overscrollEnabled) {
-      const { width: containerWidth = 0 } = measure(containerRef);
+      const measurement = measure(containerRef);
+      const containerWidth = measurement?.width || 0;
 
       // If the item's total width is less than the container's width, then there is no need to scroll.
       if (dataLength * size < containerWidth)
@@ -291,6 +292,20 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
   const onGestureUpdate = useCallback((e: PanGestureHandlerEventPayload) => {
     "worklet";
 
+    if (panOffset.value === undefined) {
+      // This may happen if `onGestureStart` is called as a part of the
+      // JS thread (instead of the UI thread / worklet). If so, when
+      // `onGestureStart` sets panOffset.value, the set will be asynchronous,
+      // and so it may not actually occur before `onGestureUpdate` is called.
+      //
+      // Keeping this value as `undefined` when it is not active protects us
+      // from the situation where we may use the previous value for panOffset
+      // instead; this would cause a visual flicker in the carousel.
+
+      // console.warn("onGestureUpdate: panOffset is undefined");
+      return;
+    }
+
     if (validStart.value) {
       validStart.value = false;
       cancelAnimation(translation);
@@ -334,6 +349,11 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
 
   const onGestureEnd = useCallback((e: GestureStateChangeEvent<PanGestureHandlerEventPayload>, _success: boolean) => {
     "worklet";
+
+    if (panOffset.value === undefined) {
+      // console.warn("onGestureEnd: panOffset is undefined");
+      return;
+    }
 
     const { velocityX, velocityY, translationX, translationY } = e;
     const scrollEndVelocityValue = isHorizontal.value
@@ -381,6 +401,8 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
 
     if (!loop)
       touching.value = false;
+
+    panOffset.value = undefined;
   }, [
     size,
     loop,

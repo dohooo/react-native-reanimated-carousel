@@ -1,12 +1,15 @@
 import React from "react";
 import type { StyleProp, ViewStyle } from "react-native";
-import { View, TouchableWithoutFeedback } from "react-native";
+import { View } from "react-native";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import type { SharedValue } from "react-native-reanimated";
+
+import type { DefaultStyle } from "react-native-reanimated/lib/typescript/hook/commonTypes";
 
 import type { DotStyle } from "./PaginationItem";
 import { PaginationItem } from "./PaginationItem";
 
-export interface BasicProps<T extends {} = {}> {
+export interface ShapeProps<T extends {} = {}> {
   progress: SharedValue<number>
   horizontal?: boolean
   data: Array<T>
@@ -16,9 +19,14 @@ export interface BasicProps<T extends {} = {}> {
   activeDotStyle?: DotStyle
   size?: number
   onPress?: (index: number) => void
+  customReanimatedStyle?: (
+    progress: number,
+    index: number,
+    length: number,
+  ) => DefaultStyle
 }
 
-export const Basic = <T extends {}>(props: BasicProps<T>) => {
+export const Custom = <T extends {}>(props: ShapeProps<T>) => {
   const {
     activeDotStyle,
     dotStyle,
@@ -29,14 +37,20 @@ export const Basic = <T extends {}>(props: BasicProps<T>) => {
     containerStyle,
     renderItem,
     onPress,
+    customReanimatedStyle,
   } = props;
 
   if (
     typeof size === "string" ||
     typeof dotStyle?.width === "string" ||
-    typeof dotStyle?.height === "string"
+    typeof dotStyle?.height === "string" ||
+    typeof activeDotStyle?.width === "string" ||
+    typeof activeDotStyle?.height === "string"
   )
     throw new Error("size/width/height must be a number");
+
+  const maxItemWidth = Math.max(size ?? 0, dotStyle?.width ?? 0, activeDotStyle?.width ?? 0);
+  const maxItemHeight = Math.max(size ?? 0, dotStyle?.height ?? 0, activeDotStyle?.height ?? 0);
 
   return (
     <View
@@ -44,6 +58,8 @@ export const Basic = <T extends {}>(props: BasicProps<T>) => {
         {
           justifyContent: "space-between",
           alignSelf: "center",
+          minWidth: maxItemWidth,
+          minHeight: maxItemHeight,
         },
         horizontal
           ? {
@@ -69,6 +85,7 @@ export const Basic = <T extends {}>(props: BasicProps<T>) => {
               animValue={progress}
               horizontal={!horizontal}
               activeDotStyle={activeDotStyle}
+              customReanimatedStyle={customReanimatedStyle}
             >
               {renderItem?.(item, index)}
             </PaginationItem>

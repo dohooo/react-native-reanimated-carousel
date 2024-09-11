@@ -1,6 +1,6 @@
 import * as React from "react";
 import { View } from "react-native";
-import { useSharedValue } from "react-native-reanimated";
+import { useSharedValue, interpolate, Extrapolation } from "react-native-reanimated";
 import Carousel, {
   ICarouselInstance,
   Pagination,
@@ -156,6 +156,7 @@ function Index() {
         activeDotStyle={{
           borderRadius: 100,
           overflow: "hidden",
+          backgroundColor: "rgba(0,0,0,0.2)",
         }}
         containerStyle={[
           isVertical
@@ -166,6 +167,10 @@ function Index() {
                 top: 40,
               }
             : undefined,
+          {
+            gap: 5,
+            marginBottom: 10,
+          },
         ]}
         horizontal={!isVertical}
         renderItem={(item) => (
@@ -177,6 +182,118 @@ function Index() {
           />
         )}
         onPress={onPressPagination}
+      />
+
+      <Pagination.Custom<{ color: string }>
+        progress={progress}
+        data={colors.map((color) => ({ color }))}
+        size={20}
+        dotStyle={{
+          borderRadius: 16,
+          backgroundColor: "rgba(0,0,0,0.2)",
+        }}
+        activeDotStyle={{
+          borderRadius: 8,
+          width: 40,
+          height: 30,
+          overflow: "hidden",
+          backgroundColor: 'black',
+        }}
+        containerStyle={[
+          isVertical
+            ? {
+                position: "absolute",
+                width: 20,
+                right: 5,
+                top: 40,
+              }
+            : undefined,
+            {
+              gap: 5,
+              marginBottom: 10,
+              alignItems: "center",
+            },
+        ]}
+        horizontal={!isVertical}
+        onPress={onPressPagination}
+        customReanimatedStyle={(progress, index, length) => {
+          let val = Math.abs(progress - index);
+          if (index === 0 && progress > length - 1) {
+            val = Math.abs(progress - length);
+          }
+
+          return {
+            transform: [
+              {
+                translateY: interpolate(
+                  val,
+                  [0, 1],
+                  [10, 0],
+                  Extrapolation.CLAMP,
+                ),
+              }
+            ]
+          }
+        }}
+      />
+
+      <Pagination.Custom<{ color: string }>
+        progress={progress}
+        data={colors.map((color) => ({ color }))}
+        size={20}
+        dotStyle={{
+          borderRadius: 16,
+          backgroundColor: "rgba(0,0,0,0.2)",
+        }}
+        activeDotStyle={{
+          borderRadius: 8,
+          width: 40,
+          height: 30,
+          overflow: "hidden",
+        }}
+        containerStyle={[
+          isVertical
+            ? {
+                position: "absolute",
+                width: 20,
+                right: 5,
+                top: 40,
+              }
+            : undefined,
+            {
+              gap: 5,
+              alignItems: "center",
+            },
+        ]}
+        horizontal={!isVertical}
+        onPress={onPressPagination}
+        customReanimatedStyle={(progress, index, length) => {
+          let val = Math.abs(progress - index);
+          if (index === 0 && progress > length - 1) {
+            val = Math.abs(progress - length);
+          }
+
+          return {
+            transform: [
+              {
+                translateY: interpolate(
+                  val,
+                  [0, 1],
+                  [10, 0],
+                  Extrapolation.CLAMP,
+                ),
+              }
+            ]
+          }
+        }}
+        renderItem={(item) => (
+          <View
+            style={{
+              backgroundColor: item.color,
+              flex: 1,
+            }}
+          />
+        )}
       />
 
       <SButton

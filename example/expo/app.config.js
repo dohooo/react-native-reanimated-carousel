@@ -19,6 +19,7 @@ export default () => {
     ],
     ios: {
       supportsTablet: true,
+      bundleIdentifier: "com.rnrc.exampleExpo",
     },
     android: {
       adaptiveIcon: {
