@@ -1,5 +1,19 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-canary.13
+
+### Patch Changes
+
+- [#666](https://github.com/dohooo/react-native-reanimated-carousel/pull/666) [`2982fcd`](https://github.com/dohooo/react-native-reanimated-carousel/commit/2982fcdcfa42852f96198f2e8e9cda48a617c705) Thanks [@dohooo](https://github.com/dohooo)! - fix: typescript error where MeasuredDimension can be null
+
+- [#666](https://github.com/dohooo/react-native-reanimated-carousel/pull/666) [`32c8c36`](https://github.com/dohooo/react-native-reanimated-carousel/commit/32c8c36c4f70885f2a49ab9156ce13e674391f4c) Thanks [@dohooo](https://github.com/dohooo)! - Add <Pagination.Custom/> dot animation.
+
+- [#577](https://github.com/dohooo/react-native-reanimated-carousel/pull/577) [`17621ca`](https://github.com/dohooo/react-native-reanimated-carousel/commit/17621ca772cc3f166094e1445253f77a0967a201) Thanks [@nmassey](https://github.com/nmassey)! - fix: make gesture onStart/onUpdate/onEnd (et al) callbacks run as worklets again
+
+- [#648](https://github.com/dohooo/react-native-reanimated-carousel/pull/648) [`0abdb2d`](https://github.com/dohooo/react-native-reanimated-carousel/commit/0abdb2d51fba1d309a065ed614713d792b6e70a5) Thanks [@nmassey](https://github.com/nmassey)! - fix app crash when using "onProgressChange" prop as function
+
+- [#576](https://github.com/dohooo/react-native-reanimated-carousel/pull/576) [`a99f069`](https://github.com/dohooo/react-native-reanimated-carousel/commit/a99f069b5c4bace6e0cf42d457d3d3363321dd7f) Thanks [@nmassey](https://github.com/nmassey)! - fix: rework code to avoid possible flicker when starting pan (panOffset race condition)
+
 ## 4.0.0-alpha.12
 
 ### Patch Changes
