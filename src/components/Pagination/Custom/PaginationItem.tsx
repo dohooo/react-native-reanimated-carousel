@@ -1,38 +1,44 @@
 import type { PropsWithChildren } from "react";
 import React from "react";
 import type { ViewStyle } from "react-native";
+import type { SharedValue } from "react-native-reanimated";
 import Animated, {
   Extrapolation,
   interpolate,
   interpolateColor,
-  SharedValue,
   useAnimatedStyle,
   runOnJS,
   useSharedValue,
   useDerivedValue,
 } from "react-native-reanimated";
+
 import type { DefaultStyle } from "react-native-reanimated/lib/typescript/hook/commonTypes";
 
-export type DotStyle = Omit<ViewStyle, "width" | "height"> & {
-  width?: number
-  height?: number
+export type DotStyle = Omit<
+  ViewStyle,
+  "width" | "height" | "backgroundColor" | "borderRadius"
+> & {
+  width?: number;
+  height?: number;
+  backgroundColor?: string;
+  borderRadius?: number;
 };
 
 export const PaginationItem: React.FC<
-PropsWithChildren<{
-  index: number
-  count: number
-  size?: number
-  animValue: SharedValue<number>
-  horizontal?: boolean
-  dotStyle?: DotStyle
-  activeDotStyle?: DotStyle
-  customReanimatedStyle?: (
-    progress: number,
-    index: number,
-    length: number,
-  ) => DefaultStyle
-}>
+  PropsWithChildren<{
+    index: number;
+    count: number;
+    size?: number;
+    animValue: SharedValue<number>;
+    horizontal?: boolean;
+    dotStyle?: DotStyle;
+    activeDotStyle?: DotStyle;
+    customReanimatedStyle?: (
+      progress: number,
+      index: number,
+      length: number,
+    ) => DefaultStyle;
+  }>
 > = (props) => {
   const defaultDotSize = 10;
   const {
@@ -48,8 +54,9 @@ PropsWithChildren<{
   } = props;
   const customReanimatedStyleRef = useSharedValue<DefaultStyle>({});
   const handleCustomAnimation = (progress: number) => {
-    customReanimatedStyleRef.value = customReanimatedStyle?.(progress, index, count) ?? {};
-  }
+    customReanimatedStyleRef.value =
+      customReanimatedStyle?.(progress, index, count) ?? {};
+  };
 
   useDerivedValue(() => {
     runOnJS(handleCustomAnimation)(animValue?.value);
@@ -71,58 +78,66 @@ PropsWithChildren<{
       ...restActiveDotStyle
     } = activeDotStyle ?? {};
     let val = Math.abs(animValue?.value - index);
-    if (index === 0 && animValue?.value > count - 1) {
+    if (index === 0 && animValue?.value > count - 1)
       val = Math.abs(animValue?.value - count);
-    }
+
     const inputRange = [0, 1, 2];
     const restStyle = (val === 0 ? restActiveDotStyle : restDotStyle) ?? {};
 
     return {
-        width: interpolate(
-            val,
-            inputRange,
-            [activeWidth, width, width],
-            Extrapolation.CLAMP,
-        ),
-        height: interpolate(
-            val,
-            inputRange,
-            [activeHeight, height, height],
-            Extrapolation.CLAMP,
-        ),
-        borderRadius: interpolate(
-          val,
-          inputRange,
-          [activeBorderRadius, borderRadius, borderRadius],
-          Extrapolation.CLAMP,
-        ),
-        backgroundColor: interpolateColor(
-            val,
-            inputRange,
-            [activeBackgroundColor, backgroundColor, backgroundColor],
-        ),
-        ...restStyle,
-        ...(customReanimatedStyleRef.value ?? {}),
-        transform: [
-          ...restStyle?.transform ?? [],
-          ...customReanimatedStyleRef.value?.transform ?? [],
-        ]
+      width: interpolate(
+        val,
+        inputRange,
+        [activeWidth, width, width],
+        Extrapolation.CLAMP,
+      ),
+      height: interpolate(
+        val,
+        inputRange,
+        [activeHeight, height, height],
+        Extrapolation.CLAMP,
+      ),
+      borderRadius: interpolate(
+        val,
+        inputRange,
+        [activeBorderRadius ?? borderRadius ?? 0, borderRadius ?? 0, borderRadius ?? 0],
+        Extrapolation.CLAMP,
+      ),
+      backgroundColor: interpolateColor(val, inputRange, [
+        activeBackgroundColor,
+        backgroundColor,
+        backgroundColor,
+      ]),
+      ...restStyle,
+      ...(customReanimatedStyleRef.value ?? {}),
+      transform: [
+        ...(restStyle?.transform ?? []),
+        ...(customReanimatedStyleRef.value?.transform ?? []),
+      ],
     };
-  }, [animValue, index, count, horizontal, dotStyle, activeDotStyle, customReanimatedStyle]);
+  }, [
+    animValue,
+    index,
+    count,
+    horizontal,
+    dotStyle,
+    activeDotStyle,
+    customReanimatedStyle,
+  ]);
 
   return (
     <Animated.View
       style={[
-          {
-            overflow: "hidden",
-            transform: [
-                {
-                    rotateZ: horizontal ? "90deg" : "0deg",
-                },
-            ],
-          },
-          dotStyle,
-          animStyle,
+        {
+          overflow: "hidden",
+          transform: [
+            {
+              rotateZ: horizontal ? "90deg" : "0deg",
+            },
+          ],
+        },
+        dotStyle,
+        animStyle,
       ]}
     >
       {children}

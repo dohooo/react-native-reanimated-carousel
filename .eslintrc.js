@@ -6,6 +6,7 @@ module.exports = {
     "quotes": "off",
     "@typescript-eslint/quotes": "error",
     "operator-linebreak": "off",
+    "@typescript-eslint/indent": "off",
   },
-  plugins: ["jest"],
+  plugins: ["jest", "prettier"],
 };

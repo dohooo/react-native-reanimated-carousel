@@ -3,6 +3,7 @@ import type { StyleProp, ViewStyle } from "react-native";
 import { View } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import type { SharedValue } from "react-native-reanimated";
+
 import type { DefaultStyle } from "react-native-reanimated/lib/typescript/hook/commonTypes";
 
 import type { DotStyle } from "./PaginationItem";
@@ -44,10 +45,10 @@ export const Custom = <T extends {}>(props: ShapeProps<T>) => {
     typeof dotStyle?.width === "string" ||
     typeof dotStyle?.height === "string" ||
     typeof activeDotStyle?.width === "string" ||
-    typeof activeDotStyle?.height === "string" 
+    typeof activeDotStyle?.height === "string"
   )
     throw new Error("size/width/height must be a number");
-  
+
   const maxItemWidth = Math.max(size ?? 0, dotStyle?.width ?? 0, activeDotStyle?.width ?? 0);
   const maxItemHeight = Math.max(size ?? 0, dotStyle?.height ?? 0, activeDotStyle?.height ?? 0);
 
