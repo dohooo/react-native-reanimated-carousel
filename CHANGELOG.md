@@ -1,5 +1,11 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-canary.14
+
+### Patch Changes
+
+- [#672](https://github.com/dohooo/react-native-reanimated-carousel/pull/672) [`5fa78a7`](https://github.com/dohooo/react-native-reanimated-carousel/commit/5fa78a765116d155b3fd0fabc83576e1403f13e1) Thanks [@dohooo](https://github.com/dohooo)! - revert autoPlay changes
+
 ## 4.0.0-canary.13
 
 ### Patch Changes
