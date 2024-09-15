@@ -1,6 +1,6 @@
 import React from "react";
 import type { StyleProp, ViewStyle } from "react-native";
-import { TouchableWithoutFeedback, View } from "react-native";
+import { View } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 
 import type { DefaultStyle } from "react-native-reanimated/lib/typescript/hook/commonTypes";
@@ -72,12 +72,9 @@ export const Custom = <T extends {}>(props: ShapeProps<T>) => {
     >
       {data.map((item, index) => {
         return (
-          <TouchableWithoutFeedback
-            key={index}
-            onPress={() => onPress?.(index)}
-          >
             <PaginationItem
-              index={index}
+            key={index}
+            index={index}
               size={size}
               count={data.length}
               dotStyle={dotStyle}
@@ -85,10 +82,10 @@ export const Custom = <T extends {}>(props: ShapeProps<T>) => {
               horizontal={!horizontal}
               activeDotStyle={activeDotStyle}
               customReanimatedStyle={customReanimatedStyle}
-            >
+              onPress={() => onPress?.(index)}
+              >
               {renderItem?.(item, index)}
             </PaginationItem>
-          </TouchableWithoutFeedback>
         );
       })}
     </View>
