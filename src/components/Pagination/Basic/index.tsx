@@ -1,7 +1,6 @@
 import React from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import { View } from "react-native";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import type { SharedValue } from "react-native-reanimated";
 
 import type { DotStyle } from "./PaginationItem";
@@ -58,22 +57,19 @@ export const Basic = <T extends {}>(props: BasicProps<T>) => {
     >
       {data.map((item, index) => {
         return (
-          <TouchableWithoutFeedback
+          <PaginationItem
             key={index}
+            index={index}
+            size={size}
+            count={data.length}
+            dotStyle={dotStyle}
+            animValue={progress}
+            horizontal={!horizontal}
+            activeDotStyle={activeDotStyle}
             onPress={() => onPress?.(index)}
           >
-            <PaginationItem
-              index={index}
-              size={size}
-              count={data.length}
-              dotStyle={dotStyle}
-              animValue={progress}
-              horizontal={!horizontal}
-              activeDotStyle={activeDotStyle}
-            >
-              {renderItem?.(item, index)}
-            </PaginationItem>
-          </TouchableWithoutFeedback>
+            {renderItem?.(item, index)}
+          </PaginationItem>
         );
       })}
     </View>

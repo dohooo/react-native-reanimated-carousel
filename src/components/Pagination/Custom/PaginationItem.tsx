@@ -134,20 +134,20 @@ export const PaginationItem: React.FC<
 
   return (
     <TouchableWithoutFeedback onPress={onPress}>
-    <Animated.View
-      style={[
-        {
-          overflow: "hidden",
-          transform: [
-            {
-              rotateZ: horizontal ? "90deg" : "0deg",
-            },
-          ],
-        },
-        dotStyle,
-        animStyle,
-      ]}
-    >
+      <Animated.View
+        style={[
+          {
+            overflow: "hidden",
+            transform: [
+              {
+                rotateZ: horizontal ? "90deg" : "0deg",
+              },
+            ],
+          },
+          dotStyle,
+          animStyle,
+        ]}
+      >
         {children}
       </Animated.View>
     </TouchableWithoutFeedback>
