@@ -1,7 +1,6 @@
 import React from "react";
 import type { StyleProp, ViewStyle } from "react-native";
-import { View } from "react-native";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { TouchableWithoutFeedback, View } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 
 import type { DefaultStyle } from "react-native-reanimated/lib/typescript/hook/commonTypes";
