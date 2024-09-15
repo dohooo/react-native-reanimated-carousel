@@ -84,31 +84,31 @@ PropsWithChildren<{
     <TouchableWithoutFeedback onPress={onPress}>
       <View
         style={[
-        {
-          width,
-          height,
-          overflow: "hidden",
-          transform: [
-            {
-              rotateZ: horizontal ? "90deg" : "0deg",
-            },
-          ],
-        },
-        dotStyle,
-      ]}
-    >
-      <Animated.View
-        style={[
           {
-            backgroundColor: "black",
-            flex: 1,
+            width,
+            height,
+            overflow: "hidden",
+            transform: [
+              {
+                rotateZ: horizontal ? "90deg" : "0deg",
+              },
+            ],
           },
-          animStyle,
-          activeDotStyle,
-        ]}
+          dotStyle,
+      ]}
       >
-        {children}
-          </Animated.View>
+        <Animated.View
+          style={[
+            {
+              backgroundColor: "black",
+              flex: 1,
+            },
+            animStyle,
+            activeDotStyle,
+          ]}
+        >
+          {children}
+        </Animated.View>
       </View>
     </TouchableWithoutFeedback>
   );

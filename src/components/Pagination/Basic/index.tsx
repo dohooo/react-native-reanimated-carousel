@@ -57,20 +57,20 @@ export const Basic = <T extends {}>(props: BasicProps<T>) => {
     >
       {data.map((item, index) => {
         return (
-            <PaginationItem
+          <PaginationItem
             key={index}
-              index={index}
-              size={size}
-              count={data.length}
-              dotStyle={dotStyle}
-              animValue={progress}
-              horizontal={!horizontal}
-              activeDotStyle={activeDotStyle}
-              onPress={() => onPress?.(index)}
-              >
-              {renderItem?.(item, index)}
-            </PaginationItem>
-        );
+            index={index}
+            size={size}
+            count={data.length}
+            dotStyle={dotStyle}
+            animValue={progress}
+            horizontal={!horizontal}
+            activeDotStyle={activeDotStyle}
+            onPress={() => onPress?.(index)}
+          >
+            {renderItem?.(item, index)}
+          </PaginationItem>
+      );
       })}
     </View>
   );

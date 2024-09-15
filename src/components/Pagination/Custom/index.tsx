@@ -72,20 +72,20 @@ export const Custom = <T extends {}>(props: ShapeProps<T>) => {
     >
       {data.map((item, index) => {
         return (
-            <PaginationItem
+          <PaginationItem
             key={index}
             index={index}
-              size={size}
-              count={data.length}
-              dotStyle={dotStyle}
-              animValue={progress}
-              horizontal={!horizontal}
-              activeDotStyle={activeDotStyle}
-              customReanimatedStyle={customReanimatedStyle}
-              onPress={() => onPress?.(index)}
-              >
-              {renderItem?.(item, index)}
-            </PaginationItem>
+            size={size}
+            count={data.length}
+            dotStyle={dotStyle}
+            animValue={progress}
+            horizontal={!horizontal}
+            activeDotStyle={activeDotStyle}
+            customReanimatedStyle={customReanimatedStyle}
+            onPress={() => onPress?.(index)}
+          >
+            {renderItem?.(item, index)}
+          </PaginationItem>
         );
       })}
     </View>
