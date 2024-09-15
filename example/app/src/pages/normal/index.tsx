@@ -49,6 +49,7 @@ function Index() {
         data={data}
         onScrollStart={()=>{console.log('===1')}}
         onScrollEnd={()=>{console.log('===2')}}
+        onEndWithSpring={(index: number)=>{console.log(`onEndWithSpring ${index}`)}}
 
         onConfigurePanGesture={g => g.enabled(false)}
         pagingEnabled={isPagingEnabled}

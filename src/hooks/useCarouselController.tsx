@@ -29,6 +29,7 @@ interface IOpts {
   defaultIndex?: number
   onScrollStart?: () => void
   onScrollEnd?: () => void
+  onEndWithSpring?: (index: number) => void
 }
 
 export interface ICarouselController {
@@ -142,6 +143,10 @@ export function useCarouselController(options: IOpts): ICarouselController {
     options.onScrollStart?.();
   }, [options]);
 
+  const onEndWithSpring = React.useCallback((index: number) => {
+    options.onEndWithSpring?.(index);
+  }, [options]);
+
   const scrollWithTiming = React.useCallback(
     (toValue: number, onFinished?: () => void) => {
       "worklet";
@@ -173,9 +178,11 @@ export function useCarouselController(options: IOpts): ICarouselController {
       if (!canSliding() || (!loop && index.value >= dataInfo.length - 1))
         return;
 
-      onScrollStart?.();
-
       const nextPage = currentFixedPage() + count;
+
+      onScrollStart?.();
+      onEndWithSpring?.(nextPage);
+
       index.value = nextPage;
 
       if (animated) {
@@ -195,6 +202,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
       index,
       dataInfo,
       onScrollStart,
+      onEndWithSpring,
       handlerOffset,
       size,
       scrollWithTiming,
@@ -207,9 +215,11 @@ export function useCarouselController(options: IOpts): ICarouselController {
       const { count = 1, animated = true, onFinished } = opts;
       if (!canSliding() || (!loop && index.value <= 0)) return;
 
-      onScrollStart?.();
-
       const prevPage = currentFixedPage() - count;
+
+      onScrollStart?.();
+      onEndWithSpring?.(prevPage);
+
       index.value = prevPage;
 
       if (animated) {
@@ -228,6 +238,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
       loop,
       index,
       onScrollStart,
+      onEndWithSpring,
       handlerOffset,
       size,
       scrollWithTiming,
