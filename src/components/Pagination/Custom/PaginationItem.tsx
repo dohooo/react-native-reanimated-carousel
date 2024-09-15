@@ -1,5 +1,6 @@
 import type { PropsWithChildren } from "react";
 import React from "react";
+import { TouchableWithoutFeedback } from "react-native";
 import type { ViewStyle } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 import Animated, {
@@ -33,6 +34,7 @@ export const PaginationItem: React.FC<
     horizontal?: boolean;
     dotStyle?: DotStyle;
     activeDotStyle?: DotStyle;
+    onPress: () => void;
     customReanimatedStyle?: (
       progress: number,
       index: number,
@@ -51,6 +53,7 @@ export const PaginationItem: React.FC<
     horizontal,
     children,
     customReanimatedStyle,
+    onPress,
   } = props;
   const customReanimatedStyleRef = useSharedValue<DefaultStyle>({});
   const handleCustomAnimation = (progress: number) => {
@@ -126,21 +129,23 @@ export const PaginationItem: React.FC<
   ]);
 
   return (
-    <Animated.View
-      style={[
-        {
-          overflow: "hidden",
-          transform: [
-            {
-              rotateZ: horizontal ? "90deg" : "0deg",
-            },
-          ],
-        },
-        dotStyle,
-        animStyle,
-      ]}
-    >
-      {children}
-    </Animated.View>
+    <TouchableWithoutFeedback onPress={onPress}>
+      <Animated.View
+        style={[
+          {
+            overflow: "hidden",
+            transform: [
+              {
+                rotateZ: horizontal ? "90deg" : "0deg",
+              },
+            ],
+          },
+          dotStyle,
+          animStyle,
+        ]}
+      >
+        {children}
+      </Animated.View>
+    </TouchableWithoutFeedback>
   );
 };
