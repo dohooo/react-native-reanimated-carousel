@@ -1,5 +1,12 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-canary.15
+
+### Patch Changes
+
+- [#677](https://github.com/dohooo/react-native-reanimated-carousel/pull/677) [`00c948b`](https://github.com/dohooo/react-native-reanimated-carousel/commit/00c948bca03ab1aeeaff97e5f077b1b4cd61e2e4) Thanks [@nmassey](https://github.com/nmassey)! - fix Pagination.Basic and Pagination.Custom usage of TouchableWithoutFeedback.
+  This fixes press event handler not working correctly. (Thanks to @qwertychouskie for reporting!)
+
 ## 4.0.0-canary.14
 
 ### Patch Changes
