@@ -1,17 +1,16 @@
-import React from "react";
+import React from 'react';
+import { runOnJS, useAnimatedReaction } from 'react-native-reanimated';
+
+import { useVisibleRanges } from '../hooks/useVisibleRanges';
+import { computedRealIndexWithAutoFillData } from '../utils/computed-with-auto-fill-data';
+import { BaseLayout } from './BaseLayout';
+
 import type { FC } from "react";
 import type { ViewStyle } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
-import { useAnimatedReaction, runOnJS } from "react-native-reanimated";
-
-import type { TAnimationStyle } from "./BaseLayout";
-import { BaseLayout } from "./BaseLayout";
-
 import type { VisibleRanges } from "../hooks/useVisibleRanges";
-import { useVisibleRanges } from "../hooks/useVisibleRanges";
 import type { CarouselRenderItem } from "../types";
-import { computedRealIndexWithAutoFillData } from "../utils/computed-with-auto-fill-data";
-
+import type { TAnimationStyle } from "./BaseLayout";
 interface Props {
   data: any[];
   dataLength: number;
@@ -25,6 +24,7 @@ interface Props {
   layoutConfig: TAnimationStyle;
   renderItem: CarouselRenderItem<any>;
   customAnimation?: (value: number) => ViewStyle;
+  itemContainerStyle?: ViewStyle
 }
 
 export const ItemRenderer: FC<Props> = (props) => {
@@ -41,6 +41,7 @@ export const ItemRenderer: FC<Props> = (props) => {
     layoutConfig,
     renderItem,
     customAnimation,
+    itemContainerStyle
   } = props;
 
   const visibleRanges = useVisibleRanges({
@@ -88,6 +89,7 @@ export const ItemRenderer: FC<Props> = (props) => {
             handlerOffset={offsetX}
             visibleRanges={visibleRanges}
             animationStyle={customAnimation || layoutConfig}
+            itemContainerStyle={itemContainerStyle}
           >
             {({ animationValue }) =>
               renderItem({

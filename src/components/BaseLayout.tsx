@@ -1,17 +1,14 @@
-import React from "react";
+import React from 'react';
+import Animated, { useAnimatedStyle, useDerivedValue } from 'react-native-reanimated';
+
+import { useOffsetX } from '../hooks/useOffsetX';
+import { CTX } from '../store';
+
 import type { ViewStyle } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
-import Animated, {
-  useAnimatedStyle,
-  useDerivedValue,
-} from "react-native-reanimated";
-
 import type { IOpts } from "../hooks/useOffsetX";
-import { useOffsetX } from "../hooks/useOffsetX";
 import type { IVisibleRanges } from "../hooks/useVisibleRanges";
 import type { ILayoutConfig } from "../layouts/stack";
-import { CTX } from "../store";
-
 export type TAnimationStyle = (value: number) => ViewStyle;
 
 export const BaseLayout: React.FC<{
@@ -19,11 +16,12 @@ export const BaseLayout: React.FC<{
   handlerOffset: SharedValue<number>;
   visibleRanges: IVisibleRanges;
   animationStyle: TAnimationStyle;
+  itemContainerStyle?: ViewStyle
   children: (ctx: {
     animationValue: Animated.SharedValue<number>;
   }) => React.ReactElement;
 }> = (props) => {
-  const { handlerOffset, index, children, visibleRanges, animationStyle } =
+  const { handlerOffset, index, children, visibleRanges, animationStyle, itemContainerStyle } =
     props;
 
   const context = React.useContext(CTX);
@@ -80,6 +78,7 @@ export const BaseLayout: React.FC<{
           position: "absolute",
         },
         animatedStyle,
+        itemContainerStyle,
       ]}
       /**
        * We use this testID to know when the carousel item is ready to be tested in test.

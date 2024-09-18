@@ -1,11 +1,11 @@
 import type { StyleProp, ViewStyle } from "react-native";
 import type { PanGesture } from "react-native-gesture-handler";
+import type Animated from "react-native-reanimated";
 import type {
   SharedValue,
   WithSpringConfig,
   WithTimingConfig,
 } from "react-native-reanimated";
-import type Animated from "react-native-reanimated";
 
 import type { TParallaxModeProps } from "./layouts/parallax";
 import type { TStackModeProps } from "./layouts/stack";
@@ -209,6 +209,7 @@ export type TCarouselProps<T = any> = {
       * @deprecated please use snapEnabled instead
       */
   enableSnap?: boolean
+  itemContainerStyle?: ViewStyle
 } & (TParallaxModeProps | TStackModeProps);
 
 export interface ICarouselInstance {

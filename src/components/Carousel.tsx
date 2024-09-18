@@ -1,22 +1,21 @@
-import React from "react";
-import { StyleSheet } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { runOnJS, useDerivedValue } from "react-native-reanimated";
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { runOnJS, useDerivedValue } from 'react-native-reanimated';
 
-import { ItemRenderer } from "./ItemRenderer";
-import { ScrollViewGesture } from "./ScrollViewGesture";
+import { useAutoPlay } from '../hooks/useAutoPlay';
+import { useCarouselController } from '../hooks/useCarouselController';
+import { useCommonVariables } from '../hooks/useCommonVariables';
+import { useInitProps } from '../hooks/useInitProps';
+import { useLayoutConfig } from '../hooks/useLayoutConfig';
+import { useOnProgressChange } from '../hooks/useOnProgressChange';
+import { usePropsErrorBoundary } from '../hooks/usePropsErrorBoundary';
+import { CTX } from '../store';
+import { computedRealIndexWithAutoFillData } from '../utils/computed-with-auto-fill-data';
+import { ItemRenderer } from './ItemRenderer';
+import { ScrollViewGesture } from './ScrollViewGesture';
 
-import { useAutoPlay } from "../hooks/useAutoPlay";
-import { useCarouselController } from "../hooks/useCarouselController";
-import { useCommonVariables } from "../hooks/useCommonVariables";
-import { useInitProps } from "../hooks/useInitProps";
-import { useLayoutConfig } from "../hooks/useLayoutConfig";
-import { useOnProgressChange } from "../hooks/useOnProgressChange";
-import { usePropsErrorBoundary } from "../hooks/usePropsErrorBoundary";
-import { CTX } from "../store";
 import type { ICarouselInstance, TCarouselProps } from "../types";
-import { computedRealIndexWithAutoFillData } from "../utils/computed-with-auto-fill-data";
-
 const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
   (_props, ref) => {
     const props = useInitProps(_props);
@@ -50,6 +49,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       onProgressChange,
       customAnimation,
       defaultIndex,
+      itemContainerStyle
     } = props;
 
     const commonVariables = useCommonVariables(props);
@@ -187,6 +187,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
               layoutConfig={layoutConfig}
               renderItem={renderItem}
               customAnimation={customAnimation}
+              itemContainerStyle={itemContainerStyle}
             />
           </ScrollViewGesture>
         </CTX.Provider>
