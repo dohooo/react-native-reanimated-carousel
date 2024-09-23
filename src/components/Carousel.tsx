@@ -197,7 +197,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
 
 export default Carousel as <T extends any>(
   props: React.PropsWithChildren<TCarouselProps<T>>,
-) => React.ReactElement;
+) => JSX.Element;
 
 const styles = StyleSheet.create({
   container: {

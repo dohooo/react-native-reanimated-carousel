@@ -3,7 +3,7 @@
   "compilerOptions": {
     "paths": {
       "react-native-reanimated-carousel": ["../../src/index"],
-      "react-native-reanimated-carousel-example-app": ["../app/src/index"]
+      "react-native-reanimated-carousel-example-demo": ["../demo/src/index"]
     },
     "strict": true
   }

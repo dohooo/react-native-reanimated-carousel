@@ -8,9 +8,9 @@ const rootPak = JSON.parse(
   fs.readFileSync(path.join(root, 'package.json'), 'utf8')
 );
 
-const app = path.join(__dirname, '../app');
-const appPak = JSON.parse(
-  fs.readFileSync(path.join(app, 'package.json'), 'utf8')
+const demo = path.join(__dirname, '../demo');
+const demoPak = JSON.parse(
+  fs.readFileSync(path.join(demo, 'package.json'), 'utf8')
 );
 
 const modules = [
@@ -19,8 +19,8 @@ const modules = [
   ...Object.keys({
     ...rootPak.dependencies,
     ...rootPak.peerDependencies,
-    ...appPak.devDependencies,
-    ...appPak.peerDependencies,
+    ...demoPak.devDependencies,
+    ...demoPak.peerDependencies,
   }),
 ];
 
@@ -33,7 +33,7 @@ module.exports = {
   resolver: {
     blacklistRE: exclusionList([
       new RegExp(`^${escape(path.join(root, 'node_modules'))}\\/.*$`),
-      new RegExp(`^${escape(path.join(app, 'node_modules'))}\\/.*$`),
+      new RegExp(`^${escape(path.join(demo, 'node_modules'))}\\/.*$`),
     ]),
 
     extraNodeModules: modules.reduce((acc, name) => {

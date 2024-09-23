@@ -6,9 +6,9 @@ const rootPak = JSON.parse(
   fs.readFileSync(path.join(root, 'package.json'), 'utf8')
 );
 
-const app = path.join(__dirname, '../app');
-const appPak = JSON.parse(
-  fs.readFileSync(path.join(app, 'package.json'), 'utf8')
+const demo = path.join(__dirname, '../demo');
+const demoPak = JSON.parse(
+  fs.readFileSync(path.join(demo, 'package.json'), 'utf8')
 );
 
 module.exports = function (api) {
@@ -24,7 +24,7 @@ module.exports = function (api) {
           alias: {
             // For development, we want to alias the library to the source
             [rootPak.name]: path.join(root, rootPak['react-native']),
-            [appPak.name]: path.join(app, appPak['react-native']),
+            [demoPak.name]: path.join(demo, demoPak['react-native']),
           },
         },
       ],
