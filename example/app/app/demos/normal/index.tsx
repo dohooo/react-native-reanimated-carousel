@@ -1,14 +1,21 @@
 import * as React from "react";
 import { useWindowDimensions } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
 import { useSharedValue } from "react-native-reanimated";
-import type { ICarouselInstance } from "react-native-reanimated-carousel";
+import type {
+  ICarouselInstance,
+  TCarouselProps,
+} from "react-native-reanimated-carousel";
 import Carousel from "react-native-reanimated-carousel";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { SBItem } from "@/components/SBItem";
-import SButton from "@/components/SButton";
-import { ElementsText, window } from "@/constants/Sizes";
+import { CarouselSettings } from "@/components/CarouselSettings";
+import { window } from "@/constants/Sizes";
+import { renderItem } from "@/utils/render-item";
+import {
+  CustomButtonActionItem,
+  CustomSelectActionItem,
+} from "@/components/ActionItems";
+import { ScrollView, YStack } from "tamagui";
 
 const PAGE_WIDTH = window.width;
 
@@ -16,13 +23,11 @@ function Index() {
   const windowWidth = useWindowDimensions().width;
   const scrollOffsetValue = useSharedValue<number>(0);
   const [data, setData] = React.useState([...new Array(4).keys()]);
-  const [isVertical, setIsVertical] = React.useState(false);
-  const [isFast, setIsFast] = React.useState(false);
-  const [isAutoPlay, setIsAutoPlay] = React.useState(false);
-  const [isPagingEnabled, setIsPagingEnabled] = React.useState(true);
+  const [carouselSettings, setCarouselSettings] =
+    React.useState<Partial<TCarouselProps>>();
   const ref = React.useRef<ICarouselInstance>(null);
 
-  const baseOptions = isVertical
+  const baseOptions = carouselSettings?.vertical
     ? ({
         vertical: true,
         width: windowWidth,
@@ -44,8 +49,8 @@ function Index() {
         defaultScrollOffsetValue={scrollOffsetValue}
         testID={"xxx"}
         style={{ width: "100%" }}
-        autoPlay={isAutoPlay}
-        autoPlayInterval={isFast ? 100 : 2000}
+        autoPlay={carouselSettings?.autoPlay}
+        autoPlayInterval={carouselSettings?.autoPlayInterval}
         data={data}
         onScrollStart={() => {
           console.log("===1");
@@ -57,87 +62,50 @@ function Index() {
           "worklet";
           g.enabled(false);
         }}
-        pagingEnabled={isPagingEnabled}
+        pagingEnabled={carouselSettings?.pagingEnabled}
         onSnapToItem={(index: number) => console.log("current index:", index)}
-        renderItem={({ index }: { index: number }) => (
-          <SBItem key={index} index={index} />
-        )}
+        renderItem={renderItem()}
       />
-      <ScrollView style={{ flex: 1 }}>
-        <SButton
-          onPress={() => {
-            setData([...new Array(5).keys()]);
-          }}
-        >
-          {"Change the data length to 5"}
-        </SButton>
-        <SButton
-          onPress={() => {
-            setData([...new Array(3).keys()]);
-          }}
-        >
-          {"Change the data length to 3"}
-        </SButton>
-        <SButton
-          onPress={() => {
-            setIsVertical(!isVertical);
-          }}
-        >
-          {isVertical ? "Set horizontal" : "Set Vertical"}
-        </SButton>
-        <SButton
-          onPress={() => {
-            setIsFast(!isFast);
-          }}
-        >
-          {isFast ? "NORMAL" : "FAST"}
-        </SButton>
-        <SButton
-          onPress={() => {
-            setIsPagingEnabled(!isPagingEnabled);
-          }}
-        >
-          PagingEnabled:{isPagingEnabled.toString()}
-        </SButton>
-        <SButton
-          onPress={() => {
-            setIsAutoPlay(!isAutoPlay);
-          }}
-        >
-          {ElementsText.AUTOPLAY}:{`${isAutoPlay}`}
-        </SButton>
-        <SButton
-          onPress={() => {
-            console.log(ref.current?.getCurrentIndex());
-          }}
-        >
-          Log current index
-        </SButton>
-        <SButton
-          onPress={() => {
-            setData(
-              data.length === 6
-                ? [...new Array(8).keys()]
-                : [...new Array(6).keys()],
-            );
-          }}
-        >
-          Change data length to:{data.length === 6 ? 8 : 6}
-        </SButton>
-        <SButton
-          onPress={() => {
-            ref.current?.scrollTo({ count: -1, animated: true });
-          }}
-        >
-          prev
-        </SButton>
-        <SButton
-          onPress={() => {
-            ref.current?.scrollTo({ count: 1, animated: true });
-          }}
-        >
-          next
-        </SButton>
+
+      <ScrollView paddingHorizontal={"$2"} flex={1}>
+        <YStack gap={"$2"}>
+          <CarouselSettings
+            defaultSettings={carouselSettings}
+            onSettingChange={(settings) => {
+              setCarouselSettings(settings);
+            }}
+          />
+          <CustomSelectActionItem
+            label="Change data length"
+            value={data.length.toString()}
+            onValueChange={(value) => {
+              const num = Number(value);
+              if (isNaN(num)) return;
+              setData([...new Array(num).keys()]);
+            }}
+            options={[
+              { label: "3", value: "3" },
+              { label: "4", value: "4" },
+              { label: "5", value: "5" },
+              { label: "6", value: "6" },
+              { label: "7", value: "7" },
+              { label: "8", value: "8" },
+            ]}
+          />
+
+          <CustomButtonActionItem
+            label="Log current index"
+            action={() => console.log(ref.current?.getCurrentIndex())}
+          />
+          <CustomButtonActionItem
+            label="Swipe to prev"
+            action={() => ref.current?.scrollTo({ count: -1, animated: true })}
+          />
+          <CustomButtonActionItem
+            label="Swipe to next"
+            action={() => ref.current?.scrollTo({ count: 1, animated: true })}
+          />
+        </YStack>
       </ScrollView>
     </SafeAreaView>
   );

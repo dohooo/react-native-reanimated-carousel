@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import {
   useSharedValue,
   interpolate,
@@ -13,6 +13,7 @@ import Carousel, {
 import { SBItem } from "@/components/SBItem";
 import SButton from "@/components/SButton";
 import { ElementsText, window } from "@/constants/Sizes";
+import { renderItem } from "@/utils/render-item";
 
 const PAGE_WIDTH = window.width;
 const colors = [
@@ -58,7 +59,7 @@ function Index() {
   return (
     <View
       style={{
-        alignItems: "center",
+        flex: 1,
       }}
     >
       <Carousel
@@ -66,6 +67,8 @@ function Index() {
         {...baseOptions}
         style={{
           width: PAGE_WIDTH,
+          borderWidth: 1,
+          borderColor: "red",
         }}
         loop
         pagingEnabled={pagingEnabled}
@@ -79,9 +82,8 @@ function Index() {
           parallaxScrollingOffset: 50,
         }}
         data={colors}
-        renderItem={({ index }) => <SBItem index={index} />}
+        renderItem={renderItem({ rounded: true })}
       />
-
       <Pagination.Basic
         progress={progress}
         data={colors}

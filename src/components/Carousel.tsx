@@ -1,4 +1,5 @@
 import React from "react";
+import type { StyleProp, ViewStyle } from "react-native";
 import { StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { runOnJS, useDerivedValue } from "react-native-reanimated";
@@ -152,8 +153,13 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
 
     const layoutConfig = useLayoutConfig({ ...props, size });
 
+    const layoutStyle: StyleProp<ViewStyle> = {
+      width: width || "100%",
+      height: height || "100%",
+    };
+
     return (
-      <GestureHandlerRootView>
+      <GestureHandlerRootView style={layoutStyle}>
         <CTX.Provider value={{ props, common: commonVariables }}>
           <ScrollViewGesture
             key={mode}
@@ -161,10 +167,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
             translation={handlerOffset}
             style={[
               styles.container,
-              {
-                width: width || "100%",
-                height: height || "100%",
-              },
+              layoutStyle,
               style,
               vertical ? styles.itemsVertical : styles.itemsHorizontal,
             ]}
