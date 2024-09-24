@@ -12,7 +12,7 @@ import Animated, {
   useDerivedValue,
 } from "react-native-reanimated";
 
-import type { DefaultStyle } from "react-native-reanimated/lib/typescript/hook/commonTypes";
+import type { DefaultStyle } from "react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes";
 
 export type DotStyle = Omit<
   ViewStyle,
@@ -62,7 +62,7 @@ export const PaginationItem: React.FC<
     runOnJS(handleCustomAnimation)(animValue?.value);
   });
 
-  const animStyle = useAnimatedStyle(() => {
+  const animStyle = useAnimatedStyle((): DefaultStyle => {
     const {
       width = size || defaultDotSize,
       height = size || defaultDotSize,
@@ -100,7 +100,11 @@ export const PaginationItem: React.FC<
       borderRadius: interpolate(
         val,
         inputRange,
-        [activeBorderRadius ?? borderRadius ?? 0, borderRadius ?? 0, borderRadius ?? 0],
+        [
+          activeBorderRadius ?? borderRadius ?? 0,
+          borderRadius ?? 0,
+          borderRadius ?? 0,
+        ],
         Extrapolation.CLAMP,
       ),
       backgroundColor: interpolateColor(val, inputRange, [
@@ -113,7 +117,7 @@ export const PaginationItem: React.FC<
       transform: [
         ...(restStyle?.transform ?? []),
         ...(customReanimatedStyleRef.value?.transform ?? []),
-      ],
+      ] as DefaultStyle["transform"],
     };
   }, [
     animValue,

@@ -1,10 +1,22 @@
 import React from "react";
 import { Text } from "react-native";
-import type { PanGesture, PanGestureHandler, TapGesture } from "react-native-gesture-handler";
-import { Gesture, GestureDetector, GestureHandlerRootView, State } from "react-native-gesture-handler";
+import type {
+  PanGesture,
+  PanGestureHandler,
+  TapGesture,
+} from "react-native-gesture-handler";
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+  State,
+} from "react-native-gesture-handler";
 
 import { cleanup, render } from "@testing-library/react-native";
-import { fireGestureHandler, getByGestureTestId } from "react-native-gesture-handler/jest-utils";
+import {
+  fireGestureHandler,
+  getByGestureTestId,
+} from "react-native-gesture-handler/jest-utils";
 
 import { usePanGestureProxy } from "./usePanGestureProxy";
 
@@ -36,12 +48,16 @@ const mockedEventHandlersFromUser = () => {
 
 describe("Using RNGH v2 gesture API", () => {
   interface SingleHandlerProps {
-    handlers: ReturnType<typeof mockedEventHandlers>
-    handlersFromUser: ReturnType<typeof mockedEventHandlers>
-    treatStartAsUpdate?: boolean
+    handlers: ReturnType<typeof mockedEventHandlers>;
+    handlersFromUser: ReturnType<typeof mockedEventHandlers>;
+    treatStartAsUpdate?: boolean;
   }
 
-  function SingleHandler({ handlers, handlersFromUser, treatStartAsUpdate }: SingleHandlerProps) {
+  function SingleHandler({
+    handlers,
+    handlersFromUser,
+    treatStartAsUpdate,
+  }: SingleHandlerProps) {
     const pan = usePanGestureProxy({
       onConfigurePanGesture: (gesture: PanGesture) => {
         // This is user's customizations
@@ -68,8 +84,8 @@ describe("Using RNGH v2 gesture API", () => {
   }
 
   interface RacingHandlersProps {
-    tapHandlers: ReturnType<typeof mockedEventHandlers>
-    panHandlers: ReturnType<typeof mockedEventHandlers>
+    tapHandlers: ReturnType<typeof mockedEventHandlers>;
+    panHandlers: ReturnType<typeof mockedEventHandlers>;
   }
 
   function RacingHandlers({ tapHandlers, panHandlers }: RacingHandlersProps) {
@@ -80,8 +96,7 @@ describe("Using RNGH v2 gesture API", () => {
 
     const pan = usePanGestureProxy({
       onConfigurePanGesture: (_: PanGesture) => {
-        _
-          .onBegin(panHandlers.begin)
+        _.onBegin(panHandlers.begin)
           .onFinalize(panHandlers.finish)
           .withTestId("pan");
       },
@@ -122,7 +137,13 @@ describe("Using RNGH v2 gesture API", () => {
   it("sends events with additional data to handlers", () => {
     const panHandlers = mockedEventHandlers();
     const panHandlersFromUser = mockedEventHandlersFromUser();
-    render(<SingleHandler handlers={panHandlers} handlersFromUser={panHandlersFromUser} treatStartAsUpdate />);
+    render(
+      <SingleHandler
+        handlers={panHandlers}
+        handlersFromUser={panHandlersFromUser}
+        treatStartAsUpdate
+      />,
+    );
     fireGestureHandler<PanGesture>(getByGestureTestId("pan"), [
       { state: State.BEGAN, translationX: 0 },
       { state: State.ACTIVE, translationX: 10 },
@@ -154,7 +175,13 @@ describe("Using RNGH v2 gesture API", () => {
 
     jest.spyOn(console, "error");
 
-    render(<SingleHandler handlers={panHandlers} handlersFromUser={panHandlersFromUser} treatStartAsUpdate />);
+    render(
+      <SingleHandler
+        handlers={panHandlers}
+        handlersFromUser={panHandlersFromUser}
+        treatStartAsUpdate
+      />,
+    );
     fireGestureHandler<PanGesture>(getByGestureTestId("pan"), [
       { state: State.BEGAN },
       { state: State.ACTIVE },
@@ -167,16 +194,19 @@ describe("Using RNGH v2 gesture API", () => {
 
 describe("Event list validation", () => {
   interface SingleHandlerProps {
-    handlers: ReturnType<typeof mockedEventHandlers>
-    handlersFromUser: ReturnType<typeof mockedEventHandlers>
-    treatStartAsUpdate?: boolean
+    handlers: ReturnType<typeof mockedEventHandlers>;
+    handlersFromUser: ReturnType<typeof mockedEventHandlers>;
+    treatStartAsUpdate?: boolean;
   }
 
-  function SingleHandler({ handlers, handlersFromUser, treatStartAsUpdate }: SingleHandlerProps) {
+  function SingleHandler({
+    handlers,
+    handlersFromUser,
+    treatStartAsUpdate,
+  }: SingleHandlerProps) {
     const pan = usePanGestureProxy({
       onConfigurePanGesture: (_: PanGesture) => {
-        _
-          .onBegin(handlersFromUser.begin)
+        _.onBegin(handlersFromUser.begin)
           .onUpdate(handlersFromUser.active)
           .onEnd(handlersFromUser.end)
           .onFinalize(handlers.finish)
@@ -200,7 +230,12 @@ describe("Event list validation", () => {
   it("throws error when oldState doesn't correspond to previous event's state", () => {
     const panHandlers = mockedEventHandlers();
     const panHandlersFromUser = mockedEventHandlersFromUser();
-    render(<SingleHandler handlers={panHandlers} handlersFromUser={panHandlersFromUser} />);
+    render(
+      <SingleHandler
+        handlers={panHandlers}
+        handlersFromUser={panHandlersFromUser}
+      />,
+    );
 
     expect(() => {
       fireGestureHandler<PanGesture>(getByGestureTestId("pan"), [
@@ -217,7 +252,12 @@ describe("Event list validation", () => {
     (lastState) => {
       const panHandlers = mockedEventHandlers();
       const panHandlersFromUser = mockedEventHandlersFromUser();
-      render(<SingleHandler handlers={panHandlers} handlersFromUser={panHandlersFromUser} />);
+      render(
+        <SingleHandler
+          handlers={panHandlers}
+          handlersFromUser={panHandlersFromUser}
+        />,
+      );
       fireGestureHandler<PanGesture>(getByGestureTestId("pan"), [
         { state: State.BEGAN },
         { state: State.ACTIVE },
@@ -228,19 +268,16 @@ describe("Event list validation", () => {
       expect(panHandlersFromUser.active).toBeCalledTimes(0);
       expect(panHandlersFromUser.end).toBeCalledTimes(1);
 
-      if (lastState === State.END)
-        expect(panHandlers.end).toBeCalled();
-
-      else
-        expect(panHandlers.finish).toBeCalledWith(expect.any(Object), false);
+      if (lastState === State.END) expect(panHandlers.end).toBeCalled();
+      else expect(panHandlers.finish).toBeCalledWith(expect.any(Object), false);
     },
   );
 });
 
 describe("Filling event list with defaults", () => {
   interface RacingTapAndPanProps {
-    handlers: ReturnType<typeof mockedEventHandlers>
-    treatStartAsUpdate?: boolean
+    handlers: ReturnType<typeof mockedEventHandlers>;
+    treatStartAsUpdate?: boolean;
   }
 
   function RacingTapAndPan({
@@ -254,10 +291,7 @@ describe("Filling event list with defaults", () => {
 
     const pan = usePanGestureProxy({
       onConfigurePanGesture: (_: PanGesture) => {
-        _
-          .onBegin(handlers.begin)
-          .onFinalize(handlers.finish)
-          .withTestId("pan");
+        _.onBegin(handlers.begin).onFinalize(handlers.finish).withTestId("pan");
       },
       onGestureStart: treatStartAsUpdate ? handlers.active : handlers.start,
       onGestureUpdate: handlers.active,
