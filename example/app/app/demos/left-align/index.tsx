@@ -2,97 +2,31 @@ import * as React from "react";
 import { View } from "react-native";
 import type { ICarouselInstance } from "react-native-reanimated-carousel";
 import Carousel from "react-native-reanimated-carousel";
-
-import { SBItem } from "@/components/SBItem";
-import SButton from "@/components/SButton";
-import { ElementsText, window } from "@/constants/Sizes";
-
-const PAGE_WIDTH = window.width;
+import { CarouselAdvancedSettingsPanel } from "@/components/CarouselAdvancedSettingsPanel";
+import { useAdvancedSettings } from "@/hooks/useSettings";
+import { renderItem } from "@/utils/render-item";
 
 function Index() {
-  const [data, setData] = React.useState([...new Array(6).keys()]);
-  const [isFast, setIsFast] = React.useState(false);
-  const [isAutoPlay, setIsAutoPlay] = React.useState(false);
-  const [isPagingEnabled, setIsPagingEnabled] = React.useState(true);
   const ref = React.useRef<ICarouselInstance>(null);
-
-  const baseOptions = {
-    vertical: false,
-    width: PAGE_WIDTH * 0.85,
-    height: PAGE_WIDTH / 2,
-  } as const;
+  const { constants, advancedSettings, onAdvancedSettingsChange } =
+    useAdvancedSettings();
 
   return (
     <View style={{ flex: 1 }}>
       <Carousel
-        {...baseOptions}
-        loop={false}
+        {...advancedSettings}
         ref={ref}
         style={{ width: "100%" }}
-        autoPlay={isAutoPlay}
-        autoPlayInterval={isFast ? 100 : 2000}
-        data={data}
-        pagingEnabled={isPagingEnabled}
+        width={constants.PAGE_WIDTH * 0.75}
         onSnapToItem={(index) => console.log("current index:", index)}
-        renderItem={({ index }) => (
-          <View style={{ flex: 1, marginLeft: "2.5%" }}>
-            <SBItem key={index} index={index} />
-          </View>
-        )}
+        renderItem={renderItem({ rounded: true, style: { marginRight: 8 } })}
       />
-      <SButton
-        onPress={() => {
-          setIsFast(!isFast);
-        }}
-      >
-        {isFast ? "NORMAL" : "FAST"}
-      </SButton>
-      <SButton
-        onPress={() => {
-          setIsPagingEnabled(!isPagingEnabled);
-        }}
-      >
-        PagingEnabled:{isPagingEnabled.toString()}
-      </SButton>
-      <SButton
-        onPress={() => {
-          setIsAutoPlay(!isAutoPlay);
-        }}
-      >
-        {ElementsText.AUTOPLAY}:{`${isAutoPlay}`}
-      </SButton>
-      <SButton
-        onPress={() => {
-          console.log(ref.current?.getCurrentIndex());
-        }}
-      >
-        Log current index
-      </SButton>
-      <SButton
-        onPress={() => {
-          setData(
-            data.length === 6
-              ? [...new Array(8).keys()]
-              : [...new Array(6).keys()],
-          );
-        }}
-      >
-        Change data length to:{data.length === 6 ? 8 : 6}
-      </SButton>
-      <SButton
-        onPress={() => {
-          ref.current?.scrollTo({ count: -1, animated: true });
-        }}
-      >
-        prev
-      </SButton>
-      <SButton
-        onPress={() => {
-          ref.current?.scrollTo({ count: 1, animated: true });
-        }}
-      >
-        next
-      </SButton>
+
+      <CarouselAdvancedSettingsPanel
+        carouselRef={ref}
+        advancedSettings={advancedSettings}
+        onAdvancedSettingsChange={onAdvancedSettingsChange}
+      />
     </View>
   );
 }

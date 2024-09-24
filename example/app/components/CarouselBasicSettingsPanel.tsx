@@ -1,23 +1,81 @@
 import * as React from "react";
-import { View, Text, Button } from "react-native";
 import { CustomSelectActionItem, CustomSwitchActionItem } from "./ActionItems";
+import { YStack } from "tamagui";
 import { TCarouselProps } from "react-native-reanimated-carousel";
-import { YStack, Label } from "tamagui";
+import { window } from "@/constants/Sizes";
 
-export function CarouselSettings({
-  defaultSettings = {
+const defaultDataWith6Colors = [
+  "#26292E",
+  "#899F9C",
+  "#B3C680",
+  "#5C6265",
+  "#F5D399",
+  "#F1F1F1",
+];
+
+export const getDefaultBasicSettings: () => BasicSettings = () => {
+  const settings = {
     vertical: false,
     pagingEnabled: true,
+    snapEnabled: true,
+    loop: true,
     autoPlay: false,
+    autoPlayReverse: false,
     autoPlayInterval: 2000,
-  },
+    data: defaultDataWith6Colors,
+  };
+  const PAGE_WIDTH = window.width;
+  const demission = settings.vertical
+    ? ({
+        vertical: true,
+        width: PAGE_WIDTH * 0.86,
+        height: PAGE_WIDTH * 0.6,
+      } as const)
+    : ({
+        vertical: false,
+        width: PAGE_WIDTH,
+        height: PAGE_WIDTH * 0.6,
+      } as const);
+
+  return {
+    ...settings,
+    ...demission,
+  };
+};
+
+export interface BasicSettings
+  extends Pick<
+    TCarouselProps,
+    | "data"
+    | "vertical"
+    | "pagingEnabled"
+    | "snapEnabled"
+    | "loop"
+    | "autoPlay"
+    | "autoPlayInterval"
+    | "autoPlayReverse"
+    | "width"
+    | "height"
+    | "enabled"
+  > {}
+
+// This component is used to display basic properties, which are related to the basic properties of the carousel
+export function CarouselBasicSettingsPanel({
+  defaultSettings,
   onSettingChange,
 }: {
-  defaultSettings?: Partial<TCarouselProps>;
-  onSettingChange: (settings: Partial<TCarouselProps>) => void;
+  defaultSettings?: Partial<BasicSettings>;
+  onSettingChange: (settings: Partial<BasicSettings>) => void;
 }) {
-  const [settings, setSettings] =
-    React.useState<Partial<TCarouselProps>>(defaultSettings);
+  const [updatedSettings, setSettings] = React.useState(defaultSettings);
+
+  const settings = React.useMemo(() => {
+    return {
+      ...getDefaultBasicSettings(),
+      ...defaultSettings,
+      ...updatedSettings,
+    };
+  }, [updatedSettings]);
 
   React.useEffect(() => {
     onSettingChange(settings);
@@ -26,14 +84,14 @@ export function CarouselSettings({
   const options: Array<
     | {
         label: string;
-        key: keyof Partial<TCarouselProps>;
+        key: keyof BasicSettings;
         type: "switch";
         value?: boolean;
         onValueChange: (value: boolean) => void;
       }
     | {
         label: string;
-        key: keyof Partial<TCarouselProps>;
+        key: keyof BasicSettings;
         type: "select";
         value?: string;
         placeholder?: string;
@@ -41,6 +99,14 @@ export function CarouselSettings({
         options: { label: string; value: string }[];
       }
   > = [
+    {
+      label: "Enabled",
+      key: "enabled",
+      type: "switch",
+      value: settings.enabled,
+      onValueChange: (value: boolean) =>
+        setSettings({ ...settings, enabled: value }),
+    },
     {
       label: "Set Vertical",
       key: "vertical",
@@ -58,12 +124,36 @@ export function CarouselSettings({
         setSettings({ ...settings, pagingEnabled: value }),
     },
     {
+      label: "Snap Enabled",
+      key: "snapEnabled",
+      type: "switch",
+      value: settings.snapEnabled,
+      onValueChange: (value: boolean) =>
+        setSettings({ ...settings, snapEnabled: value }),
+    },
+    {
+      label: "Loop",
+      key: "loop",
+      type: "switch",
+      value: settings.loop,
+      onValueChange: (value: boolean) =>
+        setSettings({ ...settings, loop: value }),
+    },
+    {
       label: "Auto Play",
       key: "autoPlay",
       type: "switch",
       value: settings.autoPlay,
       onValueChange: (value: boolean) =>
         setSettings({ ...settings, autoPlay: value }),
+    },
+    {
+      label: "Auto Play Reverse",
+      key: "autoPlayReverse",
+      type: "switch",
+      value: settings.autoPlayReverse,
+      onValueChange: (value: boolean) =>
+        setSettings({ ...settings, autoPlayReverse: value }),
     },
     {
       label: "Interval",

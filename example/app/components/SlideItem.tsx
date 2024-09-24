@@ -2,7 +2,6 @@ import React, { useMemo } from "react";
 import {
   type StyleProp,
   type ViewProps,
-  type ImageSourcePropType,
   type ImageStyle,
   StyleSheet,
   View,
@@ -10,8 +9,6 @@ import {
 } from "react-native";
 import type { AnimatedProps } from "react-native-reanimated";
 import Animated from "react-native-reanimated";
-
-import Constants from "expo-constants";
 
 import { Image } from "expo-image";
 
@@ -49,7 +46,6 @@ export const SlideItem: React.FC<Props> = (props) => {
     testID,
     ...animatedViewProps
   } = props;
-  const enablePretty = Constants?.expoConfig?.extra?.enablePretty || false;
 
   const source = useMemo(() => {
     if (imageType === "dark") return DARK_IMAGES[index % DARK_IMAGES.length];

@@ -16,8 +16,8 @@ export const LayoutsDemos = [
     title: "Left Align",
   },
   {
-    name: "right-align",
-    title: "Right Align",
+    name: "pagination",
+    title: "Pagination",
   },
 ] as const;
 
