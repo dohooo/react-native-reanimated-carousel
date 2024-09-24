@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import { StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -34,6 +34,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       rawDataLength,
       mode,
       style,
+      containerStyle,
       width,
       height,
       vertical,
@@ -153,20 +154,22 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
 
     const layoutConfig = useLayoutConfig({ ...props, size });
 
-    const layoutStyle: StyleProp<ViewStyle> = {
-      width: width || "100%",
-      height: height || "100%",
-    };
+    const layoutStyle: StyleProp<ViewStyle> = useMemo(() => {
+      return {
+        width: width || "100%",
+        height: height || "100%",
+      };
+    }, [width, height, size]);
 
     return (
-      <GestureHandlerRootView style={layoutStyle}>
+      <GestureHandlerRootView style={[styles.layoutContainer, containerStyle]}>
         <CTX.Provider value={{ props, common: commonVariables }}>
           <ScrollViewGesture
             key={mode}
             size={size}
             translation={handlerOffset}
             style={[
-              styles.container,
+              styles.contentContainer,
               layoutStyle,
               style,
               vertical ? styles.itemsVertical : styles.itemsHorizontal,
@@ -203,7 +206,10 @@ export default Carousel as <T extends any>(
 ) => JSX.Element;
 
 const styles = StyleSheet.create({
-  container: {
+  layoutContainer: {
+    display: "flex",
+  },
+  contentContainer: {
     overflow: "hidden",
   },
   itemsHorizontal: {
