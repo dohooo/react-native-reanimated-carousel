@@ -75,17 +75,14 @@ const Restart = () => {
 };
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
   const headerShown = !useWebContext()?.page;
   const [isRTL, setIsRTL] = useState(I18nManager.isRTL);
 
   return (
-    <TamaguiProvider config={tamaguiConfig} defaultTheme={colorScheme!}>
+    <TamaguiProvider config={tamaguiConfig} defaultTheme={"light"}>
       <View style={{ flex: 1 }}>
         <GestureHandlerRootView style={{ flex: 1 }}>
-          <ThemeProvider
-            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-          >
+          <ThemeProvider value={DefaultTheme}>
             <Stack
               initialRouteName="/"
               screenOptions={{

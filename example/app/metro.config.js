@@ -15,6 +15,7 @@ const rootPak = JSON.parse(
 const modules = [
   "@babel/runtime",
   "metro-runtime",
+  "react-native-web",
   ...Object.keys({
     ...rootPak.dependencies,
     ...rootPak.peerDependencies,
