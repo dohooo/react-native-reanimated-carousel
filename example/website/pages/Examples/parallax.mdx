@@ -42,196 +42,60 @@ import Page from '../../components/Page'
 ```tsx copy
 import * as React from "react";
 import { View } from "react-native";
-import Animated, {
-  Extrapolate,
-  interpolate,
-  useAnimatedStyle,
-  useSharedValue,
-} from "react-native-reanimated";
-import Carousel from "react-native-reanimated-carousel";
+import { useSharedValue } from "react-native-reanimated";
+import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
 
-import { SBItem } from "../../components/SBItem";
-import SButton from "../../components/SButton";
-import { ElementsText, window } from "../../constants";
+import { window } from "@/constants/Sizes";
+import { renderItem } from "@/utils/render-item";
+import { CarouselAdvancedSettingsPanel } from "@/components/CarouselAdvancedSettingsPanel";
+import { useAdvancedSettings } from "@/hooks/useSettings";
+import { Stack } from "tamagui";
 
 const PAGE_WIDTH = window.width;
-const colors = [
-  "#26292E",
-  "#899F9C",
-  "#B3C680",
-  "#5C6265",
-  "#F5D399",
-  "#F1F1F1",
-];
 
 function Index() {
-  const [isVertical, setIsVertical] = React.useState(false);
-  const [autoPlay, setAutoPlay] = React.useState(false);
-  const [pagingEnabled, setPagingEnabled] = React.useState<boolean>(true);
-  const [snapEnabled, setSnapEnabled] = React.useState<boolean>(true);
-  const progressValue = useSharedValue<number>(0);
-  const baseOptions = isVertical
-    ? ({
-      vertical: true,
-      width: PAGE_WIDTH * 0.86,
-      height: PAGE_WIDTH * 0.6,
-    } as const)
-    : ({
+  const progress = useSharedValue<number>(0);
+  const ref = React.useRef<ICarouselInstance>(null);
+  const { advancedSettings, onAdvancedSettingsChange } = useAdvancedSettings({
+    defaultSettings: {
+      autoPlay: false,
+      autoPlayInterval: 2000,
+      autoPlayReverse: false,
+      data: ["#26292E", "#899F9C", "#B3C680", "#5C6265", "#F5D399", "#F1F1F1"],
+      height: 258,
+      loop: true,
+      pagingEnabled: true,
+      snapEnabled: true,
       vertical: false,
-      width: PAGE_WIDTH,
-      height: PAGE_WIDTH * 0.6,
-    } as const);
+      width: 430,
+    },
+  });
 
   return (
-    <View
-      style={{
-        alignItems: "center",
-      }}
-    >
+    <Stack flex={1}>
       <Carousel
-        {...baseOptions}
+        ref={ref}
+        {...advancedSettings}
         style={{
-           width: PAGE_WIDTH,
+          width: PAGE_WIDTH,
         }}
-        loop
-        pagingEnabled={pagingEnabled}
-        snapEnabled={snapEnabled}
-        autoPlay={autoPlay}
-        autoPlayInterval={1500}
-        onProgressChange={(_, absoluteProgress) =>
-          (progressValue.value = absoluteProgress)
-        }
         mode="parallax"
         modeConfig={{
           parallaxScrollingScale: 0.9,
           parallaxScrollingOffset: 50,
         }}
-        data={colors}
-        renderItem={({ index }) => <SBItem index={index} />}
+        onProgressChange={progress}
+        renderItem={renderItem({ rounded: true })}
       />
-      {!!progressValue && (
-        <View
-          style={
-            isVertical
-              ? {
-                flexDirection: "column",
-                justifyContent: "space-between",
-                width: 10,
-                alignSelf: "center",
-                position: "absolute",
-                right: 5,
-                top: 40,
-              }
-              : {
-                flexDirection: "row",
-                justifyContent: "space-between",
-                width: 100,
-                alignSelf: "center",
-              }
-          }
-        >
-          {colors.map((backgroundColor, index) => {
-            return (
-              <PaginationItem
-                backgroundColor={backgroundColor}
-                animValue={progressValue}
-                index={index}
-                key={index}
-                isRotate={isVertical}
-                length={colors.length}
-              />
-            );
-          })}
-        </View>
-      )}
-      <SButton
-        onPress={() => setAutoPlay(!autoPlay)}
-      >{`${ElementsText.AUTOPLAY}:${autoPlay}`}</SButton>
-      <SButton
-        onPress={() => {
-          setIsVertical(!isVertical);
-        }}
-      >
-        {isVertical ? "Set horizontal" : "Set Vertical"}
-      </SButton>
-      <SButton
-        onPress={() => {
-          setPagingEnabled(!pagingEnabled);
-        }}
-      >
-        {`pagingEnabled:${pagingEnabled}`}
-      </SButton>
-      <SButton
-        onPress={() => {
-          setSnapEnabled(!snapEnabled);
-        }}
-      >
-        {`snapEnabled:${snapEnabled}`}
-      </SButton>
-    </View>
+
+      <CarouselAdvancedSettingsPanel
+        carouselRef={ref}
+        advancedSettings={advancedSettings}
+        onAdvancedSettingsChange={onAdvancedSettingsChange}
+      />
+    </Stack>
   );
 }
-
-const PaginationItem: React.FC<{
-  index: number
-  backgroundColor: string
-  length: number
-  animValue: Animated.SharedValue<number>
-  isRotate?: boolean
-}> = (props) => {
-  const { animValue, index, length, backgroundColor, isRotate } = props;
-  const width = 10;
-
-  const animStyle = useAnimatedStyle(() => {
-    let inputRange = [index - 1, index, index + 1];
-    let outputRange = [-width, 0, width];
-
-    if (index === 0 && animValue?.value > length - 1) {
-      inputRange = [length - 1, length, length + 1];
-      outputRange = [-width, 0, width];
-    }
-
-    return {
-      transform: [
-        {
-          translateX: interpolate(
-            animValue?.value,
-            inputRange,
-            outputRange,
-            Extrapolate.CLAMP,
-          ),
-        },
-      ],
-    };
-  }, [animValue, index, length]);
-  return (
-    <View
-      style={{
-        backgroundColor: "white",
-        width,
-        height: width,
-        borderRadius: 50,
-        overflow: "hidden",
-        transform: [
-          {
-            rotateZ: isRotate ? "90deg" : "0deg",
-          },
-        ],
-      }}
-    >
-      <Animated.View
-        style={[
-          {
-            borderRadius: 50,
-            backgroundColor,
-            flex: 1,
-          },
-          animStyle,
-        ]}
-      />
-    </View>
-  );
-};
 
 export default Index;
 

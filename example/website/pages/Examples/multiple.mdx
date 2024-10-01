@@ -44,9 +44,9 @@ import * as React from "react";
 import { View } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 
-import { SBItem } from "../../components/SBItem";
-import SButton from "../../components/SButton";
-import { ElementsText, window } from "../../constants";
+import { SBItem } from "@/components/SBItem";
+import SButton from "@/components/SButton";
+import { ElementsText, window } from "@/constants/Sizes";
 
 const PAGE_WIDTH = window.width;
 
@@ -59,21 +59,21 @@ function Index() {
 
   const baseOptions = isVertical
     ? ({
-      vertical: true,
-      width: PAGE_WIDTH,
-      height: PAGE_WIDTH / 2 / COUNT,
-      style: {
-        height: PAGE_WIDTH / 2,
-      },
-    } as const)
-    : ({
-      vertical: false,
-      width: PAGE_WIDTH / COUNT,
-      height: PAGE_WIDTH / 2,
-      style: {
+        vertical: true,
         width: PAGE_WIDTH,
-      },
-    } as const);
+        height: PAGE_WIDTH / 2 / COUNT,
+        style: {
+          height: PAGE_WIDTH / 2,
+        },
+      } as const)
+    : ({
+        vertical: false,
+        width: PAGE_WIDTH / COUNT,
+        height: PAGE_WIDTH / 2,
+        style: {
+          width: PAGE_WIDTH,
+        },
+      } as const);
 
   return (
     <View style={{ flex: 1 }}>

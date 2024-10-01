@@ -41,18 +41,18 @@ import Page from '../../components/Page'
 
 ```tsx copy
 import * as React from "react";
-import { View } from "react-native";
+import { View, ViewStyle } from "react-native";
 import Animated, {
-  Extrapolate,
+  Extrapolation,
   interpolate,
   interpolateColor,
   useAnimatedStyle,
 } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
-import { SBItem } from "../../components/SBItem";
-import { window } from "../../constants";
-import { withAnchorPoint } from "../../utils/anchor-point";
+import { SBItem } from "@/components/SBItem";
+import { window } from "@/constants/Sizes";
+import { withAnchorPoint } from "@/utils/anchor-point";
 
 const count = 4;
 
@@ -60,9 +60,7 @@ function Index() {
   const size = window.width / 4;
 
   return (
-    <View
-      style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
-    >
+    <View style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
       {Array.from({
         length: count * 3,
       }).map((_, i) => {
@@ -79,7 +77,7 @@ function Index() {
 function CubeItem() {
   const PAGE_WIDTH = window.width / 4;
   const PAGE_HEIGHT = PAGE_WIDTH;
-  const animationStyle: TAnimationStyle = React.useCallback(
+  const animationStyle = React.useCallback<TAnimationStyle>(
     (value: number) => {
       "worklet";
       const zIndex = interpolate(value, [-1, 0, 1], [-1000, 0, -1000]);
@@ -88,37 +86,32 @@ function CubeItem() {
         value,
         [-1, 0, 1],
         [-PAGE_WIDTH, 0, PAGE_WIDTH],
-        Extrapolate.CLAMP,
+        Extrapolation.CLAMP,
       );
 
       const scale = interpolate(
         value,
         [-1, 0, 1],
         [0.49, 1, 0.49],
-        Extrapolate.CLAMP,
+        Extrapolation.CLAMP,
       );
 
       const perspective = interpolate(
         value,
         [-1, 0, 1],
         [PAGE_WIDTH * 0.89, PAGE_WIDTH * 1.5, PAGE_WIDTH * 0.89],
-        Extrapolate.CLAMP,
+        Extrapolation.CLAMP,
       );
 
       const rotateY = `${interpolate(
         value,
         [-1, 0, 1],
         [-90, 0, 90],
-        Extrapolate.CLAMP,
+        Extrapolation.CLAMP,
       )}deg`;
 
       const transform = {
-        transform: [
-          { scale },
-          { translateX },
-          { perspective },
-          { rotateY },
-        ],
+        transform: [{ scale }, { translateX }, { perspective }, { rotateY }],
       };
 
       return {
@@ -166,8 +159,8 @@ function CubeItem() {
 }
 
 interface ItemProps {
-  index: number
-  animationValue: Animated.SharedValue<number>
+  index: number;
+  animationValue: Animated.SharedValue<number>;
 }
 const CustomItem: React.FC<ItemProps> = ({ index, animationValue }) => {
   const maskStyle = useAnimatedStyle(() => {
@@ -184,12 +177,7 @@ const CustomItem: React.FC<ItemProps> = ({ index, animationValue }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <SBItem
-        pretty
-        key={index}
-        index={index}
-        style={{ borderRadius: 0 }}
-      />
+      <SBItem pretty key={index} index={index} style={{ borderRadius: 0 }} />
       <Animated.View
         pointerEvents="none"
         style={[

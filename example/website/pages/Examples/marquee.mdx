@@ -45,23 +45,22 @@ import { View, Text } from "react-native";
 import Animated, { Easing } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
 
-import { window } from "../../constants";
+import { window } from "@/constants/Sizes";
 
 const PAGE_WIDTH = window.width / 2;
 
 function ReactionContainer(props: {
-  text: string
+  text: string;
   children: (
     text: React.ReactElement,
-    layout?: { width: number }
-  ) => React.ReactElement
+    layout?: { width: number },
+  ) => React.ReactElement;
 }) {
   const [width, setWidth] = React.useState<number>();
   const [layout, setLayout] = React.useState<{ width: number }>();
 
   React.useEffect(() => {
-    if (typeof width === "number")
-      setLayout({ width });
+    if (typeof width === "number") setLayout({ width });
   }, [width]);
 
   React.useEffect(() => {
@@ -79,8 +78,7 @@ function ReactionContainer(props: {
     >
       <Text
         onLayout={({ nativeEvent }) => {
-          if (typeof layout === "undefined")
-            setWidth(nativeEvent.layout.width);
+          if (typeof layout === "undefined") setWidth(nativeEvent.layout.width);
         }}
       >
         {props.text}

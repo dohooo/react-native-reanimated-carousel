@@ -49,32 +49,25 @@ import Animated, {
 } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
-import { SBItem } from "../../components/SBItem";
-import SButton from "../../components/SButton";
-import { ElementsText, window } from "../../constants";
+import { SBItem } from "@/components/SBItem";
+import SButton from "@/components/SButton";
+import { ElementsText, window } from "@/constants/Sizes";
 
 const PAGE_WIDTH = window.width;
 
 function Index() {
   const [isAutoPlay, setIsAutoPlay] = React.useState(false);
-  const animationStyle: TAnimationStyle = React.useCallback(
-    (value: number) => {
-      "worklet";
+  const animationStyle: TAnimationStyle = React.useCallback((value: number) => {
+    "worklet";
 
-      const zIndex = interpolate(value, [-1, 0, 1], [-1000, 0, 1000]);
-      const translateX = interpolate(
-        value,
-        [-1, 0, 1],
-        [0, 0, PAGE_WIDTH],
-      );
+    const zIndex = interpolate(value, [-1, 0, 1], [-1000, 0, 1000]);
+    const translateX = interpolate(value, [-1, 0, 1], [0, 0, PAGE_WIDTH]);
 
-      return {
-        transform: [{ translateX }],
-        zIndex,
-      };
-    },
-    [],
-  );
+    return {
+      transform: [{ translateX }],
+      zIndex,
+    };
+  }, []);
 
   return (
     <View style={{ flex: 1 }}>
@@ -108,8 +101,8 @@ function Index() {
 }
 
 interface ItemProps {
-  index: number
-  animationValue: Animated.SharedValue<number>
+  index: number;
+  animationValue: Animated.SharedValue<number>;
 }
 const CustomItem: React.FC<ItemProps> = ({ index, animationValue }) => {
   const maskStyle = useAnimatedStyle(() => {

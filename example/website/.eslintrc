@@ -2,6 +2,7 @@
     "extends": "../../.eslintrc",
     "rules": {
         "@typescript-eslint/no-use-before-define": "off",
-        "no-console": "off"
+        "no-console": "off",
+        "arrow-parens": "off"
     }
 }

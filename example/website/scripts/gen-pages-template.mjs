@@ -1,11 +1,8 @@
 function upcaseFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export const pagesTemplate = (
-    page,
-    content
-)=>`
+export const pagesTemplate = (page, content) => `
 ---
 id: ${page}
 title: ${upcaseFirstLetter(page)}
@@ -50,4 +47,4 @@ import Page from '../../components/Page'
 \`\`\`tsx copy
 ${content}
 \`\`\`
-`
+`;

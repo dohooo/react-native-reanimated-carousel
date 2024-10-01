@@ -43,17 +43,17 @@ import Page from '../../components/Page'
 import * as React from "react";
 import { View } from "react-native";
 import Animated, {
-  Extrapolate,
+  Extrapolation,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
 
-import { SBItem } from "../../components/SBItem";
-import SButton from "../../components/SButton";
-import { ElementsText, window } from "../../constants";
-import { withAnchorPoint } from "../../utils/anchor-point";
+import { SBItem } from "@/components/SBItem";
+import SButton from "@/components/SButton";
+import { ElementsText, window } from "@/constants/Sizes";
+import { withAnchorPoint } from "@/utils/anchor-point";
 
 const PAGE_WIDTH = window.width / 5;
 const colors = [
@@ -102,7 +102,7 @@ function Index() {
             value,
             [-2, -1, 0, 1, 2],
             [1.7, 1.2, 1, 1.2, 1.7],
-            Extrapolate.CLAMP,
+            Extrapolation.CLAMP,
           );
 
           const translate = interpolate(
@@ -123,7 +123,7 @@ function Index() {
                   value,
                   [-1, 0, 1],
                   [30, 0, -30],
-                  Extrapolate.CLAMP,
+                  Extrapolation.CLAMP,
                 )}deg`,
               },
             ],
@@ -178,11 +178,11 @@ function Index() {
 }
 
 const PaginationItem: React.FC<{
-  index: number
-  backgroundColor: string
-  length: number
-  animValue: Animated.SharedValue<number>
-  isRotate?: boolean
+  index: number;
+  backgroundColor: string;
+  length: number;
+  animValue: Animated.SharedValue<number>;
+  isRotate?: boolean;
 }> = (props) => {
   const { animValue, index, length, backgroundColor, isRotate } = props;
   const width = 10;
@@ -203,7 +203,7 @@ const PaginationItem: React.FC<{
             animValue?.value,
             inputRange,
             outputRange,
-            Extrapolate.CLAMP,
+            Extrapolation.CLAMP,
           ),
         },
       ],

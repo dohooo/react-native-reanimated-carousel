@@ -48,9 +48,9 @@ import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import { faker } from "@faker-js/faker";
 
-import { SBImageItem } from "../../components/SBImageItem";
-import SButton from "../../components/SButton";
-import { ElementsText, window } from "../../constants";
+import { SBImageItem } from "@/components/SBImageItem";
+import SButton from "@/components/SButton";
+import { ElementsText, window } from "@/constants/Sizes";
 
 const PAGE_WIDTH = window.width;
 
@@ -70,10 +70,10 @@ function Index() {
         [-30, -15, 0, 0, 0, 15, 30],
       );
 
-      const translateX
-        = interpolate(value, [-1, 0, 1], [-itemSize, 0, itemSize])
-        + centerOffset
-        - itemGap;
+      const translateX =
+        interpolate(value, [-1, 0, 1], [-itemSize, 0, itemSize]) +
+        centerOffset -
+        itemGap;
 
       const translateY = interpolate(
         value,
@@ -150,10 +150,7 @@ function Index() {
                   fontSize: 40,
                 }}
               >
-                {faker.person.
-                  fullName()
-                  .slice(0, 2)
-                  .toUpperCase()}
+                {faker.person.fullName().slice(0, 2).toUpperCase()}
               </Text>
             </View>
           </TouchableWithoutFeedback>

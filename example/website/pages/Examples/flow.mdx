@@ -48,7 +48,7 @@ import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 import { faker } from "@faker-js/faker";
 import { BlurView } from "expo-blur";
 
-import { window } from "../../constants";
+import { window } from "@/constants/Sizes";
 
 function Index() {
   const headerHeight = 100;
@@ -88,10 +88,10 @@ function Index() {
     <View style={{ flex: 1 }}>
       <Image
         source={{
-          uri:
-                        `${faker.image.nature(PAGE_WIDTH, PAGE_HEIGHT)
-                        }?random=${
-                          Math.random()}`,
+          uri: `${faker.image.url({
+            width: PAGE_WIDTH,
+            height: PAGE_HEIGHT,
+          })}?random=${Math.random()}`,
         }}
         style={{
           width: PAGE_WIDTH,
@@ -146,10 +146,10 @@ function Index() {
                       marginRight: 5,
                     }}
                     source={{
-                      uri:
-                                                `${faker.image.animals(20, 20)
-                                                }?random=${
-                                                  Math.random()}`,
+                      uri: `${faker.image.url({
+                        width: 20,
+                        height: 20,
+                      })}?random=${Math.random()}`,
                     }}
                   />
                   <Text
@@ -178,15 +178,10 @@ function Index() {
                       marginRight: 5,
                     }}
                     source={{
-                      uri:
-                                                `${faker.image.nature(
-                                                  Math.round(
-                                                    ITEM_WIDTH * 0.6,
-                                                  ),
-                                                  ITEM_HEIGHT - 20,
-                                                )
-                                                }?random=${
-                                                  Math.random()}`,
+                      uri: `${faker.image.url({
+                        width: Math.round(ITEM_WIDTH * 0.6),
+                        height: ITEM_HEIGHT - 20,
+                      })}?random=${Math.random()}`,
                     }}
                   />
                 </View>

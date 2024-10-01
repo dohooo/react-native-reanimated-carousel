@@ -43,7 +43,7 @@ import Page from '../../components/Page'
 import * as React from "react";
 import { View, Pressable } from "react-native";
 import Animated, {
-  Extrapolate,
+  Extrapolation,
   interpolate,
   interpolateColor,
   useAnimatedStyle,
@@ -53,9 +53,9 @@ import Animated, {
 import type { ICarouselInstance } from "react-native-reanimated-carousel";
 import Carousel from "react-native-reanimated-carousel";
 
-import SButton from "../../components/SButton";
-import { ElementsText, window } from "../../constants";
-import { useToggleButton } from "../../hooks/useToggleButton";
+import SButton from "@/components/SButton";
+import { ElementsText, window } from "@/constants/Sizes";
+import { useToggleButton } from "@/hooks/useToggleButton";
 
 const PAGE_WIDTH = 60;
 const PAGE_HEIGHT = 40;
@@ -123,9 +123,9 @@ function Index() {
 export default Index;
 
 interface Props {
-  animationValue: Animated.SharedValue<number>
-  label: string
-  onPress?: () => void
+  animationValue: Animated.SharedValue<number>;
+  label: string;
+  onPress?: () => void;
 }
 
 const Item: React.FC<Props> = (props) => {
@@ -138,7 +138,7 @@ const Item: React.FC<Props> = (props) => {
       animationValue.value,
       [-1, 0, 1],
       [0.5, 1, 0.5],
-      Extrapolate.CLAMP,
+      Extrapolation.CLAMP,
     );
 
     return {
@@ -151,7 +151,7 @@ const Item: React.FC<Props> = (props) => {
       animationValue.value,
       [-1, 0, 1],
       [1, 1.25, 1],
-      Extrapolate.CLAMP,
+      Extrapolation.CLAMP,
     );
 
     const color = interpolateColor(
@@ -175,11 +175,7 @@ const Item: React.FC<Props> = (props) => {
   }, [translateY]);
 
   return (
-    <Pressable
-      onPress={onPress}
-      onPressIn={onPressIn}
-      onPressOut={onPressOut}
-    >
+    <Pressable onPress={onPress} onPressIn={onPressIn} onPressOut={onPressOut}>
       <Animated.View
         style={[
           {
@@ -190,9 +186,7 @@ const Item: React.FC<Props> = (props) => {
           containerStyle,
         ]}
       >
-        <Animated.Text
-          style={[{ fontSize: 18, color: "#26292E" }, labelStyle]}
-        >
+        <Animated.Text style={[{ fontSize: 18, color: "#26292E" }, labelStyle]}>
           {label}
         </Animated.Text>
       </Animated.View>

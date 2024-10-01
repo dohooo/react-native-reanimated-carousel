@@ -10,7 +10,20 @@ import { Stack } from "tamagui";
 function Index() {
   const scrollOffsetValue = useSharedValue<number>(0);
   const ref = React.useRef<ICarouselInstance>(null);
-  const { advancedSettings, onAdvancedSettingsChange } = useAdvancedSettings();
+  const { advancedSettings, onAdvancedSettingsChange } = useAdvancedSettings({
+    defaultSettings: {
+      autoPlay: false,
+      autoPlayInterval: 2000,
+      autoPlayReverse: false,
+      data: ["#26292E", "#899F9C", "#B3C680", "#5C6265", "#F5D399", "#F1F1F1"],
+      height: 258,
+      loop: true,
+      pagingEnabled: true,
+      snapEnabled: true,
+      vertical: false,
+      width: 430,
+    },
+  });
 
   return (
     <Stack flex={1}>

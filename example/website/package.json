@@ -14,7 +14,8 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/gen-pages.mjs && next build",
+    "gen-pages": "node scripts/gen-pages.mjs",
+    "build": "npm run gen-pages && next build",
     "start": "next start"
   },
   "dependencies": {

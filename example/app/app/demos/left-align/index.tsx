@@ -9,7 +9,27 @@ import { renderItem } from "@/utils/render-item";
 function Index() {
   const ref = React.useRef<ICarouselInstance>(null);
   const { constants, advancedSettings, onAdvancedSettingsChange } =
-    useAdvancedSettings();
+    useAdvancedSettings({
+      defaultSettings: {
+        autoPlay: false,
+        autoPlayInterval: 2000,
+        autoPlayReverse: false,
+        data: [
+          "#26292E",
+          "#899F9C",
+          "#B3C680",
+          "#5C6265",
+          "#F5D399",
+          "#F1F1F1",
+        ],
+        height: 258,
+        loop: true,
+        pagingEnabled: true,
+        snapEnabled: true,
+        vertical: false,
+        width: 430,
+      },
+    });
 
   return (
     <View style={{ flex: 1 }}>
