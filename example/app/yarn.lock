@@ -4461,13 +4461,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:~18.2.45":
-  version: 18.2.79
-  resolution: "@types/react@npm:18.2.79"
+"@types/react@npm:18.2.0":
+  version: 18.2.0
+  resolution: "@types/react@npm:18.2.0"
   dependencies:
     "@types/prop-types": "npm:*"
+    "@types/scheduler": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 2ef833e7d0a5c226beddbbe090811582371f6ae5e2f092a3d9f47cc6087c8bce0b96ee33e351de6d1d470f0a0ec5892d971933f841ef31538c1821681fc6569e
+  checksum: c5fe6b798ab0d4ba2c40173275fb7f1e85a67586d40c97b0bee25a514f44de032e7aa90a98482cc38e106e66102727cdf1be9a8413d29509b92cb384adf4864d
+  languageName: node
+  linkType: hard
+
+"@types/scheduler@npm:*":
+  version: 0.23.0
+  resolution: "@types/scheduler@npm:0.23.0"
+  checksum: 874d753aa65c17760dfc460a91e6df24009bde37bfd427a031577b30262f7770c1b8f71a21366c7dbc76111967384cf4090a31d65315155180ef14bd7acccb32
   languageName: node
   linkType: hard
 
@@ -4812,7 +4820,7 @@ __metadata:
     "@react-navigation/native": "npm:^6.0.2"
     "@tamagui/config": "npm:^1.111.13"
     "@tamagui/lucide-icons": "npm:^1.111.13"
-    "@types/react": "npm:~18.2.45"
+    "@types/react": "npm:18.2.0"
     babel-plugin-module-resolver: "npm:^5.0.2"
     expo: "npm:~51.0.28"
     expo-blur: "npm:~13.0.2"

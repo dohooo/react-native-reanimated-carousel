@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  ColorValue,
-  I18nManager,
-  Platform,
-  Text,
-  useColorScheme,
-  View,
-} from "react-native";
+import { ColorValue, I18nManager, Platform, Text, View } from "react-native";
 import {
   GestureHandlerRootView,
   TouchableWithoutFeedback,
@@ -33,7 +26,6 @@ import {
   ExperimentDemos,
   LayoutsDemos,
 } from "./demos/routes";
-import { usePathname, useRouter } from "expo-router";
 
 export {
   // Catch any errors thrown by the Layout component.
