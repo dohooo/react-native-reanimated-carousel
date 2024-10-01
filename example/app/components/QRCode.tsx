@@ -1,29 +1,93 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from "react";
 import type { ColorValue } from "react-native";
-import { Text, View, Image, StyleSheet } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { AlertDialog, Input, Label, XStack } from "tamagui";
+import {
+  Adapt,
+  Button,
+  Image,
+  Popover,
+  PopoverProps,
+  Stack,
+  YStack,
+} from "tamagui";
 
 export const QRCode: React.FC<{ tintColor?: ColorValue }> = ({ tintColor }) => {
-  const [visible, setVisible] = React.useState(false);
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        setVisible(!visible);
-      }}
-    >
-      <View>
-        <Text style={{ color: tintColor }}>{"QR CODE"}</Text>
+    <Stack flex={1}>
+      <AlertDialog>
+        <AlertDialog.Trigger asChild>
+          <Text>QR CODE</Text>
+        </AlertDialog.Trigger>
+
+        <AlertDialog.Portal>
+          <AlertDialog.Overlay
+            key="overlay"
+            animation="quick"
+            opacity={0.5}
+            enterStyle={{ opacity: 0 }}
+            exitStyle={{ opacity: 0 }}
+          />
+          <AlertDialog.Content
+            bordered
+            elevate
+            key="content"
+            animation={[
+              "quick",
+              {
+                opacity: {
+                  overshootClamping: true,
+                },
+              },
+            ]}
+            enterStyle={{ x: 0, y: -20, opacity: 0, scale: 0.9 }}
+            exitStyle={{ x: 0, y: 10, opacity: 0, scale: 0.95 }}
+            x={0}
+            scale={1}
+            opacity={1}
+            y={0}
+          >
+            <AlertDialog.Cancel asChild>
+              <Stack width={200} height={200}>
+                <Image
+                  position={"absolute"}
+                  width={"100%"}
+                  height={"100%"}
+                  borderRadius={5}
+                  borderWidth={3}
+                  borderColor={"#26292E"}
+                  source={require("@/assets/images/web-example-qrcode.png")}
+                />
+              </Stack>
+            </AlertDialog.Cancel>
+          </AlertDialog.Content>
+        </AlertDialog.Portal>
+      </AlertDialog>
+
+      {/* <Text style={{ color: tintColor }}>{"QR CODE"}</Text>
         {visible && (
-          <View style={styles.qrCodeContainer}>
+          <Stack
+            position={"absolute"}
+            bottom={-10}
+            right={0}
+            width={200}
+            height={200}
+            transform={[{ translateY: "100%" }]}
+          >
             <Image
-              style={styles.qrCodeImage}
+              position={"absolute"}
+              width={"100%"}
+              height={"100%"}
+              borderRadius={5}
+              borderWidth={3}
+              borderColor={"#26292E"}
               source={require("@/assets/images/web-example-qrcode.png")}
             />
-          </View>
-        )}
-      </View>
-    </TouchableWithoutFeedback>
+          </Stack>
+        )} */}
+    </Stack>
   );
 };
 

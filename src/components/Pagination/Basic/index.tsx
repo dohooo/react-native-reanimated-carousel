@@ -1,21 +1,22 @@
 import React from "react";
 import type { StyleProp, ViewStyle } from "react-native";
-import { View, TouchableWithoutFeedback } from "react-native";
+import { View } from "react-native";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import type { SharedValue } from "react-native-reanimated";
 
 import type { DotStyle } from "./PaginationItem";
 import { PaginationItem } from "./PaginationItem";
 
 export interface BasicProps<T extends {} = {}> {
-  progress: SharedValue<number>
-  horizontal?: boolean
-  data: Array<T>
-  renderItem?: (item: T, index: number) => React.ReactNode
-  containerStyle?: StyleProp<ViewStyle>
-  dotStyle?: DotStyle
-  activeDotStyle?: DotStyle
-  size?: number
-  onPress?: (index: number) => void
+  progress: SharedValue<number>;
+  horizontal?: boolean;
+  data: Array<T>;
+  renderItem?: (item: T, index: number) => React.ReactNode;
+  containerStyle?: StyleProp<ViewStyle>;
+  dotStyle?: DotStyle;
+  activeDotStyle?: DotStyle;
+  size?: number;
+  onPress?: (index: number) => void;
 }
 
 export const Basic = <T extends {}>(props: BasicProps<T>) => {
@@ -47,11 +48,11 @@ export const Basic = <T extends {}>(props: BasicProps<T>) => {
         },
         horizontal
           ? {
-            flexDirection: "row",
-          }
+              flexDirection: "row",
+            }
           : {
-            flexDirection: "column",
-          },
+              flexDirection: "column",
+            },
         containerStyle,
       ]}
     >

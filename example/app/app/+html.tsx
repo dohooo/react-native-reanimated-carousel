@@ -1,7 +1,6 @@
 import { ScrollViewStyleReset } from "expo-router/html";
-
-import { window } from "@/constants/Sizes";
 import { WebProvider } from "@/store/WebProvider";
+import { MAX_WIDTH } from "@/constants/Sizes";
 
 // This file is web-only and used to configure the root HTML for every
 // web page during static rendering.
@@ -15,7 +14,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1"
         />
 
         {/*
@@ -25,22 +24,11 @@ export default function Root({ children }: { children: React.ReactNode }) {
         <ScrollViewStyleReset />
 
         {/* Using raw CSS styles as an escape-hatch to ensure the background color never flickers in dark-mode. */}
-        <style dangerouslySetInnerHTML={{ __html: responsiveBackground }} />
+        <style dangerouslySetInnerHTML={{ __html: responsiveBackground + viewportStyles }} />
         {/* Add any additional <head> elements that you want globally available on web... */}
       </head>
       <body>
-        <WebProvider>
-          <div
-            style={{
-              height: "100%",
-              width: window.width,
-              alignSelf: "center",
-              margin: "auto",
-            }}
-          >
-            {children}
-          </div>
-        </WebProvider>
+        <WebProvider>{children}</WebProvider>
       </body>
     </html>
   );
@@ -49,9 +37,17 @@ export default function Root({ children }: { children: React.ReactNode }) {
 const responsiveBackground = `
 body {
   background-color: #fff;
-}
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #000;
-  }
 }`;
+
+const viewportStyles = `
+@media (min-width: ${MAX_WIDTH}px) {
+  html, body {
+    max-width: ${MAX_WIDTH}px;
+    margin: 0 auto;
+    background-color: #f0f0f0;
+  }
+  body {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+}
+`;

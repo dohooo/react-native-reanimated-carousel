@@ -22,6 +22,8 @@ import {
   ExperimentDemos,
   LayoutsDemos,
 } from "./demos/routes";
+import { ChevronLeft } from "@tamagui/lucide-icons";
+import { useRouter } from "expo-router";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -65,6 +67,7 @@ const Restart = () => {
 function RootLayoutNav() {
   const headerShown = !useWebContext()?.page;
   const [isRTL, setIsRTL] = useState(I18nManager.isRTL);
+  const { back } = useRouter();
 
   return (
     <TamaguiProvider config={tamaguiConfig} defaultTheme={"light"}>

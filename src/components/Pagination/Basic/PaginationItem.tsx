@@ -1,7 +1,6 @@
 import type { PropsWithChildren } from "react";
 import React from "react";
 import type { ViewStyle } from "react-native";
-import { View } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -9,20 +8,20 @@ import Animated, {
 } from "react-native-reanimated";
 
 export type DotStyle = Omit<ViewStyle, "width" | "height"> & {
-  width?: number
-  height?: number
+  width?: number;
+  height?: number;
 };
 
 export const PaginationItem: React.FC<
-PropsWithChildren<{
-  index: number
-  count: number
-  size?: number
-  animValue: Animated.SharedValue<number>
-  horizontal?: boolean
-  dotStyle?: DotStyle
-  activeDotStyle?: DotStyle
-}>
+  PropsWithChildren<{
+    index: number;
+    count: number;
+    size?: number;
+    animValue: Animated.SharedValue<number>;
+    horizontal?: boolean;
+    dotStyle?: DotStyle;
+    activeDotStyle?: DotStyle;
+  }>
 > = (props) => {
   const {
     animValue,
@@ -79,7 +78,7 @@ PropsWithChildren<{
   }, [animValue, index, count, horizontal]);
 
   return (
-    <View
+    <Animated.View
       style={[
         {
           width,
@@ -106,6 +105,6 @@ PropsWithChildren<{
       >
         {children}
       </Animated.View>
-    </View>
+    </Animated.View>
   );
 };
