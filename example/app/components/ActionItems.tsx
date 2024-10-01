@@ -12,13 +12,9 @@ import {
   Checkbox,
   Button,
   Select,
-  Stack,
   Adapt,
   Sheet,
   YStack,
-  getFontSize,
-  FontSizeTokens,
-  SelectProps,
 } from "tamagui";
 import { LinearGradient } from "tamagui/linear-gradient";
 

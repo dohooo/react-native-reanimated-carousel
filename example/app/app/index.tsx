@@ -3,13 +3,13 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 
 import { useRouter } from "expo-router";
 
-import { Text, View } from "@/components/Themed";
 import { useColor } from "@/hooks/useColor";
 import {
   CustomAnimationsDemos,
   ExperimentDemos,
   LayoutsDemos,
 } from "./demos/routes";
+import { Stack, Text } from "tamagui";
 
 const ListItem = ({
   name,
@@ -21,15 +21,15 @@ const ListItem = ({
   color: string;
 }) => (
   <TouchableOpacity onPress={onPress}>
-    <View style={styles.listItem}>
+    <Stack style={styles.listItem}>
       <Text style={[styles.text, { color }]}>{name.split("-").join(" ")}</Text>
-    </View>
+    </Stack>
   </TouchableOpacity>
 );
 
 const SectionHeader = ({ title, color }: { title: string; color: any }) => (
-  <View style={[styles.section, { backgroundColor: color.background }]}>
-    <View
+  <Stack style={[styles.section, { backgroundColor: color.background }]}>
+    <Stack
       style={{
         width: 5,
         height: 20,
@@ -38,7 +38,7 @@ const SectionHeader = ({ title, color }: { title: string; color: any }) => (
       }}
     />
     <Text style={[styles.sectionText, { color: color.text }]}>{title}</Text>
-  </View>
+  </Stack>
 );
 
 export default function Home() {
