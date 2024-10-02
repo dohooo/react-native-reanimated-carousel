@@ -13,7 +13,7 @@ import { parallaxLayout } from "./parallax";
 
 import { SBItem } from "@/components/SBItem";
 import SButton from "@/components/SButton";
-import { ElementsText, HEADER_HEIGHT, window } from "@/constants/Sizes";
+import { ElementsText, HEADER_HEIGHT, window } from "@/constants/sizes";
 import { fruitItems } from "@/utils/items";
 
 const BlurView = Animated.createAnimatedComponent(_BlurView);

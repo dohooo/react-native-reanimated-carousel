@@ -10,7 +10,7 @@ import Carousel from "react-native-reanimated-carousel";
 
 import { SBItem } from "@/components/SBItem";
 import SButton from "@/components/SButton";
-import { ElementsText, window } from "@/constants/Sizes";
+import { ElementsText, window } from "@/constants/sizes";
 import { withAnchorPoint } from "@/utils/anchor-point";
 
 const PAGE_WIDTH = window.width / 5;

@@ -9,7 +9,7 @@ import Animated, {
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import { SBItem } from "@/components/SBItem";
-import { window } from "@/constants/Sizes";
+import { window } from "@/constants/sizes";
 import { withAnchorPoint } from "@/utils/anchor-point";
 
 const count = 4;

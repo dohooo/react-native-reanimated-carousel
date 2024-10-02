@@ -4,7 +4,7 @@ import { interpolate } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import { SBItem } from "@/components/SBItem";
-import { ElementsText, window } from "@/constants/Sizes";
+import { ElementsText, window } from "@/constants/sizes";
 import { useToggleButton } from "@/hooks/useToggleButton";
 
 const scale = 0.7;

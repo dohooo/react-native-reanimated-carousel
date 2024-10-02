@@ -4,7 +4,7 @@ import {
   BasicSettings,
   getDefaultBasicSettings,
 } from "@/components/CarouselBasicSettingsPanel";
-import { window } from "@/constants/Sizes";
+import { window } from "@/constants/sizes";
 
 interface AdvancedSettings extends BasicSettings {
   data: string[];

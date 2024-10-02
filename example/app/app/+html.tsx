@@ -1,6 +1,6 @@
 import { ScrollViewStyleReset } from "expo-router/html";
 import { WebProvider } from "@/store/WebProvider";
-import { MAX_WIDTH } from "@/constants/Sizes";
+import { MAX_WIDTH } from "@/constants/sizes";
 
 // This file is web-only and used to configure the root HTML for every
 // web page during static rendering.
@@ -24,7 +24,11 @@ export default function Root({ children }: { children: React.ReactNode }) {
         <ScrollViewStyleReset />
 
         {/* Using raw CSS styles as an escape-hatch to ensure the background color never flickers in dark-mode. */}
-        <style dangerouslySetInnerHTML={{ __html: responsiveBackground + viewportStyles }} />
+        <style
+          dangerouslySetInnerHTML={{
+            __html: responsiveBackground + viewportStyles,
+          }}
+        />
         {/* Add any additional <head> elements that you want globally available on web... */}
       </head>
       <body>

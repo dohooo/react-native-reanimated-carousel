@@ -10,7 +10,7 @@ import Animated, {
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import SButton from "@/components/SButton";
-import { ElementsText, window } from "@/constants/Sizes";
+import { ElementsText, window } from "@/constants/sizes";
 import { ImageItems } from "@/utils/items";
 
 const PAGE_WIDTH = window.width;

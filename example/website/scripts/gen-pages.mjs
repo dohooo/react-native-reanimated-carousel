@@ -1,4 +1,11 @@
-import { readdirSync, readFileSync, statSync, writeFileSync } from "fs";
+import {
+  existsSync,
+  readdirSync,
+  readFileSync,
+  statSync,
+  unlinkSync,
+  writeFileSync,
+} from "fs";
 import { join } from "path";
 import { fileURLToPath } from "url";
 
@@ -9,13 +16,7 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 const pagesDir = join(__dirname, "../../app/app/demos");
 
-const includePages = [
-  "normal",
-  "parallax",
-  "stack",
-  "left-align",
-  "pagination",
-];
+const examplesDir = join(__dirname, "../../website/pages/Examples");
 
 const externalPages = [
   "material-3",
@@ -24,9 +25,12 @@ const externalPages = [
   "snap-carousel-complex",
 ];
 
-const pages = readdirSync(pagesDir)
-  .filter((page) => includePages.includes(page))
-  .filter((page) => !externalPages.includes(page));
+const pages = readdirSync(pagesDir).filter((page) => {
+  const hasExcluded = externalPages.includes(page);
+  const hasPreviewImage = existsSync(join(pagesDir, page, "preview.png"));
+
+  return !hasExcluded && hasPreviewImage;
+});
 
 async function writePage(page) {
   const pageDirPath = join(pagesDir, page);
@@ -36,7 +40,7 @@ async function writePage(page) {
 
   const pageContent = readFileSync(join(pageDirPath, "index.tsx"), "utf8");
   const processedContent = pagesTemplate(page, pageContent);
-  const mdxPath = join(__dirname, `../../website/pages/Examples/${page}.mdx`);
+  const mdxPath = join(examplesDir, `${page}.mdx`);
   await writeFileSync(mdxPath, processedContent.trim(), {
     overwrite: true,
   });
@@ -45,11 +49,18 @@ async function writePage(page) {
 async function writeSummary() {
   const page = "summary";
   const processedContent = summaryTemplate(pages);
-  const mdxPath = join(__dirname, `../../website/pages/Examples/${page}.mdx`);
+  const mdxPath = join(examplesDir, `${page}.mdx`);
   await writeFileSync(mdxPath, processedContent.trim(), {
     overwrite: true,
   });
 }
+
+// remove all of the mdx files in the examples dir
+const mdxFiles = readdirSync(examplesDir).filter((file) =>
+  file.endsWith(".mdx"),
+);
+
+for (const file of mdxFiles) unlinkSync(join(examplesDir, file));
 
 Promise.all(pages.map(writePage));
 

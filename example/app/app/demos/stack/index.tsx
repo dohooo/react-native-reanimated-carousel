@@ -6,6 +6,8 @@ import { renderItem } from "@/utils/render-item";
 import { useAdvancedSettings } from "@/hooks/useSettings";
 import { CarouselAdvancedSettingsPanel } from "@/components/CarouselAdvancedSettingsPanel";
 import { CustomSelectActionItem } from "@/components/ActionItems";
+import { CaptureWrapper } from "@/store/CaptureProvider";
+import { defaultDataWith6Colors } from "@/components/CarouselBasicSettingsPanel";
 
 function Index() {
   const viewCount = 5;
@@ -19,7 +21,7 @@ function Index() {
       autoPlay: false,
       autoPlayInterval: 2000,
       autoPlayReverse: false,
-      data: ["#26292E", "#899F9C", "#B3C680", "#5C6265", "#F5D399", "#F1F1F1"],
+      data: defaultDataWith6Colors,
       height: 258,
       loop: true,
       pagingEnabled: true,
@@ -31,25 +33,27 @@ function Index() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Carousel
-        ref={ref}
-        {...advancedSettings}
-        style={{
-          alignItems: "center",
-          justifyContent: "center",
-          width: "100%",
-          height: 240,
-        }}
-        width={280}
-        height={210}
-        mode={mode}
-        modeConfig={{
-          snapDirection,
-          stackInterval: mode === "vertical-stack" ? 8 : 18,
-        }}
-        customConfig={() => ({ type: "positive", viewCount })}
-        renderItem={renderItem({ rounded: true })}
-      />
+      <CaptureWrapper>
+        <Carousel
+          ref={ref}
+          {...advancedSettings}
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            height: 240,
+          }}
+          width={280}
+          height={210}
+          mode={mode}
+          modeConfig={{
+            snapDirection,
+            stackInterval: mode === "vertical-stack" ? 8 : 18,
+          }}
+          customConfig={() => ({ type: "positive", viewCount })}
+          renderItem={renderItem({ rounded: true })}
+        />
+      </CaptureWrapper>
 
       <CarouselAdvancedSettingsPanel
         carouselRef={ref}

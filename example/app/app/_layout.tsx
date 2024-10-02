@@ -1,29 +1,23 @@
 import { useEffect, useState } from "react";
-import { ColorValue, I18nManager, Platform, Text, View } from "react-native";
-import {
-  GestureHandlerRootView,
-  TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
+import { I18nManager, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { TamaguiProvider } from "tamagui";
 import { tamaguiConfig } from "../tamagui.config";
 
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import * as Updates from "expo-updates";
 import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
 import Stack from "expo-router/stack";
 import { useWebContext } from "@/store/WebProvider";
-import { isWeb } from "@/utils";
-import { QRCode } from "@/components/QRCode";
 import {
   CustomAnimationsDemos,
   ExperimentDemos,
   LayoutsDemos,
 } from "./demos/routes";
-import { ChevronLeft } from "@tamagui/lucide-icons";
-import { useRouter } from "expo-router";
+import { CaptureProvider } from "@/store/CaptureProvider";
+import { HeaderRight } from "@/components/HeaderRight";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -59,71 +53,48 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
-const Restart = () => {
-  if (Platform.OS === "web") window.location.reload();
-  else Updates.reloadAsync();
-};
-
 function RootLayoutNav() {
   const headerShown = !useWebContext()?.page;
   const [isRTL, setIsRTL] = useState(I18nManager.isRTL);
-  const { back } = useRouter();
 
   return (
     <TamaguiProvider config={tamaguiConfig} defaultTheme={"light"}>
       <View style={{ flex: 1 }}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <ThemeProvider value={DefaultTheme}>
-            <Stack
-              initialRouteName="/"
-              screenOptions={{
-                headerShown,
-                contentStyle: {
-                  flex: 1,
-                },
-                headerRight: ({ tintColor }: { tintColor?: ColorValue }) => (
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
+            <CaptureProvider>
+              <Stack
+                initialRouteName="/"
+                screenOptions={{
+                  headerShown,
+                  contentStyle: {
+                    flex: 1,
+                  },
+                  headerRight: ({ tintColor }) => (
+                    <HeaderRight
+                      tintColor={tintColor}
+                      isRTL={isRTL}
+                      setIsRTL={setIsRTL}
+                    />
+                  ),
+                }}
+              >
+                <Stack.Screen name="index" />
+                {[
+                  ...LayoutsDemos,
+                  ...CustomAnimationsDemos,
+                  ...ExperimentDemos,
+                ].map((item) => (
+                  <Stack.Screen
+                    key={item.name}
+                    name={`demos/${item.name}/index`}
+                    options={{
+                      title: item.title,
                     }}
-                  >
-                    {isWeb && (
-                      <>
-                        <QRCode tintColor={tintColor} />
-                        <Text style={{ color: tintColor }}> | </Text>
-                      </>
-                    )}
-                    <TouchableWithoutFeedback
-                      onPress={() => {
-                        I18nManager.forceRTL(!isRTL);
-                        setIsRTL(!isRTL);
-                        Restart();
-                      }}
-                    >
-                      <Text style={{ color: tintColor, marginRight: 12 }}>
-                        {isRTL ? "LTR" : "RTL"}
-                      </Text>
-                    </TouchableWithoutFeedback>
-                  </View>
-                ),
-              }}
-            >
-              <Stack.Screen name="index" />
-              {[
-                ...LayoutsDemos,
-                ...CustomAnimationsDemos,
-                ...ExperimentDemos,
-              ].map((item) => (
-                <Stack.Screen
-                  key={item.name}
-                  name={`demos/${item.name}/index`}
-                  options={{
-                    title: item.title,
-                  }}
-                />
-              ))}
-            </Stack>
+                  />
+                ))}
+              </Stack>
+            </CaptureProvider>
           </ThemeProvider>
         </GestureHandlerRootView>
       </View>

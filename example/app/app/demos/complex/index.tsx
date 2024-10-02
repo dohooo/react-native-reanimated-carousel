@@ -3,7 +3,7 @@ import { ScrollView, Text, View } from "react-native";
 import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
 
 import SButton from "@/components/SButton";
-import { window } from "@/constants/Sizes";
+import { window } from "@/constants/sizes";
 
 const PAGE_WIDTH = window.width;
 

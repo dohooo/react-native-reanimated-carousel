@@ -8,7 +8,7 @@ import Animated, {
 } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
-import { ElementsText, window } from "@/constants/Sizes";
+import { ElementsText, window } from "@/constants/sizes";
 import { ImageItems } from "@/utils/items";
 import SButton from "@/components/SButton";
 

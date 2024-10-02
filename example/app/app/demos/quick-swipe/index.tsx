@@ -4,7 +4,7 @@ import Carousel from "react-native-reanimated-carousel";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { SBItem } from "@/components/SBItem";
-import { window } from "@/constants/Sizes";
+import { window } from "@/constants/sizes";
 import {
   Image,
   ImageSourcePropType,

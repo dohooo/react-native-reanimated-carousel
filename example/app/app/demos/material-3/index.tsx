@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { getImages } from "@/utils/get-images";
 
 import SButton from "@/components/SButton";
-import { ElementsText, window } from "@/constants/Sizes";
+import { ElementsText, window } from "@/constants/sizes";
 import {
   useWindowDimensions,
   View,

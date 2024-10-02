@@ -2,10 +2,10 @@ import * as React from "react";
 import { CustomSelectActionItem, CustomSwitchActionItem } from "./ActionItems";
 import { YStack } from "tamagui";
 import { TCarouselProps } from "react-native-reanimated-carousel";
-import { window } from "@/constants/Sizes";
+import { window } from "@/constants/sizes";
 
-const defaultDataWith6Colors = [
-  "#26292E",
+export const defaultDataWith6Colors = [
+  "#B0604D",
   "#899F9C",
   "#B3C680",
   "#5C6265",

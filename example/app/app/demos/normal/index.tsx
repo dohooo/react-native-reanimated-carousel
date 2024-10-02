@@ -6,6 +6,8 @@ import { renderItem } from "@/utils/render-item";
 import { CarouselAdvancedSettingsPanel } from "@/components/CarouselAdvancedSettingsPanel";
 import { useAdvancedSettings } from "@/hooks/useSettings";
 import { Stack } from "tamagui";
+import { CaptureWrapper } from "@/store/CaptureProvider";
+import { defaultDataWith6Colors } from "@/components/CarouselBasicSettingsPanel";
 
 function Index() {
   const scrollOffsetValue = useSharedValue<number>(0);
@@ -15,7 +17,7 @@ function Index() {
       autoPlay: false,
       autoPlayInterval: 2000,
       autoPlayReverse: false,
-      data: ["#26292E", "#899F9C", "#B3C680", "#5C6265", "#F5D399", "#F1F1F1"],
+      data: defaultDataWith6Colors,
       height: 258,
       loop: true,
       pagingEnabled: true,
@@ -27,25 +29,27 @@ function Index() {
 
   return (
     <Stack flex={1}>
-      <Carousel
-        {...advancedSettings}
-        ref={ref}
-        defaultScrollOffsetValue={scrollOffsetValue}
-        testID={"xxx"}
-        style={{ width: "100%" }}
-        onScrollStart={() => {
-          console.log("Scroll start");
-        }}
-        onScrollEnd={() => {
-          console.log("Scroll end");
-        }}
-        onConfigurePanGesture={(g: { enabled: (arg0: boolean) => any }) => {
-          "worklet";
-          g.enabled(false);
-        }}
-        onSnapToItem={(index: number) => console.log("current index:", index)}
-        renderItem={renderItem()}
-      />
+      <CaptureWrapper>
+        <Carousel
+          {...advancedSettings}
+          ref={ref}
+          defaultScrollOffsetValue={scrollOffsetValue}
+          testID={"xxx"}
+          style={{ width: "100%" }}
+          onScrollStart={() => {
+            console.log("Scroll start");
+          }}
+          onScrollEnd={() => {
+            console.log("Scroll end");
+          }}
+          onConfigurePanGesture={(g: { enabled: (arg0: boolean) => any }) => {
+            "worklet";
+            g.enabled(false);
+          }}
+          onSnapToItem={(index: number) => console.log("current index:", index)}
+          renderItem={renderItem()}
+        />
+      </CaptureWrapper>
 
       <CarouselAdvancedSettingsPanel
         carouselRef={ref}

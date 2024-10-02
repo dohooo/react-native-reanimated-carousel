@@ -8,7 +8,7 @@ import Animated, {
 } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
-import { window } from "@/constants/Sizes";
+import { window } from "@/constants/sizes";
 import { getImages } from "@/utils/get-images";
 
 const data = getImages();

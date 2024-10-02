@@ -6,7 +6,7 @@ import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 import { faker } from "@faker-js/faker";
 import { BlurView } from "expo-blur";
 
-import { window } from "@/constants/Sizes";
+import { window } from "@/constants/sizes";
 
 function Index() {
   const headerHeight = 100;

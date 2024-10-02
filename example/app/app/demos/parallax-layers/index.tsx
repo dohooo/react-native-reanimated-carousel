@@ -8,7 +8,7 @@ import Animated, {
 import Carousel from "react-native-reanimated-carousel";
 
 import SButton from "@/components/SButton";
-import { ElementsText, window } from "@/constants/Sizes";
+import { ElementsText, window } from "@/constants/sizes";
 import { withAnchorPoint } from "@/utils/anchor-point";
 import { fruitItems } from "@/utils/items";
 

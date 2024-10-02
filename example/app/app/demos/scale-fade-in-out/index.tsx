@@ -4,7 +4,7 @@ import { interpolate } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import { SBItem } from "@/components/SBItem";
-import { window } from "@/constants/Sizes";
+import { window } from "@/constants/sizes";
 
 const PAGE_WIDTH = window.width;
 

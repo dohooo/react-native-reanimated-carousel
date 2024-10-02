@@ -12,7 +12,7 @@ import { BlurView as _BlurView } from "expo-blur";
 import { parallaxLayout } from "./parallax";
 
 import SButton from "@/components/SButton";
-import { ElementsText, window } from "@/constants/Sizes";
+import { ElementsText, window } from "@/constants/sizes";
 import { fruitItems } from "@/utils/items";
 
 const BlurView = Animated.createAnimatedComponent(_BlurView);

@@ -12,7 +12,7 @@ import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import { Arrow, ArrowDirection } from "./Arrow";
 
-import { window } from "@/constants/Sizes";
+import { window } from "@/constants/sizes";
 
 function Index() {
   const headerHeight = 100;

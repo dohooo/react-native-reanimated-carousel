@@ -5,6 +5,8 @@ import Carousel from "react-native-reanimated-carousel";
 import { CarouselAdvancedSettingsPanel } from "@/components/CarouselAdvancedSettingsPanel";
 import { useAdvancedSettings } from "@/hooks/useSettings";
 import { renderItem } from "@/utils/render-item";
+import { CaptureWrapper } from "@/store/CaptureProvider";
+import { defaultDataWith6Colors } from "@/components/CarouselBasicSettingsPanel";
 
 function Index() {
   const ref = React.useRef<ICarouselInstance>(null);
@@ -14,14 +16,7 @@ function Index() {
         autoPlay: false,
         autoPlayInterval: 2000,
         autoPlayReverse: false,
-        data: [
-          "#26292E",
-          "#899F9C",
-          "#B3C680",
-          "#5C6265",
-          "#F5D399",
-          "#F1F1F1",
-        ],
+        data: defaultDataWith6Colors,
         height: 258,
         loop: true,
         pagingEnabled: true,
@@ -33,14 +28,16 @@ function Index() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Carousel
-        {...advancedSettings}
-        ref={ref}
-        style={{ width: "100%" }}
-        width={constants.PAGE_WIDTH * 0.75}
-        onSnapToItem={(index) => console.log("current index:", index)}
-        renderItem={renderItem({ rounded: true, style: { marginRight: 8 } })}
-      />
+      <CaptureWrapper>
+        <Carousel
+          {...advancedSettings}
+          ref={ref}
+          style={{ width: "100%" }}
+          width={constants.PAGE_WIDTH * 0.75}
+          onSnapToItem={(index) => console.log("current index:", index)}
+          renderItem={renderItem({ rounded: true, style: { marginRight: 8 } })}
+        />
+      </CaptureWrapper>
 
       <CarouselAdvancedSettingsPanel
         carouselRef={ref}

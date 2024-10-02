@@ -10,19 +10,13 @@ import Carousel, {
   Pagination,
 } from "react-native-reanimated-carousel";
 
-import { window } from "@/constants/Sizes";
+import { window } from "@/constants/sizes";
 import { renderItem } from "@/utils/render-item";
 import { Stack, YStack } from "tamagui";
+import { CaptureWrapper } from "@/store/CaptureProvider";
+import { defaultDataWith6Colors } from "@/components/CarouselBasicSettingsPanel";
 
 const PAGE_WIDTH = window.width;
-const colors = [
-  "#26292E",
-  "#899F9C",
-  "#B3C680",
-  "#5C6265",
-  "#F5D399",
-  "#CBBAF1",
-];
 
 function Index() {
   const progress = useSharedValue<number>(0);
@@ -54,182 +48,159 @@ function Index() {
           loop
           onProgressChange={progress}
           style={{ width: PAGE_WIDTH }}
-          data={colors}
+          data={defaultDataWith6Colors}
           renderItem={renderItem({ rounded: true })}
         />
       </Stack>
 
-      <Pagination.Basic
-        progress={progress}
-        data={colors}
-        dotStyle={{ backgroundColor: "rgba(0,0,0,0.2)" }}
-        containerStyle={{ gap: 5, marginBottom: 10 }}
-        onPress={onPressPagination}
-      />
+      <CaptureWrapper>
+        <Pagination.Basic
+          progress={progress}
+          data={defaultDataWith6Colors}
+          dotStyle={{ backgroundColor: "#262626" }}
+          activeDotStyle={{ backgroundColor: "#f1f1f1" }}
+          containerStyle={{ gap: 5, marginBottom: 10 }}
+          onPress={onPressPagination}
+        />
 
-      <Pagination.Basic<{ color: string }>
-        progress={progress}
-        data={colors.map((color) => ({ color }))}
-        dotStyle={{
-          width: 25,
-          height: 4,
-          backgroundColor: "rgba(0,0,0,0.2)",
-        }}
-        activeDotStyle={{
-          overflow: "hidden",
-        }}
-        containerStyle={{
-          gap: 10,
-          marginBottom: 10,
-        }}
-        horizontal
-        onPress={onPressPagination}
-      />
+        <Pagination.Basic<{ color: string }>
+          progress={progress}
+          data={defaultDataWith6Colors.map((color) => ({ color }))}
+          dotStyle={{
+            width: 25,
+            height: 4,
+            backgroundColor: "#262626",
+          }}
+          activeDotStyle={{
+            overflow: "hidden",
+            backgroundColor: "#f1f1f1",
+          }}
+          containerStyle={{
+            gap: 10,
+            marginBottom: 10,
+          }}
+          horizontal
+          onPress={onPressPagination}
+        />
 
-      <Pagination.Basic<{ color: string }>
-        progress={progress}
-        data={colors.map((color) => ({ color }))}
-        size={20}
-        dotStyle={{
-          borderRadius: 100,
-          backgroundColor: "rgba(0,0,0,0.2)",
-        }}
-        activeDotStyle={{
-          borderRadius: 100,
-          overflow: "hidden",
-        }}
-        containerStyle={[
-          {
+        <Pagination.Basic<{ color: string }>
+          progress={progress}
+          data={defaultDataWith6Colors.map((color) => ({ color }))}
+          size={20}
+          dotStyle={{
+            borderRadius: 100,
+            backgroundColor: "#262626",
+          }}
+          activeDotStyle={{
+            borderRadius: 100,
+            overflow: "hidden",
+            backgroundColor: "#f1f1f1",
+          }}
+          containerStyle={[
+            {
+              gap: 5,
+              marginBottom: 10,
+            },
+          ]}
+          horizontal
+          onPress={onPressPagination}
+        />
+
+        <Pagination.Custom<{ color: string }>
+          progress={progress}
+          data={defaultDataWith6Colors.map((color) => ({ color }))}
+          size={20}
+          dotStyle={{
+            borderRadius: 16,
+            backgroundColor: "#262626",
+          }}
+          activeDotStyle={{
+            borderRadius: 8,
+            width: 40,
+            height: 30,
+            overflow: "hidden",
+            backgroundColor: "#f1f1f1",
+          }}
+          containerStyle={{
             gap: 5,
             marginBottom: 10,
-          },
-        ]}
-        horizontal
-        onPress={onPressPagination}
-      />
+            alignItems: "center",
+            height: 10,
+          }}
+          horizontal
+          onPress={onPressPagination}
+          customReanimatedStyle={(progress, index, length) => {
+            let val = Math.abs(progress - index);
+            if (index === 0 && progress > length - 1) {
+              val = Math.abs(progress - length);
+            }
 
-      <Pagination.Basic<{ color: string }>
-        progress={progress}
-        data={colors.map((color) => ({ color }))}
-        size={20}
-        dotStyle={{
-          borderRadius: 100,
-          backgroundColor: "rgba(0,0,0,0.2)",
-        }}
-        activeDotStyle={{
-          borderRadius: 100,
-          overflow: "hidden",
-          backgroundColor: "rgba(0,0,0,0.2)",
-        }}
-        containerStyle={{
-          gap: 5,
-          marginBottom: 10,
-        }}
-        horizontal
-        renderItem={(item) => (
-          <View
-            style={{
-              backgroundColor: item.color,
-              flex: 1,
-            }}
-          />
-        )}
-        onPress={onPressPagination}
-      />
+            return {
+              transform: [
+                {
+                  translateY: interpolate(
+                    val,
+                    [0, 1],
+                    [0, 0],
+                    Extrapolation.CLAMP,
+                  ),
+                },
+              ],
+            };
+          }}
+        />
 
-      <Pagination.Custom<{ color: string }>
-        progress={progress}
-        data={colors.map((color) => ({ color }))}
-        size={20}
-        dotStyle={{
-          borderRadius: 16,
-          backgroundColor: "rgba(0,0,0,0.2)",
-        }}
-        activeDotStyle={{
-          borderRadius: 8,
-          width: 40,
-          height: 30,
-          overflow: "hidden",
-          backgroundColor: "black",
-        }}
-        containerStyle={{
-          gap: 5,
-          marginBottom: 10,
-          alignItems: "center",
-          height: 10,
-        }}
-        horizontal
-        onPress={onPressPagination}
-        customReanimatedStyle={(progress, index, length) => {
-          let val = Math.abs(progress - index);
-          if (index === 0 && progress > length - 1) {
-            val = Math.abs(progress - length);
-          }
+        <Pagination.Custom<{ color: string }>
+          progress={progress}
+          data={defaultDataWith6Colors.map((color) => ({ color }))}
+          size={20}
+          dotStyle={{
+            borderRadius: 16,
+            backgroundColor: "#262626",
+          }}
+          activeDotStyle={{
+            borderRadius: 8,
+            width: 40,
+            height: 30,
+            overflow: "hidden",
+            backgroundColor: "#f1f1f1",
+          }}
+          containerStyle={{
+            gap: 5,
+            alignItems: "center",
+            height: 10,
+          }}
+          horizontal
+          onPress={onPressPagination}
+          customReanimatedStyle={(progress, index, length) => {
+            let val = Math.abs(progress - index);
+            if (index === 0 && progress > length - 1) {
+              val = Math.abs(progress - length);
+            }
 
-          return {
-            transform: [
-              {
-                translateY: interpolate(
-                  val,
-                  [0, 1],
-                  [0, 0],
-                  Extrapolation.CLAMP,
-                ),
-              },
-            ],
-          };
-        }}
-      />
-
-      <Pagination.Custom<{ color: string }>
-        progress={progress}
-        data={colors.map((color) => ({ color }))}
-        size={20}
-        dotStyle={{
-          borderRadius: 16,
-          backgroundColor: "rgba(0,0,0,0.2)",
-        }}
-        activeDotStyle={{
-          borderRadius: 8,
-          width: 40,
-          height: 30,
-          overflow: "hidden",
-        }}
-        containerStyle={{
-          gap: 5,
-          alignItems: "center",
-          height: 10,
-        }}
-        horizontal
-        onPress={onPressPagination}
-        customReanimatedStyle={(progress, index, length) => {
-          let val = Math.abs(progress - index);
-          if (index === 0 && progress > length - 1) {
-            val = Math.abs(progress - length);
-          }
-
-          return {
-            transform: [
-              {
-                translateY: interpolate(
-                  val,
-                  [0, 1],
-                  [0, 0],
-                  Extrapolation.CLAMP,
-                ),
-              },
-            ],
-          };
-        }}
-        renderItem={(item) => (
-          <View
-            style={{
-              backgroundColor: item.color,
-              flex: 1,
-            }}
-          />
-        )}
-      />
+            return {
+              transform: [
+                {
+                  translateY: interpolate(
+                    val,
+                    [0, 1],
+                    [0, 0],
+                    Extrapolation.CLAMP,
+                  ),
+                },
+              ],
+            };
+          }}
+          renderItem={(item) => (
+            <View
+              style={{
+                backgroundColor: item.color,
+                flex: 1,
+              }}
+            />
+          )}
+        />
+      </CaptureWrapper>
     </YStack>
   );
 }

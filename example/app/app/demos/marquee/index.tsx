@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import Animated, { Easing } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
 
-import { window } from "@/constants/Sizes";
+import { window } from "@/constants/sizes";
 
 const PAGE_WIDTH = window.width / 2;
 

@@ -8,7 +8,7 @@ import { faker } from "@faker-js/faker";
 
 import { SBImageItem } from "@/components/SBImageItem";
 import SButton from "@/components/SButton";
-import { ElementsText, window } from "@/constants/Sizes";
+import { ElementsText, window } from "@/constants/sizes";
 
 const PAGE_WIDTH = window.width;
 

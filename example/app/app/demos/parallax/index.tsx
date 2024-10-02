@@ -3,11 +3,13 @@ import { View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
 
-import { window } from "@/constants/Sizes";
+import { window } from "@/constants/sizes";
 import { renderItem } from "@/utils/render-item";
 import { CarouselAdvancedSettingsPanel } from "@/components/CarouselAdvancedSettingsPanel";
 import { useAdvancedSettings } from "@/hooks/useSettings";
 import { Stack } from "tamagui";
+import { CaptureWrapper } from "@/store/CaptureProvider";
+import { defaultDataWith6Colors } from "@/components/CarouselBasicSettingsPanel";
 
 const PAGE_WIDTH = window.width;
 
@@ -19,7 +21,7 @@ function Index() {
       autoPlay: false,
       autoPlayInterval: 2000,
       autoPlayReverse: false,
-      data: ["#26292E", "#899F9C", "#B3C680", "#5C6265", "#F5D399", "#F1F1F1"],
+      data: defaultDataWith6Colors,
       height: 258,
       loop: true,
       pagingEnabled: true,
@@ -31,20 +33,22 @@ function Index() {
 
   return (
     <Stack flex={1}>
-      <Carousel
-        ref={ref}
-        {...advancedSettings}
-        style={{
-          width: PAGE_WIDTH,
-        }}
-        mode="parallax"
-        modeConfig={{
-          parallaxScrollingScale: 0.9,
-          parallaxScrollingOffset: 50,
-        }}
-        onProgressChange={progress}
-        renderItem={renderItem({ rounded: true })}
-      />
+      <CaptureWrapper>
+        <Carousel
+          ref={ref}
+          {...advancedSettings}
+          style={{
+            width: PAGE_WIDTH,
+          }}
+          mode="parallax"
+          modeConfig={{
+            parallaxScrollingScale: 0.9,
+            parallaxScrollingOffset: 50,
+          }}
+          onProgressChange={progress}
+          renderItem={renderItem({ rounded: true })}
+        />
+      </CaptureWrapper>
 
       <CarouselAdvancedSettingsPanel
         carouselRef={ref}

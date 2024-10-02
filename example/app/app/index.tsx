@@ -11,6 +11,11 @@ import {
 } from "./demos/routes";
 import { Stack, Text } from "tamagui";
 
+import * as MediaLibrary from "expo-media-library";
+import { useEffect } from "react";
+import { IS_DEV } from "@/constants/env";
+import { IS_WEB } from "@/constants/platform";
+
 const ListItem = ({
   name,
   onPress,
@@ -44,6 +49,13 @@ const SectionHeader = ({ title, color }: { title: string; color: any }) => (
 export default function Home() {
   const { colors } = useColor();
   const router = useRouter();
+  const [status, requestPermission] = MediaLibrary.usePermissions();
+
+  useEffect(() => {
+    if (status === null && IS_DEV && !IS_WEB) {
+      requestPermission();
+    }
+  }, [status]);
 
   const renderSection = (
     title: string,

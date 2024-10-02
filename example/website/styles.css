@@ -3,15 +3,15 @@
 @tailwind utilities;
 
 .summary-item {
-  @apply flex flex-col border border-gray-800 rounded-xl overflow-hidden;
+  @apply relative flex flex-col rounded-2xl overflow-hidden bg-[#111111];
+}
+
+.summary-item .image-container {
+  @apply h-[220px] overflow-hidden flex justify-center items-center;
 }
 
 .summary-item .image-container img {
-  @apply w-full h-auto max-h-[220px];
-}
-
-.summary-item .image-container img {
-  @apply transition-all duration-300;
+  @apply w-full h-full object-contain transition-all duration-300 p-1;
 }
 
 .summary-item:hover .image-container img {
@@ -19,11 +19,11 @@
 }
 
 .summary-item .label-container {
-  @apply text-center font-light text-lg p-2 bg-[#262626] z-10 transition-all duration-300;
+  @apply absolute bottom-4 right-8 text-center font-light text-sm text-[#fefefe] px-2 bg-[#111111] z-10 transition-all duration-300 rounded-lg mt-2 opacity-70;
 }
 
 .summary-item:hover .label-container {
-  @apply bg-[#383838];
+  @apply opacity-100 bottom-6 right-12 scale-110;
 }
 
 html[class~="dark"] .ss-content {
