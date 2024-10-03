@@ -8,7 +8,7 @@ import { ElementsText, window } from "@/constants/sizes";
 import { useToggleButton } from "@/hooks/useToggleButton";
 import { CaptureWrapper } from "@/store/CaptureProvider";
 
-const scale = 0.7;
+const scale = 0.8;
 const PAGE_WIDTH = window.width * scale;
 const PAGE_HEIGHT = 240 * scale;
 
@@ -22,16 +22,19 @@ function Index() {
     "worklet";
 
     const zIndex = interpolate(value, [-1, 0, 1], [10, 20, 30]);
+    const scale = interpolate(value, [-1, 0, 1], [1.25, 1, 0.25]);
     const rotateZ = `${interpolate(value, [-1, 0, 1], [-45, 0, 45])}deg`;
     const translateX = interpolate(
       value,
       [-1, 0, 1],
-      [-window.width, 0, window.width],
+      [-PAGE_WIDTH, 0, PAGE_WIDTH],
     );
+    const opacity = interpolate(value, [-0.75, 0, 1], [0, 1, 0]);
 
     return {
-      transform: [{ rotateZ }, { translateX }],
+      transform: [{ scale }, { rotateZ }, { translateX }],
       zIndex,
+      opacity,
     };
   }, []);
 

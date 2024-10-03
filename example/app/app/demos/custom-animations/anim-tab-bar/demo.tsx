@@ -10,11 +10,8 @@ import Animated, {
 } from "react-native-reanimated";
 import type { ICarouselInstance } from "react-native-reanimated-carousel";
 import Carousel from "react-native-reanimated-carousel";
-
-import SButton from "@/components/SButton";
 import { ElementsText, window } from "@/constants/sizes";
 import { useToggleButton } from "@/hooks/useToggleButton";
-import { CaptureWrapper } from "@/store/CaptureProvider";
 
 const PAGE_WIDTH = 60;
 const PAGE_HEIGHT = 40;
@@ -26,57 +23,39 @@ function Index() {
     defaultValue: false,
     buttonTitle: ElementsText.AUTOPLAY,
   });
-  const [loop, setLoop] = React.useState(false);
 
   return (
-    <View style={{ flex: 1 }}>
-      <CaptureWrapper>
-        <View style={{ marginVertical: 100 }}>
-          <Carousel
-            key={`${loop}`}
-            ref={r}
-            loop={loop}
-            style={{
-              width: window.width,
-              height: PAGE_HEIGHT,
-              justifyContent: "center",
-              alignItems: "center",
-              borderBottomWidth: 1,
-              borderBottomColor: "#002a57",
-            }}
-            width={PAGE_WIDTH}
-            height={PAGE_HEIGHT}
-            data={DATA}
-            renderItem={({ item, animationValue }) => {
-              return (
-                <Item
-                  animationValue={animationValue}
-                  label={item}
-                  onPress={() =>
-                    r.current?.scrollTo({
-                      count: animationValue.value,
-                      animated: true,
-                    })
-                  }
-                />
-              );
-            }}
-            autoPlay={AutoPLay.status}
-          />
-        </View>
-      </CaptureWrapper>
-      {AutoPLay.button}
-      <SButton onPress={() => setLoop(!loop)}>{`Loop: ${loop}`}</SButton>
-      <View
+    <View style={{ paddingVertical: 100 }} id="carousel-component">
+      <Carousel
+        ref={r}
+        loop
         style={{
-          marginTop: 24,
-          flexDirection: "row",
-          justifyContent: "space-evenly",
+          width: window.width,
+          height: PAGE_HEIGHT,
+          justifyContent: "center",
+          alignItems: "center",
+          borderBottomWidth: 1,
+          borderBottomColor: "#002a57",
         }}
-      >
-        <SButton onPress={() => r.current?.prev()}>{"Prev"}</SButton>
-        <SButton onPress={() => r.current?.next()}>{"Next"}</SButton>
-      </View>
+        width={PAGE_WIDTH}
+        height={PAGE_HEIGHT}
+        data={DATA}
+        renderItem={({ item, animationValue }) => {
+          return (
+            <Item
+              animationValue={animationValue}
+              label={item}
+              onPress={() =>
+                r.current?.scrollTo({
+                  count: animationValue.value,
+                  animated: true,
+                })
+              }
+            />
+          );
+        }}
+        autoPlay={AutoPLay.status}
+      />
     </View>
   );
 }
@@ -118,7 +97,7 @@ const Item: React.FC<Props> = (props) => {
     const color = interpolateColor(
       animationValue.value,
       [-1, 0, 1],
-      ["#b6bbc0", "#002a57", "#b6bbc0"],
+      ["#ffffff", "#002a57", "#ffffff"],
     );
 
     return {
@@ -147,7 +126,7 @@ const Item: React.FC<Props> = (props) => {
           containerStyle,
         ]}
       >
-        <Animated.Text style={[{ fontSize: 18, color: "#26292E" }, labelStyle]}>
+        <Animated.Text style={[{ fontSize: 18, color: "#f1f1f1" }, labelStyle]}>
           {label}
         </Animated.Text>
       </Animated.View>

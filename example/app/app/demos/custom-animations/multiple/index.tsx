@@ -5,6 +5,7 @@ import Carousel from "react-native-reanimated-carousel";
 import { SBItem } from "@/components/SBItem";
 import SButton from "@/components/SButton";
 import { ElementsText, window } from "@/constants/sizes";
+import { CaptureWrapper } from "@/store/CaptureProvider";
 
 const PAGE_WIDTH = window.width;
 
@@ -35,14 +36,16 @@ function Index() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Carousel
-        {...baseOptions}
-        loop
-        autoPlay={isAutoPlay}
-        autoPlayInterval={isFast ? 100 : 2000}
-        data={[...new Array(12).keys()]}
-        renderItem={({ index }) => <SBItem key={index} index={index} />}
-      />
+      <CaptureWrapper>
+        <Carousel
+          {...baseOptions}
+          loop
+          autoPlay={isAutoPlay}
+          autoPlayInterval={isFast ? 100 : 2000}
+          data={[...new Array(12).keys()]}
+          renderItem={({ index }) => <SBItem key={index} index={index} />}
+        />
+      </CaptureWrapper>
       <SButton
         onPress={() => {
           setIsVertical(!isVertical);

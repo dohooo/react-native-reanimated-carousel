@@ -5,7 +5,6 @@ import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import { SBItem } from "@/components/SBItem";
 import { window } from "@/constants/sizes";
-import { CaptureWrapper } from "@/store/CaptureProvider";
 
 const PAGE_WIDTH = window.width;
 
@@ -25,26 +24,24 @@ function Index() {
   }, []);
 
   return (
-    <View style={{ flex: 1 }}>
-      <CaptureWrapper>
-        <Carousel
-          loop
-          style={{
-            width: PAGE_WIDTH,
-            height: 240,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          autoPlay
-          width={PAGE_WIDTH * 0.7}
-          height={240 * 0.7}
-          data={[...new Array(6).keys()]}
-          renderItem={({ index }) => {
-            return <SBItem key={index} index={index} />;
-          }}
-          customAnimation={animationStyle}
-        />
-      </CaptureWrapper>
+    <View id="carousel-component">
+      <Carousel
+        loop
+        style={{
+          width: PAGE_WIDTH,
+          height: 240,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        autoPlay
+        width={PAGE_WIDTH * 0.7}
+        height={240 * 0.7}
+        data={[...new Array(6).keys()]}
+        renderItem={({ index }) => {
+          return <SBItem key={index} index={index} />;
+        }}
+        customAnimation={animationStyle}
+      />
     </View>
   );
 }

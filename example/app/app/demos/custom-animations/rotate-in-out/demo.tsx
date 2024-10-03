@@ -7,7 +7,7 @@ import { SBItem } from "@/components/SBItem";
 import { ElementsText, window } from "@/constants/sizes";
 import { useToggleButton } from "@/hooks/useToggleButton";
 
-const scale = 0.8;
+const scale = 0.7;
 const PAGE_WIDTH = window.width * scale;
 const PAGE_HEIGHT = 240 * scale;
 
@@ -21,24 +21,21 @@ function Index() {
     "worklet";
 
     const zIndex = interpolate(value, [-1, 0, 1], [10, 20, 30]);
-    const scale = interpolate(value, [-1, 0, 1], [1.25, 1, 0.25]);
     const rotateZ = `${interpolate(value, [-1, 0, 1], [-45, 0, 45])}deg`;
     const translateX = interpolate(
       value,
       [-1, 0, 1],
-      [-PAGE_WIDTH, 0, PAGE_WIDTH],
+      [-window.width, 0, window.width],
     );
-    const opacity = interpolate(value, [-0.75, 0, 1], [0, 1, 0]);
 
     return {
-      transform: [{ scale }, { rotateZ }, { translateX }],
+      transform: [{ rotateZ }, { translateX }],
       zIndex,
-      opacity,
     };
   }, []);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View id="carousel-component">
       <Carousel
         loop
         style={{
@@ -50,13 +47,10 @@ function Index() {
         width={PAGE_WIDTH}
         height={PAGE_HEIGHT}
         data={[...new Array(6).keys()]}
-        renderItem={({ index }) => {
-          return <SBItem key={index} index={index} />;
-        }}
+        renderItem={({ index }) => <SBItem key={index} index={index} />}
         autoPlay={AutoPLay.status}
         customAnimation={animationStyle}
       />
-      {AutoPLay.button}
     </View>
   );
 }

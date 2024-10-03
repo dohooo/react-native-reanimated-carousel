@@ -136,7 +136,9 @@ async function genKindDirs() {
 // remove all of the mdx files in the examples dir
 cleanGeneratedMDXFiles();
 
-const pages = getPages();
+const pages = getPages().sort((a, b) =>
+  !a.preview.isExist && !b.preview.isExist ? 0 : a.preview.isExist ? -1 : 1,
+);
 
 // Generate kind dirs and write `_meta.json`
 genKindDirs(pages);

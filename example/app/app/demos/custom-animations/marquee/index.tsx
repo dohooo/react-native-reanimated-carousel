@@ -4,6 +4,7 @@ import Animated, { Easing } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
 
 import { window } from "@/constants/sizes";
+import { CaptureWrapper } from "@/store/CaptureProvider";
 
 const PAGE_WIDTH = window.width / 2;
 
@@ -35,6 +36,7 @@ function ReactionContainer(props: {
       ]}
     >
       <Text
+        style={{ color: "white" }}
         onLayout={({ nativeEvent }) => {
           if (typeof layout === "undefined") setWidth(nativeEvent.layout.width);
         }}
@@ -51,44 +53,46 @@ function ReactionContainer(props: {
 
 function Index() {
   return (
-    <ReactionContainer text="一二三四五六七八九十">
-      {(text, layout) => {
-        return (
-          <View
-            style={{
-              alignItems: "center",
-              flex: 1,
-              marginTop: 72,
-            }}
-          >
-            <Carousel
-              width={layout?.width ?? PAGE_WIDTH}
-              height={30}
-              style={[
-                {
-                  width: 200,
-                },
-              ]}
-              snapEnabled={false}
-              pagingEnabled={false}
-              loop
-              autoPlay
-              withAnimation={{
-                type: "timing",
-                config: {
-                  duration: 10000,
-                  easing: Easing.linear,
-                },
+    <View style={{ backgroundColor: "black", height: 200 }}>
+      <ReactionContainer text="This is a piece of text that will play in a loop...">
+        {(text, layout) => {
+          return (
+            <View
+              style={{
+                alignItems: "center",
+                flex: 1,
+                marginTop: 72,
               }}
-              autoPlayInterval={0}
-              data={[...new Array(6).keys()]}
-              renderItem={() => text}
-              enabled={false}
-            />
-          </View>
-        );
-      }}
-    </ReactionContainer>
+            >
+              <Carousel
+                width={layout?.width ?? PAGE_WIDTH}
+                height={30}
+                style={[
+                  {
+                    width: 200,
+                  },
+                ]}
+                snapEnabled={false}
+                pagingEnabled={false}
+                loop
+                autoPlay
+                withAnimation={{
+                  type: "timing",
+                  config: {
+                    duration: 10000,
+                    easing: Easing.linear,
+                  },
+                }}
+                autoPlayInterval={0}
+                data={[...new Array(6).keys()]}
+                renderItem={() => text}
+                enabled={false}
+              />
+            </View>
+          );
+        }}
+      </ReactionContainer>
+    </View>
   );
 }
 

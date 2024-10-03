@@ -97,8 +97,8 @@ export const routes = [
         title: "Rotate In Out",
       },
       {
-        name: "rotate-scale-fade-in-out",
-        title: "Rotate Scale Fade In Out",
+        name: "rotate-fade-in-out",
+        title: "Rotate Fade In Out",
       },
       {
         name: "anim-tab-bar",
