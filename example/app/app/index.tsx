@@ -4,15 +4,11 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
 
 import { useColor } from "@/hooks/useColor";
-import {
-  CustomAnimationsDemos,
-  ExperimentDemos,
-  LayoutsDemos,
-} from "./demos/routes";
+import { routes } from "./routes";
 import { Stack, Text } from "tamagui";
 
 import * as MediaLibrary from "expo-media-library";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { IS_DEV } from "@/constants/env";
 import { IS_WEB } from "@/constants/platform";
 
@@ -46,6 +42,13 @@ const SectionHeader = ({ title, color }: { title: string; color: any }) => (
   </Stack>
 );
 
+function upcaseLetter(string: string) {
+  return string
+    .split("-")
+    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+    .join(" ");
+}
+
 export default function Home() {
   const { colors } = useColor();
   const router = useRouter();
@@ -59,6 +62,7 @@ export default function Home() {
 
   const renderSection = (
     title: string,
+    kind: string,
     data: readonly {
       readonly name: string;
       readonly title: string;
@@ -69,25 +73,35 @@ export default function Home() {
       <ListItem
         key={index}
         name={item.title}
-        onPress={() => router.push(`/demos/${item.name}` as any)}
+        onPress={() => router.push(`/demos/${kind}/${item.name}` as any)}
         color={colors.text}
       />
     )),
   ];
 
+  const stickyHeaderIndices = useMemo(
+    () =>
+      routes.reduce((acc, _, index) => {
+        return [
+          ...acc,
+          typeof acc[index - 1] === "undefined"
+            ? 0
+            : acc[index - 1] + 1 + routes[index - 1].demos.length,
+        ];
+      }, [] as number[]),
+    [routes],
+  );
+
   return (
     <ScrollView
       style={{ flex: 1 }}
       contentContainerStyle={{ paddingBottom: 64 }}
-      stickyHeaderIndices={[
-        0,
-        LayoutsDemos.length + 1,
-        LayoutsDemos.length + CustomAnimationsDemos.length + 2,
-      ]}
+      stickyHeaderIndices={stickyHeaderIndices}
     >
-      {renderSection("Layouts", LayoutsDemos)}
-      {renderSection("Custom Animations", CustomAnimationsDemos)}
-      {renderSection("Experiments", ExperimentDemos)}
+      {routes.map((route) => {
+        const formattedKindName = upcaseLetter(route.kind);
+        return renderSection(formattedKindName, route.kind, route.demos);
+      })}
     </ScrollView>
   );
 }

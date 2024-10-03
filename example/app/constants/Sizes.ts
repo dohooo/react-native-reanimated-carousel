@@ -9,7 +9,7 @@ export const ElementsText = {
 
 const isWeb = Platform.OS === 'web';
 
-export const MAX_WIDTH = 480;
+export const MAX_WIDTH = 430;
 
 export const window: ScaledSize = isWeb
   ? { width: MAX_WIDTH, height: 800, scale: 1, fontScale: 1 }

@@ -11,19 +11,19 @@
 }
 
 .summary-item .image-container img {
-  @apply w-full h-full object-contain transition-all duration-300 p-1;
+  @apply w-full h-full object-contain transition-all duration-300 p-1 scale-90;
 }
 
 .summary-item:hover .image-container img {
-  @apply scale-105;
+  @apply scale-100;
 }
 
 .summary-item .label-container {
-  @apply absolute bottom-4 right-8 text-center font-light text-sm text-[#fefefe] px-2 bg-[#111111] z-10 transition-all duration-300 rounded-lg mt-2 opacity-70;
+  @apply absolute bottom-6 right-12 text-center font-light text-sm text-[#fefefe] px-2 bg-[#111111] z-10 transition-all duration-300 rounded-lg mt-2 opacity-70;
 }
 
 .summary-item:hover .label-container {
-  @apply opacity-100 bottom-6 right-12 scale-110;
+  @apply opacity-100 bottom-8 right-14 scale-125;
 }
 
 html[class~="dark"] .ss-content {

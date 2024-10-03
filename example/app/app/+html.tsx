@@ -26,9 +26,10 @@ export default function Root({ children }: { children: React.ReactNode }) {
         {/* Using raw CSS styles as an escape-hatch to ensure the background color never flickers in dark-mode. */}
         <style
           dangerouslySetInnerHTML={{
-            __html: responsiveBackground + viewportStyles,
+            __html: viewportStyles,
           }}
         />
+
         {/* Add any additional <head> elements that you want globally available on web... */}
       </head>
       <body>
@@ -38,20 +39,9 @@ export default function Root({ children }: { children: React.ReactNode }) {
   );
 }
 
-const responsiveBackground = `
-body {
-  background-color: #fff;
-}`;
-
 const viewportStyles = `
-@media (min-width: ${MAX_WIDTH}px) {
   html, body {
     max-width: ${MAX_WIDTH}px;
     margin: 0 auto;
-    background-color: #f0f0f0;
   }
-  body {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-}
 `;

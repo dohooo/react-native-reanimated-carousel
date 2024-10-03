@@ -11,13 +11,12 @@ import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
 import Stack from "expo-router/stack";
 import { useWebContext } from "@/store/WebProvider";
-import {
-  CustomAnimationsDemos,
-  ExperimentDemos,
-  LayoutsDemos,
-} from "./demos/routes";
 import { CaptureProvider } from "@/store/CaptureProvider";
 import { HeaderRight } from "@/components/HeaderRight";
+import { routes } from "./routes";
+import { useGlobalSearchParams, useLocalSearchParams } from "expo-router";
+import { useInDoc } from "@/hooks/useInDoc";
+import { IS_WEB } from "@/constants/platform";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -54,11 +53,32 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const headerShown = !useWebContext()?.page;
+  const webHeaderShown = !useWebContext()?.page;
   const [isRTL, setIsRTL] = useState(I18nManager.isRTL);
+  const { inDoc } = useInDoc();
+
+  useEffect(() => {
+    if (IS_WEB && inDoc) {
+      window.addEventListener("load", () => {
+        const carouselComponent = document.getElementById("carousel-component");
+        if (carouselComponent) {
+          window.parent.postMessage(
+            {
+              type: "carouselHeight",
+              height: carouselComponent.offsetHeight,
+            },
+            "*",
+          );
+        }
+      });
+    }
+  }, [inDoc]);
 
   return (
-    <TamaguiProvider config={tamaguiConfig} defaultTheme={"light"}>
+    <TamaguiProvider
+      config={tamaguiConfig}
+      defaultTheme={inDoc ? "dark" : "light"}
+    >
       <View style={{ flex: 1 }}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <ThemeProvider value={DefaultTheme}>
@@ -66,9 +86,12 @@ function RootLayoutNav() {
               <Stack
                 initialRouteName="/"
                 screenOptions={{
-                  headerShown,
+                  headerShown: !inDoc && webHeaderShown,
                   contentStyle: {
                     flex: 1,
+                    backgroundColor: inDoc
+                      ? tamaguiConfig.themes.dark.background.val
+                      : tamaguiConfig.themes.light.background.val,
                   },
                   headerRight: ({ tintColor }) => (
                     <HeaderRight
@@ -80,19 +103,19 @@ function RootLayoutNav() {
                 }}
               >
                 <Stack.Screen name="index" />
-                {[
-                  ...LayoutsDemos,
-                  ...CustomAnimationsDemos,
-                  ...ExperimentDemos,
-                ].map((item) => (
-                  <Stack.Screen
-                    key={item.name}
-                    name={`demos/${item.name}/index`}
-                    options={{
-                      title: item.title,
-                    }}
-                  />
-                ))}
+                {routes
+                  .flatMap((item) =>
+                    item.demos.map((demo) => ({ ...demo, kind: item.kind })),
+                  )
+                  .map((item) => (
+                    <Stack.Screen
+                      key={item.name}
+                      name={`demos/${item.kind}/${item.name}/index`}
+                      options={{
+                        title: item.title,
+                      }}
+                    />
+                  ))}
               </Stack>
             </CaptureProvider>
           </ThemeProvider>

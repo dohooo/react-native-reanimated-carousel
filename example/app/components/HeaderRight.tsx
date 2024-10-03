@@ -9,8 +9,10 @@ import { IS_WEB } from "@/constants/platform";
 import { reloadAsync } from "expo-updates";
 import { IS_DEV } from "@/constants/env";
 import { useCapture } from "@/store/CaptureProvider";
-import { Camera } from "@tamagui/lucide-icons";
+import { Box, Camera, Divide, Star } from "@tamagui/lucide-icons";
 import { XStack } from "tamagui";
+import Animated from "react-native-reanimated";
+import { Href, usePathname, useRouter } from "expo-router";
 
 interface HeaderRightProps {
   tintColor?: ColorValue;
@@ -29,6 +31,18 @@ export const HeaderRight: React.FC<HeaderRightProps> = ({
   setIsRTL,
 }) => {
   const { capture } = useCapture();
+  const pathname = usePathname();
+  const inDemos = pathname.startsWith("/demos");
+  const router = useRouter();
+
+  function demoToggle() {
+    const isDemoPage = pathname.endsWith("/demo");
+    if (isDemoPage) {
+      router.replace(pathname.replace(/\/demo$/, "") as Href<string | object>);
+    } else {
+      router.replace(`${pathname}/demo` as Href<string | object>);
+    }
+  }
 
   return (
     <XStack alignItems="center" justifyContent="center" gap={8}>
@@ -38,10 +52,22 @@ export const HeaderRight: React.FC<HeaderRightProps> = ({
           <Text style={{ color: tintColor }}> | </Text>
         </>
       )}
-      {IS_DEV && !IS_WEB && (
-        <TouchableOpacity onPress={capture}>
-          <Camera size={20} />
-        </TouchableOpacity>
+
+      {IS_DEV && !IS_WEB && inDemos && (
+        <>
+          <TouchableOpacity onPress={demoToggle}>
+            <Box size={20} />
+          </TouchableOpacity>
+          <Text>|</Text>
+        </>
+      )}
+      {IS_DEV && !IS_WEB && inDemos && (
+        <>
+          <TouchableOpacity onPress={capture}>
+            <Camera size={20} />
+          </TouchableOpacity>
+          <Text>|</Text>
+        </>
       )}
       <TouchableWithoutFeedback
         onPress={() => {

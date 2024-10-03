@@ -12,6 +12,7 @@ function Index() {
   const ref = React.useRef<ICarouselInstance>(null);
   const { constants, advancedSettings, onAdvancedSettingsChange } =
     useAdvancedSettings({
+      // These values will be passed in the Carousel Component as default props
       defaultSettings: {
         autoPlay: false,
         autoPlayInterval: 2000,

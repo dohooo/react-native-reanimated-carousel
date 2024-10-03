@@ -1,21 +1,22 @@
 {
-  "name": "nextra-docs-template",
+  "name": "reanimated-carousel-website",
   "version": "0.0.1",
   "description": "Nextra docs template",
   "author": "Shu Ding <g@shud.in>",
   "license": "MIT",
-  "homepage": "https://github.com/shuding/nextra-docs-template#readme",
+  "homepage": "https://github.com/dohooo/react-native-reanimated-carousel#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shuding/nextra-docs-template.git"
+    "url": "git+https://github.com/dohooo/react-native-reanimated-carousel.git"
   },
   "bugs": {
-    "url": "https://github.com/shuding/nextra-docs-template/issues"
+    "url": "https://github.com/dohooo/react-native-reanimated-carousel/issues"
   },
   "scripts": {
     "dev": "next dev",
-    "gen-pages": "node scripts/gen-pages.mjs",
-    "build": "npm run gen-pages && next build",
+    "gen-pages:dev": "NODE_ENV=development node scripts/gen-pages.mjs",
+    "gen-pages:prod": "NODE_ENV=production node scripts/gen-pages.mjs",
+    "build": "npm run gen-pages:prod && next build",
     "start": "next start"
   },
   "dependencies": {
@@ -30,6 +31,7 @@
   "devDependencies": {
     "@types/node": "18.11.10",
     "autoprefixer": "^10.4.16",
+    "dotenv": "^16.4.5",
     "postcss": "^8.4.32",
     "react-native-web": "~0.19.6",
     "tailwindcss": "^3.3.6",
