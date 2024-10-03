@@ -40,6 +40,15 @@ function getPages() {
       const isDemoExist = existsSync(demoFilePath);
       const isPreviewExist = existsSync(previewFilePath);
 
+      const ignoreFileIncluded = readdirSync(pageDirPath).includes(".ignore");
+
+      if (ignoreFileIncluded) {
+        console.log(
+          `💾 |_${kind}/${pageName} is ignored because of .ignore file`,
+        );
+        continue;
+      }
+
       pages.push({
         demo: {
           ext: demoFileExt,
@@ -63,10 +72,6 @@ function getPages() {
 }
 
 async function writePage(page) {
-  console.log(
-    `📜 |_${page.demo.pageKind}/${page.demo.pageName} is going to generate...`,
-  );
-
   if (!page.demo.isExist) {
     console.log(
       `🍎 |_${page.demo.pageKind}/${page.demo.pageName} demo code not found, skip it...`,
