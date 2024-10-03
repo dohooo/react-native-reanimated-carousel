@@ -11,7 +11,6 @@ import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 import { SBItem } from "@/components/SBItem";
 import { window } from "@/constants/sizes";
 import { withAnchorPoint } from "@/utils/anchor-point";
-import { CaptureWrapper } from "@/store/CaptureProvider";
 
 const count = 4;
 
@@ -19,19 +18,20 @@ function Index() {
   const size = window.width / 4;
 
   return (
-    <CaptureWrapper>
-      <View style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
-        {Array.from({
-          length: count * 3,
-        }).map((_, i) => {
-          return (
-            <View key={i} style={{ width: size, height: size }}>
-              <CubeItem />
-            </View>
-          );
-        })}
-      </View>
-    </CaptureWrapper>
+    <View
+      style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+      id="carousel-component"
+    >
+      {Array.from({
+        length: count * 3,
+      }).map((_, i) => {
+        return (
+          <View key={i} style={{ width: size, height: size }}>
+            <CubeItem />
+          </View>
+        );
+      })}
+    </View>
   );
 }
 

@@ -9,6 +9,9 @@ import { faker } from "@faker-js/faker";
 import { SBImageItem } from "@/components/SBImageItem";
 import SButton from "@/components/SButton";
 import { ElementsText, window } from "@/constants/sizes";
+import { getImages } from "@/utils/get-images";
+import { SlideItem } from "@/components/SlideItem";
+import { CaptureWrapper } from "@/store/CaptureProvider";
 
 const PAGE_WIDTH = window.width;
 
@@ -62,59 +65,46 @@ function Index() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Carousel
-        width={itemSize}
-        height={itemSize}
-        style={{
-          width: PAGE_WIDTH,
-          height: PAGE_WIDTH / 2,
-          backgroundColor: "#010017",
-        }}
-        loop
-        autoPlay={isAutoPlay}
-        autoPlayInterval={isFast ? 100 : 2000}
-        data={[...new Array(12).keys()]}
-        renderItem={({ index }) => (
-          <TouchableWithoutFeedback
-            key={index}
-            onPress={() => {
-              console.log(index);
-            }}
-            containerStyle={{ flex: 1 }}
-            style={{ flex: 1 }}
-          >
-            <View
-              style={{
-                backgroundColor: "white",
-                flex: 1,
-                borderRadius: 50,
-                justifyContent: "center",
-                overflow: "hidden",
-                alignItems: "center",
+      <CaptureWrapper>
+        <Carousel
+          width={itemSize}
+          height={itemSize}
+          style={{
+            width: PAGE_WIDTH,
+            height: PAGE_WIDTH / 2,
+          }}
+          loop
+          autoPlay={isAutoPlay}
+          autoPlayInterval={isFast ? 100 : 2000}
+          data={getImages(12)}
+          renderItem={({ index }) => (
+            <TouchableWithoutFeedback
+              key={index}
+              onPress={() => {
+                console.log(index);
               }}
+              containerStyle={{ flex: 1 }}
+              style={{ flex: 1 }}
             >
-              <SBImageItem
-                showIndex={false}
+              <View
                 style={{
-                  position: "absolute",
-                  width: "100%",
-                  height: "100%",
-                }}
-              />
-              <Text
-                style={{
-                  color: "white",
-                  fontWeight: "600",
-                  fontSize: 40,
+                  backgroundColor: "white",
+                  flex: 1,
+                  borderRadius: 50,
+                  justifyContent: "center",
+                  overflow: "hidden",
+                  alignItems: "center",
                 }}
               >
-                {faker.person.fullName().slice(0, 2).toUpperCase()}
-              </Text>
-            </View>
-          </TouchableWithoutFeedback>
-        )}
-        customAnimation={animationStyle}
-      />
+                <View style={{ width: "100%", height: "100%" }}>
+                  <SlideItem index={index} />
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          )}
+          customAnimation={animationStyle}
+        />
+      </CaptureWrapper>
       <SButton
         onPress={() => {
           setIsFast(!isFast);

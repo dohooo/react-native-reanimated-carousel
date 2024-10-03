@@ -7,6 +7,8 @@ import { faker } from "@faker-js/faker";
 import { BlurView } from "expo-blur";
 
 import { window } from "@/constants/sizes";
+import { SlideItem } from "@/components/SlideItem";
+import { CaptureWrapper } from "@/store/CaptureProvider";
 
 function Index() {
   const headerHeight = 100;
@@ -43,112 +45,83 @@ function Index() {
   );
 
   return (
-    <View style={{ flex: 1 }}>
-      <Image
-        source={{
-          uri: `${faker.image.url({
+    <View style={{ flex: 1, backgroundColor: "black" }}>
+      <CaptureWrapper>
+        <Carousel
+          loop
+          vertical
+          style={{
+            justifyContent: "center",
             width: PAGE_WIDTH,
             height: PAGE_HEIGHT,
-          })}?random=${Math.random()}`,
-        }}
-        style={{
-          width: PAGE_WIDTH,
-          height: PAGE_HEIGHT,
-          position: "absolute",
-        }}
-      />
-      <BlurView
-        intensity={80}
-        tint="dark"
-        style={{
-          width: PAGE_WIDTH,
-          height: PAGE_HEIGHT,
-          position: "absolute",
-        }}
-      />
-      <Carousel
-        loop
-        vertical
-        style={{
-          justifyContent: "center",
-          width: PAGE_WIDTH,
-          height: PAGE_HEIGHT,
-        }}
-        width={ITEM_WIDTH}
-        pagingEnabled={false}
-        height={ITEM_HEIGHT}
-        data={[...new Array(10).keys()]}
-        renderItem={({ index }) => {
-          return (
-            <View key={index} style={{ flex: 1, padding: 10 }}>
-              <View
-                style={{
-                  alignItems: "flex-start",
-                  flex: 1,
-                  justifyContent: "space-between",
-                  flexDirection: "row",
-                  borderRadius: 20,
-                }}
-              >
+          }}
+          width={ITEM_WIDTH}
+          pagingEnabled={false}
+          height={ITEM_HEIGHT}
+          data={[...new Array(10).keys()]}
+          renderItem={({ index }) => {
+            return (
+              <View key={index} style={{ flex: 1, padding: 10 }}>
                 <View
                   style={{
+                    alignItems: "flex-start",
+                    flex: 1,
+                    justifyContent: "space-between",
                     flexDirection: "row",
-                    alignItems: "center",
+                    borderRadius: 20,
                   }}
                 >
-                  <Image
+                  <View
                     style={{
-                      width: 20,
-                      height: 20,
-                      borderRadius: 10,
-                      marginRight: 5,
-                    }}
-                    source={{
-                      uri: `${faker.image.url({
-                        width: 20,
-                        height: 20,
-                      })}?random=${Math.random()}`,
-                    }}
-                  />
-                  <Text
-                    numberOfLines={1}
-                    style={{
-                      maxWidth: ITEM_WIDTH * 0.3 - 40,
-                      color: "white",
+                      flexDirection: "row",
+                      alignItems: "center",
                     }}
                   >
-                    {faker.animal.dog()}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    width: ITEM_WIDTH * 0.6,
-                    height: ITEM_HEIGHT - 20,
-                    borderRadius: 10,
-                    overflow: "hidden",
-                  }}
-                >
-                  <Image
+                    <View
+                      style={{
+                        width: 20,
+                        height: 20,
+                        borderRadius: 10,
+                        marginRight: 5,
+                        backgroundColor: "gray",
+                      }}
+                    />
+                    <Text
+                      numberOfLines={1}
+                      style={{
+                        maxWidth: ITEM_WIDTH * 0.3 - 40,
+                        color: "white",
+                      }}
+                    >
+                      {faker.animal.dog()}
+                    </Text>
+                  </View>
+                  <View
                     style={{
                       width: ITEM_WIDTH * 0.6,
                       height: ITEM_HEIGHT - 20,
                       borderRadius: 10,
-                      marginRight: 5,
+                      overflow: "hidden",
                     }}
-                    source={{
-                      uri: `${faker.image.url({
-                        width: Math.round(ITEM_WIDTH * 0.6),
+                  >
+                    <View
+                      style={{
+                        width: ITEM_WIDTH * 0.6,
                         height: ITEM_HEIGHT - 20,
-                      })}?random=${Math.random()}`,
-                    }}
-                  />
+                        borderRadius: 10,
+                        marginRight: 5,
+                      }}
+                    >
+                      <SlideItem index={index} />
+                    </View>
+                  </View>
                 </View>
               </View>
-            </View>
-          );
-        }}
-        customAnimation={animationStyle}
-      />
+            );
+          }}
+          customAnimation={animationStyle}
+        />
+      </CaptureWrapper>
     </View>
   );
 }

@@ -22,52 +22,40 @@ const BlurView = Animated.createAnimatedComponent(_BlurView);
 const PAGE_WIDTH = window.width / 2;
 
 function Index() {
-  const [isAutoPlay, setIsAutoPlay] = React.useState(false);
-
   return (
-    <View style={{ flex: 1 }}>
-      <CaptureWrapper>
-        <Carousel
-          loop={true}
-          autoPlay={isAutoPlay}
-          style={{
-            width: window.width,
-            height: 240,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          width={PAGE_WIDTH}
-          data={[...fruitItems, ...fruitItems]}
-          renderItem={({ item, index, animationValue }) => {
-            return (
-              <CustomItem
-                key={index}
-                index={index}
-                animationValue={animationValue}
-              />
-            );
-          }}
-          customAnimation={parallaxLayout(
-            {
-              size: PAGE_WIDTH,
-              vertical: false,
-            },
-            {
-              parallaxScrollingScale: 1,
-              parallaxAdjacentItemScale: 0.5,
-              parallaxScrollingOffset: 40,
-            },
-          )}
-          scrollAnimationDuration={1200}
-        />
-      </CaptureWrapper>
-      <SButton
-        onPress={() => {
-          setIsAutoPlay(!isAutoPlay);
+    <View id="carousel-component">
+      <Carousel
+        loop={true}
+        style={{
+          width: window.width,
+          height: 240,
+          justifyContent: "center",
+          alignItems: "center",
         }}
-      >
-        {ElementsText.AUTOPLAY}:{`${isAutoPlay}`}
-      </SButton>
+        width={PAGE_WIDTH}
+        data={[...fruitItems, ...fruitItems]}
+        renderItem={({ item, index, animationValue }) => {
+          return (
+            <CustomItem
+              key={index}
+              index={index}
+              animationValue={animationValue}
+            />
+          );
+        }}
+        customAnimation={parallaxLayout(
+          {
+            size: PAGE_WIDTH,
+            vertical: false,
+          },
+          {
+            parallaxScrollingScale: 1,
+            parallaxAdjacentItemScale: 0.5,
+            parallaxScrollingOffset: 40,
+          },
+        )}
+        scrollAnimationDuration={1200}
+      />
     </View>
   );
 }

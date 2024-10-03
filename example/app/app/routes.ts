@@ -45,10 +45,6 @@ export const routes = [
         title: "Blur Rotate",
       },
       {
-        name: "material-3",
-        title: "Material 3",
-      },
-      {
         name: "curve",
         title: "Curve",
       },
@@ -63,10 +59,6 @@ export const routes = [
       {
         name: "press-swipe",
         title: "Press Swipe",
-      },
-      {
-        name: "tear",
-        title: "Tear",
       },
       {
         name: "stack-cards",
@@ -119,15 +111,6 @@ export const routes = [
       {
         name: "multiple",
         title: "Multiple",
-      },
-    ],
-  },
-  {
-    kind: "experiments",
-    demos: [
-      {
-        name: "complex",
-        title: "Complex",
       },
     ],
   },

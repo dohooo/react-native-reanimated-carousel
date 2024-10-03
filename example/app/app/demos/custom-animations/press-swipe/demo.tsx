@@ -1,5 +1,4 @@
 import * as React from "react";
-import type { ImageSourcePropType } from "react-native";
 import { View } from "react-native";
 import Animated, {
   interpolate,
@@ -9,16 +8,13 @@ import Animated, {
 } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
-import SButton from "@/components/SButton";
-import { ElementsText, window } from "@/constants/sizes";
-import { CaptureWrapper } from "@/store/CaptureProvider";
+import { window } from "@/constants/sizes";
 import { SlideItem } from "@/components/SlideItem";
 import { PURPLE_IMAGES } from "@/constants/purple-images";
 
 const PAGE_WIDTH = window.width;
 
 function Index() {
-  const [isAutoPlay, setIsAutoPlay] = React.useState(false);
   const pressAnim = useSharedValue<number>(0);
   const animationStyle: TAnimationStyle = React.useCallback((value: number) => {
     "worklet";
@@ -37,36 +33,24 @@ function Index() {
   }, []);
 
   return (
-    <View style={{ flex: 1 }}>
-      <CaptureWrapper>
-        <Carousel
-          loop={true}
-          autoPlay={isAutoPlay}
-          style={{ width: PAGE_WIDTH, height: 240 }}
-          width={PAGE_WIDTH}
-          data={PURPLE_IMAGES}
-          onScrollStart={() => {
-            pressAnim.value = withTiming(1);
-          }}
-          onScrollEnd={() => {
-            pressAnim.value = withTiming(0);
-          }}
-          renderItem={({ index }) => {
-            return (
-              <CustomItem index={index} key={index} pressAnim={pressAnim} />
-            );
-          }}
-          customAnimation={animationStyle}
-          scrollAnimationDuration={1200}
-        />
-      </CaptureWrapper>
-      <SButton
-        onPress={() => {
-          setIsAutoPlay(!isAutoPlay);
+    <View id="carousel-component">
+      <Carousel
+        loop={true}
+        style={{ width: PAGE_WIDTH, height: 240 }}
+        width={PAGE_WIDTH}
+        data={PURPLE_IMAGES}
+        onScrollStart={() => {
+          pressAnim.value = withTiming(1);
         }}
-      >
-        {ElementsText.AUTOPLAY}:{`${isAutoPlay}`}
-      </SButton>
+        onScrollEnd={() => {
+          pressAnim.value = withTiming(0);
+        }}
+        renderItem={({ index }) => {
+          return <CustomItem index={index} key={index} pressAnim={pressAnim} />;
+        }}
+        customAnimation={animationStyle}
+        scrollAnimationDuration={1200}
+      />
     </View>
   );
 }

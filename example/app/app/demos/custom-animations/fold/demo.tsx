@@ -1,21 +1,17 @@
 import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import type Animated from "react-native-reanimated";
 import { Extrapolation, interpolate } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
-import SButton from "@/components/SButton";
-import { ElementsText, window } from "@/constants/sizes";
+import { window } from "@/constants/sizes";
 import { SlideItem } from "@/components/SlideItem";
-import { CaptureWrapper } from "@/store/CaptureProvider";
 import { getImages } from "@/utils/get-images";
 
 const PAGE_WIDTH = window.width;
 
 function Index() {
-  const [isFast, setIsFast] = React.useState(false);
-  const [isAutoPlay, setIsAutoPlay] = React.useState(false);
   const itemSize = PAGE_WIDTH / 2;
   const centerOffset = PAGE_WIDTH / 2 - itemSize / 2;
 
@@ -72,43 +68,25 @@ function Index() {
   );
 
   return (
-    <View style={{ flex: 1 }}>
-      <CaptureWrapper>
-        <Carousel
-          width={itemSize}
-          height={PAGE_WIDTH / 2}
-          style={{
-            width: PAGE_WIDTH,
-            height: PAGE_WIDTH / 2,
-            backgroundColor: "black",
-          }}
-          loop
-          windowSize={Math.round(dataLength / 2)}
-          scrollAnimationDuration={1500}
-          autoPlay={isAutoPlay}
-          autoPlayInterval={isFast ? 100 : 1200}
-          data={getImages(10)}
-          renderItem={({ index, animationValue }) => (
-            <Item animationValue={animationValue} index={index} key={index} />
-          )}
-          customAnimation={animationStyle}
-        />
-      </CaptureWrapper>
-
-      <SButton
-        onPress={() => {
-          setIsFast(!isFast);
+    <View id="carousel-component">
+      <Carousel
+        width={itemSize}
+        height={PAGE_WIDTH / 2}
+        style={{
+          width: PAGE_WIDTH,
+          height: PAGE_WIDTH / 2,
+          backgroundColor: "black",
         }}
-      >
-        {isFast ? "NORMAL" : "FAST"}
-      </SButton>
-      <SButton
-        onPress={() => {
-          setIsAutoPlay(!isAutoPlay);
-        }}
-      >
-        {ElementsText.AUTOPLAY}:{`${isAutoPlay}`}
-      </SButton>
+        loop
+        windowSize={Math.round(dataLength / 2)}
+        scrollAnimationDuration={1500}
+        autoPlayInterval={1200}
+        data={getImages(10)}
+        renderItem={({ index, animationValue }) => (
+          <Item animationValue={animationValue} index={index} key={index} />
+        )}
+        customAnimation={animationStyle}
+      />
     </View>
   );
 }

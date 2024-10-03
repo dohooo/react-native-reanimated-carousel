@@ -22,50 +22,39 @@ import { CaptureWrapper } from "@/store/CaptureProvider";
 const BlurView = Animated.createAnimatedComponent(_BlurView);
 
 function Index() {
-  const [isAutoPlay, setIsAutoPlay] = React.useState(false);
   const PAGE_WIDTH = window.width;
   const PAGE_HEIGHT = window.height - HEADER_HEIGHT;
   const ITEM_WIDTH = PAGE_WIDTH * 0.8;
 
   return (
-    <View style={{ flex: 1 }}>
-      <CaptureWrapper>
-        <Carousel
-          vertical
-          loop={false}
-          autoPlay={isAutoPlay}
-          style={{
-            width: PAGE_WIDTH,
-            height: PAGE_HEIGHT,
-            alignItems: "center",
-          }}
-          width={ITEM_WIDTH}
-          height={ITEM_WIDTH}
-          pagingEnabled={false}
-          snapEnabled={false}
-          data={PURPLE_IMAGES}
-          renderItem={({ item, index, animationValue }) => {
-            return (
-              <CustomItem
-                key={index}
-                index={index}
-                animationValue={animationValue}
-              />
-            );
-          }}
-          customAnimation={parallaxLayout({
-            size: ITEM_WIDTH,
-          })}
-          scrollAnimationDuration={1200}
-        />
-      </CaptureWrapper>
-      <SButton
-        onPress={() => {
-          setIsAutoPlay(!isAutoPlay);
+    <View id="carousel-component">
+      <Carousel
+        vertical
+        loop={false}
+        style={{
+          width: PAGE_WIDTH,
+          height: PAGE_HEIGHT,
+          alignItems: "center",
         }}
-      >
-        {ElementsText.AUTOPLAY}:{`${isAutoPlay}`}
-      </SButton>
+        width={ITEM_WIDTH}
+        height={ITEM_WIDTH}
+        pagingEnabled={false}
+        snapEnabled={false}
+        data={PURPLE_IMAGES}
+        renderItem={({ item, index, animationValue }) => {
+          return (
+            <CustomItem
+              key={index}
+              index={index}
+              animationValue={animationValue}
+            />
+          );
+        }}
+        customAnimation={parallaxLayout({
+          size: ITEM_WIDTH,
+        })}
+        scrollAnimationDuration={1200}
+      />
     </View>
   );
 }
