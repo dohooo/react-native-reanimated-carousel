@@ -63,22 +63,8 @@ import Page from '../../../components/Page'
 
 <Page pagePath='/demos/${kind}/${page}' />
 
-<Tabs items={['Demo.tsx', 'renderItem.ts', 'SlideItem.tsx']}>
-  <Tabs.Tab>
-    \`\`\`tsx copy
-${content.carousel}
-    \`\`\`
-  </Tabs.Tab>
-  <Tabs.Tab>
-    \`\`\`tsx copy
-${content.renderItem}
-    \`\`\`
-  </Tabs.Tab>
-  <Tabs.Tab>
-    \`\`\`tsx copy
-${content.slideItem}
-    \`\`\`
-  </Tabs.Tab>
-</Tabs>
+\`\`\`tsx copy
+${content}
+\`\`\`
 `;
 };

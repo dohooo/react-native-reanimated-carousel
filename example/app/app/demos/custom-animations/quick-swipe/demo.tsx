@@ -1,13 +1,13 @@
 import * as React from "react";
 import type { ICarouselInstance } from "react-native-reanimated-carousel";
 import Carousel from "react-native-reanimated-carousel";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 import { SBItem } from "@/components/SBItem";
 import { window } from "@/constants/sizes";
 import {
   Image,
   ImageSourcePropType,
+  View,
   ViewStyle,
   useWindowDimensions,
 } from "react-native";
@@ -24,68 +24,57 @@ import Animated, {
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import * as Haptics from "expo-haptics";
 import { getImages } from "./images";
-import { CaptureWrapper } from "@/store/CaptureProvider";
 import { IS_WEB } from "@/constants/platform";
 
 const PAGE_WIDTH = window.width;
 const data = getImages().slice(0, 68);
 
 function Index() {
-  const windowWidth = useWindowDimensions().width;
   const scrollOffsetValue = useSharedValue<number>(0);
   const ref = React.useRef<ICarouselInstance>(null);
 
   const baseOptions = {
     vertical: false,
-    width: windowWidth,
+    width: 480,
     height: PAGE_WIDTH / 2,
   } as const;
 
   return (
-    <SafeAreaView
-      edges={["bottom"]}
-      style={{
-        flex: 1,
-        backgroundColor: "black",
-        justifyContent: "center",
-      }}
-    >
-      <CaptureWrapper>
-        <Carousel
-          {...baseOptions}
-          loop={false}
-          enabled // Default is true, just for demo
-          ref={ref}
-          defaultScrollOffsetValue={scrollOffsetValue}
-          testID={"xxx"}
-          style={{ width: "100%" }}
-          autoPlay={false}
-          autoPlayInterval={1000}
-          data={data}
-          onConfigurePanGesture={(g) => {
-            "worklet";
-            g.enabled(false);
-          }}
-          pagingEnabled
-          onSnapToItem={(index) => console.log("current index:", index)}
-          windowSize={2}
-          renderItem={({ index, item }) => {
-            return (
-              <Animated.View key={index} style={{ flex: 1 }}>
-                <SBItem showIndex={false} img={item} />
-              </Animated.View>
-            );
-          }}
-        />
-        <ThumbnailPagination
-          style={{ marginVertical: 9 }}
-          onIndexChange={(index) => {
-            ref.current?.scrollTo({ index, animated: false });
-            !IS_WEB && Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          }}
-        />
-      </CaptureWrapper>
-    </SafeAreaView>
+    <View id="carousel-component" style={{ paddingVertical: 20 }}>
+      <Carousel
+        {...baseOptions}
+        loop={false}
+        enabled // Default is true, just for demo
+        ref={ref}
+        defaultScrollOffsetValue={scrollOffsetValue}
+        testID={"xxx"}
+        style={{ width: "100%" }}
+        autoPlay={false}
+        autoPlayInterval={1000}
+        data={data}
+        onConfigurePanGesture={(g) => {
+          "worklet";
+          g.enabled(false);
+        }}
+        pagingEnabled
+        onSnapToItem={(index) => console.log("current index:", index)}
+        windowSize={2}
+        renderItem={({ index, item }) => {
+          return (
+            <Animated.View key={index} style={{ flex: 1 }}>
+              <SBItem showIndex={false} img={item} />
+            </Animated.View>
+          );
+        }}
+      />
+      <ThumbnailPagination
+        style={{ marginVertical: 9 }}
+        onIndexChange={(index) => {
+          ref.current?.scrollTo({ index, animated: false });
+          !IS_WEB && Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        }}
+      />
+    </View>
   );
 }
 

@@ -14,7 +14,12 @@ import { useWebContext } from "@/store/WebProvider";
 import { CaptureProvider } from "@/store/CaptureProvider";
 import { HeaderRight } from "@/components/HeaderRight";
 import { routes } from "./routes";
-import { useGlobalSearchParams, useLocalSearchParams } from "expo-router";
+import {
+  useGlobalSearchParams,
+  useLocalSearchParams,
+  useNavigation,
+  usePathname,
+} from "expo-router";
 import { useInDoc } from "@/hooks/useInDoc";
 import { IS_WEB } from "@/constants/platform";
 

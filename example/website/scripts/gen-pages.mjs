@@ -83,14 +83,6 @@ async function writePage(page) {
 
   const demoFilePath = join(pagesDir, page.demo.relativePath);
   const pageContent = readFileSync(demoFilePath, "utf8");
-  const renderItemContent = readFileSync(
-    join(pagesDir, "../../utils/render-item.tsx"),
-    "utf8",
-  );
-  const slideItemContent = readFileSync(
-    join(pagesDir, "../../components/SlideItem.tsx"),
-    "utf8",
-  );
 
   // Format the code contents using Prettier
   const formattedPageContent = await prettier.format(pageContent, {
@@ -98,24 +90,10 @@ async function writePage(page) {
     useTabs: true,
   });
 
-  const formattedRenderItemContent = await prettier.format(renderItemContent, {
-    parser: "typescript",
-    useTabs: true,
-  });
-
-  const formattedSlideItemContent = await prettier.format(slideItemContent, {
-    parser: "typescript",
-    useTabs: true,
-  });
-
   const processedContent = pagesTemplate(
     page.demo.pageKind,
     page.demo.pageName,
-    {
-      carousel: formattedPageContent,
-      renderItem: formattedRenderItemContent,
-      slideItem: formattedSlideItemContent,
-    },
+    formattedPageContent,
   );
   const mdxDir = join(examplesDir, page.demo.pageKind);
   if (!existsSync(mdxDir)) await mkdirSync(mdxDir, { recursive: true });
@@ -151,7 +129,6 @@ async function genKindDirs() {
       "basic-layouts": "Basic Layouts",
       "utils": "Utils",
       "custom-animations": "Custom Animations",
-      "experiments": "Experiments",
     }),
   );
 }

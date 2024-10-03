@@ -49,6 +49,10 @@ import { Cards } from 'nextra/components'
 import Link from 'next/link'
 
 ${Object.keys(groupedPages)
+  .sort((a, b) => {
+    const kindsSort = ["basic-layouts", "utils", "custom-animations"];
+    return kindsSort.indexOf(a) - kindsSort.indexOf(b);
+  })
   .map((kind) => {
     const pages = groupedPages[kind].filter(
       (page) => !!page.preview.isExist && !!page.demo.isExist,
