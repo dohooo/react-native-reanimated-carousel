@@ -11,25 +11,27 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: checkout code repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      - name: Setup Node.js
+      - name: setup node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: 18
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+        run: echo "::set-output name=dir::$(yarn cache dir)"
 
-      - name: Cache yarn dependencies
-        uses: actions/cache@v3
+      - uses: actions/cache@v1
+        id: yarn-cache
         with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+            path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+            restore-keys: |
+                ${{ runner.os }}-yarn-
 
       - name: Install dependencies
         run: yarn install
