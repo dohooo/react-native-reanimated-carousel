@@ -14,8 +14,8 @@
 ## The best carousel component in React Native community. ⚡️
 
 -   **It completely solved this** [problem](https://github.com/meliorence/react-native-snap-carousel/issues/632) **for `react-native-snap-carousel`**
--   **Fully implemented using Reanimated 2&3**
--   **[Demo](https://dohooo.github.io/react-native-reanimated-carousel/)**
+-   **Fully implemented using Reanimated 3**
+-   **[Examples](https://app.reanimated-carousel.dev)**
 
 ## Getting Started
 
