@@ -13424,17 +13424,10 @@ __metadata:
     typescript: "npm:^5.5.4"
     watch: "npm:^1.0.2"
   peerDependencies:
-    "@types/react": "*"
-    "@types/react-native": "*"
     react: ">=18.0.0"
     react-native: ">=0.70.3"
     react-native-gesture-handler: ">=2.9.0"
     react-native-reanimated: ">=3.0.0"
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-    "@types/react-native":
-      optional: true
   languageName: unknown
   linkType: soft
 
