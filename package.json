@@ -43,20 +43,10 @@
     "registry": "https://registry.npmjs.org/"
   },
   "peerDependencies": {
-    "@types/react": "*",
-    "@types/react-native": "*",
     "react": ">=18.0.0",
     "react-native": ">=0.70.3",
     "react-native-gesture-handler": ">=2.9.0",
     "react-native-reanimated": ">=3.0.0"
-  },
-  "peerDependenciesMeta": {
-    "@types/react": {
-      "optional": true
-    },
-    "@types/react-native": {
-      "optional": true
-    }
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.18.6",

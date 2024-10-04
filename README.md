@@ -23,7 +23,7 @@ Check out the [documentation](https://rn-carousel.dev) website.
 
 ## Examples
 
-> Click on the image to see the code snippets [[Try it]](https://snack.expo.dev/@zhaodonghao586/simple-carousel) 🍺
+> Click on the image to see the code snippets [[Try it]](https://snack.expo.dev/@caspian.zhao/react-native-reanimated-carousel) 🍺
 
 |              <img src="assets/normal-horizontal.gif"/>               |                <img src="assets/normal-vertical.gif"/>                |              <img src="assets/parallax-horizontal.gif"/>               |
 | :------------------------------------------------------------------: | :-------------------------------------------------------------------: | :--------------------------------------------------------------------: |
