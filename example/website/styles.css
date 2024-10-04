@@ -2,22 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
-#summary-item div {
-  max-height: 180px;
-  overflow: hidden;
+.summary-item {
+  @apply relative flex flex-col rounded-2xl overflow-hidden bg-[#111111];
 }
 
-#summary-item img {
-  width: 100%;
-  height: auto;
+.summary-item .image-container {
+  @apply h-[220px] overflow-hidden flex justify-center items-center;
 }
 
-html[class~=dark] .ss-content {
+.summary-item .image-container img {
+  @apply w-full h-full object-contain transition-all duration-300 p-1 scale-90;
+}
+
+.summary-item:hover .image-container img {
+  @apply scale-100;
+}
+
+.summary-item .label-container {
+  @apply absolute bottom-6 right-12 text-center font-light text-sm text-[#fefefe] px-2 bg-[#111111] z-10 transition-all duration-300 rounded-lg mt-2 opacity-70;
+}
+
+.summary-item:hover .label-container {
+  @apply opacity-100 bottom-8 right-14 scale-125;
+}
+
+html[class~="dark"] .ss-content {
   color: rgb(17, 17, 17);
   background-color: rgb(241, 245, 249);
 }
 
-html[class~=light] .ss-content {
+html[class~="light"] .ss-content {
   color: rgb(241, 245, 249);
   background-color: rgb(17, 17, 17);
 }

@@ -13,7 +13,7 @@ const config: DocsThemeConfig = {
   chat: {
     link: "https://discord.gg/qB9h3kGNas",
   },
-  docsRepositoryBase: "https://github.com/shuding/nextra-docs-template",
+  docsRepositoryBase: "https://github.com/dohooo/react-native-reanimated-carousel",
   footer: {
     text: "Copyright © 2024 Caspian. Built with Nextra.",
   },

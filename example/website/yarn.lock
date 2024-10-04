@@ -1795,6 +1795,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv@npm:^16.4.5":
+  version: 16.4.5
+  resolution: "dotenv@npm:16.4.5"
+  checksum: 55a3134601115194ae0f924e54473459ed0d9fc340ae610b676e248cca45aa7c680d86365318ea964e6da4e2ea80c4514c1adab5adb43d6867fb57ff068f95c8
+  languageName: node
+  linkType: hard
+
 "eastasianwidth@npm:^0.2.0":
   version: 0.2.0
   resolution: "eastasianwidth@npm:0.2.0"
@@ -4259,26 +4266,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nextra-docs-template@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "nextra-docs-template@workspace:."
-  dependencies:
-    "@types/node": "npm:18.11.10"
-    "@vercel/analytics": "npm:^1.1.1"
-    autoprefixer: "npm:^10.4.16"
-    next: "npm:^13.0.6"
-    nextra: "npm:2.13.2"
-    nextra-theme-docs: "npm:2.13.2"
-    postcss: "npm:^8.4.32"
-    react: "npm:^18.2.0"
-    react-dom: "npm:^18.2.0"
-    react-native-web: "npm:~0.19.6"
-    snack-sdk: "npm:^4.2.0"
-    tailwindcss: "npm:^3.3.6"
-    typescript: "npm:^5.5.4"
-  languageName: unknown
-  linkType: soft
-
 "nextra-theme-docs@npm:2.13.2":
   version: 2.13.2
   resolution: "nextra-theme-docs@npm:2.13.2"
@@ -4754,6 +4741,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prettier@npm:^3.3.3":
+  version: 3.3.3
+  resolution: "prettier@npm:3.3.3"
+  bin:
+    prettier: bin/prettier.cjs
+  checksum: 5beac1f30b5b40162532b8e2f7c3a4eb650910a2695e9c8512a62ffdc09dae93190c29db9107fa7f26d1b6c71aad3628ecb9b5de1ecb0911191099be109434d7
+  languageName: node
+  linkType: hard
+
 "proc-log@npm:^3.0.0":
   version: 3.0.0
   resolution: "proc-log@npm:3.0.0"
@@ -4919,6 +4915,28 @@ __metadata:
   checksum: d52921d2563693f34e71ecc6ec97bd48ec960c44dff04384e56c47ee68cfa36749acbcaeec4d0cd1d18113e53ae67825bb067ea63ba1f86107e289573e5f584f
   languageName: node
   linkType: hard
+
+"reanimated-carousel-website@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "reanimated-carousel-website@workspace:."
+  dependencies:
+    "@types/node": "npm:18.11.10"
+    "@vercel/analytics": "npm:^1.1.1"
+    autoprefixer: "npm:^10.4.16"
+    dotenv: "npm:^16.4.5"
+    next: "npm:^13.0.6"
+    nextra: "npm:2.13.2"
+    nextra-theme-docs: "npm:2.13.2"
+    postcss: "npm:^8.4.32"
+    prettier: "npm:^3.3.3"
+    react: "npm:^18.2.0"
+    react-dom: "npm:^18.2.0"
+    react-native-web: "npm:~0.19.6"
+    snack-sdk: "npm:^4.2.0"
+    tailwindcss: "npm:^3.3.6"
+    typescript: "npm:^5.5.4"
+  languageName: unknown
+  linkType: soft
 
 "regenerator-runtime@npm:^0.14.0":
   version: 0.14.0

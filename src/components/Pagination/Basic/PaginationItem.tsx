@@ -9,21 +9,21 @@ import Animated, {
 } from "react-native-reanimated";
 
 export type DotStyle = Omit<ViewStyle, "width" | "height"> & {
-  width?: number
-  height?: number
+  width?: number;
+  height?: number;
 };
 
 export const PaginationItem: React.FC<
-PropsWithChildren<{
-  index: number
-  count: number
-  size?: number
-  animValue: Animated.SharedValue<number>
-  horizontal?: boolean
-  dotStyle?: DotStyle
-  activeDotStyle?: DotStyle
-  onPress: () => void
-}>
+  PropsWithChildren<{
+    index: number;
+    count: number;
+    size?: number;
+    animValue: Animated.SharedValue<number>;
+    horizontal?: boolean;
+    dotStyle?: DotStyle;
+    activeDotStyle?: DotStyle;
+    onPress: () => void;
+  }>
 > = (props) => {
   const {
     animValue,
@@ -95,7 +95,7 @@ PropsWithChildren<{
             ],
           },
           dotStyle,
-      ]}
+        ]}
       >
         <Animated.View
           style={[
