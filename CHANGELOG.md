@@ -1,5 +1,13 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-canary.16
+
+### Patch Changes
+
+- [#687](https://github.com/dohooo/react-native-reanimated-carousel/pull/687) [`55c55ff`](https://github.com/dohooo/react-native-reanimated-carousel/commit/55c55ff8304159ab2949b0335ac34411030b94b7) Thanks [@dohooo](https://github.com/dohooo)! - feat: Add containerStyle prop to control the container styles.
+
+- [#689](https://github.com/dohooo/react-native-reanimated-carousel/pull/689) [`f935f7a`](https://github.com/dohooo/react-native-reanimated-carousel/commit/f935f7ae2f052dd0856bb11acc11f0a1945d24a8) Thanks [@dohooo](https://github.com/dohooo)! - Delete unnecessary peer denpendences
+
 ## 4.0.0-canary.15
 
 ### Patch Changes
