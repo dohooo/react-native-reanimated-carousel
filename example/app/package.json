@@ -8,6 +8,7 @@
     "android": "expo start --android -c",
     "ios": "expo start --ios",
     "web": "expo start --web -p 8002",
+    "build:web": "expo export --platform web",
     "test": "jest --watchAll"
   },
   "jest": {
