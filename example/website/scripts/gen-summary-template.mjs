@@ -65,22 +65,19 @@ ${Object.keys(groupedPages)
 
 <Cards num={2}>
   ${pages
-    .map(
-      (page) => `
-        <Link href="/Examples/${page.demo.pageKind}/${page.demo.pageName}">
+    .map((page) => {
+      const { pageKind, pageName } = page.demo;
+      return `
+        <Link href="/Examples/${pageKind}/${pageName}">
           <div className='summary-item'>
-            <div className='image-container'>![${page.demo.pageKind}-${
-        page.demo.pageName
-      }](../../../app/app/demos/${page.demo.pageKind}/${
-        page.demo.pageName
-      }/preview.png)</div>
+            <div className='image-container'>![${pageKind}-${pageName}](../../../app/app/demos/${pageKind}/${pageName}/preview.png)</div>
             <div className='label-container'>
-              ${upcaseLetter(page.demo.pageName)}
+              ${upcaseLetter(pageName)}
             </div>
           </div>
         </Link>
-  `,
-    )
+  `;
+    })
     .join("\n")}
 </Cards>
   `;

@@ -14,9 +14,8 @@
   },
   "scripts": {
     "dev": "next dev",
-    "gen-pages:dev": "NODE_ENV=development node scripts/gen-pages.mjs",
-    "gen-pages:prod": "NODE_ENV=production node scripts/gen-pages.mjs",
-    "build": "npm run gen-pages:prod && next build",
+    "gen-pages": "node scripts/gen-pages.mjs",
+    "build": "npm run gen-pages && next build",
     "start": "next start"
   },
   "dependencies": {
