@@ -29,8 +29,7 @@
     },
     "plugins": ["expo-router", "expo-font"],
     "experiments": {
-      "typedRoutes": true,
-      "baseUrl": "/react-native-reanimated-carousel"
+      "typedRoutes": true
     }
   }
 }
