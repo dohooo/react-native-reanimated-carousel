@@ -42,7 +42,7 @@ import { Tabs } from 'nextra/components'
 import { Callout } from 'nextra/components'
 import Demo from '@/components/Demo'
 
-<Callout emoji="👾">
+<Callout type="info" emoji="💡">
   Check out the \`${page}\` animation demo for the full source code [here](https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/app/app/demos/${kind}/${page}/index.tsx)
 </Callout>
 

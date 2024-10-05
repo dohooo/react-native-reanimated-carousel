@@ -1,5 +1,6 @@
 import { ScrollViewStyleReset } from "expo-router/html";
 import { WebProvider } from "@/store/WebProvider";
+import Head from "expo-router/head";
 
 // This file is web-only and used to configure the root HTML for every
 // web page during static rendering.
@@ -15,6 +16,10 @@ export default function Root({ children }: { children: React.ReactNode }) {
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1"
         />
+
+        <Head>
+          <title>Examples - RNRC</title>
+        </Head>
 
         {/*
           Disable body scrolling on web. This makes ScrollView components work closer to how they do on native.

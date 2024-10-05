@@ -7,6 +7,7 @@ import {
   StyleSheet,
   View,
   Text,
+  ImageSourcePropType,
 } from "react-native";
 import type { AnimatedProps } from "react-native-reanimated";
 import Animated from "react-native-reanimated";
@@ -15,6 +16,7 @@ interface Props extends AnimatedProps<ViewProps> {
   style?: StyleProp<ImageStyle>;
   index?: number;
   rounded?: boolean;
+  source?: ImageSourcePropType;
 }
 
 export const SlideItem: React.FC<Props> = (props) => {
@@ -27,8 +29,8 @@ export const SlideItem: React.FC<Props> = (props) => {
   } = props;
 
   const source = useMemo(
-    () => PURPLE_IMAGES[index % PURPLE_IMAGES.length],
-    [index],
+    () => props.source || PURPLE_IMAGES[index % PURPLE_IMAGES.length],
+    [index, props.source],
   );
 
   return (

@@ -42,7 +42,7 @@ export const SBItem: React.FC<Props> = (props) => {
       }}
     >
       <Animated.View testID={testID} style={{ flex: 1 }} {...animatedViewProps}>
-        <SlideItem index={index} rounded={rounded} />
+        <SlideItem index={index} rounded={rounded} source={img} />
       </Animated.View>
     </LongPressGestureHandler>
   );

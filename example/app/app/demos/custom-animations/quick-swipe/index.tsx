@@ -5,12 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { SBItem } from "@/components/SBItem";
 import { window } from "@/constants/sizes";
-import {
-  Image,
-  ImageSourcePropType,
-  ViewStyle,
-  useWindowDimensions,
-} from "react-native";
+import { Image, ImageSourcePropType, ViewStyle } from "react-native";
 import Animated, {
   Easing,
   Extrapolation,
@@ -27,18 +22,16 @@ import { getImages } from "./images";
 import { CaptureWrapper } from "@/store/CaptureProvider";
 import { IS_WEB } from "@/constants/platform";
 
-const PAGE_WIDTH = window.width;
 const data = getImages().slice(0, 68);
 
 function Index() {
-  const windowWidth = useWindowDimensions().width;
   const scrollOffsetValue = useSharedValue<number>(0);
   const ref = React.useRef<ICarouselInstance>(null);
 
   const baseOptions = {
     vertical: false,
-    width: windowWidth,
-    height: PAGE_WIDTH / 2,
+    width: window.width,
+    height: window.width / 2,
   } as const;
 
   return (
@@ -72,7 +65,7 @@ function Index() {
           renderItem={({ index, item }) => {
             return (
               <Animated.View key={index} style={{ flex: 1 }}>
-                <SBItem showIndex={false} img={item} />
+                <SBItem showIndex={false} img={item} index={index} />
               </Animated.View>
             );
           }}
