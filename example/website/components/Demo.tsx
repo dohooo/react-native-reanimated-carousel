@@ -11,6 +11,7 @@ const ResizableIframe: React.FC<ResizableIframeProps> = ({ pagePath }) => {
   const handleIframeLoad = () => {
     // get carousel-component height by postmessage
     window.addEventListener("message", (event) => {
+      console.log(event);
       if (event.data.type === "carouselHeight") {
         setCarouselHeight(event.data.height);
         setIsLoading(false);
@@ -24,13 +25,13 @@ const ResizableIframe: React.FC<ResizableIframeProps> = ({ pagePath }) => {
         style={{
           marginTop: "24px",
           width: "100%",
-          height: carouselHeight ?? 28,
+          height: carouselHeight ?? 280,
           position: "relative",
           overflow: "hidden",
           transition: "height 0.3s ease-in-out",
         }}
       >
-        {isLoading && <div style={{ textAlign: "center" }}>Loading...</div>}
+        {/* {isLoading && <div style={{ textAlign: "center" }}>Loading...</div>} */}
         <iframe
           id="carousel-iframe"
           onLoad={handleIframeLoad}
@@ -40,7 +41,7 @@ const ResizableIframe: React.FC<ResizableIframeProps> = ({ pagePath }) => {
             height: "100%",
             border: "none",
             overflow: "hidden",
-            opacity: isLoading ? 0 : 1,
+            // opacity: isLoading ? 0 : 1,
           }}
         ></iframe>
       </div>
