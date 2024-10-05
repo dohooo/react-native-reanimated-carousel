@@ -35,14 +35,15 @@ export default function Root({ children }: { children: React.ReactNode }) {
         dangerouslySetInnerHTML={{
           __html: `
             window.addEventListener("load", () => {
+              console.log("load called!");
+              console.log(window.location.search);
               // get in_doc search param and condition if it's set to true
               const inDoc = window.location.search.includes("in_doc=true");
-
+              console.log("inDoc", inDoc);
               if (!inDoc) {
                 return;
               }
 
-              console.log("events called!");
               const carouselComponent = document.getElementById("carousel-component");
               console.log("carouselComponent exists!");
               console.log(carouselComponent);
