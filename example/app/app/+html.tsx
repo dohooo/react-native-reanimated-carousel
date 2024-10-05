@@ -1,6 +1,5 @@
 import { ScrollViewStyleReset } from "expo-router/html";
 import { WebProvider } from "@/store/WebProvider";
-import { MAX_WIDTH } from "@/constants/sizes";
 
 // This file is web-only and used to configure the root HTML for every
 // web page during static rendering.
@@ -17,6 +16,12 @@ export default function Root({ children }: { children: React.ReactNode }) {
           content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1"
         />
 
+        {/* This CSP used to control which domain could embed this App. For now, we're using this App in doc site. */}
+        <meta
+          httpEquiv="Content-Security-Policy"
+          content="frame-ancestors 'self' https://app.rn-carousel.dev http://localhost:8002"
+        />
+
         {/*
           Disable body scrolling on web. This makes ScrollView components work closer to how they do on native.
           However, body scrolling is often nice to have for mobile web. If you want to enable it, remove this line.
@@ -26,7 +31,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
         {/* Using raw CSS styles as an escape-hatch to ensure the background color never flickers in dark-mode. */}
         <style
           dangerouslySetInnerHTML={{
-            __html: viewportStyles,
+            __html: ``,
           }}
         />
 
@@ -38,10 +43,3 @@ export default function Root({ children }: { children: React.ReactNode }) {
     </html>
   );
 }
-
-const viewportStyles = `
-  html, body {
-    max-width: ${MAX_WIDTH}px;
-    margin: 0 auto;
-  }
-`;

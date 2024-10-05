@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 
-import { useNavigation, usePathname, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 
 import { useColor } from "@/hooks/useColor";
 import { routes } from "./routes";
