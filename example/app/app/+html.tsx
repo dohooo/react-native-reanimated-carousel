@@ -16,6 +16,12 @@ export default function Root({ children }: { children: React.ReactNode }) {
           content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1"
         />
 
+        {/* This CSP used to control which domain could embed this App. For now, we're using this App in doc site. */}
+        <meta
+          httpEquiv="Content-Security-Policy"
+          content="frame-ancestors 'self' https://app.rn-carousel.dev http://localhost:8002"
+        />
+
         {/*
           Disable body scrolling on web. This makes ScrollView components work closer to how they do on native.
           However, body scrolling is often nice to have for mobile web. If you want to enable it, remove this line.
