@@ -57,34 +57,6 @@ function RootLayoutNav() {
   const [isRTL, setIsRTL] = useState(I18nManager.isRTL);
   const { inDoc } = useInDoc();
 
-  useEffect(() => {
-    console.log(
-      {
-        IS_WEB,
-        inDoc,
-      },
-      "====",
-    );
-    if (IS_WEB && inDoc) {
-      window.addEventListener("load", () => {
-        console.log("events called!");
-        const carouselComponent = document.getElementById("carousel-component");
-        console.log("carouselComponent exists!");
-        console.log(carouselComponent);
-        if (carouselComponent) {
-          console.log(carouselComponent.offsetHeight);
-          window.parent.postMessage(
-            {
-              type: "carouselHeight",
-              height: carouselComponent.offsetHeight,
-            },
-            "*",
-          );
-        }
-      });
-    }
-  }, [inDoc]);
-
   const backgroundColor = inDoc
     ? tamaguiConfig.themes.dark.background.val
     : tamaguiConfig.themes.light.background.val;

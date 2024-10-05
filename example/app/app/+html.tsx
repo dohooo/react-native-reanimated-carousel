@@ -31,6 +31,36 @@ export default function Root({ children }: { children: React.ReactNode }) {
 
         {/* Add any additional <head> elements that you want globally available on web... */}
       </head>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.addEventListener("load", () => {
+              console.log("load called!");
+              console.log(window.location.search);
+              // get in_doc search param and condition if it's set to true
+              const inDoc = window.location.search.includes("in_doc=true");
+              console.log("inDoc", inDoc);
+              if (!inDoc) {
+                return;
+              }
+
+              const carouselComponent = document.getElementById("carousel-component");
+              console.log("carouselComponent exists!");
+              console.log(carouselComponent);
+              if (carouselComponent) {
+                console.log(carouselComponent.offsetHeight);
+                window.parent.postMessage(
+                  {
+                    type: "carouselHeight",
+                    height: carouselComponent.offsetHeight,
+                  },
+                  "*",
+                );
+              }
+            });
+          `,
+        }}
+      />
       <body>
         <WebProvider>{children}</WebProvider>
       </body>
