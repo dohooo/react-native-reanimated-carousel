@@ -2,8 +2,6 @@
   "name": "reanimated-carousel-website",
   "version": "0.0.1",
   "description": "Nextra docs template",
-  "author": "Shu Ding <g@shud.in>",
-  "license": "MIT",
   "homepage": "https://github.com/dohooo/react-native-reanimated-carousel#readme",
   "repository": {
     "type": "git",
