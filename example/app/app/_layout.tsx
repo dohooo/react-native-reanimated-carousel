@@ -61,7 +61,9 @@ function RootLayoutNav() {
     if (IS_WEB && inDoc) {
       window.addEventListener("load", () => {
         const carouselComponent = document.getElementById("carousel-component");
+
         if (carouselComponent) {
+          console.log(carouselComponent.offsetHeight);
           window.parent.postMessage(
             {
               type: "carouselHeight",
