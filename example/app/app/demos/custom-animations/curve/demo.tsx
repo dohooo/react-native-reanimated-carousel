@@ -30,6 +30,7 @@ function Index() {
         alignItems: "center",
       }}
       id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "curve" }}
     >
       <Carousel
         {...baseOptions}

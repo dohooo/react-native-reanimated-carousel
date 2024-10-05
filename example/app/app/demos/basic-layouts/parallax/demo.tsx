@@ -17,7 +17,10 @@ function Index() {
   const progress = useSharedValue<number>(0);
 
   return (
-    <View id="carousel-component">
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "basic-layouts", name: "parallax" }}
+    >
       <Carousel
         autoPlayInterval={2000}
         data={defaultDataWith6Colors}

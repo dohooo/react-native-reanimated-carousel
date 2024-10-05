@@ -35,7 +35,10 @@ function Index() {
   }, []);
 
   return (
-    <View id="carousel-component">
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "rotate-in-out" }}
+    >
       <Carousel
         loop
         style={{

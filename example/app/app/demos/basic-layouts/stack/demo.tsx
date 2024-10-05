@@ -17,7 +17,10 @@ function Index() {
   const ref = React.useRef<ICarouselInstance>(null);
 
   return (
-    <View id="carousel-component">
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "basic-layouts", name: "stack" }}
+    >
       <Carousel
         ref={ref}
         autoPlayInterval={2000}

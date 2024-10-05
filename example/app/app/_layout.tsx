@@ -17,6 +17,8 @@ import { routes } from "./routes";
 import { useInDoc } from "@/hooks/useInDoc";
 import { IS_WEB } from "@/constants/platform";
 import { MAX_WIDTH } from "@/constants/sizes";
+import { Link } from "expo-router";
+import { useReducedMotion } from "react-native-reanimated";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -61,6 +63,23 @@ function RootLayoutNav() {
     ? tamaguiConfig.themes.dark.background.val
     : tamaguiConfig.themes.light.background.val;
 
+  const reduceMotion = useReducedMotion();
+
+  // post message to parent doc
+  useEffect(() => {
+    if (!inDoc) {
+      return;
+    }
+
+    window.parent.postMessage(
+      {
+        type: "reduceMotion",
+        reduceMotion,
+      },
+      "*",
+    );
+  }, [reduceMotion]);
+
   return (
     <TamaguiProvider
       config={tamaguiConfig}
@@ -73,6 +92,30 @@ function RootLayoutNav() {
           backgroundColor={backgroundColor}
         >
           <YStack minWidth={IS_WEB ? MAX_WIDTH : "100%"} height={"100%"}>
+            {IS_WEB && !inDoc && reduceMotion && (
+              <XStack paddingHorizontal={"$2"} width={MAX_WIDTH}>
+                <Text
+                  style={{
+                    color: "red",
+                    textAlign: "center",
+                    opacity: 0.75,
+                    fontSize: 12,
+                  }}
+                >
+                  It looks like reduced motion is turned on in your system
+                  preferences. Some of the animations may be skipped.{" "}
+                  <Link
+                    target="_blank"
+                    style={{ textDecorationLine: "underline" }}
+                    href={
+                      "https://docs.swmansion.com/react-native-reanimated/docs/guides/accessibility/#reduced-motion-in-animations"
+                    }
+                  >
+                    Learn more
+                  </Link>
+                </Text>
+              </XStack>
+            )}
             <Stack
               initialRouteName="/"
               screenOptions={{

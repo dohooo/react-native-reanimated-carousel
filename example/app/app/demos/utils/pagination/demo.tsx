@@ -45,7 +45,11 @@ function Index() {
   };
 
   return (
-    <View id="carousel-component" style={{ gap: 10 }}>
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "utils", name: "pagination" }}
+      style={{ gap: 10 }}
+    >
       <View style={{ marginBottom: 10 }}>
         <Carousel
           ref={ref}

@@ -57,7 +57,10 @@ function Index() {
   );
 
   return (
-    <View id="carousel-component">
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "circular" }}
+    >
       <Carousel
         width={itemSize}
         height={itemSize}

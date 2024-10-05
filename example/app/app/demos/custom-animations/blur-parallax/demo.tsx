@@ -23,7 +23,10 @@ const PAGE_WIDTH = window.width / 2;
 
 function Index() {
   return (
-    <View id="carousel-component">
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "blur-parallax" }}
+    >
       <Carousel
         loop={true}
         style={{

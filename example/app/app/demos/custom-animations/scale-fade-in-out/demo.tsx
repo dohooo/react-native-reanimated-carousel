@@ -24,7 +24,10 @@ function Index() {
   }, []);
 
   return (
-    <View id="carousel-component">
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "scale-fade-in-out" }}
+    >
       <Carousel
         loop
         style={{

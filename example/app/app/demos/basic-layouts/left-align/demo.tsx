@@ -14,7 +14,10 @@ const defaultDataWith6Colors = [
 
 function Index() {
   return (
-    <View id="carousel-component">
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "basic-layouts", name: "left-align" }}
+    >
       <Carousel
         loop={true}
         width={430}

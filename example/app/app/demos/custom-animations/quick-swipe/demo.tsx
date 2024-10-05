@@ -40,7 +40,11 @@ function Index() {
   } as const;
 
   return (
-    <View id="carousel-component" style={{ paddingVertical: 20 }}>
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "quick-swipe" }}
+      style={{ paddingVertical: 20 }}
+    >
       <Carousel
         {...baseOptions}
         loop={false}

@@ -42,11 +42,16 @@ export default function Root({ children }: { children: React.ReactNode }) {
               }
 
               const carouselComponent = document.getElementById("carousel-component");
+
               if (carouselComponent) {
+                const kind = carouselComponent.getAttribute("data-kind");
+                const name = carouselComponent.getAttribute("data-name");
                 window.parent.postMessage(
                   {
                     type: "carouselHeight",
                     height: carouselComponent.offsetHeight,
+                    kind,
+                    name,
                   },
                   "*",
                 );
