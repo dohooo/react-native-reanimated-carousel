@@ -43,7 +43,10 @@ function Index() {
   );
 
   return (
-    <View id="carousel-component">
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "flow" }}
+    >
       <Carousel
         loop
         vertical

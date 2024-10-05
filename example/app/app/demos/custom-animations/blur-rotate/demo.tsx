@@ -27,7 +27,10 @@ function Index() {
   const ITEM_WIDTH = PAGE_WIDTH * 0.8;
 
   return (
-    <View id="carousel-component">
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "blur-rotate" }}
+    >
       <Carousel
         vertical
         loop={false}

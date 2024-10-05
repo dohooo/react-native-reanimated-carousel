@@ -33,7 +33,10 @@ function Index() {
   }, []);
 
   return (
-    <View id="carousel-component">
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "press-swipe" }}
+    >
       <Carousel
         loop={true}
         style={{ width: PAGE_WIDTH, height: 240 }}

@@ -17,8 +17,8 @@ import { routes } from "./routes";
 import { useInDoc } from "@/hooks/useInDoc";
 import { IS_WEB } from "@/constants/platform";
 import { MAX_WIDTH } from "@/constants/sizes";
-import { useReducedMotion } from "react-native-reanimated";
 import { Link } from "expo-router";
+import { useReducedMotion } from "react-native-reanimated";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -65,6 +65,21 @@ function RootLayoutNav() {
 
   const reduceMotion = useReducedMotion();
 
+  // post message to parent doc
+  useEffect(() => {
+    if (!inDoc) {
+      return;
+    }
+
+    window.parent.postMessage(
+      {
+        type: "reduceMotion",
+        reduceMotion,
+      },
+      "*",
+    );
+  }, [reduceMotion]);
+
   return (
     <TamaguiProvider
       config={tamaguiConfig}
@@ -77,7 +92,7 @@ function RootLayoutNav() {
           backgroundColor={backgroundColor}
         >
           <YStack minWidth={IS_WEB ? MAX_WIDTH : "100%"} height={"100%"}>
-            {IS_WEB && reduceMotion && (
+            {IS_WEB && !inDoc && reduceMotion && (
               <XStack paddingHorizontal={"$2"} width={MAX_WIDTH}>
                 <Text
                   style={{

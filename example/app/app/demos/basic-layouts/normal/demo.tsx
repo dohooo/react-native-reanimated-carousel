@@ -17,7 +17,10 @@ function Index() {
   const scrollOffsetValue = useSharedValue<number>(0);
 
   return (
-    <View id="carousel-component">
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "basic-layouts", name: "normal" }}
+    >
       <Carousel
         testID={"xxx"}
         loop={true}
@@ -40,7 +43,7 @@ function Index() {
           g.enabled(false);
         }}
         onSnapToItem={(index: number) => console.log("current index:", index)}
-        renderItem={renderItem()}
+        renderItem={renderItem({ rounded: true })}
       />
     </View>
   );

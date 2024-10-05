@@ -21,6 +21,7 @@ function Index() {
     <View
       style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
       id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "cube-3d" }}
     >
       {Array.from({
         length: count * 3,

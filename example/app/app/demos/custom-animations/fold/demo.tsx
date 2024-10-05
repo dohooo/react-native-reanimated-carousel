@@ -68,7 +68,10 @@ function Index() {
   );
 
   return (
-    <View id="carousel-component">
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "fold" }}
+    >
       <Carousel
         width={itemSize}
         height={PAGE_WIDTH / 2}

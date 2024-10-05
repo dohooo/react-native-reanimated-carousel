@@ -25,7 +25,11 @@ function Index() {
   });
 
   return (
-    <View style={{ paddingVertical: 100 }} id="carousel-component">
+    <View
+      style={{ paddingVertical: 100 }}
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "anim-tab-bar" }}
+    >
       <Carousel
         ref={r}
         loop
