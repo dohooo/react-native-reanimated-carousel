@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://rn-carousel.dev
+
+# Sitemaps
+Sitemap: https://rn-carousel.dev/sitemap.xml
