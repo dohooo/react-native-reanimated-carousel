@@ -1,5 +1,11 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-canary.17
+
+### Patch Changes
+
+- [#703](https://github.com/dohooo/react-native-reanimated-carousel/pull/703) [`564d2f5`](https://github.com/dohooo/react-native-reanimated-carousel/commit/564d2f5f63c3b5b934b37e8e643406ea06e1ec7e) Thanks [@dohooo](https://github.com/dohooo)! - Update homepage in package.json
+
 ## 4.0.0-canary.16
 
 ### Patch Changes
