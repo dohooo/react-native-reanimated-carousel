@@ -625,15 +625,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vercel/analytics@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "@vercel/analytics@npm:1.1.1"
-  dependencies:
-    server-only: "npm:^0.0.1"
-  checksum: fece944678360085a5deaea3afdade16cab67097dca6585e02a1c4c67ac3ba91b8e0bb848b7ec686b87757aad763df5bae41ce103bdc16c6e586b9390d0b4c11
-  languageName: node
-  linkType: hard
-
 "abbrev@npm:^2.0.0":
   version: 2.0.0
   resolution: "abbrev@npm:2.0.0"
@@ -2132,6 +2123,13 @@ __metadata:
   dependencies:
     node-fetch: "npm:~2.6.1"
   checksum: 787df06a74a708163ef9e1c7967189c885cf9f7f30d63cac9e46e4cfc1f963bdd076ab025f85b58c5e85620d27992ae6714a1888e262b1748e9fdb65d82ac678
+  languageName: node
+  linkType: hard
+
+"fflate@npm:^0.4.8":
+  version: 0.4.8
+  resolution: "fflate@npm:0.4.8"
+  checksum: c0c75029bcbefd0b47cede4ad2a3698f571e38d3d93dfbb96d744c655ec3bf5e31111044c2c01fa3965109874f5be8b5a6b3686b958392693689665cbabf3ece
   languageName: node
   linkType: hard
 
@@ -4779,6 +4777,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"posthog-js@npm:^1.167.0":
+  version: 1.167.0
+  resolution: "posthog-js@npm:1.167.0"
+  dependencies:
+    fflate: "npm:^0.4.8"
+    preact: "npm:^10.19.3"
+    web-vitals: "npm:^4.0.1"
+  checksum: 7b1332cecb86094f9c08394065f459dfcb99d5de72deb79a36f1fa16be6bf88ec3524d1699b8cf1cac3d637fdf307ad95e614477cdbc3ad703d0cecfb2f3374a
+  languageName: node
+  linkType: hard
+
+"preact@npm:^10.19.3":
+  version: 10.24.3
+  resolution: "preact@npm:10.24.3"
+  checksum: e9c4c901a4ddd475a1072355b5c6c944b05797445e0d68f317ad0dbc976b831523573693ea75d2e12e7902042e3729af435377816d25558bf693ecf6b516c707
+  languageName: node
+  linkType: hard
+
 "prettier@npm:^3.3.3":
   version: 3.3.3
   resolution: "prettier@npm:3.3.3"
@@ -4959,7 +4975,6 @@ __metadata:
   resolution: "reanimated-carousel-website@workspace:."
   dependencies:
     "@types/node": "npm:18.11.10"
-    "@vercel/analytics": "npm:^1.1.1"
     autoprefixer: "npm:^10.4.16"
     dotenv: "npm:^16.4.5"
     next: "npm:^13.0.6"
@@ -4967,6 +4982,7 @@ __metadata:
     nextra: "npm:2.13.2"
     nextra-theme-docs: "npm:2.13.2"
     postcss: "npm:^8.4.32"
+    posthog-js: "npm:^1.167.0"
     prettier: "npm:^3.3.3"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
@@ -5214,13 +5230,6 @@ __metadata:
   bin:
     semver: bin/semver.js
   checksum: 985dec0d372370229a262c737063860fabd4a1c730662c1ea3200a2f649117761a42184c96df62a0e885e76fbd5dace41087d6c1ac0351b13c0df5d6bcb1b5ac
-  languageName: node
-  linkType: hard
-
-"server-only@npm:^0.0.1":
-  version: 0.0.1
-  resolution: "server-only@npm:0.0.1"
-  checksum: c432348956641ea3f460af8dc3765f3a1bdbcf7a1e0205b0756d868e6e6fe8934cdee6bff68401a1dd49ba4a831c75916517a877446d54b334f7de36fa273e53
   languageName: node
   linkType: hard
 
@@ -6149,6 +6158,13 @@ __metadata:
   version: 2.0.1
   resolution: "web-namespaces@npm:2.0.1"
   checksum: b6d9f02f1a43d0ef0848a812d89c83801d5bbad57d8bb61f02eb6d7eb794c3736f6cc2e1191664bb26136594c8218ac609f4069722c6f56d9fc2d808fa9271c6
+  languageName: node
+  linkType: hard
+
+"web-vitals@npm:^4.0.1":
+  version: 4.2.3
+  resolution: "web-vitals@npm:4.2.3"
+  checksum: f4f1b0d6e0dd06b50a1d48c5cbe8a2804f26c5778d7c9bd0a8f591c147fd044f35465a3e95659b9ca801bfd85742e0ac70c3416228c4241d858fcecb8b396503
   languageName: node
   linkType: hard
 
