@@ -5,7 +5,7 @@
   "description": "Simple carousel component.fully implemented using Reanimated 2.Infinitely scrolling, very smooth.",
   "author": "Doho <zhaodonghao586@outlook.com> (https://github.com/dohooo)",
   "license": "MIT",
-  "homepage": "https://github.com/dohooo/react-native-reanimated-carousel#readme",
+  "homepage": "https://rn-carousel.dev/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dohooo/react-native-reanimated-carousel.git"
