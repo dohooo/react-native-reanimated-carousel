@@ -29,6 +29,7 @@ function Index() {
         loop={true}
         pagingEnabled={true}
         snapEnabled={true}
+        scrollAnimationDuration={100}
         width={430 * 0.75}
         style={{
           alignItems: "center",
