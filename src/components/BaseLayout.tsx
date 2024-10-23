@@ -12,7 +12,7 @@ import type { IVisibleRanges } from "../hooks/useVisibleRanges";
 import type { ILayoutConfig } from "../layouts/stack";
 import { CTX } from "../store";
 
-export type TAnimationStyle = (value: number) => ViewStyle;
+export type TAnimationStyle = (value: number, index: number) => ViewStyle;
 
 export const BaseLayout: React.FC<{
   index: number;
@@ -67,7 +67,7 @@ export const BaseLayout: React.FC<{
   const x = useOffsetX(offsetXConfig, visibleRanges);
   const animationValue = useDerivedValue(() => x.value / size, [x, size]);
   const animatedStyle = useAnimatedStyle<ViewStyle>(
-    () => animationStyle(x.value / size),
+    () => animationStyle(x.value / size, index),
     [animationStyle],
   );
 
