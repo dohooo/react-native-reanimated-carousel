@@ -232,11 +232,11 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
         translation.value = withSpring(-((maxPage - 1) * size));
     }
   }, [
-    touching.value,
+    touching,
     translation,
     maxPage,
     size,
-    scrollEndTranslation.value,
+    scrollEndTranslation,
     loop,
     activeDecay,
     withSpring,
