@@ -205,7 +205,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       { velocity: scrollEndVelocity.value },
       isFinished => onFinish(isFinished as boolean),
     );
-  }, [onFinish, scrollEndVelocity.value, touching, translation]);
+  }, [onFinish, scrollEndVelocity, touching, translation]);
 
   const resetBoundary = React.useCallback(() => {
     "worklet";
@@ -232,11 +232,11 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
         translation.value = withSpring(-((maxPage - 1) * size));
     }
   }, [
-    touching.value,
+    touching,
     translation,
     maxPage,
     size,
-    scrollEndTranslation.value,
+    scrollEndTranslation,
     loop,
     activeDecay,
     withSpring,
