@@ -58,7 +58,7 @@ export function parallaxLayout(
         [-1, 0, 1],
         [0, size, 0],
         Extrapolation.CLAMP,
-      )
+      ),
     );
 
     const scale = interpolate(
