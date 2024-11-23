@@ -1,5 +1,13 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-canary.18
+
+### Patch Changes
+
+- [#721](https://github.com/dohooo/react-native-reanimated-carousel/pull/721) [`2a8111e`](https://github.com/dohooo/react-native-reanimated-carousel/commit/2a8111e51762d2d716f4e4dfb18fa38c21b205a6) Thanks [@dohooo](https://github.com/dohooo)! - fix: parallax layout with new arch enabled
+
+- [#710](https://github.com/dohooo/react-native-reanimated-carousel/pull/710) [`d98bb99`](https://github.com/dohooo/react-native-reanimated-carousel/commit/d98bb999fce8f24b627c0c6b90a1bd2c1150364b) Thanks [@nmassey](https://github.com/nmassey)! - fix: remove shared value access warning from react-native-reanimated
+
 ## 4.0.0-canary.17
 
 ### Patch Changes
