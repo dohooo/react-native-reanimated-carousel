@@ -93,7 +93,15 @@
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
-    ]
+    ],
+    "rules": {
+      "subject-case": [
+        0
+      ],
+      "type-case": [
+        0
+      ]
+    }
   },
   "react-native-builder-bob": {
     "source": "src",
