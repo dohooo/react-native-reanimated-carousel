@@ -25,31 +25,24 @@ permissions:
   pull-requests: read
 
 jobs:
-  validate:
-    name: Validate & Test
+  setup:
+    name: Setup & Lint
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-    strategy:
-      matrix:
-        node-version: [20.x]
+    timeout-minutes: 10
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 20.x
           cache: yarn
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-        
       - name: Cache dependencies
         uses: actions/cache@v3
+        id: yarn-cache
         with:
           path: |
             **/node_modules
@@ -58,27 +51,21 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
+      - name: Install dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
+
       - name: Lint code
         run: yarn lint
         
       - name: Type check
         run: yarn types
 
-      - name: Run tests
-        run: yarn test --coverage
-        
-      - name: Upload coverage reports
-        uses: codecov/codecov-action@v3
-        if: always()
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: false
-
-  build:
-    name: Build Check
-    needs: validate
+  build-and-test:
+    name: Build & Test
+    needs: setup
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     
     steps:
       - name: Checkout repository
@@ -90,8 +77,23 @@ jobs:
           node-version: 20.x
           cache: yarn
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+            ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
       - name: Build project
         run: yarn build
+
+      - name: Run tests
+        run: yarn test --coverage
+        
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        if: always()
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
