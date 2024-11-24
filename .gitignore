@@ -66,3 +66,7 @@ lib/
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Cursor
+.cursorrules
+.cursorignore

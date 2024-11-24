@@ -60,18 +60,24 @@ export interface WithTimingAnimation {
 export type WithAnimation = WithSpringAnimation | WithTimingAnimation;
 
 export type TCarouselProps<T = any> = {
+  /**
+   * @test_coverage ✅ tested in Carousel.test.tsx > should handle the ref props
+   */
   ref?: React.Ref<ICarouselInstance>;
   /**
    * The default animated value of the carousel.
+   * @test_coverage ✅ tested in Carousel.test.tsx > should render the correct progress value with the defaultScrollOffsetValue props
    */
   defaultScrollOffsetValue?: SharedValue<number>;
   /**
    * Carousel loop playback.
    * @default true
+   * @test_coverage ✅ tested in Carousel.test.tsx > should swipe back to the first item when loop is true
    */
   loop?: boolean;
   /**
    * Carousel items data set.
+   * @test_coverage ✅ tested in Carousel.test.tsx > should render correctly
    */
   data: T[];
   /**
@@ -80,20 +86,24 @@ export type TCarouselProps<T = any> = {
    * @example
    * [1] => [1, 1, 1]
    * [1, 2] => [1, 2, 1, 2]
+   * @test_coverage ✅ tested in Carousel.test.tsx > should auto fill data array to allow loop playback when the loop props is true
    */
   autoFillData?: boolean;
   /**
    * Default index
    * @default 0
+   * @test_coverage ✅ tested in Carousel.test.tsx > should render the correct item with the defaultIndex props
    */
   defaultIndex?: number;
   /**
    * Auto play
+   * @test_coverage ✅ tested in Carousel.test.tsx > should swipe automatically when autoPlay is true
    */
   autoPlay?: boolean;
   /**
    * Auto play
    * @description reverse playback
+   * @test_coverage ✅ tested in Carousel.test.tsx > should swipe automatically in reverse when autoPlayReverse is true
    */
   autoPlayReverse?: boolean;
   /**
@@ -116,6 +126,7 @@ export type TCarouselProps<T = any> = {
   containerStyle?: StyleProp<ViewStyle>;
   /**
    * PanGesture config
+   * @test_coverage ✅ tested in Carousel.test.tsx > should call the onConfigurePanGesture callback
    */
   onConfigurePanGesture?: (panGesture: PanGesture) => void;
   /**
@@ -128,6 +139,7 @@ export type TCarouselProps<T = any> = {
   /**
    * When true, the scroll view stops on multiples of the scroll view's size when scrolling.
    * @default true
+   * @test_coverage ✅ tested in Carousel.test.tsx > should swipe to the next item when pagingEnabled is true
    */
   pagingEnabled?: boolean;
   /**
@@ -167,6 +179,7 @@ export type TCarouselProps<T = any> = {
   /**
    * @experimental This API will be changed in the future.
    * If positive, the carousel will scroll to the positive direction and vice versa.
+   * @test_coverage ✅ tested in Carousel.test.tsx > should swipe to the correct direction when fixedDirection is positive
    * */
   fixedDirection?: "positive" | "negative";
   /**
@@ -180,24 +193,29 @@ export type TCarouselProps<T = any> = {
   customAnimation?: (value: number) => ViewStyle;
   /**
    * Render carousel item.
+   * @test_coverage ✅ tested in Carousel.test.tsx > should render items correctly
    */
   renderItem: CarouselRenderItem<T>;
   /**
    * Callback fired when navigating to an item.
+   * @test_coverage ✅ tested in Carousel.test.tsx > should call the onSnapToItem callback
    */
   onSnapToItem?: (index: number) => void;
   /**
    * On scroll start
+   * @test_coverage ✅ tested in Carousel.test.tsx > should call the onScrollStart callback
    */
   onScrollStart?: () => void;
   /**
    * On scroll end
+   * @test_coverage ✅ tested in Carousel.test.tsx > should call the onScrollEnd callback
    */
   onScrollEnd?: (index: number) => void;
   /**
    * On progress change
    * @param offsetProgress Total of offset distance (0 390 780 ...)
    * @param absoluteProgress Convert to index (0 1 2 ...)
+   * @test_coverage ✅ tested in Carousel.test.tsx > should call the onProgressChange callback
    *
    * If you want to update a shared value automatically, you can use the shared value as a parameter directly.
    */
