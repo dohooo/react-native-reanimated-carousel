@@ -13,13 +13,20 @@
   "bugs": {
     "url": "https://github.com/dohooo/react-native-reanimated-carousel/issues"
   },
-  "keywords": ["react-native", "ios", "android"],
+  "keywords": [
+    "react-native",
+    "ios",
+    "android"
+  ],
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "react-native": "src/index.tsx",
   "types": "lib/typescript/index.d.ts",
   "source": "src/index",
-  "files": ["lib", "src"],
+  "files": [
+    "lib",
+    "src"
+  ],
   "scripts": {
     "gif": "node scripts/makegif.js ./scripts/gif-works-directory",
     "test": "jest run src/**/*",
@@ -84,12 +91,26 @@
     }
   },
   "commitlint": {
-    "extends": ["@commitlint/config-conventional"]
+    "extends": [
+      "@commitlint/config-conventional"
+    ],
+    "rules": {
+      "subject-case": [
+        0
+      ],
+      "type-case": [
+        0
+      ]
+    }
   },
   "react-native-builder-bob": {
     "source": "src",
     "output": "lib",
-    "targets": ["commonjs", "module", "typescript"]
+    "targets": [
+      "commonjs",
+      "module",
+      "typescript"
+    ]
   },
   "config": {
     "commitizen": {

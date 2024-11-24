@@ -26,7 +26,7 @@ permissions:
 
 jobs:
   setup:
-    name: Setup & Lint
+    name: Setup & Code Quality
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -55,7 +55,10 @@ jobs:
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
-      - name: Lint code
+      - name: Check code format
+        run: yarn format
+
+      - name: Run linter
         run: yarn lint
         
       - name: Type check
@@ -85,11 +88,14 @@ jobs:
             ~/.cache/yarn
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
+      - name: Clean lib directory
+        run: yarn clean
+
       - name: Build project
-        run: yarn build
+        run: yarn prepare
 
       - name: Run tests
-        run: yarn test --coverage
+        run: yarn test
         
       - name: Upload coverage reports
         uses: codecov/codecov-action@v3
