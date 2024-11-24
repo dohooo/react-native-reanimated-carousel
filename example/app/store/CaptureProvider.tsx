@@ -23,7 +23,7 @@ export const CaptureProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [imageRef, setImageRef] = useState<React.RefObject<any> | null>(null);
 
   const capture = async () => {
-    if (imageRef && imageRef.current) {
+    if (imageRef?.current) {
       try {
         const uri = await captureRef(imageRef.current, {
           format: "png",
@@ -46,17 +46,16 @@ export const CaptureProvider: React.FC<PropsWithChildren> = ({ children }) => {
   };
 
   return (
-    <CaptureContext.Provider value={{ capture, setImageRef }}>
-      {children}
-    </CaptureContext.Provider>
+    <CaptureContext.Provider value={{ capture, setImageRef }}>{children}</CaptureContext.Provider>
   );
 };
 
-export const CaptureWrapper: React.FC<
-  PropsWithChildren & ComponentProps<typeof Stack>
-> = ({ children, ...props }) => {
+export const CaptureWrapper: React.FC<PropsWithChildren & ComponentProps<typeof Stack>> = ({
+  children,
+  ...props
+}) => {
   const imageRef = useRef(null);
-  const { setImageRef: setImageRef } = useContext(CaptureContext);
+  const { setImageRef } = useContext(CaptureContext);
 
   React.useEffect(() => {
     setImageRef(imageRef);

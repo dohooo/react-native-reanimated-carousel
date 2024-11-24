@@ -15,7 +15,7 @@ describe("useUpdateGestureConfig", () => {
     renderHook(() =>
       useUpdateGestureConfig(mockGesture as any, {
         enabled: true,
-      }),
+      })
     );
 
     expect(mockGesture.enabled).toHaveBeenCalledWith(true);
@@ -28,12 +28,9 @@ describe("useUpdateGestureConfig", () => {
   });
 
   it("should update when enabled state changes", () => {
-    const { rerender } = renderHook(
-      props => useUpdateGestureConfig(mockGesture as any, props),
-      {
-        initialProps: { enabled: true },
-      },
-    );
+    const { rerender } = renderHook((props) => useUpdateGestureConfig(mockGesture as any, props), {
+      initialProps: { enabled: true },
+    });
 
     expect(mockGesture.enabled).toHaveBeenCalledWith(true);
 
@@ -42,12 +39,9 @@ describe("useUpdateGestureConfig", () => {
   });
 
   it("should not update when enabled state remains the same", () => {
-    const { rerender } = renderHook(
-      props => useUpdateGestureConfig(mockGesture as any, props),
-      {
-        initialProps: { enabled: true },
-      },
-    );
+    const { rerender } = renderHook((props) => useUpdateGestureConfig(mockGesture as any, props), {
+      initialProps: { enabled: true },
+    });
 
     mockGesture.enabled.mockClear();
 
@@ -67,7 +61,7 @@ describe("useUpdateGestureConfig", () => {
           gesture: mockGesture,
           config: { enabled: true },
         },
-      },
+      }
     );
 
     expect(mockGesture.enabled).toHaveBeenCalledWith(true);
@@ -84,7 +78,7 @@ describe("useUpdateGestureConfig", () => {
     const { unmount } = renderHook(() =>
       useUpdateGestureConfig(mockGesture as any, {
         enabled: true,
-      }),
+      })
     );
 
     mockGesture.enabled.mockClear();

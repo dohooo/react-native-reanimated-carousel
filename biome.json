@@ -1,0 +1,59 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.5.3/schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "suspicious": {
+        "noExplicitAny": "off",
+        "noArrayIndexKey": "off"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
+      },
+      "style": {
+        "useTemplate": "error",
+        "useConst": "error",
+        "noNonNullAssertion": "off",
+        "useImportType": "off",
+        "noArguments": "off"
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "off"
+      }
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "trailingCommas": "es5",
+      "semicolons": "always"
+    }
+  },
+  "files": {
+    "ignore": [
+      "node_modules/**/*",
+      "lib/**/*",
+      "coverage/**/*",
+      "dist/**/*",
+      ".yarn/**/*",
+      "example/website/**/*",
+      "example/app/.expo/**/*",
+      "example/app/.yarn/**/*",
+      "example/app/.dist/**/*",
+      "example/app/node_modules/**/*",
+      "example/app/metro.config.js",
+      "example/app/babel.config.js",
+      "scripts/**/*"
+    ]
+  }
+}

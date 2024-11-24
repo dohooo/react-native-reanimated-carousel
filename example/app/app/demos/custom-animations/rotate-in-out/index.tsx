@@ -23,11 +23,7 @@ function Index() {
 
     const zIndex = interpolate(value, [-1, 0, 1], [10, 20, 30]);
     const rotateZ = `${interpolate(value, [-1, 0, 1], [-45, 0, 45])}deg`;
-    const translateX = interpolate(
-      value,
-      [-1, 0, 1],
-      [-window.width, 0, window.width],
-    );
+    const translateX = interpolate(value, [-1, 0, 1], [-window.width, 0, window.width]);
 
     return {
       transform: [{ rotateZ }, { translateX }],

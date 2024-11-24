@@ -26,7 +26,7 @@ describe("useLayoutConfig", () => {
         rawData: [],
         dataLength: 0,
         rawDataLength: 0,
-      }),
+      })
     );
 
     expect(result.current).toBeDefined();
@@ -59,7 +59,7 @@ describe("useLayoutConfig", () => {
         rawData: [],
         dataLength: 0,
         rawDataLength: 0,
-      }),
+      })
     );
     const style = result.current(0); // Test with offset 0
 
@@ -93,7 +93,7 @@ describe("useLayoutConfig", () => {
         rawData: [],
         dataLength: 0,
         rawDataLength: 0,
-      }),
+      })
     );
     const style = result.current(0); // Test with offset 0
 
@@ -127,7 +127,7 @@ describe("useLayoutConfig", () => {
         rawData: [],
         dataLength: 0,
         rawDataLength: 0,
-      }),
+      })
     );
     const style = result.current(0); // Test with offset 0
 
@@ -157,7 +157,7 @@ describe("useLayoutConfig", () => {
         rawData: [],
         dataLength: 0,
         rawDataLength: 0,
-      }),
+      })
     );
     const style = result.current(0); // Test with offset 0
 
@@ -181,7 +181,7 @@ describe("useLayoutConfig", () => {
         rawData: [],
         dataLength: 0,
         rawDataLength: 0,
-      }),
+      })
     );
 
     const style1 = result.current(-1); // Previous item
@@ -209,7 +209,7 @@ describe("useLayoutConfig", () => {
         rawData: [],
         dataLength: 0,
         rawDataLength: 0,
-      }),
+      })
     );
     const firstResult = result.current;
 
@@ -219,7 +219,7 @@ describe("useLayoutConfig", () => {
 
   it("should update layout when props change", () => {
     const { result, rerender } = renderHook(
-      props =>
+      (props) =>
         useLayoutConfig({
           ...props,
           data: [],
@@ -237,7 +237,7 @@ describe("useLayoutConfig", () => {
         }),
       {
         initialProps: defaultProps,
-      },
+      }
     );
     const firstResult = result.current;
 

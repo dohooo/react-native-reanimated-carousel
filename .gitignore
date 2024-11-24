@@ -70,3 +70,6 @@ lib/
 # Cursor
 .cursorrules
 .cursorignore
+
+# Add Biome cache
+.biome/

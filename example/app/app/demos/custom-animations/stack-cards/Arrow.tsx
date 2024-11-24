@@ -42,12 +42,7 @@ export const Arrow: React.FC<{
       transform: [
         { translateY: -100 },
         {
-          rotateZ: `${interpolate(
-            directionAnim.value,
-            [0, 1],
-            [0, 90],
-            Extrapolation.EXTEND,
-          )}deg`,
+          rotateZ: `${interpolate(directionAnim.value, [0, 1], [0, 90], Extrapolation.EXTEND)}deg`,
         },
       ],
     };
@@ -61,7 +56,7 @@ export const Arrow: React.FC<{
             directionAnim.value,
             [0, 1],
             [180, 270],
-            Extrapolation.EXTEND,
+            Extrapolation.EXTEND
           )}deg`,
         },
       ],
@@ -76,11 +71,11 @@ export const Arrow: React.FC<{
       } else {
         translateAnim.value = withSequence(
           withTiming(0, { duration: 300 }),
-          withRepeat(withSpring(0.7), -1, true),
+          withRepeat(withSpring(0.7), -1, true)
         );
       }
     },
-    [],
+    []
   );
 
   return (
@@ -95,18 +90,14 @@ export const Arrow: React.FC<{
         directionAnim.value = withTiming((directionAnim.value + 1) % 2);
       }}
     >
-      <Animated.View
-        style={[arrowContainerUpStyle, { width: "100%", height: 150 }]}
-      >
+      <Animated.View style={[arrowContainerUpStyle, { width: "100%", height: 150 }]}>
         <Animated.Image
           source={require("@/assets/images/arrow-up.png")}
           resizeMode="center"
           style={[arrowStyle, { height: "100%" }]}
         />
       </Animated.View>
-      <Animated.View
-        style={[arrowContainerDownStyle, { width: "100%", height: 150 }]}
-      >
+      <Animated.View style={[arrowContainerDownStyle, { width: "100%", height: 150 }]}>
         <Animated.Image
           source={require("@/assets/images/arrow-up.png")}
           resizeMode="center"

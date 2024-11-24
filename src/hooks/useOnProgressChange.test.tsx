@@ -9,7 +9,7 @@ jest.mock("react-native-reanimated", () => {
   let reactionCallback: ((value: any) => void) | null = null;
 
   return {
-    useSharedValue: jest.fn(initialValue => ({
+    useSharedValue: jest.fn((initialValue) => ({
       value: initialValue,
     })),
     useAnimatedReaction: jest.fn((deps, cb) => {
@@ -20,7 +20,7 @@ jest.mock("react-native-reanimated", () => {
         reactionCallback = null;
       };
     }),
-    runOnJS: jest.fn(fn => fn),
+    runOnJS: jest.fn((fn) => fn),
     Easing: {
       bezier: () => ({
         factory: () => 0,
@@ -28,8 +28,7 @@ jest.mock("react-native-reanimated", () => {
     },
     // Export the helper function for testing
     __triggerReaction: (value: any) => {
-      if (reactionCallback)
-        reactionCallback(value);
+      if (reactionCallback) reactionCallback(value);
     },
   };
 });
@@ -58,7 +57,7 @@ describe("useOnProgressChange", () => {
         offsetX: mockOffsetX,
         rawDataLength: 5,
         onProgressChange: mockOnProgressChange,
-      }),
+      })
     );
 
     mockOffsetX.value = -300; // Move to next slide
@@ -76,7 +75,7 @@ describe("useOnProgressChange", () => {
         offsetX: mockOffsetX,
         rawDataLength: 5,
         onProgressChange: progressValue,
-      }),
+      })
     );
 
     mockOffsetX.value = -300; // Move to next slide
@@ -93,7 +92,7 @@ describe("useOnProgressChange", () => {
         offsetX: mockOffsetX,
         rawDataLength: 5,
         onProgressChange: mockOnProgressChange,
-      }),
+      })
     );
 
     mockOffsetX.value = -1500; // Move to last slide
@@ -110,7 +109,7 @@ describe("useOnProgressChange", () => {
         offsetX: mockOffsetX,
         rawDataLength: 3,
         onProgressChange: mockOnProgressChange,
-      }),
+      })
     );
 
     mockOffsetX.value = -300; // Move to next slide
@@ -127,7 +126,7 @@ describe("useOnProgressChange", () => {
         offsetX: mockOffsetX,
         rawDataLength: 3,
         onProgressChange: mockOnProgressChange,
-      }),
+      })
     );
 
     mockOffsetX.value = 300; // Try to move before first slide
@@ -148,7 +147,7 @@ describe("useOnProgressChange", () => {
         offsetX: mockOffsetX,
         rawDataLength: 5,
         onProgressChange: mockOnProgressChange,
-      }),
+      })
     );
 
     mockOffsetX.value = 300; // Move backwards
@@ -164,7 +163,7 @@ describe("useOnProgressChange", () => {
         loop: false,
         offsetX: mockOffsetX,
         rawDataLength: 5,
-      }),
+      })
     );
 
     mockOffsetX.value = -300;

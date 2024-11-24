@@ -1,5 +1,7 @@
+import { ElementsText, window } from "@/constants/sizes";
+import { useToggleButton } from "@/hooks/useToggleButton";
 import * as React from "react";
-import { View, Pressable } from "react-native";
+import { Pressable, View } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -10,8 +12,6 @@ import Animated, {
 } from "react-native-reanimated";
 import type { ICarouselInstance } from "react-native-reanimated-carousel";
 import Carousel from "react-native-reanimated-carousel";
-import { ElementsText, window } from "@/constants/sizes";
-import { useToggleButton } from "@/hooks/useToggleButton";
 
 const PAGE_WIDTH = 60;
 const PAGE_HEIGHT = 40;
@@ -82,7 +82,7 @@ const Item: React.FC<Props> = (props) => {
       animationValue.value,
       [-1, 0, 1],
       [0.5, 1, 0.5],
-      Extrapolation.CLAMP,
+      Extrapolation.CLAMP
     );
 
     return {
@@ -91,17 +91,12 @@ const Item: React.FC<Props> = (props) => {
   }, [animationValue]);
 
   const labelStyle = useAnimatedStyle(() => {
-    const scale = interpolate(
-      animationValue.value,
-      [-1, 0, 1],
-      [1, 1.25, 1],
-      Extrapolation.CLAMP,
-    );
+    const scale = interpolate(animationValue.value, [-1, 0, 1], [1, 1.25, 1], Extrapolation.CLAMP);
 
     const color = interpolateColor(
       animationValue.value,
       [-1, 0, 1],
-      ["#ffffff", "#002a57", "#ffffff"],
+      ["#ffffff", "#002a57", "#ffffff"]
     );
 
     return {

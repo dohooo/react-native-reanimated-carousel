@@ -32,10 +32,7 @@ export type TParallaxModeProps = IComputedDirectionTypes<{
   modeConfig?: ILayoutConfig;
 }>;
 
-export function parallaxLayout(
-  baseConfig: TBaseConfig,
-  modeConfig: ILayoutConfig = {},
-) {
+export function parallaxLayout(baseConfig: TBaseConfig, modeConfig: ILayoutConfig = {}) {
   const { size, vertical } = baseConfig;
   const {
     parallaxScrollingOffset = 100,
@@ -48,25 +45,16 @@ export function parallaxLayout(
     const translate = interpolate(
       value,
       [-1, 0, 1],
-      [-size + parallaxScrollingOffset, 0, size - parallaxScrollingOffset],
+      [-size + parallaxScrollingOffset, 0, size - parallaxScrollingOffset]
     );
 
-    const zIndex = interpolate(
-      value,
-      [-1, 0, 1],
-      [0, size, 0],
-      Extrapolation.CLAMP,
-    );
+    const zIndex = interpolate(value, [-1, 0, 1], [0, size, 0], Extrapolation.CLAMP);
 
     const scale = interpolate(
       value,
       [-1, 0, 1],
-      [
-        parallaxAdjacentItemScale,
-        parallaxScrollingScale,
-        parallaxAdjacentItemScale,
-      ],
-      Extrapolation.CLAMP,
+      [parallaxAdjacentItemScale, parallaxScrollingScale, parallaxAdjacentItemScale],
+      Extrapolation.CLAMP
     );
 
     return {

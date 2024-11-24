@@ -1,4 +1,3 @@
-/* eslint-disable prefer-rest-params */
 const { DefaultReporter } = require("@jest/reporters");
 
 class Reporter extends DefaultReporter {
@@ -9,8 +8,7 @@ class Reporter extends DefaultReporter {
   printTestFileHeader(_testPath, config, result) {
     const console = result.console;
 
-    if (result.numFailingTests === 0 && !result.testExecError)
-      result.console = null;
+    if (result.numFailingTests === 0 && !result.testExecError) result.console = null;
 
     super.printTestFileHeader(...arguments);
 

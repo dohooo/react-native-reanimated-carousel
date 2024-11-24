@@ -4844,6 +4844,7 @@ __metadata:
     react-native: "npm:0.74.5"
     react-native-gesture-handler: "npm:~2.16.1"
     react-native-reanimated: "npm:~3.10.1"
+    react-native-reanimated-carousel: "link:../.."
     react-native-safe-area-context: "npm:4.10.5"
     react-native-screens: "npm:3.31.1"
     react-native-svg: "npm:15.2.0"
@@ -11279,6 +11280,12 @@ __metadata:
   checksum: 217bd0eaa61d426a512634369c70c44ce8b92127ec626dc40c65b72b1be1534ed3ed00ba2dd1a9ad77d1716ce8fd1e6db3f7209534303a652d9932a962d2c830
   languageName: node
   linkType: hard
+
+"react-native-reanimated-carousel@link:../..::locator=app%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "react-native-reanimated-carousel@link:../..::locator=app%40workspace%3A."
+  languageName: node
+  linkType: soft
 
 "react-native-reanimated@npm:~3.10.1":
   version: 3.10.1

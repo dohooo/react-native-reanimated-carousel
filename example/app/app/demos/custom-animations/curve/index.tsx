@@ -11,18 +11,11 @@ import Carousel from "react-native-reanimated-carousel";
 import { SBItem } from "@/components/SBItem";
 import SButton from "@/components/SButton";
 import { ElementsText, window } from "@/constants/sizes";
-import { withAnchorPoint } from "@/utils/anchor-point";
 import { CaptureWrapper } from "@/store/CaptureProvider";
+import { withAnchorPoint } from "@/utils/anchor-point";
 
 const PAGE_WIDTH = window.width / 5;
-const colors = [
-  "#26292E",
-  "#899F9C",
-  "#B3C680",
-  "#5C6265",
-  "#F5D399",
-  "#F1F1F1",
-];
+const colors = ["#26292E", "#899F9C", "#B3C680", "#5C6265", "#F5D399", "#F1F1F1"];
 
 function Index() {
   const [autoPlay, setAutoPlay] = React.useState(false);
@@ -52,9 +45,9 @@ function Index() {
           autoPlay={autoPlay}
           autoPlayInterval={150}
           scrollAnimationDuration={600}
-          onProgressChange={(_, absoluteProgress) =>
-            (progressValue.value = absoluteProgress)
-          }
+          onProgressChange={(absoluteProgress) => {
+            progressValue.value = absoluteProgress;
+          }}
           customAnimation={(value: number) => {
             "worklet";
             const size = PAGE_WIDTH;
@@ -62,13 +55,13 @@ function Index() {
               value,
               [-2, -1, 0, 1, 2],
               [1.7, 1.2, 1, 1.2, 1.7],
-              Extrapolation.CLAMP,
+              Extrapolation.CLAMP
             );
 
             const translate = interpolate(
               value,
               [-2, -1, 0, 1, 2],
-              [-size * 1.45, -size * 0.9, 0, size * 0.9, size * 1.45],
+              [-size * 1.45, -size * 0.9, 0, size * 0.9, size * 1.45]
             );
 
             const transform = {
@@ -83,7 +76,7 @@ function Index() {
                     value,
                     [-1, 0, 1],
                     [30, 0, -30],
-                    Extrapolation.CLAMP,
+                    Extrapolation.CLAMP
                   )}deg`,
                 },
               ],
@@ -96,7 +89,7 @@ function Index() {
                 {
                   width: baseOptions.width,
                   height: baseOptions.height,
-                },
+                }
               ),
             };
           }}
@@ -160,12 +153,7 @@ const PaginationItem: React.FC<{
     return {
       transform: [
         {
-          translateX: interpolate(
-            animValue?.value,
-            inputRange,
-            outputRange,
-            Extrapolation.CLAMP,
-          ),
+          translateX: interpolate(animValue?.value, inputRange, outputRange, Extrapolation.CLAMP),
         },
       ],
     };

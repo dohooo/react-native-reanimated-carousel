@@ -1,13 +1,13 @@
+import { CarouselAdvancedSettingsPanel } from "@/components/CarouselAdvancedSettingsPanel";
+import { defaultDataWith6Colors } from "@/components/CarouselBasicSettingsPanel";
+import { useAdvancedSettings } from "@/hooks/useSettings";
+import { CaptureWrapper } from "@/store/CaptureProvider";
+import { renderItem } from "@/utils/render-item";
 import * as React from "react";
 import { useSharedValue } from "react-native-reanimated";
 import type { ICarouselInstance } from "react-native-reanimated-carousel";
 import Carousel from "react-native-reanimated-carousel";
-import { renderItem } from "@/utils/render-item";
-import { CarouselAdvancedSettingsPanel } from "@/components/CarouselAdvancedSettingsPanel";
-import { useAdvancedSettings } from "@/hooks/useSettings";
 import { Stack } from "tamagui";
-import { CaptureWrapper } from "@/store/CaptureProvider";
-import { defaultDataWith6Colors } from "@/components/CarouselBasicSettingsPanel";
 
 function Index() {
   const scrollOffsetValue = useSharedValue<number>(0);

@@ -26,11 +26,7 @@ export const WebProvider: React.FC<WebProviderProps> = ({ children }) => {
     page && setPage(page);
   }, []);
 
-  return (
-    <WebContext.Provider value={{ color, page }}>
-      {children}
-    </WebContext.Provider>
-  );
+  return <WebContext.Provider value={{ color, page }}>{children}</WebContext.Provider>;
 };
 
 export const useWebContext = (): WebContextProps | undefined => {

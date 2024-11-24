@@ -2,17 +2,11 @@ import type { FC } from "react";
 import React from "react";
 import type { PanGesture } from "react-native-gesture-handler";
 import { Gesture, State } from "react-native-gesture-handler";
-import Animated, {
-  useDerivedValue,
-  useSharedValue,
-} from "react-native-reanimated";
+import Animated, { useDerivedValue, useSharedValue } from "react-native-reanimated";
 import type { ReactTestInstance } from "react-test-renderer";
 
 import { render, waitFor } from "@testing-library/react-native";
-import {
-  fireGestureHandler,
-  getByGestureTestId,
-} from "react-native-gesture-handler/jest-utils";
+import { fireGestureHandler, getByGestureTestId } from "react-native-gesture-handler/jest-utils";
 
 import Carousel from "./Carousel";
 
@@ -45,7 +39,7 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
   // Helper function to create default props with correct typing
   const createDefaultProps = (
     progressAnimVal: Animated.SharedValue<number>,
-    customProps: Partial<TCarouselProps<string>> = {},
+    customProps: Partial<TCarouselProps<string>> = {}
   ) => {
     const baseProps: Partial<TCarouselProps<string>> = {
       width: slideWidth,
@@ -64,33 +58,33 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
 
   // Helper function to create test wrapper
   const createWrapper = (progress: { current: number }) => {
-    const Wrapper: FC<Partial<TCarouselProps<string>>> = React.forwardRef(
-      (customProps, ref) => {
-        const progressAnimVal = useSharedValue(progress.current);
-        const defaultRenderItem = ({
-          item,
-          index,
-        }: {
-          item: string;
-          index: number;
-        }) => (
-          <Animated.View
-            testID={`carousel-item-${index}`}
-            style={{ width: slideWidth, height: slideHeight, flex: 1 }}
-          >
-            {item}
-          </Animated.View>
-        );
-        const { renderItem = defaultRenderItem, ...defaultProps } =
-          createDefaultProps(progressAnimVal, customProps);
+    const Wrapper: FC<Partial<TCarouselProps<string>>> = React.forwardRef((customProps, ref) => {
+      const progressAnimVal = useSharedValue(progress.current);
+      const defaultRenderItem = ({
+        item,
+        index,
+      }: {
+        item: string;
+        index: number;
+      }) => (
+        <Animated.View
+          testID={`carousel-item-${index}`}
+          style={{ width: slideWidth, height: slideHeight, flex: 1 }}
+        >
+          {item}
+        </Animated.View>
+      );
+      const { renderItem = defaultRenderItem, ...defaultProps } = createDefaultProps(
+        progressAnimVal,
+        customProps
+      );
 
-        useDerivedValue(() => {
-          progress.current = progressAnimVal.value;
-        }, [progressAnimVal]);
+      useDerivedValue(() => {
+        progress.current = progressAnimVal.value;
+      }, [progressAnimVal]);
 
-        return <Carousel {...defaultProps} renderItem={renderItem} ref={ref} />;
-      },
-    );
+      return <Carousel {...defaultProps} renderItem={renderItem} ref={ref} />;
+    });
 
     return Wrapper;
   };
@@ -108,14 +102,14 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
 
   // Helper function to verify initial render
   const verifyInitialRender = async (
-    getByTestId: (testID: string | RegExp) => ReactTestInstance,
+    getByTestId: (testID: string | RegExp) => ReactTestInstance
   ) => {
     await waitFor(
       () => {
         const item = getByTestId("carousel-item-0");
         expect(item).toBeTruthy();
       },
-      { timeout: 1000 * 3 },
+      { timeout: 1000 * 3 }
     );
   };
 
@@ -141,7 +135,7 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
         renderItem={({ item, index }) => (
           <Animated.Text testID={`item-${index}`}>{item}</Animated.Text>
         )}
-      />,
+      />
     );
 
     await waitFor(() => expect(getByTestId("item-0")).toBeTruthy());
@@ -262,18 +256,14 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     const progress = { current: 0 };
     const Wrapper = createWrapper(progress);
     {
-      const { getAllByTestId } = render(
-        <Wrapper autoFillData data={createMockData(1)} />,
-      );
+      const { getAllByTestId } = render(<Wrapper autoFillData data={createMockData(1)} />);
       await waitFor(() => {
         expect(getAllByTestId("carousel-item-0").length).toBe(3);
       });
     }
 
     {
-      const { getAllByTestId } = render(
-        <Wrapper autoFillData={false} data={createMockData(1)} />,
-      );
+      const { getAllByTestId } = render(<Wrapper autoFillData={false} data={createMockData(1)} />);
       await waitFor(() => {
         expect(getAllByTestId("carousel-item-0").length).toBe(1);
       });
@@ -320,7 +310,7 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
           _pan = pan;
           return pan;
         }}
-      />,
+      />
     );
 
     const { getByTestId } = render(<Wrapper pagingEnabled={false} />);
@@ -384,7 +374,7 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     });
     const Wrapper = createWrapper(offsetProgressVal);
     const { getByTestId } = render(
-      <Wrapper onProgressChange={onProgressChange} defaultIndex={0} />,
+      <Wrapper onProgressChange={onProgressChange} defaultIndex={0} />
     );
     await verifyInitialRender(getByTestId);
 

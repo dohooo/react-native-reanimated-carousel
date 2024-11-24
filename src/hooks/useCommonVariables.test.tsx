@@ -34,8 +34,6 @@ describe("useCommonVariables", () => {
 
     expect(hook.result.current.size).toMatchInlineSnapshot("700");
     expect(hook.result.current.validLength).toMatchInlineSnapshot("3");
-    expect(hook.result.current.handlerOffset.value).toMatchInlineSnapshot(
-      "-0",
-    );
+    expect(hook.result.current.handlerOffset.value).toMatchInlineSnapshot("-0");
   });
 });

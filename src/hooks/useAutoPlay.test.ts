@@ -1,4 +1,4 @@
-import { renderHook, act } from "@testing-library/react-hooks";
+import { act, renderHook } from "@testing-library/react-hooks";
 
 import { useAutoPlay } from "./useAutoPlay";
 
@@ -29,7 +29,7 @@ describe("useAutoPlay", () => {
         autoPlay: true,
         autoPlayInterval: 1000,
         carouselController: mockCarouselController,
-      }),
+      })
     );
 
     act(() => {
@@ -40,7 +40,7 @@ describe("useAutoPlay", () => {
     expect(mockCarouselController.next).toHaveBeenCalledWith(
       expect.objectContaining({
         onFinished: expect.any(Function),
-      }),
+      })
     );
   });
 
@@ -50,7 +50,7 @@ describe("useAutoPlay", () => {
         autoPlay: false,
         autoPlayInterval: 1000,
         carouselController: mockCarouselController,
-      }),
+      })
     );
 
     act(() => {
@@ -67,7 +67,7 @@ describe("useAutoPlay", () => {
         autoPlayReverse: true,
         autoPlayInterval: 1000,
         carouselController: mockCarouselController,
-      }),
+      })
     );
 
     act(() => {
@@ -84,7 +84,7 @@ describe("useAutoPlay", () => {
         autoPlay: true,
         autoPlayInterval: 1000,
         carouselController: mockCarouselController,
-      }),
+      })
     );
 
     // Run the timer once to ensure it's set
@@ -110,7 +110,7 @@ describe("useAutoPlay", () => {
         autoPlay: true,
         autoPlayInterval: 1000,
         carouselController: mockCarouselController,
-      }),
+      })
     );
 
     // Run the timer once to ensure it's set
@@ -144,7 +144,7 @@ describe("useAutoPlay", () => {
         autoPlay: true,
         autoPlayInterval: 2000,
         carouselController: mockCarouselController,
-      }),
+      })
     );
 
     // Advance less than interval
@@ -166,7 +166,7 @@ describe("useAutoPlay", () => {
         autoPlay: true,
         autoPlayInterval: 1000,
         carouselController: mockCarouselController,
-      }),
+      })
     );
 
     // First interval

@@ -1,6 +1,6 @@
 import { useSharedValue } from "react-native-reanimated";
 
-import { renderHook, act } from "@testing-library/react-hooks";
+import { act, renderHook } from "@testing-library/react-hooks";
 
 import { useCarouselController } from "./useCarouselController";
 
@@ -19,16 +19,15 @@ jest.mock("react-native-reanimated", () => {
   });
 
   return {
-    useSharedValue: jest.fn(initialValue => ({
+    useSharedValue: jest.fn((initialValue) => ({
       value: initialValue,
     })),
-    useDerivedValue: jest.fn(callback => ({
+    useDerivedValue: jest.fn((callback) => ({
       value: callback(),
     })),
     useAnimatedReaction: mockAnimatedReaction,
     withTiming: jest.fn((toValue, config, callback) => {
-      if (callback)
-        callback(true);
+      if (callback) callback(true);
 
       return toValue;
     }),
@@ -44,9 +43,7 @@ jest.mock("react-native-reanimated", () => {
 });
 
 // Get mock functions for testing
-const { mockAnimatedReaction, mockRunOnJS } = jest.requireMock(
-  "react-native-reanimated",
-);
+const { mockAnimatedReaction, mockRunOnJS } = jest.requireMock("react-native-reanimated");
 
 describe("useCarouselController", () => {
   const mockHandlerOffset = useSharedValue(0);
@@ -76,7 +73,7 @@ describe("useCarouselController", () => {
       useCarouselController({
         ...defaultProps,
         defaultIndex: 2,
-      }),
+      })
     );
 
     expect(result.current.getCurrentIndex()).toBe(2);
@@ -107,7 +104,7 @@ describe("useCarouselController", () => {
       useCarouselController({
         ...defaultProps,
         loop: true,
-      }),
+      })
     );
 
     // Move to last slide
@@ -128,7 +125,7 @@ describe("useCarouselController", () => {
       useCarouselController({
         ...defaultProps,
         loop: false,
-      }),
+      })
     );
 
     // Try to go previous at start
@@ -178,7 +175,7 @@ describe("useCarouselController", () => {
       useCarouselController({
         ...defaultProps,
         duration: 500,
-      }),
+      })
     );
 
     const onFinished = jest.fn();
@@ -218,7 +215,7 @@ describe("useCarouselController", () => {
         ...defaultProps,
         autoFillData: true,
         dataLength: 3,
-      }),
+      })
     );
 
     act(() => {

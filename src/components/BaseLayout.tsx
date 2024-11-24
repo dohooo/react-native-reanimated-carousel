@@ -1,10 +1,7 @@
 import React from "react";
 import type { ViewStyle } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
-import Animated, {
-  useAnimatedStyle,
-  useDerivedValue,
-} from "react-native-reanimated";
+import Animated, { useAnimatedStyle, useDerivedValue } from "react-native-reanimated";
 
 import type { IOpts } from "../hooks/useOffsetX";
 import { useOffsetX } from "../hooks/useOffsetX";
@@ -23,21 +20,11 @@ export const BaseLayout: React.FC<{
     animationValue: Animated.SharedValue<number>;
   }) => React.ReactElement;
 }> = (props) => {
-  const { handlerOffset, index, children, visibleRanges, animationStyle } =
-    props;
+  const { handlerOffset, index, children, visibleRanges, animationStyle } = props;
 
   const context = React.useContext(CTX);
   const {
-    props: {
-      loop,
-      dataLength,
-      width,
-      height,
-      vertical,
-      customConfig,
-      mode,
-      modeConfig,
-    },
+    props: { loop, dataLength, width, height, vertical, customConfig, mode, modeConfig },
   } = context;
   const size = vertical ? height : width;
 
@@ -68,7 +55,7 @@ export const BaseLayout: React.FC<{
   const animationValue = useDerivedValue(() => x.value / size, [x, size]);
   const animatedStyle = useAnimatedStyle<ViewStyle>(
     () => animationStyle(x.value / size),
-    [animationStyle],
+    [animationStyle]
   );
 
   return (

@@ -1,15 +1,12 @@
 import type { StyleProp, ViewStyle } from "react-native";
 import type { PanGesture } from "react-native-gesture-handler";
-import type {
-  SharedValue,
-  WithSpringConfig,
-  WithTimingConfig,
-} from "react-native-reanimated";
+import type { SharedValue, WithSpringConfig, WithTimingConfig } from "react-native-reanimated";
 import type Animated from "react-native-reanimated";
 
 import type { TParallaxModeProps } from "./layouts/parallax";
 import type { TStackModeProps } from "./layouts/stack";
 
+// biome-ignore lint/complexity/noBannedTypes: <explanation>
 export type IComputedDirectionTypes<T, VP = {}, HP = {}> =
   | (T &
       VP & {
@@ -260,9 +257,7 @@ export interface CarouselRenderItemInfo<ItemT> {
   animationValue: Animated.SharedValue<number>;
 }
 
-export type CarouselRenderItem<ItemT> = (
-  info: CarouselRenderItemInfo<ItemT>,
-) => React.ReactElement;
+export type CarouselRenderItem<ItemT> = (info: CarouselRenderItemInfo<ItemT>) => React.ReactElement;
 
 export interface TCarouselActionOptions {
   index?: number;

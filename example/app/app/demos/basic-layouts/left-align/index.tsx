@@ -1,31 +1,30 @@
+import { CarouselAdvancedSettingsPanel } from "@/components/CarouselAdvancedSettingsPanel";
+import { defaultDataWith6Colors } from "@/components/CarouselBasicSettingsPanel";
+import { useAdvancedSettings } from "@/hooks/useSettings";
+import { CaptureWrapper } from "@/store/CaptureProvider";
+import { renderItem } from "@/utils/render-item";
 import * as React from "react";
 import { View } from "react-native";
 import type { ICarouselInstance } from "react-native-reanimated-carousel";
 import Carousel from "react-native-reanimated-carousel";
-import { CarouselAdvancedSettingsPanel } from "@/components/CarouselAdvancedSettingsPanel";
-import { useAdvancedSettings } from "@/hooks/useSettings";
-import { renderItem } from "@/utils/render-item";
-import { CaptureWrapper } from "@/store/CaptureProvider";
-import { defaultDataWith6Colors } from "@/components/CarouselBasicSettingsPanel";
 
 function Index() {
   const ref = React.useRef<ICarouselInstance>(null);
-  const { constants, advancedSettings, onAdvancedSettingsChange } =
-    useAdvancedSettings({
-      // These values will be passed in the Carousel Component as default props
-      defaultSettings: {
-        autoPlay: false,
-        autoPlayInterval: 2000,
-        autoPlayReverse: false,
-        data: defaultDataWith6Colors,
-        height: 258,
-        loop: true,
-        pagingEnabled: true,
-        snapEnabled: true,
-        vertical: false,
-        width: 430,
-      },
-    });
+  const { constants, advancedSettings, onAdvancedSettingsChange } = useAdvancedSettings({
+    // These values will be passed in the Carousel Component as default props
+    defaultSettings: {
+      autoPlay: false,
+      autoPlayInterval: 2000,
+      autoPlayReverse: false,
+      data: defaultDataWith6Colors,
+      height: 258,
+      loop: true,
+      pagingEnabled: true,
+      snapEnabled: true,
+      vertical: false,
+      width: 430,
+    },
+  });
 
   return (
     <View style={{ flex: 1 }}>

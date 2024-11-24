@@ -7,7 +7,7 @@ export const ElementsText = {
   AUTOPLAY: "AutoPlay",
 };
 
-const isWeb = Platform.OS === 'web';
+const isWeb = Platform.OS === "web";
 
 export const MAX_WIDTH = 430;
 

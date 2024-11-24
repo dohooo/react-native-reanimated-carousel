@@ -1,12 +1,11 @@
-import React from "react";
-import type { StyleProp, ViewStyle } from "react-native";
-import { View } from "react-native";
+import { type StyleProp, View, type ViewStyle } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 
+import React from "react";
 import type { DotStyle } from "./PaginationItem";
 import { PaginationItem } from "./PaginationItem";
 
-export interface BasicProps<T extends {} = {}> {
+export interface BasicProps<T> {
   progress: SharedValue<number>;
   horizontal?: boolean;
   data: Array<T>;

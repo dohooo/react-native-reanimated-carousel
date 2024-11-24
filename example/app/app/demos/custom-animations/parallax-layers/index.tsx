@@ -1,10 +1,6 @@
 import * as React from "react";
 import { View } from "react-native";
-import Animated, {
-  Extrapolation,
-  interpolate,
-  useAnimatedStyle,
-} from "react-native-reanimated";
+import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
 
 import SButton from "@/components/SButton";
@@ -67,14 +63,10 @@ const Card: React.FC<{
       animationValue.value,
       [-0.1, 0, 1],
       [0.95, 1, 1],
-      Extrapolation.CLAMP,
+      Extrapolation.CLAMP
     );
 
-    const translateX = interpolate(
-      animationValue.value,
-      [-1, -0.2, 0, 1],
-      [0, WIDTH * 0.3, 0, 0],
-    );
+    const translateX = interpolate(animationValue.value, [-1, -0.2, 0, 1], [0, WIDTH * 0.3, 0, 0]);
 
     const transform = {
       transform: [
@@ -86,33 +78,21 @@ const Card: React.FC<{
             animationValue.value,
             [-1, 0, 0.4, 1],
             [30, 0, -25, -25],
-            Extrapolation.CLAMP,
+            Extrapolation.CLAMP
           )}deg`,
         },
       ],
     };
 
     return {
-      ...withAnchorPoint(
-        transform,
-        { x: 0.5, y: 0.5 },
-        { width: WIDTH, height: HEIGHT },
-      ),
+      ...withAnchorPoint(transform, { x: 0.5, y: 0.5 }, { width: WIDTH, height: HEIGHT }),
     };
   }, [index]);
 
   const blockStyle = useAnimatedStyle(() => {
-    const translateX = interpolate(
-      animationValue.value,
-      [-1, 0, 1],
-      [0, 60, 60],
-    );
+    const translateX = interpolate(animationValue.value, [-1, 0, 1], [0, 60, 60]);
 
-    const translateY = interpolate(
-      animationValue.value,
-      [-1, 0, 1],
-      [0, -40, -40],
-    );
+    const translateY = interpolate(animationValue.value, [-1, 0, 1], [0, -40, -40]);
 
     const rotateZ = interpolate(animationValue.value, [-1, 0, 1], [0, 0, -25]);
 

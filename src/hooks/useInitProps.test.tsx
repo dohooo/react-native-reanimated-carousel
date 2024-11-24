@@ -36,7 +36,7 @@ describe("useInitProps", () => {
         rawData: defaultData,
         dataLength: 4,
         rawDataLength: 4,
-      }),
+      })
     );
   });
 
@@ -63,7 +63,7 @@ describe("useInitProps", () => {
         rawData: defaultData,
         dataLength: 4,
         rawDataLength: 4,
-      }),
+      })
     );
   });
   it("should handle stack mode configuration", () => {

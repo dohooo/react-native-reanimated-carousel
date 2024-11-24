@@ -3,17 +3,14 @@ import { log, round } from "./log";
 describe("log utilities", () => {
   describe("log", () => {
     const mockConsoleLog = jest.fn();
-    // eslint-disable-next-line no-console
     const originalConsoleLog = console.log;
 
     beforeEach(() => {
-      // eslint-disable-next-line no-console
       console.log = mockConsoleLog;
     });
 
     afterEach(() => {
       mockConsoleLog.mockClear();
-      // eslint-disable-next-line no-console
       console.log = originalConsoleLog;
     });
 
@@ -51,7 +48,7 @@ describe("log utilities", () => {
     it("should handle zero values", () => {
       expect(round(0)).toBe(0);
       expect(round(-0)).toBe(-0);
-      expect(1 / round(-0)).toBe(-Infinity);
+      expect(1 / round(-0)).toBe(Number.NEGATIVE_INFINITY);
     });
 
     it("should handle integers", () => {
@@ -60,8 +57,8 @@ describe("log utilities", () => {
     });
 
     it("should handle decimal places", () => {
-      expect(round(3.14159)).toBe(3);
-      expect(round(-3.14159)).toBe(-3);
+      expect(round(Math.PI)).toBe(3);
+      expect(round(-Math.PI)).toBe(-3);
     });
   });
 });

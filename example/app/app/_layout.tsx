@@ -9,16 +9,16 @@ import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
-import Stack from "expo-router/stack";
-import { useWebContext } from "@/store/WebProvider";
-import { CaptureProvider } from "@/store/CaptureProvider";
 import { HeaderRight } from "@/components/HeaderRight";
-import { routes } from "./routes";
-import { useInDoc } from "@/hooks/useInDoc";
 import { IS_WEB } from "@/constants/platform";
 import { MAX_WIDTH } from "@/constants/sizes";
+import { useInDoc } from "@/hooks/useInDoc";
+import { CaptureProvider } from "@/store/CaptureProvider";
+import { useWebContext } from "@/store/WebProvider";
 import { Link } from "expo-router";
+import Stack from "expo-router/stack";
 import { useReducedMotion } from "react-native-reanimated";
+import { routes } from "./routes";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -76,21 +76,14 @@ function RootLayoutNav() {
         type: "reduceMotion",
         reduceMotion,
       },
-      "*",
+      "*"
     );
   }, [reduceMotion]);
 
   return (
-    <TamaguiProvider
-      config={tamaguiConfig}
-      defaultTheme={inDoc ? "dark" : "light"}
-    >
+    <TamaguiProvider config={tamaguiConfig} defaultTheme={inDoc ? "dark" : "light"}>
       <Providers>
-        <XStack
-          flex={1}
-          justifyContent="center"
-          backgroundColor={backgroundColor}
-        >
+        <XStack flex={1} justifyContent="center" backgroundColor={backgroundColor}>
           <YStack minWidth={IS_WEB ? MAX_WIDTH : "100%"} height={"100%"}>
             {IS_WEB && !inDoc && reduceMotion && (
               <XStack paddingHorizontal={"$2"} width={MAX_WIDTH}>
@@ -102,8 +95,8 @@ function RootLayoutNav() {
                     fontSize: 12,
                   }}
                 >
-                  It looks like reduced motion is turned on in your system
-                  preferences. Some of the animations may be skipped.{" "}
+                  It looks like reduced motion is turned on in your system preferences. Some of the
+                  animations may be skipped.{" "}
                   <Link
                     target="_blank"
                     style={{ textDecorationLine: "underline" }}
@@ -125,19 +118,13 @@ function RootLayoutNav() {
                   backgroundColor,
                 },
                 headerRight: ({ tintColor }) => (
-                  <HeaderRight
-                    tintColor={tintColor}
-                    isRTL={isRTL}
-                    setIsRTL={setIsRTL}
-                  />
+                  <HeaderRight tintColor={tintColor} isRTL={isRTL} setIsRTL={setIsRTL} />
                 ),
               }}
             >
               <Stack.Screen name="index" />
               {routes
-                .flatMap((item) =>
-                  item.demos.map((demo) => ({ ...demo, kind: item.kind })),
-                )
+                .flatMap((item) => item.demos.map((demo) => ({ ...demo, kind: item.kind })))
                 .map((item) => (
                   <Stack.Screen
                     key={item.name}

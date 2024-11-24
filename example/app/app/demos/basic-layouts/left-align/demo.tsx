@@ -1,23 +1,13 @@
+import { renderItem } from "@/utils/render-item";
 import * as React from "react";
 import { View } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
-import { renderItem } from "@/utils/render-item";
 
-const defaultDataWith6Colors = [
-  "#B0604D",
-  "#899F9C",
-  "#B3C680",
-  "#5C6265",
-  "#F5D399",
-  "#F1F1F1",
-];
+const defaultDataWith6Colors = ["#B0604D", "#899F9C", "#B3C680", "#5C6265", "#F5D399", "#F1F1F1"];
 
 function Index() {
   return (
-    <View
-      id="carousel-component"
-      dataSet={{ kind: "basic-layouts", name: "left-align" }}
-    >
+    <View id="carousel-component" dataSet={{ kind: "basic-layouts", name: "left-align" }}>
       <Carousel
         loop={true}
         width={430}

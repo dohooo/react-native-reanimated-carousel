@@ -2,19 +2,17 @@ import * as React from "react";
 import { View } from "react-native";
 import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
 
-import { renderItem } from "@/utils/render-item";
-import { useAdvancedSettings } from "@/hooks/useSettings";
-import { CarouselAdvancedSettingsPanel } from "@/components/CarouselAdvancedSettingsPanel";
 import { CustomSelectActionItem } from "@/components/ActionItems";
-import { CaptureWrapper } from "@/store/CaptureProvider";
+import { CarouselAdvancedSettingsPanel } from "@/components/CarouselAdvancedSettingsPanel";
 import { defaultDataWith6Colors } from "@/components/CarouselBasicSettingsPanel";
+import { useAdvancedSettings } from "@/hooks/useSettings";
+import { CaptureWrapper } from "@/store/CaptureProvider";
+import { renderItem } from "@/utils/render-item";
 
 function Index() {
   const viewCount = 5;
   const [mode, setMode] = React.useState<any>("horizontal-stack");
-  const [snapDirection, setSnapDirection] = React.useState<"left" | "right">(
-    "left",
-  );
+  const [snapDirection, setSnapDirection] = React.useState<"left" | "right">("left");
   const ref = React.useRef<ICarouselInstance>(null);
   const { advancedSettings, onAdvancedSettingsChange } = useAdvancedSettings({
     // These values will be passed in the Carousel Component as default props
@@ -62,6 +60,7 @@ function Index() {
         onAdvancedSettingsChange={onAdvancedSettingsChange}
         extraSettings={[
           <CustomSelectActionItem
+            key="change-mode"
             label="Change mode"
             value={mode}
             onValueChange={(value) => {
@@ -73,6 +72,7 @@ function Index() {
             ]}
           />,
           <CustomSelectActionItem
+            key="change-snap-direction"
             label="Change snap direction"
             value={snapDirection}
             onValueChange={(value) => {

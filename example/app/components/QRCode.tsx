@@ -1,18 +1,8 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from "react";
 import type { ColorValue } from "react-native";
-import { Text, View, StyleSheet } from "react-native";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { AlertDialog, Input, Label, XStack } from "tamagui";
-import {
-  Adapt,
-  Button,
-  Image,
-  Popover,
-  PopoverProps,
-  Stack,
-  YStack,
-} from "tamagui";
+import { StyleSheet, Text } from "react-native";
+import { AlertDialog } from "tamagui";
+import { Image, Stack } from "tamagui";
 
 export const QRCode: React.FC<{ tintColor?: ColorValue }> = ({ tintColor }) => {
   return (

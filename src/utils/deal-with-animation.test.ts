@@ -33,11 +33,7 @@ describe("dealWithAnimation", () => {
 
     const result = animation(100, callback);
 
-    expect(withSpring).toHaveBeenCalledWith(
-      100,
-      springConfig,
-      expect.any(Function),
-    );
+    expect(withSpring).toHaveBeenCalledWith(100, springConfig, expect.any(Function));
     expect(callback).toHaveBeenCalledWith(true);
     expect(result).toBe(100);
   });
@@ -55,11 +51,7 @@ describe("dealWithAnimation", () => {
 
     const result = animation(100, callback);
 
-    expect(withTiming).toHaveBeenCalledWith(
-      100,
-      timingConfig,
-      expect.any(Function),
-    );
+    expect(withTiming).toHaveBeenCalledWith(100, timingConfig, expect.any(Function));
     expect(callback).toHaveBeenCalledWith(true);
     expect(result).toBe(100);
   });
@@ -81,7 +73,7 @@ describe("dealWithAnimation", () => {
     expect(withSpring).toHaveBeenCalledWith(
       100,
       expect.objectContaining(springConfig),
-      expect.any(Function),
+      expect.any(Function)
     );
   });
 

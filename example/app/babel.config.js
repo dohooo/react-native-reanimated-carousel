@@ -2,11 +2,9 @@ const fs = require("fs");
 const path = require("path");
 
 const root = path.resolve(__dirname, "../..");
-const rootPak = JSON.parse(
-  fs.readFileSync(path.join(root, "package.json"), "utf8"),
-);
+const rootPak = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
 
-module.exports = function (api) {
+module.exports = (api) => {
   api.cache(true);
   return {
     presets: ["babel-preset-expo"],

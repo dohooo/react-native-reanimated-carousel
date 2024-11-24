@@ -1,20 +1,13 @@
 import * as React from "react";
 import { View } from "react-native";
-import {
-  useSharedValue,
-  interpolate,
-  Extrapolation,
-} from "react-native-reanimated";
-import Carousel, {
-  ICarouselInstance,
-  Pagination,
-} from "react-native-reanimated-carousel";
+import { Extrapolation, interpolate, useSharedValue } from "react-native-reanimated";
+import Carousel, { ICarouselInstance, Pagination } from "react-native-reanimated-carousel";
 
+import { defaultDataWith6Colors } from "@/components/CarouselBasicSettingsPanel";
 import { window } from "@/constants/sizes";
+import { CaptureWrapper } from "@/store/CaptureProvider";
 import { renderItem } from "@/utils/render-item";
 import { Stack, YStack } from "tamagui";
-import { CaptureWrapper } from "@/store/CaptureProvider";
-import { defaultDataWith6Colors } from "@/components/CarouselBasicSettingsPanel";
 
 const PAGE_WIDTH = window.width;
 
@@ -138,12 +131,7 @@ function Index() {
             return {
               transform: [
                 {
-                  translateY: interpolate(
-                    val,
-                    [0, 1],
-                    [0, 0],
-                    Extrapolation.CLAMP,
-                  ),
+                  translateY: interpolate(val, [0, 1], [0, 0], Extrapolation.CLAMP),
                 },
               ],
             };
@@ -181,12 +169,7 @@ function Index() {
             return {
               transform: [
                 {
-                  translateY: interpolate(
-                    val,
-                    [0, 1],
-                    [0, 0],
-                    Extrapolation.CLAMP,
-                  ),
+                  translateY: interpolate(val, [0, 1], [0, 0], Extrapolation.CLAMP),
                 },
               ],
             };

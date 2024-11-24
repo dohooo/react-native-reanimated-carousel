@@ -8,14 +8,7 @@ import { window } from "@/constants/sizes";
 import { withAnchorPoint } from "@/utils/anchor-point";
 
 const PAGE_WIDTH = window.width / 5;
-const colors = [
-  "#26292E",
-  "#899F9C",
-  "#B3C680",
-  "#5C6265",
-  "#F5D399",
-  "#F1F1F1",
-];
+const colors = ["#26292E", "#899F9C", "#B3C680", "#5C6265", "#F5D399", "#F1F1F1"];
 
 function Index() {
   const baseOptions = {
@@ -50,13 +43,13 @@ function Index() {
             value,
             [-2, -1, 0, 1, 2],
             [1.7, 1.2, 1, 1.2, 1.7],
-            Extrapolation.CLAMP,
+            Extrapolation.CLAMP
           );
 
           const translate = interpolate(
             value,
             [-2, -1, 0, 1, 2],
-            [-size * 1.45, -size * 0.9, 0, size * 0.9, size * 1.45],
+            [-size * 1.45, -size * 0.9, 0, size * 0.9, size * 1.45]
           );
 
           const transform = {
@@ -67,12 +60,7 @@ function Index() {
               },
               { perspective: 150 },
               {
-                rotateY: `${interpolate(
-                  value,
-                  [-1, 0, 1],
-                  [30, 0, -30],
-                  Extrapolation.CLAMP,
-                )}deg`,
+                rotateY: `${interpolate(value, [-1, 0, 1], [30, 0, -30], Extrapolation.CLAMP)}deg`,
               },
             ],
           };
@@ -84,7 +72,7 @@ function Index() {
               {
                 width: baseOptions.width,
                 height: baseOptions.height,
-              },
+              }
             ),
           };
         }}
