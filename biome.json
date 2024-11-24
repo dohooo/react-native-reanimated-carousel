@@ -53,7 +53,8 @@
       "example/app/node_modules/**/*",
       "example/app/metro.config.js",
       "example/app/babel.config.js",
-      "scripts/**/*"
+      "scripts/**/*",
+      "package.json"
     ]
   }
 }
