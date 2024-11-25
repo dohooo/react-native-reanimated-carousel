@@ -10,10 +10,6 @@ on:
       - main
       - develop
     types: [opened, synchronize, reopened, ready_for_review]
-    paths-ignore:
-      - '**.md'
-      - 'docs/**'
-      - '.github/*.md'
   workflow_dispatch:
 
 concurrency:
