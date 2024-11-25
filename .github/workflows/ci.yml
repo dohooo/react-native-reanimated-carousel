@@ -22,7 +22,6 @@ permissions:
 
 jobs:
   setup:
-    if: "!contains(github.event.pull_request.title, 'release: version packages')"
     name: Setup & Code Quality
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -62,7 +61,6 @@ jobs:
         run: yarn types
 
   build-and-test:
-    if: "!contains(github.event.pull_request.title, 'release: version packages')"
     name: Build & Test
     needs: setup
     runs-on: ubuntu-latest
