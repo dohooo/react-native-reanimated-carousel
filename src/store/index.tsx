@@ -1,7 +1,7 @@
 import React from "react";
 
-import type { TInitializeCarouselProps } from "../hooks/useInitProps";
 import { SharedValue, useSharedValue } from "react-native-reanimated";
+import type { TInitializeCarouselProps } from "../hooks/useInitProps";
 
 type ItemDimensions = Record<number, { width: number; height: number }>;
 

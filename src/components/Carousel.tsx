@@ -1,10 +1,10 @@
 import React from "react";
-import { CarouselLayout } from "./CarouselLayout";
 import { useCommonVariables } from "../hooks/useCommonVariables";
 import { useInitProps } from "../hooks/useInitProps";
 import { usePropsErrorBoundary } from "../hooks/usePropsErrorBoundary";
 import { GlobalStateProvider } from "../store";
 import type { ICarouselInstance, TCarouselProps } from "../types";
+import { CarouselLayout } from "./CarouselLayout";
 
 const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>((_props, ref) => {
   const props = useInitProps(_props);

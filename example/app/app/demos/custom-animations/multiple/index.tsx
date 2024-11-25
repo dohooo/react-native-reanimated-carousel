@@ -2,12 +2,12 @@ import * as React from "react";
 import { View } from "react-native";
 import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
 
+import { CarouselAdvancedSettingsPanel } from "@/components/CarouselAdvancedSettingsPanel";
+import { defaultDataWith6Colors } from "@/components/CarouselBasicSettingsPanel";
 import { SBItem } from "@/components/SBItem";
 import { window } from "@/constants/sizes";
-import { CaptureWrapper } from "@/store/CaptureProvider";
-import { CarouselAdvancedSettingsPanel } from "@/components/CarouselAdvancedSettingsPanel";
 import { useAdvancedSettings } from "@/hooks/useSettings";
-import { defaultDataWith6Colors } from "@/components/CarouselBasicSettingsPanel";
+import { CaptureWrapper } from "@/store/CaptureProvider";
 
 const PAGE_WIDTH = window.width;
 

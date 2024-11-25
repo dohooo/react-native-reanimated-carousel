@@ -3,11 +3,11 @@ import { useSharedValue } from "react-native-reanimated";
 
 import { act, renderHook } from "@testing-library/react-hooks";
 
-import { useCarouselController } from "./useCarouselController";
-import { useRef, useImperativeHandle } from "react";
-import { ICarouselInstance } from "../types";
-import { GlobalStateContext, IContext } from "../store";
+import { useImperativeHandle, useRef } from "react";
 import { View } from "react-native";
+import { GlobalStateContext, IContext } from "../store";
+import { ICarouselInstance } from "../types";
+import { useCarouselController } from "./useCarouselController";
 
 // Mock Reanimated
 jest.mock("react-native-reanimated", () => {

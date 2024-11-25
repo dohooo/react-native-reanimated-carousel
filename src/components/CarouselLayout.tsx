@@ -1,17 +1,17 @@
 import React from "react";
 import { StyleSheet, type ViewStyle } from "react-native";
-import { runOnJS, useAnimatedStyle, useDerivedValue } from "react-native-reanimated";
-import { useGlobalState } from "../store";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useLayoutConfig } from "../hooks/useLayoutConfig";
+import { runOnJS, useAnimatedStyle, useDerivedValue } from "react-native-reanimated";
 import { useAutoPlay } from "../hooks/useAutoPlay";
-import { useCommonVariables } from "../hooks/useCommonVariables";
-import { useOnProgressChange } from "../hooks/useOnProgressChange";
 import { useCarouselController } from "../hooks/useCarouselController";
-import { computedRealIndexWithAutoFillData } from "../utils/computed-with-auto-fill-data";
+import { useCommonVariables } from "../hooks/useCommonVariables";
+import { useLayoutConfig } from "../hooks/useLayoutConfig";
+import { useOnProgressChange } from "../hooks/useOnProgressChange";
+import { useGlobalState } from "../store";
 import { ICarouselInstance } from "../types";
-import { ScrollViewGesture } from "./ScrollViewGesture";
+import { computedRealIndexWithAutoFillData } from "../utils/computed-with-auto-fill-data";
 import { ItemRenderer } from "./ItemRenderer";
+import { ScrollViewGesture } from "./ScrollViewGesture";
 
 export type TAnimationStyle = (value: number) => ViewStyle;
 

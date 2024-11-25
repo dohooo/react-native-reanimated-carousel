@@ -1,7 +1,8 @@
 import React, { useRef } from "react";
-import { runOnJS, SharedValue, useAnimatedReaction, useSharedValue } from "react-native-reanimated";
+import { SharedValue, runOnJS, useAnimatedReaction, useSharedValue } from "react-native-reanimated";
 
 import { Easing } from "../constants";
+import { useGlobalState } from "../store";
 import type {
   ICarouselInstance,
   TCarouselActionOptions,
@@ -15,7 +16,6 @@ import {
 import { dealWithAnimation } from "../utils/deal-with-animation";
 import { handlerOffsetDirection } from "../utils/handleroffset-direction";
 import { round } from "../utils/log";
-import { useGlobalState } from "../store";
 
 interface IOpts {
   ref: React.ForwardedRef<ICarouselInstance>;
