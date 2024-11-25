@@ -1,9 +1,13 @@
 import React, { useRef } from "react";
-import type Animated from "react-native-reanimated";
-import { runOnJS, useAnimatedReaction, useSharedValue } from "react-native-reanimated";
+import { runOnJS, SharedValue, useAnimatedReaction, useSharedValue } from "react-native-reanimated";
 
 import { Easing } from "../constants";
-import type { TCarouselActionOptions, TCarouselProps, WithTimingAnimation } from "../types";
+import type {
+  ICarouselInstance,
+  TCarouselActionOptions,
+  TCarouselProps,
+  WithTimingAnimation,
+} from "../types";
 import {
   computedRealIndexWithAutoFillData,
   convertToSharedIndex,
@@ -11,12 +15,14 @@ import {
 import { dealWithAnimation } from "../utils/deal-with-animation";
 import { handlerOffsetDirection } from "../utils/handleroffset-direction";
 import { round } from "../utils/log";
+import { useGlobalState } from "../store";
 
 interface IOpts {
+  ref: React.ForwardedRef<ICarouselInstance>;
   loop: boolean;
   size: number;
   dataLength: number;
-  handlerOffset: Animated.SharedValue<number>;
+  handlerOffset: SharedValue<number>;
   autoFillData: TCarouselProps["autoFillData"];
   withAnimation?: TCarouselProps["withAnimation"];
   fixedDirection?: TCarouselProps["fixedDirection"];
@@ -32,10 +38,12 @@ export interface ICarouselController {
   next: (opts?: TCarouselActionOptions) => void;
   getCurrentIndex: () => number;
   scrollTo: (opts?: TCarouselActionOptions) => void;
+  index: SharedValue<number>;
 }
 
 export function useCarouselController(options: IOpts): ICarouselController {
   const {
+    ref,
     size,
     loop,
     dataLength,
@@ -46,6 +54,13 @@ export function useCarouselController(options: IOpts): ICarouselController {
     autoFillData,
     fixedDirection,
   } = options;
+
+  const globalState = useGlobalState();
+
+  const {
+    props: { overscrollEnabled },
+    layout: { containerSize },
+  } = globalState;
 
   const dataInfo = React.useMemo(
     () => ({
@@ -148,7 +163,44 @@ export function useCarouselController(options: IOpts): ICarouselController {
     (opts: TCarouselActionOptions = {}) => {
       "worklet";
       const { count = 1, animated = true, onFinished } = opts;
-      if (!canSliding() || (!loop && index.value >= dataInfo.length - 1)) return;
+      if (!canSliding()) return;
+
+      if (!loop && index.value >= dataInfo.length - 1) return;
+
+      /* 
+      [Overscroll Protection Logic]
+      
+      This section handles the overscroll protection when overscrollEnabled is false.
+      It prevents scrolling beyond the visible content area.
+
+      Example scenario:
+      - Container width: 300px
+      - Item width: 75px (4 items per view)
+      - Total items: 6
+      
+      Initial state (index = 0):
+      [0][1][2][3] | [4][5]
+      visible      | remaining
+
+      After 2 slides (index = 2):
+      [0][1] | [2][3][4][5]
+      hidden | visible
+
+      The visibleContentWidth calculation:
+      - At index 2, remaining items = 4 (items 2,3,4,5)
+      - visibleContentWidth = 4 * 75px = 300px
+      
+      If we try to slide again:
+      - New visibleContentWidth would be: 2 * 75px = 150px (only items 4,5 remain)
+      - Since 150px < container width (300px), the slide is prevented
+      
+      This ensures we don't scroll beyond the last set of fully visible items,
+      maintaining a clean UX without partial item visibility at the edges.
+      */
+      const visibleContentWidth = (dataInfo.length - index.value) * size;
+      if (!overscrollEnabled && !(visibleContentWidth > containerSize.value.width)) {
+        return;
+      }
 
       onScrollStart?.();
 
@@ -178,7 +230,9 @@ export function useCarouselController(options: IOpts): ICarouselController {
   const prev = React.useCallback(
     (opts: TCarouselActionOptions = {}) => {
       const { count = 1, animated = true, onFinished } = opts;
-      if (!canSliding() || (!loop && index.value <= 0)) return;
+      if (!canSliding()) return;
+
+      if (!loop && index.value <= 0) return;
 
       onScrollStart?.();
 
@@ -207,7 +261,9 @@ export function useCarouselController(options: IOpts): ICarouselController {
   const to = React.useCallback(
     (opts: { i: number; animated: boolean; onFinished?: () => void }) => {
       const { i, animated = false, onFinished } = opts;
+
       if (i === index.value) return;
+
       if (!canSliding()) return;
 
       onScrollStart?.();
@@ -256,6 +312,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
   const scrollTo = React.useCallback(
     (opts: TCarouselActionOptions = {}) => {
       const { index: i, count, animated = false, onFinished } = opts;
+
       if (typeof i === "number" && i > -1) {
         to({ i, animated, onFinished });
         return;
@@ -271,11 +328,23 @@ export function useCarouselController(options: IOpts): ICarouselController {
     [prev, next, to]
   );
 
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      next,
+      prev,
+      getCurrentIndex,
+      scrollTo,
+    }),
+    [getCurrentIndex, next, prev, scrollTo]
+  );
+
   return {
     next,
     prev,
     scrollTo,
     getCurrentIndex,
     getSharedIndex: () => sharedIndex.current,
+    index,
   };
 }

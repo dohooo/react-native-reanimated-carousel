@@ -7,11 +7,11 @@ import type { IOpts } from "../hooks/useOffsetX";
 import { useOffsetX } from "../hooks/useOffsetX";
 import type { IVisibleRanges } from "../hooks/useVisibleRanges";
 import type { ILayoutConfig } from "../layouts/stack";
-import { CTX } from "../store";
+import { useGlobalState } from "../store";
 
 export type TAnimationStyle = (value: number) => ViewStyle;
 
-export const BaseLayout: React.FC<{
+export const ItemLayout: React.FC<{
   index: number;
   handlerOffset: SharedValue<number>;
   visibleRanges: IVisibleRanges;
@@ -22,10 +22,12 @@ export const BaseLayout: React.FC<{
 }> = (props) => {
   const { handlerOffset, index, children, visibleRanges, animationStyle } = props;
 
-  const context = React.useContext(CTX);
   const {
     props: { loop, dataLength, width, height, vertical, customConfig, mode, modeConfig },
-  } = context;
+    // TODO: For dynamic dimension in the future
+    // layout: { updateItemDimensions },
+  } = useGlobalState();
+
   const size = vertical ? height : width;
 
   let offsetXConfig: IOpts = {
@@ -58,6 +60,12 @@ export const BaseLayout: React.FC<{
     [animationStyle]
   );
 
+  // TODO: For dynamic dimension in the future
+  // function handleLayout(e: LayoutChangeEvent) {
+  //   const { width, height } = e.nativeEvent.layout;
+  //   updateItemDimensions(index, { width, height });
+  // }
+
   return (
     <Animated.View
       style={[
@@ -68,6 +76,7 @@ export const BaseLayout: React.FC<{
         },
         animatedStyle,
       ]}
+      // onLayout={handleLayout}
       /**
        * We use this testID to know when the carousel item is ready to be tested in test.
        * e.g.

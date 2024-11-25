@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
 import React, { useCallback } from "react";
-import type { StyleProp, ViewStyle } from "react-native";
+import type { LayoutChangeEvent, StyleProp, ViewStyle } from "react-native";
 import type {
   GestureStateChangeEvent,
   PanGestureHandlerEventPayload,
@@ -19,7 +19,7 @@ import Animated, {
 
 import { Easing } from "../constants";
 import { usePanGestureProxy } from "../hooks/usePanGestureProxy";
-import { CTX } from "../store";
+import { useGlobalState } from "../store";
 import type { WithTimingAnimation } from "../types";
 import { dealWithAnimation } from "../utils/deal-with-animation";
 
@@ -28,11 +28,12 @@ interface Props {
   infinite?: boolean;
   testID?: string;
   style?: StyleProp<ViewStyle>;
+  translation: Animated.SharedValue<number>;
+  onLayout?: (e: LayoutChangeEvent) => void;
   onScrollStart?: () => void;
   onScrollEnd?: () => void;
   onTouchBegin?: () => void;
   onTouchEnd?: () => void;
-  translation: Animated.SharedValue<number>;
 }
 
 const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
@@ -52,10 +53,11 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       minScrollDistancePerSwipe,
       fixedDirection,
     },
-  } = React.useContext(CTX);
+    common: { size },
+    layout: { updateContainerSize },
+  } = useGlobalState();
 
   const {
-    size,
     translation,
     testID,
     style = {},
@@ -421,6 +423,17 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
     options: { enabled },
   });
 
+  const onLayout = React.useCallback(
+    (e: LayoutChangeEvent) => {
+      "worklet";
+      updateContainerSize({
+        width: e.nativeEvent.layout.width,
+        height: e.nativeEvent.layout.height,
+      });
+    },
+    [updateContainerSize]
+  );
+
   return (
     <GestureDetector gesture={gesture}>
       <Animated.View
@@ -429,6 +442,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
         style={style}
         onTouchStart={onTouchBegin}
         onTouchEnd={onTouchEnd}
+        onLayout={onLayout}
       >
         {props.children}
       </Animated.View>
