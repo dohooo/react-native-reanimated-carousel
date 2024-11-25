@@ -15,6 +15,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          token: ${{ secrets.CHANGESET_ACTIONS }}
 
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -33,7 +34,6 @@ jobs:
         uses: changesets/action@v1
         with:
           publish: npx changeset publish
-          setupGitUser: false
           commit: 'release: version packages'
           title: 'release: version packages'
         env:
