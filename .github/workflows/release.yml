@@ -33,6 +33,7 @@ jobs:
         uses: changesets/action@v1
         with:
           publish: npx changeset publish
+          setupGitUser: false
           commit: 'release: version packages'
           title: 'release: version packages'
         env:
