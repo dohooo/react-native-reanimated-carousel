@@ -7,7 +7,7 @@ export type {
   IComputedDirectionTypes,
   CarouselRenderItem,
 } from "./types";
-export type { TAnimationStyle } from "./components/BaseLayout";
+export type { TAnimationStyle } from "./components/ItemLayout";
 export type { ILayoutConfig } from "./layouts/stack";
 
 export default Carousel;

@@ -95,11 +95,12 @@ jobs:
         run: yarn prepare
 
       - name: Run tests
-        run: yarn test
+        run: yarn test:ci
         
       - name: Upload coverage reports
-        uses: codecov/codecov-action@v3
-        if: always()
+        uses: codecov/codecov-action@v5
         with:
+          fail_ci_if_error: true
+          files: ./coverage/lcov.info
           token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: false
+          verbose: true

@@ -4,8 +4,8 @@ import type { ViewStyle } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 import { runOnJS, useAnimatedReaction } from "react-native-reanimated";
 
-import type { TAnimationStyle } from "./BaseLayout";
-import { BaseLayout } from "./BaseLayout";
+import type { TAnimationStyle } from "./ItemLayout";
+import { ItemLayout } from "./ItemLayout";
 
 import type { VisibleRanges } from "../hooks/useVisibleRanges";
 import { useVisibleRanges } from "../hooks/useVisibleRanges";
@@ -80,7 +80,7 @@ export const ItemRenderer: FC<Props> = (props) => {
         if (!shouldRender) return null;
 
         return (
-          <BaseLayout
+          <ItemLayout
             key={index}
             index={index}
             handlerOffset={offsetX}
@@ -94,7 +94,7 @@ export const ItemRenderer: FC<Props> = (props) => {
                 animationValue,
               })
             }
-          </BaseLayout>
+          </ItemLayout>
         );
       })}
     </>

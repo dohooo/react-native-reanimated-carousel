@@ -1,5 +1,7 @@
+import "expo-dev-client";
+
 import { useEffect, useState } from "react";
-import { I18nManager, Text, View } from "react-native";
+import { I18nManager, Text } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { TamaguiProvider, XStack, YStack } from "tamagui";
 import { tamaguiConfig } from "../tamagui.config";

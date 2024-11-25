@@ -148,6 +148,7 @@ export type TCarouselProps<T = any> = {
   /**
    * If enabled, items will scroll to the first placement when scrolling past the edge rather than closing to the last. (previous conditions: loop=false)
    * @default true
+   * @test_coverage ✅ tested in Carousel.test.tsx > should respect overscrollEnabled=false and prevent scrolling beyond bounds
    */
   overscrollEnabled?: boolean;
   /**
