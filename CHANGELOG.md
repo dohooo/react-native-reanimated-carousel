@@ -1,5 +1,11 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-canary.19
+
+### Patch Changes
+
+- [#724](https://github.com/dohooo/react-native-reanimated-carousel/pull/724) [`33022e6`](https://github.com/dohooo/react-native-reanimated-carousel/commit/33022e6e1fa042dffc2ae688b5cc00f62470d713) Thanks [@dohooo](https://github.com/dohooo)! - fix: next item function overscolling with overscrollEnabled is false
+
 ## 4.0.0-canary.18
 
 ### Patch Changes
