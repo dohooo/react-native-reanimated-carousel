@@ -95,7 +95,7 @@ jobs:
         run: yarn prepare
 
       - name: Run tests
-        run: yarn test
+        run: yarn test:ci
         
       - name: Upload coverage reports
         uses: codecov/codecov-action@v3

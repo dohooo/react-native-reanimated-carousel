@@ -73,3 +73,6 @@ lib/
 
 # Add Biome cache
 .biome/
+
+# Jest
+coverage/
