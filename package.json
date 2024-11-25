@@ -39,7 +39,8 @@
     "dev": "watch 'yarn prepare' ./src",
     "prepare": "bob build",
     "clean": "del-cli lib",
-    "version": "changeset version"
+    "version": "changeset version",
+    "precommit": "yarn lint:fix && yarn format:fix"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -87,6 +88,7 @@
   },
   "husky": {
     "hooks": {
+      "pre-commit": "yarn precommit",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
