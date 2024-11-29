@@ -1,5 +1,11 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-canary.21
+
+### Patch Changes
+
+- [#733](https://github.com/dohooo/react-native-reanimated-carousel/pull/733) [`3040863`](https://github.com/dohooo/react-native-reanimated-carousel/commit/3040863506254b680e1897d2c7ac746ed56f4a39) Thanks [@dohooo](https://github.com/dohooo)! - Add pointerEvents: ‘box-none’ to ItemLayout component to allow touches for children components outside item boundaries
+
 ## 4.0.0-canary.20
 
 ### Patch Changes
