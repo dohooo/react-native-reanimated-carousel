@@ -1,3 +1,4 @@
+import { window } from "@/constants/sizes";
 import { renderItem } from "@/utils/render-item";
 import * as React from "react";
 import { View } from "react-native";
@@ -18,9 +19,9 @@ function Index() {
         loop={true}
         pagingEnabled={true}
         snapEnabled={true}
-        width={430}
+        width={window.width}
         style={{
-          width: 430,
+          width: window.width,
         }}
         mode="parallax"
         modeConfig={{
