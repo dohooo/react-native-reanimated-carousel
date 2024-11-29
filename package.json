@@ -1,6 +1,6 @@
 {
   "name": "react-native-reanimated-carousel",
-  "version": "4.0.0-canary.20",
+  "version": "4.0.0-canary.21",
   "packageManager": "yarn@4.0.2",
   "description": "Simple carousel component.fully implemented using Reanimated 2.Infinitely scrolling, very smooth.",
   "author": "Doho <zhaodonghao586@outlook.com> (https://github.com/dohooo)",
