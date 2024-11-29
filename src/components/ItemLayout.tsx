@@ -3,13 +3,14 @@ import type { ViewStyle } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 import Animated, { useAnimatedStyle, useDerivedValue } from "react-native-reanimated";
 
+import { TCarouselProps } from "src/types";
 import type { IOpts } from "../hooks/useOffsetX";
 import { useOffsetX } from "../hooks/useOffsetX";
 import type { IVisibleRanges } from "../hooks/useVisibleRanges";
 import type { ILayoutConfig } from "../layouts/stack";
 import { useGlobalState } from "../store";
 
-export type TAnimationStyle = (value: number) => ViewStyle;
+export type TAnimationStyle = NonNullable<TCarouselProps["customAnimation"]>;
 
 export const ItemLayout: React.FC<{
   index: number;
@@ -56,8 +57,8 @@ export const ItemLayout: React.FC<{
   const x = useOffsetX(offsetXConfig, visibleRanges);
   const animationValue = useDerivedValue(() => x.value / size, [x, size]);
   const animatedStyle = useAnimatedStyle<ViewStyle>(
-    () => animationStyle(x.value / size),
-    [animationStyle]
+    () => animationStyle(x.value / size, index),
+    [animationStyle, index]
   );
 
   // TODO: For dynamic dimension in the future

@@ -2,7 +2,7 @@ import type { FC } from "react";
 import React from "react";
 import type { PanGesture } from "react-native-gesture-handler";
 import { Gesture, State } from "react-native-gesture-handler";
-import Animated, { useDerivedValue, useSharedValue } from "react-native-reanimated";
+import Animated, { interpolate, useDerivedValue, useSharedValue } from "react-native-reanimated";
 import type { ReactTestInstance } from "react-test-renderer";
 
 import { act, render, waitFor } from "@testing-library/react-native";
@@ -301,7 +301,11 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
 
       fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
         { state: State.BEGAN, translationX: 0, velocityX: -5 },
-        { state: State.ACTIVE, translationX: -slideWidth * 0.15, velocityX: -5 },
+        {
+          state: State.ACTIVE,
+          translationX: -slideWidth * 0.15,
+          velocityX: -5,
+        },
         { state: State.END, translationX: -slideWidth * 0.25, velocityX: -5 },
       ]);
 
@@ -314,8 +318,16 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
 
       fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
         { state: State.BEGAN, translationX: 0, velocityX: -1000 },
-        { state: State.ACTIVE, translationX: -slideWidth * 0.15, velocityX: -1000 },
-        { state: State.END, translationX: -slideWidth * 0.25, velocityX: -1000 },
+        {
+          state: State.ACTIVE,
+          translationX: -slideWidth * 0.15,
+          velocityX: -1000,
+        },
+        {
+          state: State.END,
+          translationX: -slideWidth * 0.25,
+          velocityX: -1000,
+        },
       ]);
 
       await waitFor(() => expect(progress.current).toBe(1));
@@ -439,6 +451,45 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
       swipeToLeftOnce({ velocityX: -slideWidth });
       await waitFor(() => expect(progress.current).toBe(1));
     }
+  });
+
+  it("`customAnimation` prop: should apply the custom animation", async () => {
+    const progress = { current: 0 };
+    const indexes: Record<number, number> = {};
+    const Wrapper = createCarousel(progress);
+    const { getByTestId } = render(
+      <Wrapper
+        customAnimation={(value: number, index: number) => {
+          "worklet";
+
+          indexes[index] = index;
+
+          const zIndex = interpolate(value, [-1, 0, 1], [10, 20, 30]);
+          const translateX = interpolate(value, [-2, 0, 1], [-slideWidth, 0, slideWidth]);
+
+          return {
+            transform: [{ translateX }],
+            zIndex,
+          };
+        }}
+      />
+    );
+
+    await verifyInitialRender(getByTestId);
+
+    swipeToLeftOnce();
+    await waitFor(() => {
+      expect(progress.current).toBe(1);
+
+      expect(indexes).toMatchInlineSnapshot(`
+        {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 3,
+        }
+      `);
+    });
   });
 
   it("`overscrollEnabled` prop: should respect overscrollEnabled=false and prevent scrolling beyond bounds", async () => {
