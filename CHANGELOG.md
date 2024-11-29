@@ -1,5 +1,11 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-canary.22
+
+### Patch Changes
+
+- [#735](https://github.com/dohooo/react-native-reanimated-carousel/pull/735) [`848f458`](https://github.com/dohooo/react-native-reanimated-carousel/commit/848f45810203d7c77077e041840179412863f0ca) Thanks [@dohooo](https://github.com/dohooo)! - This PR updates the customAnimation function signature to include an index parameter, allowing users to apply custom animations based on the item’s index.
+
 ## 4.0.0-canary.21
 
 ### Patch Changes
