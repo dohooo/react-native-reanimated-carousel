@@ -92,18 +92,17 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
   // Helper function to simulate swipe
   const swipeToLeftOnce = (
     options: {
-      itemWidth: number;
-    } = {
-      itemWidth: slideWidth,
-    }
+      itemWidth?: number;
+      velocityX?: number;
+    } = {}
   ) => {
-    const { itemWidth } = options;
+    const { itemWidth = slideWidth, velocityX = -slideWidth } = options;
     fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
-      { state: State.BEGAN, translationX: 0 },
-      { state: State.ACTIVE, translationX: -itemWidth * 0.25 },
-      { state: State.ACTIVE, translationX: -itemWidth * 0.5 },
-      { state: State.ACTIVE, translationX: -itemWidth * 0.75 },
-      { state: State.END, translationX: -itemWidth },
+      { state: State.BEGAN, translationX: 0, velocityX },
+      { state: State.ACTIVE, translationX: -itemWidth * 0.25, velocityX },
+      { state: State.ACTIVE, translationX: -itemWidth * 0.5, velocityX },
+      { state: State.ACTIVE, translationX: -itemWidth * 0.75, velocityX },
+      { state: State.END, translationX: -itemWidth, velocityX },
     ]);
   };
 
@@ -301,9 +300,9 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
       await verifyInitialRender(getByTestId);
 
       fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
-        { state: State.BEGAN, translationX: 0 },
-        { state: State.ACTIVE, translationX: -slideWidth * 0.15, velocityX: 0 },
-        { state: State.END, translationX: -slideWidth * 0.25, velocityX: 0 },
+        { state: State.BEGAN, translationX: 0, velocityX: -5 },
+        { state: State.ACTIVE, translationX: -slideWidth * 0.15, velocityX: -5 },
+        { state: State.END, translationX: -slideWidth * 0.25, velocityX: -5 },
       ]);
 
       await waitFor(() => expect(progress.current).toBe(0));
@@ -314,9 +313,9 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
       await verifyInitialRender(getByTestId);
 
       fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
-        { state: State.BEGAN, translationX: 0 },
-        { state: State.ACTIVE, translationX: -slideWidth * 0.15, velocityX: 0 },
-        { state: State.END, translationX: -slideWidth * 0.25, velocityX: 0 },
+        { state: State.BEGAN, translationX: 0, velocityX: -1000 },
+        { state: State.ACTIVE, translationX: -slideWidth * 0.15, velocityX: -1000 },
+        { state: State.END, translationX: -slideWidth * 0.25, velocityX: -1000 },
       ]);
 
       await waitFor(() => expect(progress.current).toBe(1));
@@ -354,9 +353,9 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     await verifyInitialRender(getByTestId);
 
     fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
-      { state: State.BEGAN, translationX: 0 },
-      { state: State.ACTIVE, translationX: slideWidth / 2 },
-      { state: State.END, translationX: slideWidth },
+      { state: State.BEGAN, translationX: 0, velocityX: 1000 },
+      { state: State.ACTIVE, translationX: slideWidth / 2, velocityX: 1000 },
+      { state: State.END, translationX: slideWidth, velocityX: 1000 },
     ]);
 
     await waitFor(() => {
@@ -377,9 +376,9 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     await verifyInitialRender(getByTestId);
 
     fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
-      { state: State.BEGAN, translationX: 0 },
-      { state: State.ACTIVE, translationX: slideWidth / 2 },
-      { state: State.END, translationX: slideWidth },
+      { state: State.BEGAN, translationX: 0, velocityX: 1000 },
+      { state: State.ACTIVE, translationX: slideWidth / 2, velocityX: 1000 },
+      { state: State.END, translationX: slideWidth, velocityX: 1000 },
     ]);
 
     await waitFor(() => {
@@ -407,9 +406,9 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     });
 
     fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
-      { state: State.BEGAN, translationX: 0 },
-      { state: State.ACTIVE, translationX: -slideWidth / 2 },
-      { state: State.END, translationX: -slideWidth },
+      { state: State.BEGAN, translationX: 0, velocityX: -1000 },
+      { state: State.ACTIVE, translationX: -slideWidth / 2, velocityX: -1000 },
+      { state: State.END, translationX: -slideWidth, velocityX: -1000 },
     ]);
 
     await waitFor(() => {
@@ -419,21 +418,25 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
   });
 
   it("`fixedDirection` prop: should swipe to the correct direction when fixedDirection is positive", async () => {
-    const progress = { current: 0 };
-    const Wrapper = createCarousel(progress);
     {
+      const progress = { current: 0 };
+      const Wrapper = createCarousel(progress);
       const { getByTestId } = render(<Wrapper fixedDirection="positive" />);
       await verifyInitialRender(getByTestId);
 
-      swipeToLeftOnce();
-      await waitFor(() => expect(progress.current).toBe(3));
+      swipeToLeftOnce({ velocityX: slideWidth });
+      await waitFor(() => {
+        expect(progress.current).toBe(3);
+      });
     }
 
     {
+      const progress = { current: 0 };
+      const Wrapper = createCarousel(progress);
       const { getByTestId } = render(<Wrapper fixedDirection="negative" />);
       await verifyInitialRender(getByTestId);
 
-      swipeToLeftOnce();
+      swipeToLeftOnce({ velocityX: -slideWidth });
       await waitFor(() => expect(progress.current).toBe(1));
     }
   });

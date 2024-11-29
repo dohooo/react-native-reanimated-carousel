@@ -28,7 +28,7 @@ function Index() {
       pagingEnabled: true,
       snapEnabled: true,
       vertical: false,
-      width: 430,
+      width: PAGE_WIDTH,
     },
   });
 
