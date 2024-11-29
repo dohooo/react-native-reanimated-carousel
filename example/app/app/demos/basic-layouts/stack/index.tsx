@@ -5,6 +5,7 @@ import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
 import { CustomSelectActionItem } from "@/components/ActionItems";
 import { CarouselAdvancedSettingsPanel } from "@/components/CarouselAdvancedSettingsPanel";
 import { defaultDataWith6Colors } from "@/components/CarouselBasicSettingsPanel";
+import { window } from "@/constants/sizes";
 import { useAdvancedSettings } from "@/hooks/useSettings";
 import { CaptureWrapper } from "@/store/CaptureProvider";
 import { renderItem } from "@/utils/render-item";
@@ -26,7 +27,7 @@ function Index() {
       pagingEnabled: true,
       snapEnabled: true,
       vertical: false,
-      width: 430,
+      width: window.width,
     },
   });
 
