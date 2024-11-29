@@ -73,6 +73,7 @@ export const ItemLayout: React.FC<{
           width: width || "100%",
           height: height || "100%",
           position: "absolute",
+          pointerEvents: "box-none",
         },
         animatedStyle,
       ]}
