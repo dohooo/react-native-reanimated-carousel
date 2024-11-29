@@ -1,5 +1,11 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-canary.20
+
+### Patch Changes
+
+- [#731](https://github.com/dohooo/react-native-reanimated-carousel/pull/731) [`6e8cdb4`](https://github.com/dohooo/react-native-reanimated-carousel/commit/6e8cdb4c13d447abe48c7529ee5217e39bbd0d14) Thanks [@dohooo](https://github.com/dohooo)! - improve "slow pan" behavior: if it seems that the user intent is to stay on the current page (because they didn't pan very far; maybe they started panning one direction then reversed direction, etc.), _don't_ actually change page upon gesture completion
+
 ## 4.0.0-canary.19
 
 ### Patch Changes
