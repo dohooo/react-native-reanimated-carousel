@@ -187,8 +187,9 @@ export type TCarouselProps<T = any> = {
   /**
    * Custom animations.
    * Must use `worklet`, Details: https://docs.swmansion.com/react-native-reanimated/docs/2.2.0/worklets/
+   * @test_coverage ✅ tested in Carousel.test.tsx > should apply the custom animation
    */
-  customAnimation?: (value: number) => ViewStyle;
+  customAnimation?: (value: number, index: number) => ViewStyle;
   /**
    * Render carousel item.
    * @test_coverage ✅ tested in Carousel.test.tsx > should render items correctly

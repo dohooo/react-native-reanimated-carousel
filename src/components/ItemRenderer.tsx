@@ -24,7 +24,7 @@ interface Props {
   handlerOffset: SharedValue<number>;
   layoutConfig: TAnimationStyle;
   renderItem: CarouselRenderItem<any>;
-  customAnimation?: (value: number) => ViewStyle;
+  customAnimation?: (value: number, index: number) => ViewStyle;
 }
 
 export const ItemRenderer: FC<Props> = (props) => {
