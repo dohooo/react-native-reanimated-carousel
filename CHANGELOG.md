@@ -1,5 +1,25 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-canary.20
+
+### Patch Changes
+
+- [#731](https://github.com/dohooo/react-native-reanimated-carousel/pull/731) [`6e8cdb4`](https://github.com/dohooo/react-native-reanimated-carousel/commit/6e8cdb4c13d447abe48c7529ee5217e39bbd0d14) Thanks [@dohooo](https://github.com/dohooo)! - improve "slow pan" behavior: if it seems that the user intent is to stay on the current page (because they didn't pan very far; maybe they started panning one direction then reversed direction, etc.), _don't_ actually change page upon gesture completion
+
+## 4.0.0-canary.19
+
+### Patch Changes
+
+- [#724](https://github.com/dohooo/react-native-reanimated-carousel/pull/724) [`33022e6`](https://github.com/dohooo/react-native-reanimated-carousel/commit/33022e6e1fa042dffc2ae688b5cc00f62470d713) Thanks [@dohooo](https://github.com/dohooo)! - fix: next item function overscolling with overscrollEnabled is false
+
+## 4.0.0-canary.18
+
+### Patch Changes
+
+- [#721](https://github.com/dohooo/react-native-reanimated-carousel/pull/721) [`2a8111e`](https://github.com/dohooo/react-native-reanimated-carousel/commit/2a8111e51762d2d716f4e4dfb18fa38c21b205a6) Thanks [@dohooo](https://github.com/dohooo)! - fix: parallax layout with new arch enabled
+
+- [#710](https://github.com/dohooo/react-native-reanimated-carousel/pull/710) [`d98bb99`](https://github.com/dohooo/react-native-reanimated-carousel/commit/d98bb999fce8f24b627c0c6b90a1bd2c1150364b) Thanks [@nmassey](https://github.com/nmassey)! - fix: remove shared value access warning from react-native-reanimated
+
 ## 4.0.0-canary.17
 
 ### Patch Changes

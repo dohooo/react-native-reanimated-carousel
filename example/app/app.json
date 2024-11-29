@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "rnrc-example-app",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/images/splash.png",

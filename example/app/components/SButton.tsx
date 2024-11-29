@@ -1,17 +1,16 @@
 import type { PropsWithChildren } from "react";
 import React from "react";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 export interface ISButtonProps {
-  visible?: boolean
-  onPress?: () => void
+  visible?: boolean;
+  onPress?: () => void;
 }
 
 const SButton: React.FC<PropsWithChildren<ISButtonProps>> = (props) => {
   const { children, visible = true, onPress } = props;
 
-  if (!visible)
-    return <></>;
+  if (!visible) return <></>;
 
   return (
     <View

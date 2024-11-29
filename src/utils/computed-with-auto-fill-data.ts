@@ -7,14 +7,12 @@ function isAutoFillData(params: { autoFillData: boolean; loop: boolean }) {
   return !!params.loop && !!params.autoFillData;
 }
 
-type BaseParams<T extends object = {}> = {
-  autoFillData: boolean
-  loop: boolean
+type BaseParams<T extends object> = {
+  autoFillData: boolean;
+  loop: boolean;
 } & T;
 
-export function convertToSharedIndex(
-  params: BaseParams<{ index: number; rawDataLength: number }>,
-) {
+export function convertToSharedIndex(params: BaseParams<{ index: number; rawDataLength: number }>) {
   "worklet";
   const { loop, rawDataLength, index, autoFillData } = params;
 
@@ -32,10 +30,10 @@ export function convertToSharedIndex(
 
 export function computedOffsetXValueWithAutoFillData(
   params: BaseParams<{
-    rawDataLength: number
-    value: number
-    size: number
-  }>,
+    rawDataLength: number;
+    value: number;
+    size: number;
+  }>
 ) {
   "worklet";
 
@@ -55,9 +53,9 @@ export function computedOffsetXValueWithAutoFillData(
 
 export function computedRealIndexWithAutoFillData(
   params: BaseParams<{
-    index: number
-    dataLength: number
-  }>,
+    index: number;
+    dataLength: number;
+  }>
 ) {
   const { index, dataLength, loop, autoFillData } = params;
 
@@ -75,9 +73,9 @@ export function computedRealIndexWithAutoFillData(
 
 export function computedFillDataWithAutoFillData<T>(
   params: BaseParams<{
-    data: T[]
-    dataLength: number
-  }>,
+    data: T[];
+    dataLength: number;
+  }>
 ): T[] {
   const { data, loop, autoFillData, dataLength } = params;
 

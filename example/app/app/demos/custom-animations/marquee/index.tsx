@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 import Animated, { Easing } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
 
@@ -10,10 +10,7 @@ const PAGE_WIDTH = window.width / 2;
 
 function ReactionContainer(props: {
   text: string;
-  children: (
-    text: React.ReactElement,
-    layout?: { width: number },
-  ) => React.ReactElement;
+  children: (text: React.ReactElement, layout?: { width: number }) => React.ReactElement;
 }) {
   const [width, setWidth] = React.useState<number>();
   const [layout, setLayout] = React.useState<{ width: number }>();

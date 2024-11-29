@@ -1,18 +1,15 @@
-import React from "react";
-import { ColorValue, I18nManager, Platform, Text, View } from "react-native";
-import {
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
 import { QRCode } from "@/components/QRCode";
-import { IS_WEB } from "@/constants/platform";
-import { reloadAsync } from "expo-updates";
 import { IS_DEV } from "@/constants/env";
+import { IS_WEB } from "@/constants/platform";
 import { useCapture } from "@/store/CaptureProvider";
 import { Box, Camera, Divide, Star } from "@tamagui/lucide-icons";
-import { XStack } from "tamagui";
-import Animated from "react-native-reanimated";
 import { Href, usePathname, useRouter } from "expo-router";
+import { reloadAsync } from "expo-updates";
+import React from "react";
+import { ColorValue, I18nManager, Platform, Text, View } from "react-native";
+import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
+import Animated from "react-native-reanimated";
+import { XStack } from "tamagui";
 
 interface HeaderRightProps {
   tintColor?: ColorValue;
@@ -25,11 +22,7 @@ const Restart = () => {
   else reloadAsync();
 };
 
-export const HeaderRight: React.FC<HeaderRightProps> = ({
-  tintColor,
-  isRTL,
-  setIsRTL,
-}) => {
+export const HeaderRight: React.FC<HeaderRightProps> = ({ tintColor, isRTL, setIsRTL }) => {
   const { capture } = useCapture();
   const pathname = usePathname();
   const inDemos = pathname.startsWith("/demos");
@@ -76,9 +69,7 @@ export const HeaderRight: React.FC<HeaderRightProps> = ({
           Restart();
         }}
       >
-        <Text style={{ color: tintColor, marginRight: 12 }}>
-          {isRTL ? "LTR" : "RTL"}
-        </Text>
+        <Text style={{ color: tintColor, marginRight: 12 }}>{isRTL ? "LTR" : "RTL"}</Text>
       </TouchableWithoutFeedback>
     </XStack>
   );

@@ -1,43 +1,102 @@
-name: CI
+name: Continuous Integration
 
 on:
+  push:
+    branches:
+      - main
+      - develop
   pull_request:
+    branches:
+      - main
+      - develop
     types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
 
-  # allow manual triggers
-  workflow_dispatch: {}
-
-# Cancel in progress workflows on pull_requests.
-# https://docs.github.com/en/actions/using-jobs/using-concurrency#example-using-a-fallback-value
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
-permissions: read-all
+permissions:
+  contents: read
+  pull-requests: read
 
 jobs:
-  test:
+  setup:
+    name: Setup & Code Quality
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+    timeout-minutes: 10
 
-      - name: Setup Node
-        uses: actions/setup-node@v3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 20.x
           cache: yarn
 
-      - name: Install dependencies
-        run: yarn install
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: |
+            **/node_modules
+            ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
-      - name: Run tests
-        run: yarn test
+      - name: Install dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
+
+      - name: Check code format
+        run: yarn format
 
       - name: Run linter
         run: yarn lint
-
-      - name: Check types
+        
+      - name: Type check
         run: yarn types
+
+  build-and-test:
+    name: Build & Test
+    needs: setup
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: yarn
+
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+            ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Clean lib directory
+        run: yarn clean
+
+      - name: Build project
+        run: yarn prepare
+
+      - name: Run tests
+        run: yarn test:ci
+        
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v5
+        with:
+          fail_ci_if_error: true
+          files: ./coverage/lcov.info
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true

@@ -66,3 +66,13 @@ lib/
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Cursor
+.cursorrules
+.cursorignore
+
+# Add Biome cache
+.biome/
+
+# Jest
+coverage/

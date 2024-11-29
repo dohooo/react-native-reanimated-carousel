@@ -5,8 +5,8 @@ import type Animated from "react-native-reanimated";
 import { Extrapolation, interpolate } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
-import { window } from "@/constants/sizes";
 import { SlideItem } from "@/components/SlideItem";
+import { window } from "@/constants/sizes";
 import { getImages } from "@/utils/get-images";
 
 const PAGE_WIDTH = window.width;
@@ -35,23 +35,24 @@ function Index() {
         itemOffsetInput.map((item) => {
           if (item < 0) {
             return (-itemSize + sideItemWidth) * Math.abs(item);
-          } else if (item > 0) {
+          }
+
+          if (item > 0) {
             return (itemSize - sideItemWidth) * (Math.abs(item) - 1);
           }
+
           return 0;
-        }) as number[],
+        }) as number[]
       );
 
       const translate =
-        interpolate(value, [-1, 0, 1], [-itemSize, 0, itemSize]) +
-        centerOffset -
-        itemOffset;
+        interpolate(value, [-1, 0, 1], [-itemSize, 0, itemSize]) + centerOffset - itemOffset;
 
       const width = interpolate(
         value,
         [-1, 0, 1],
         [sideItemWidth, itemSize, sideItemWidth],
-        Extrapolation.CLAMP,
+        Extrapolation.CLAMP
       );
 
       return {
@@ -64,14 +65,11 @@ function Index() {
         overflow: "hidden",
       };
     },
-    [centerOffset, itemSize, sideItemWidth, sideItemCount],
+    [centerOffset, itemSize, sideItemWidth, sideItemCount]
   );
 
   return (
-    <View
-      id="carousel-component"
-      dataSet={{ kind: "custom-animations", name: "fold" }}
-    >
+    <View id="carousel-component" dataSet={{ kind: "custom-animations", name: "fold" }}>
       <Carousel
         width={itemSize}
         height={PAGE_WIDTH / 2}

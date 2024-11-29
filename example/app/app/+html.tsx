@@ -1,6 +1,6 @@
-import { ScrollViewStyleReset } from "expo-router/html";
 import { WebProvider } from "@/store/WebProvider";
 import Head from "expo-router/head";
+import { ScrollViewStyleReset } from "expo-router/html";
 
 // This file is web-only and used to configure the root HTML for every
 // web page during static rendering.
@@ -30,7 +30,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
         {/* Using raw CSS styles as an escape-hatch to ensure the background color never flickers in dark-mode. */}
         <style
           dangerouslySetInnerHTML={{
-            __html: ``,
+            __html: "",
           }}
         />
 

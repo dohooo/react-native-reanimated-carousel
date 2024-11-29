@@ -3,8 +3,8 @@ import { View } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 
 import { SBItem } from "@/components/SBItem";
-import { window } from "@/constants/sizes";
 import { PURPLE_IMAGES } from "@/constants/purple-images";
+import { window } from "@/constants/sizes";
 
 const PAGE_WIDTH = window.width;
 
@@ -12,10 +12,7 @@ const COUNT = 6;
 
 function Index() {
   return (
-    <View
-      id="carousel-component"
-      dataSet={{ kind: "custom-animations", name: "multiple" }}
-    >
+    <View id="carousel-component" dataSet={{ kind: "custom-animations", name: "multiple" }}>
       <Carousel
         loop
         autoPlay

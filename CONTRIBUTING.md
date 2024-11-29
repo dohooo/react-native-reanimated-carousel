@@ -38,17 +38,17 @@ To run the example app on Web:
 cd example/expo && yarn && yarn web
 ```
 
-Make sure your code passes TypeScript and ESLint. Run the following to verify:
+Make sure your code passes TypeScript and Biome checks. Run the following to verify:
 
 ```sh
 yarn typescript
 yarn lint
 ```
 
-To fix formatting errors, run the following:
+To fix formatting and linting errors, run the following:
 
 ```sh
-yarn lint --fix
+yarn lint:fix
 ```
 
 Remember to add tests for your change if possible. Run the unit tests by:
@@ -72,9 +72,9 @@ Our pre-commit hooks verify that your commit message matches this format when co
 
 ### Linting and tests
 
-[ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [TypeScript](https://www.typescriptlang.org/)
+[Biome](https://biomejs.dev/), [TypeScript](https://www.typescriptlang.org/)
 
-We use [TypeScript](https://www.typescriptlang.org/) for type checking, [ESLint](https://eslint.org/) with [Prettier](https://prettier.io/) for linting and formatting the code, and [Jest](https://jestjs.io/) for testing.
+We use [TypeScript](https://www.typescriptlang.org/) for type checking, [Biome](https://biomejs.dev/) for linting and formatting the code, and [Jest](https://jestjs.io/) for testing.
 
 Our pre-commit hooks verify that the linter and tests pass when committing.
 
@@ -94,7 +94,8 @@ The `package.json` file contains various scripts for common tasks:
 
 - `yarn bootstrap`: setup project by installing all dependencies and pods.
 - `yarn typescript`: type-check files with TypeScript.
-- `yarn lint`: lint files with ESLint.
+- `yarn lint`: check files with Biome.
+- `yarn lint:fix`: fix formatting and linting issues with Biome.
 - `yarn test`: run unit tests with Jest.
 - `yarn dev`: start build.
 - `yarn android`: run the example app on Android.

@@ -6,7 +6,9 @@ export const useColor = () => {
   const background = isDark ? "#121212" : "#ffffff";
   const text = isDark ? "#ffffff" : "#121212";
 
-  if (IS_WEB) document && (document.body.style.backgroundColor = background);
+  if (IS_WEB) {
+    document.body.style.backgroundColor = background;
+  }
 
   return {
     isDark,

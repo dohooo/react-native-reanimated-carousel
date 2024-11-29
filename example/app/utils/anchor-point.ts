@@ -1,13 +1,13 @@
 import type { TransformsStyle } from "react-native";
 
 export interface Point {
-  x: number
-  y: number
+  x: number;
+  y: number;
 }
 
 export interface Size {
-  width: number
-  height: number
+  width: number;
+  height: number;
 }
 
 const isValidSize = (size: Size): boolean => {
@@ -18,19 +18,13 @@ const isValidSize = (size: Size): boolean => {
 
 const defaultAnchorPoint = { x: 0.5, y: 0.5 };
 
-export const withAnchorPoint = (
-  transform: TransformsStyle,
-  anchorPoint: Point,
-  size: Size,
-) => {
+export const withAnchorPoint = (transform: TransformsStyle, anchorPoint: Point, size: Size) => {
   "worklet";
 
-  if (!isValidSize(size))
-    return transform;
+  if (!isValidSize(size)) return transform;
 
   let injectedTransform = transform.transform;
-  if (!injectedTransform)
-    return transform;
+  if (!injectedTransform) return transform;
 
   if (anchorPoint.x !== defaultAnchorPoint.x && size.width) {
     const shiftTranslateX = [];
@@ -39,15 +33,16 @@ export const withAnchorPoint = (
     shiftTranslateX.push({
       translateX: size.width * (anchorPoint.x - defaultAnchorPoint.x),
     });
+    // @ts-ignore
     injectedTransform = [...shiftTranslateX, ...injectedTransform];
     // shift after rotation
+    // @ts-ignore
     injectedTransform.push({
       translateX: size.width * (defaultAnchorPoint.x - anchorPoint.x),
     });
   }
 
-  if (!Array.isArray(injectedTransform))
-    return { transform: injectedTransform };
+  if (!Array.isArray(injectedTransform)) return { transform: injectedTransform };
 
   if (anchorPoint.y !== defaultAnchorPoint.y && size.height) {
     const shiftTranslateY = [];

@@ -14,8 +14,8 @@ describe("useSharedValue", () => {
         positiveRange: [0, 3],
       }) as IVisibleRanges;
       const inputs: Array<{
-        config: IOpts
-        range: IVisibleRanges
+        config: IOpts;
+        range: IVisibleRanges;
       }> = Array.from({ length: 10 }).map((_, index) => ({
         config: {
           dataLength: 10,
@@ -34,7 +34,7 @@ describe("useSharedValue", () => {
       });
     });
 
-    const expected = hook.result.current.map(v => v.value).slice();
+    const expected = hook.result.current.map((v) => v.value).slice();
 
     expect(expected).toMatchInlineSnapshot(`
             [

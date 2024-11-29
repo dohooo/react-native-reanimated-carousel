@@ -1,19 +1,25 @@
 import { useMemo } from "react";
-import type { GestureStateChangeEvent, GestureUpdateEvent, PanGesture, PanGestureHandlerEventPayload } from "react-native-gesture-handler";
+import type {
+  GestureStateChangeEvent,
+  GestureUpdateEvent,
+  PanGesture,
+  PanGestureHandlerEventPayload,
+} from "react-native-gesture-handler";
 import { Gesture } from "react-native-gesture-handler";
 
 import type { GestureConfig } from "./useUpdateGestureConfig";
 import { useUpdateGestureConfig } from "./useUpdateGestureConfig";
 
-export const usePanGestureProxy = (
-  customization: {
-    onConfigurePanGesture?: (gesture: PanGesture) => void
-    onGestureStart: (event: GestureStateChangeEvent<PanGestureHandlerEventPayload>) => void
-    onGestureUpdate: (event: GestureUpdateEvent<PanGestureHandlerEventPayload>) => void
-    onGestureEnd: (event: GestureStateChangeEvent<PanGestureHandlerEventPayload>, success: boolean) => void
-    options?: GestureConfig
-  },
-) => {
+export const usePanGestureProxy = (customization: {
+  onConfigurePanGesture?: (gesture: PanGesture) => void;
+  onGestureStart: (event: GestureStateChangeEvent<PanGestureHandlerEventPayload>) => void;
+  onGestureUpdate: (event: GestureUpdateEvent<PanGestureHandlerEventPayload>) => void;
+  onGestureEnd: (
+    event: GestureStateChangeEvent<PanGestureHandlerEventPayload>,
+    success: boolean
+  ) => void;
+  options?: GestureConfig;
+}) => {
   const {
     onConfigurePanGesture,
     onGestureStart,
@@ -23,7 +29,7 @@ export const usePanGestureProxy = (
   } = customization;
 
   const gesture = useMemo(() => {
-    const gesture = Gesture.Pan();
+    const gesture = Gesture.Pan().withTestId("rnrc-gesture-handler");
 
     // Save the original gesture callbacks
     const originalGestures = {
@@ -36,11 +42,11 @@ export const usePanGestureProxy = (
 
     // Save the user defined gesture callbacks
     const userDefinedConflictGestures: {
-      onBegin?: Parameters<(typeof gesture)["onBegin"]>[0]
-      onStart?: Parameters<(typeof gesture)["onStart"]>[0]
-      onUpdate?: Parameters<(typeof gesture)["onUpdate"]>[0]
-      onEnd?: Parameters<(typeof gesture)["onEnd"]>[0]
-      onFinalize?: Parameters<(typeof gesture)["onFinalize"]>[0]
+      onBegin?: Parameters<(typeof gesture)["onBegin"]>[0];
+      onStart?: Parameters<(typeof gesture)["onStart"]>[0];
+      onUpdate?: Parameters<(typeof gesture)["onUpdate"]>[0];
+      onEnd?: Parameters<(typeof gesture)["onEnd"]>[0];
+      onFinalize?: Parameters<(typeof gesture)["onFinalize"]>[0];
     } = {
       onBegin: undefined,
       onStart: undefined,
@@ -102,45 +108,35 @@ export const usePanGestureProxy = (
       .onBegin((e) => {
         "worklet";
 
-        if (userDefinedConflictGestures.onBegin)
-          userDefinedConflictGestures.onBegin(e);
+        if (userDefinedConflictGestures.onBegin) userDefinedConflictGestures.onBegin(e);
       })
       .onStart((e) => {
         "worklet";
         onGestureStart(e);
 
-        if (userDefinedConflictGestures.onStart)
-          userDefinedConflictGestures.onStart(e);
+        if (userDefinedConflictGestures.onStart) userDefinedConflictGestures.onStart(e);
       })
       .onUpdate((e) => {
         "worklet";
         onGestureUpdate(e);
 
-        if (userDefinedConflictGestures.onUpdate)
-          userDefinedConflictGestures.onUpdate(e);
+        if (userDefinedConflictGestures.onUpdate) userDefinedConflictGestures.onUpdate(e);
       })
       .onEnd((e, success) => {
         "worklet";
         onGestureEnd(e, success);
 
-        if (userDefinedConflictGestures.onEnd)
-          userDefinedConflictGestures.onEnd(e, success);
+        if (userDefinedConflictGestures.onEnd) userDefinedConflictGestures.onEnd(e, success);
       })
       .onFinalize((e, success) => {
         "worklet";
 
         if (userDefinedConflictGestures.onFinalize)
           userDefinedConflictGestures.onFinalize(e, success);
-      })
-    ;
+      });
 
     return gesture;
-  }, [
-    onGestureStart,
-    onGestureUpdate,
-    onGestureEnd,
-    onConfigurePanGesture,
-  ]);
+  }, [onGestureStart, onGestureUpdate, onGestureEnd, onConfigurePanGesture]);
 
   useUpdateGestureConfig(gesture, options);
 

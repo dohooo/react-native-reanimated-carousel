@@ -3,13 +3,13 @@ import { View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
 
-import { window } from "@/constants/sizes";
-import { renderItem } from "@/utils/render-item";
 import { CarouselAdvancedSettingsPanel } from "@/components/CarouselAdvancedSettingsPanel";
-import { useAdvancedSettings } from "@/hooks/useSettings";
-import { Stack } from "tamagui";
-import { CaptureWrapper } from "@/store/CaptureProvider";
 import { defaultDataWith6Colors } from "@/components/CarouselBasicSettingsPanel";
+import { window } from "@/constants/sizes";
+import { useAdvancedSettings } from "@/hooks/useSettings";
+import { CaptureWrapper } from "@/store/CaptureProvider";
+import { renderItem } from "@/utils/render-item";
+import { Stack } from "tamagui";
 
 const PAGE_WIDTH = window.width;
 
@@ -28,7 +28,7 @@ function Index() {
       pagingEnabled: true,
       snapEnabled: true,
       vertical: false,
-      width: 430,
+      width: PAGE_WIDTH,
     },
   });
 

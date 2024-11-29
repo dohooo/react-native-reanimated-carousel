@@ -8,9 +8,9 @@ import Animated, {
 } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
-import { window } from "@/constants/sizes";
 import { SlideItem } from "@/components/SlideItem";
 import { PURPLE_IMAGES } from "@/constants/purple-images";
+import { window } from "@/constants/sizes";
 
 const PAGE_WIDTH = window.width;
 
@@ -20,11 +20,7 @@ function Index() {
     "worklet";
 
     const zIndex = interpolate(value, [-1, 0, 1], [-1000, 0, 1000]);
-    const translateX = interpolate(
-      value,
-      [-1, 0, 1],
-      [-PAGE_WIDTH, 0, PAGE_WIDTH],
-    );
+    const translateX = interpolate(value, [-1, 0, 1], [-PAGE_WIDTH, 0, PAGE_WIDTH]);
 
     return {
       transform: [{ translateX }],
@@ -33,10 +29,7 @@ function Index() {
   }, []);
 
   return (
-    <View
-      id="carousel-component"
-      dataSet={{ kind: "custom-animations", name: "press-swipe" }}
-    >
+    <View id="carousel-component" dataSet={{ kind: "custom-animations", name: "press-swipe" }}>
       <Carousel
         loop={true}
         style={{ width: PAGE_WIDTH, height: 240 }}

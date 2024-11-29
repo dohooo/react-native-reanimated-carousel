@@ -9,5 +9,6 @@ interface Options {
 
 export const renderItem =
   ({ rounded = false, style }: Options = {}): CarouselRenderItem<any> =>
-  ({ index }: { index: number }) =>
-    <SlideItem key={index} index={index} rounded={rounded} style={style} />;
+  ({ index }: { index: number }) => (
+    <SlideItem key={index} index={index} rounded={rounded} style={style} />
+  );

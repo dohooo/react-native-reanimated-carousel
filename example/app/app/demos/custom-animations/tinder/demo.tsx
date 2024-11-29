@@ -9,8 +9,8 @@ import Animated, {
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import { window } from "@/constants/sizes";
-import { getImages } from "@/utils/get-images";
 import { CaptureWrapper } from "@/store/CaptureProvider";
+import { getImages } from "@/utils/get-images";
 
 const data = getImages();
 
@@ -27,48 +27,33 @@ function Index() {
       const translateY = interpolate(value, [0, 1], [0, -18]);
 
       const translateX =
-        interpolate(value, [-1, 0], [PAGE_WIDTH, 0], Extrapolation.CLAMP) *
-        directionAnimVal.value;
+        interpolate(value, [-1, 0], [PAGE_WIDTH, 0], Extrapolation.CLAMP) * directionAnimVal.value;
 
       const rotateZ =
-        interpolate(value, [-1, 0], [15, 0], Extrapolation.CLAMP) *
-        directionAnimVal.value;
+        interpolate(value, [-1, 0], [15, 0], Extrapolation.CLAMP) * directionAnimVal.value;
 
       const zIndex = interpolate(
         value,
         [0, 1, 2, 3, 4],
         [0, 1, 2, 3, 4].map((v) => (data.length - v) * 10),
-        Extrapolation.CLAMP,
+        Extrapolation.CLAMP
       );
 
       const scale = interpolate(value, [0, 1], [1, 0.95]);
 
-      const opacity = interpolate(
-        value,
-        [-1, -0.8, 0, 1],
-        [0, 0.9, 1, 0.85],
-        Extrapolation.EXTEND,
-      );
+      const opacity = interpolate(value, [-1, -0.8, 0, 1], [0, 0.9, 1, 0.85], Extrapolation.EXTEND);
 
       return {
-        transform: [
-          { translateY },
-          { translateX },
-          { rotateZ: `${rotateZ}deg` },
-          { scale },
-        ],
+        transform: [{ translateY }, { translateX }, { rotateZ: `${rotateZ}deg` }, { scale }],
         zIndex,
         opacity,
       };
     },
-    [PAGE_HEIGHT, PAGE_WIDTH],
+    [PAGE_HEIGHT, PAGE_WIDTH]
   );
 
   return (
-    <View
-      id="carousel-component"
-      dataSet={{ kind: "custom-animations", name: "tinder" }}
-    >
+    <View id="carousel-component" dataSet={{ kind: "custom-animations", name: "tinder" }}>
       <Carousel
         loop={false}
         style={{

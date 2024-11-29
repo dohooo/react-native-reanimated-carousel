@@ -1,31 +1,16 @@
+import { Image } from "expo-image";
 import React from "react";
-import type {
-  StyleProp,
-  ViewStyle,
-  ImageURISource,
-  ImageSourcePropType,
-} from "react-native";
-import {
-  StyleSheet,
-  View,
-  ActivityIndicator,
-  Text,
-} from "react-native";
-import { Image } from 'expo-image';
+import type { ImageSourcePropType, ImageURISource, StyleProp, ViewStyle } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 interface Props {
-  style?: StyleProp<ViewStyle>
-  index?: number
-  showIndex?: boolean
-  img?: ImageSourcePropType
+  style?: StyleProp<ViewStyle>;
+  index?: number;
+  showIndex?: boolean;
+  img?: ImageSourcePropType;
 }
 
-export const SBImageItem: React.FC<Props> = ({
-  style,
-  index: _index,
-  showIndex = true,
-  img
-}) => {
+export const SBImageItem: React.FC<Props> = ({ style, index: _index, showIndex = true, img }) => {
   const index = _index ?? 0;
   const source = React.useRef<ImageURISource>({
     uri: `https://picsum.photos/id/${index}/400/300`,
@@ -34,9 +19,9 @@ export const SBImageItem: React.FC<Props> = ({
   return (
     <View style={[styles.container, style]}>
       <ActivityIndicator size="small" />
-      <Image cachePolicy={'memory-disk'} key={index} style={styles.image} source={img ?? source} />
-      {
-        showIndex && <Text
+      <Image cachePolicy={"memory-disk"} key={index} style={styles.image} source={img ?? source} />
+      {showIndex && (
+        <Text
           style={{
             position: "absolute",
             color: "#6E6E6E",
@@ -50,7 +35,7 @@ export const SBImageItem: React.FC<Props> = ({
         >
           {index}
         </Text>
-      }
+      )}
     </View>
   );
 };

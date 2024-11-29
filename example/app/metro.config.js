@@ -8,9 +8,7 @@ const { transformer, resolver } = config;
 const exclusionList = require("metro-config/src/defaults/exclusionList");
 
 const root = path.resolve(__dirname, "../..");
-const rootPak = JSON.parse(
-  fs.readFileSync(path.join(root, "package.json"), "utf8"),
-);
+const rootPak = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
 
 const modules = [
   "@babel/runtime",
@@ -32,11 +30,9 @@ module.exports = {
   // So we blacklist them at the root, and alias them to the versions in example's node_modules
   resolver: {
     ...resolver,
-    assetExts: resolver.assetExts.filter(ext => ext !== "svg"),
+    assetExts: resolver.assetExts.filter((ext) => ext !== "svg"),
     sourceExts: [...resolver.sourceExts, "svg"],
-    blacklistRE: exclusionList([
-      new RegExp(`^${escape(path.join(root, "node_modules"))}\\/.*$`),
-    ]),
+    blacklistRE: exclusionList([new RegExp(`^${escape(path.join(root, "node_modules"))}\\/.*$`)]),
     extraNodeModules: modules.reduce((acc, name) => {
       acc[name] = path.join(__dirname, "node_modules", name);
       return acc;

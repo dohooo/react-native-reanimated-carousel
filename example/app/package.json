@@ -5,11 +5,12 @@
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start -c",
-    "android": "expo start --android -c",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web -p 8002",
     "build:web": "expo export --platform web",
-    "test": "jest --watchAll"
+    "test": "jest --watchAll",
+    "types": "tsc --noEmit"
   },
   "jest": {
     "preset": "jest-expo"
@@ -22,6 +23,7 @@
     "@tamagui/lucide-icons": "^1.111.13",
     "expo": "~51.0.28",
     "expo-blur": "~13.0.2",
+    "expo-dev-client": "~4.0.29",
     "expo-font": "~12.0.10",
     "expo-haptics": "~13.0.1",
     "expo-image": "~1.12.15",
@@ -39,6 +41,7 @@
     "react-native": "0.74.5",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-reanimated": "~3.10.1",
+    "react-native-reanimated-carousel": "link:../..",
     "react-native-safe-area-context": "4.10.5",
     "react-native-screens": "3.31.1",
     "react-native-svg": "15.2.0",

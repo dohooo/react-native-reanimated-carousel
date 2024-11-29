@@ -10,8 +10,8 @@ import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import { SBItem } from "@/components/SBItem";
 import { window } from "@/constants/sizes";
-import { withAnchorPoint } from "@/utils/anchor-point";
 import { CaptureWrapper } from "@/store/CaptureProvider";
+import { withAnchorPoint } from "@/utils/anchor-point";
 
 const count = 4;
 
@@ -47,29 +47,19 @@ function CubeItem() {
         value,
         [-1, 0, 1],
         [-PAGE_WIDTH, 0, PAGE_WIDTH],
-        Extrapolation.CLAMP,
+        Extrapolation.CLAMP
       );
 
-      const scale = interpolate(
-        value,
-        [-1, 0, 1],
-        [0.49, 1, 0.49],
-        Extrapolation.CLAMP,
-      );
+      const scale = interpolate(value, [-1, 0, 1], [0.49, 1, 0.49], Extrapolation.CLAMP);
 
       const perspective = interpolate(
         value,
         [-1, 0, 1],
         [PAGE_WIDTH * 0.89, PAGE_WIDTH * 1.5, PAGE_WIDTH * 0.89],
-        Extrapolation.CLAMP,
+        Extrapolation.CLAMP
       );
 
-      const rotateY = `${interpolate(
-        value,
-        [-1, 0, 1],
-        [-90, 0, 90],
-        Extrapolation.CLAMP,
-      )}deg`;
+      const rotateY = `${interpolate(value, [-1, 0, 1], [-90, 0, 90], Extrapolation.CLAMP)}deg`;
 
       const transform = {
         transform: [{ scale }, { translateX }, { perspective }, { rotateY }],
@@ -79,12 +69,12 @@ function CubeItem() {
         ...withAnchorPoint(
           transform,
           { x: 0.5, y: 0.5 },
-          { width: PAGE_WIDTH, height: PAGE_HEIGHT },
+          { width: PAGE_WIDTH, height: PAGE_HEIGHT }
         ),
         zIndex,
       };
     },
-    [PAGE_HEIGHT, PAGE_WIDTH],
+    [PAGE_HEIGHT, PAGE_WIDTH]
   );
 
   return (
@@ -103,13 +93,7 @@ function CubeItem() {
         height={PAGE_HEIGHT}
         data={[...new Array(6).keys()]}
         renderItem={({ index, animationValue }) => {
-          return (
-            <CustomItem
-              key={index}
-              index={index}
-              animationValue={animationValue}
-            />
-          );
+          return <CustomItem key={index} index={index} animationValue={animationValue} />;
         }}
         customAnimation={animationStyle}
         scrollAnimationDuration={1200}
@@ -128,7 +112,7 @@ const CustomItem: React.FC<ItemProps> = ({ index, animationValue }) => {
     const backgroundColor = interpolateColor(
       animationValue.value,
       [-1, 0, 1],
-      ["#000000dd", "transparent", "#000000dd"],
+      ["#000000dd", "transparent", "#000000dd"]
     );
 
     return {
@@ -138,13 +122,7 @@ const CustomItem: React.FC<ItemProps> = ({ index, animationValue }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <SBItem
-        rounded={false}
-        pretty
-        key={index}
-        index={index}
-        style={{ borderRadius: 0 }}
-      />
+      <SBItem rounded={false} pretty key={index} index={index} style={{ borderRadius: 0 }} />
       <Animated.View
         pointerEvents="none"
         style={[

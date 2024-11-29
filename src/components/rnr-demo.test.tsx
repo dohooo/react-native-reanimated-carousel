@@ -9,15 +9,18 @@ describe("useSharedValue", () => {
     const updatedValue = 1;
 
     interface Props {
-      key: string
-      value: number
+      key: string;
+      value: number;
     }
 
     const TestComponent: FC<Props> = (props) => {
       const opacity = useDerivedValue(() => props.value, [props.value]);
-      const animatedStyle = useAnimatedStyle(() => ({
-        opacity: opacity.value,
-      }), [opacity]);
+      const animatedStyle = useAnimatedStyle(
+        () => ({
+          opacity: opacity.value,
+        }),
+        [opacity]
+      );
 
       return <Animated.View style={animatedStyle} />;
     };
@@ -28,7 +31,7 @@ describe("useSharedValue", () => {
     expect(
       typeof wrapper.root.children[0] !== "string"
         ? wrapper.root.children[0].props.style.jestAnimatedStyle.current.value.opacity
-        : false,
+        : false
     ).toBe(initialValue);
 
     // When rendering with updated value
@@ -37,7 +40,7 @@ describe("useSharedValue", () => {
     expect(
       typeof wrapper.root.children[0] !== "string"
         ? wrapper.root.children[0].props.style.jestAnimatedStyle.current.value.opacity
-        : false,
+        : false
     ).toBe(initialValue);
   });
 });

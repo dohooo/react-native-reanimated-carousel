@@ -1,8 +1,8 @@
-import * as React from "react";
-import { CustomSelectActionItem, CustomSwitchActionItem } from "./ActionItems";
-import { YStack } from "tamagui";
-import { TCarouselProps } from "react-native-reanimated-carousel";
 import { window } from "@/constants/sizes";
+import * as React from "react";
+import { TCarouselProps } from "react-native-reanimated-carousel";
+import { YStack } from "tamagui";
+import { CustomSelectActionItem, CustomSwitchActionItem } from "./ActionItems";
 
 export const defaultDataWith6Colors = [
   "#B0604D",
@@ -104,56 +104,49 @@ export function CarouselBasicSettingsPanel({
       key: "enabled",
       type: "switch",
       value: settings.enabled,
-      onValueChange: (value: boolean) =>
-        setSettings({ ...settings, enabled: value }),
+      onValueChange: (value: boolean) => setSettings({ ...settings, enabled: value }),
     },
     {
       label: "Set Vertical",
       key: "vertical",
       type: "switch",
       value: settings.vertical,
-      onValueChange: (value: boolean) =>
-        setSettings({ ...settings, vertical: !!value as any }),
+      onValueChange: (value: boolean) => setSettings({ ...settings, vertical: !!value as any }),
     },
     {
       label: "Paging Enabled",
       key: "pagingEnabled",
       type: "switch",
       value: settings.pagingEnabled,
-      onValueChange: (value: boolean) =>
-        setSettings({ ...settings, pagingEnabled: value }),
+      onValueChange: (value: boolean) => setSettings({ ...settings, pagingEnabled: value }),
     },
     {
       label: "Snap Enabled",
       key: "snapEnabled",
       type: "switch",
       value: settings.snapEnabled,
-      onValueChange: (value: boolean) =>
-        setSettings({ ...settings, snapEnabled: value }),
+      onValueChange: (value: boolean) => setSettings({ ...settings, snapEnabled: value }),
     },
     {
       label: "Loop",
       key: "loop",
       type: "switch",
       value: settings.loop,
-      onValueChange: (value: boolean) =>
-        setSettings({ ...settings, loop: value }),
+      onValueChange: (value: boolean) => setSettings({ ...settings, loop: value }),
     },
     {
       label: "Auto Play",
       key: "autoPlay",
       type: "switch",
       value: settings.autoPlay,
-      onValueChange: (value: boolean) =>
-        setSettings({ ...settings, autoPlay: value }),
+      onValueChange: (value: boolean) => setSettings({ ...settings, autoPlay: value }),
     },
     {
       label: "Auto Play Reverse",
       key: "autoPlayReverse",
       type: "switch",
       value: settings.autoPlayReverse,
-      onValueChange: (value: boolean) =>
-        setSettings({ ...settings, autoPlayReverse: value }),
+      onValueChange: (value: boolean) => setSettings({ ...settings, autoPlayReverse: value }),
     },
     {
       label: "Interval",

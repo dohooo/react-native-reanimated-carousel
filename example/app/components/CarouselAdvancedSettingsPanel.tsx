@@ -1,12 +1,9 @@
 import * as React from "react";
-import { CustomButtonActionItem, CustomSelectActionItem } from "./ActionItems";
 import { ICarouselInstance } from "react-native-reanimated-carousel";
-import { ScrollView, YStack } from "tamagui";
-import {
-  BasicSettings,
-  CarouselBasicSettingsPanel,
-} from "./CarouselBasicSettingsPanel";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ScrollView, YStack } from "tamagui";
+import { CustomButtonActionItem, CustomSelectActionItem } from "./ActionItems";
+import { BasicSettings, CarouselBasicSettingsPanel } from "./CarouselBasicSettingsPanel";
 
 interface AdvancedSettings extends BasicSettings {
   data: string[];
@@ -50,7 +47,7 @@ export function CarouselAdvancedSettingsPanel({
           value={carouselSettings.data?.length?.toString() || "3"}
           onValueChange={(value) => {
             const num = Number(value);
-            if (isNaN(num)) return;
+            if (Number.isNaN(num)) return;
             const currentData = carouselSettings.data || [];
             const newData = Array(num)
               .fill(null)
@@ -81,16 +78,12 @@ export function CarouselAdvancedSettingsPanel({
 
         <CustomButtonActionItem
           label="Swipe to prev"
-          action={() =>
-            carouselRef.current?.scrollTo({ count: -1, animated: true })
-          }
+          action={() => carouselRef.current?.scrollTo({ count: -1, animated: true })}
         />
 
         <CustomButtonActionItem
           label="Swipe to next"
-          action={() =>
-            carouselRef.current?.scrollTo({ count: 1, animated: true })
-          }
+          action={() => carouselRef.current?.scrollTo({ count: 1, animated: true })}
         />
 
         {extraButtons?.map((button, index) => (
