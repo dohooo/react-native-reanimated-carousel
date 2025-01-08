@@ -269,13 +269,15 @@ function getCommonStyles(opts: {
 
   if (snapDirection === "left") {
     zIndex =
-      Math.floor(
-        interpolate(
-          value,
-          [-1.5, -1, -1 + Number.MIN_VALUE, 0, validLength],
-          [Number.MIN_VALUE, validLength, validLength, validLength - 1, -1]
-        ) * 10000
-      ) / 100;
+      Math.round(
+        Math.floor(
+          interpolate(
+            value,
+            [-1.5, -1, -1 + Number.MIN_VALUE, 0, validLength],
+            [Number.MIN_VALUE, validLength, validLength, validLength - 1, -1]
+          ) * 10000
+        ) / 100
+      );
 
     opacity = interpolate(
       value,
@@ -284,13 +286,15 @@ function getCommonStyles(opts: {
     );
   } else if (snapDirection === "right") {
     zIndex =
-      Math.floor(
-        interpolate(
-          value,
-          [-validLength, 0, 1 - Number.MIN_VALUE, 1, 1.5],
-          [1, validLength - 1, validLength, validLength, Number.MIN_VALUE]
-        ) * 10000
-      ) / 100;
+      Math.round(
+        Math.floor(
+          interpolate(
+            value,
+            [-validLength, 0, 1 - Number.MIN_VALUE, 1, 1.5],
+            [1, validLength - 1, validLength, validLength, Number.MIN_VALUE]
+          ) * 10000
+        ) / 100
+      );
     opacity = interpolate(
       value,
       [-validLength, 1 - validLength, 0, 1],
