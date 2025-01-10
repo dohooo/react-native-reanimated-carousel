@@ -36,6 +36,7 @@ export interface ICarouselController {
   next: (opts?: TCarouselActionOptions) => void
   getCurrentIndex: () => number
   scrollTo: (opts?: TCarouselActionOptions) => void
+  scrollToByOffset: (opts: { offset: number, i: number, animated?: boolean }) => void
 }
 
 export function useCarouselController(options: IOpts): ICarouselController {
@@ -307,10 +308,29 @@ export function useCarouselController(options: IOpts): ICarouselController {
     [prev, next, to],
   );
 
+  const scrollToByOffset = React.useCallback(
+    (opts: { offset: number, i: number, animated?: boolean }) => {
+      const { i, offset, animated = false } = opts;
+
+      if (!canSliding()) return; 
+
+      if (animated) {
+        index.value = i;
+        handlerOffset.value = scrollWithTiming(offset);
+      }
+      else {
+        handlerOffset.value = offset;
+        index.value = i;
+      }
+    },
+    [canSliding, index, handlerOffset]
+  );
+
   return {
     next,
     prev,
     scrollTo,
+    scrollToByOffset,
     getCurrentIndex,
     getSharedIndex: () => sharedIndex.current,
   };

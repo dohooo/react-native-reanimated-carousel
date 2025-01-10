@@ -19,6 +19,7 @@
         "lint:fix": "eslint 'src/**/*.{js,ts,tsx}' --fix",
         "dev": "watch 'yarn prepare' ./src",
         "prepare": "bob build",
+        "prepack": "bob build",
         "release": "yarn prepare && dotenv release-it --no-git.requireUpstream",
         "preRelease": "yarn prepare && dotenv release-it --no-git.requireUpstream --preRelease=beta",
         "ios": "yarn --cwd exampleExpo ios",

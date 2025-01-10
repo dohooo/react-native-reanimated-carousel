@@ -90,7 +90,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       duration: scrollAnimationDuration,
     });
 
-    const { next, prev, scrollTo, getSharedIndex, getCurrentIndex }
+    const { next, prev, scrollTo, scrollToByOffset, getSharedIndex, getCurrentIndex }
             = carouselController;
 
     const { start: startAutoPlay, pause: pauseAutoPlay } = useAutoPlay({
@@ -149,8 +149,9 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
         prev,
         getCurrentIndex,
         scrollTo,
+        scrollToByOffset
       }),
-      [getCurrentIndex, next, prev, scrollTo],
+      [getCurrentIndex, next, prev, scrollTo, scrollToByOffset],
     );
 
     const visibleRanges = useVisibleRanges({
