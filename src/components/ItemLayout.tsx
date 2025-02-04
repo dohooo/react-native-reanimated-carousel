@@ -58,7 +58,7 @@ export const ItemLayout: React.FC<{
   const animationValue = useDerivedValue(() => x.value / size, [x, size]);
   const animatedStyle = useAnimatedStyle<ViewStyle>(
     () => animationStyle(x.value / size, index),
-    [animationStyle, index]
+    [animationStyle, index, x, size]
   );
 
   // TODO: For dynamic dimension in the future
