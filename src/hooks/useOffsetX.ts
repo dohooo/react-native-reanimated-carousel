@@ -73,7 +73,7 @@ export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
     }
 
     return Number.MAX_SAFE_INTEGER;
-  }, [loop, dataLength, viewCount, type, size, visibleRanges]);
+  }, [loop, dataLength, viewCount, type, size, visibleRanges, handlerOffset]);
 
   return x;
 };
