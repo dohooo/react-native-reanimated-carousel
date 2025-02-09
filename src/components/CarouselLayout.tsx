@@ -62,7 +62,7 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
     if (!loop) return handlerOffset.value;
 
     return Number.isNaN(x) ? 0 : x;
-  }, [loop, size, dataLength]);
+  }, [loop, size, dataLength, handlerOffset]);
 
   useOnProgressChange({
     autoFillData,

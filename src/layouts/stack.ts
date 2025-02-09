@@ -49,7 +49,6 @@ export function horizontalStackLayout(modeConfig: ILayoutConfig = {}) {
       rotateZDeg = 30,
     } = modeConfig;
 
-    const transform: TransformsStyle["transform"] = [];
     const { validLength, value, inputRange } = getCommonVariables({
       showLength: showLength!,
       value: _value,
@@ -61,12 +60,6 @@ export function horizontalStackLayout(modeConfig: ILayoutConfig = {}) {
       opacityInterval,
       snapDirection,
     });
-
-    const styles: ViewStyle = {
-      transform,
-      zIndex,
-      opacity,
-    };
 
     let translateX: number;
     let scale: number;
@@ -102,7 +95,7 @@ export function horizontalStackLayout(modeConfig: ILayoutConfig = {}) {
       rotateZ = `${interpolate(value, inputRange, [0, 0, rotateZDeg], Extrapolation.CLAMP)}deg`;
     }
 
-    transform.push(
+    const transform: TransformsStyle["transform"] = [
       {
         translateX: translateX!,
       },
@@ -111,8 +104,14 @@ export function horizontalStackLayout(modeConfig: ILayoutConfig = {}) {
       },
       {
         rotateZ: rotateZ!,
-      }
-    );
+      },
+    ];
+
+    const styles: ViewStyle = {
+      transform,
+      zIndex,
+      opacity,
+    };
 
     return styles;
   };
@@ -150,7 +149,7 @@ export function verticalStackLayout(modeConfig: ILayoutConfig = {}) {
       opacityInterval = 0.1,
       rotateZDeg = 30,
     } = modeConfig;
-    const transform: TransformsStyle["transform"] = [];
+
     const { validLength, value, inputRange } = getCommonVariables({
       showLength: showLength!,
       value: _value,
@@ -162,12 +161,6 @@ export function verticalStackLayout(modeConfig: ILayoutConfig = {}) {
       opacityInterval,
       snapDirection,
     });
-
-    const styles: ViewStyle = {
-      transform,
-      zIndex,
-      opacity,
-    };
 
     let translateX: number;
     let scale: number;
@@ -206,7 +199,7 @@ export function verticalStackLayout(modeConfig: ILayoutConfig = {}) {
       );
     }
 
-    transform.push(
+    const transform: TransformsStyle["transform"] = [
       {
         translateX: translateX!,
       },
@@ -218,8 +211,14 @@ export function verticalStackLayout(modeConfig: ILayoutConfig = {}) {
       },
       {
         translateY: translateY!,
-      }
-    );
+      },
+    ];
+
+    const styles: ViewStyle = {
+      transform,
+      zIndex,
+      opacity,
+    };
 
     return styles;
   };
