@@ -300,7 +300,7 @@ function getCommonStyles(opts: {
   }
 
   return {
-    zIndex,
+    zIndex: Math.round(zIndex),
     opacity,
   };
 }
