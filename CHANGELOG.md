@@ -1,5 +1,15 @@
 # react-native-reanimated-carousel
 
+## 4.0.0-canary.23
+
+### Patch Changes
+
+- [`d5de105`](https://github.com/dohooo/react-native-reanimated-carousel/commit/d5de105b977c9a2b578e97cce663d10a6bf1214f) Thanks [@dohooo](https://github.com/dohooo)! - Added missing dependencies for web to work
+
+- [`85f24e7`](https://github.com/dohooo/react-native-reanimated-carousel/commit/85f24e79282e966e781b3200d2f6ed9c1de77f6e) Thanks [@dohooo](https://github.com/dohooo)! - Type error property push does not exist on type
+
+- [`618d90d`](https://github.com/dohooo/react-native-reanimated-carousel/commit/618d90d772d4fc808d4986f2b4095a23eea5c43e) Thanks [@dohooo](https://github.com/dohooo)! - Loss of precision during arithmetic conversion
+
 ## 4.0.0-canary.22
 
 ### Patch Changes
