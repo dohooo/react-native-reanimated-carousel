@@ -45,11 +45,12 @@ import Demo from '@/components/Demo'
 <Demo kind="basic-layouts" name="parallax" />
 
 ```tsx copy
+import { window } from "@/constants/sizes";
+import { renderItem } from "@/utils/render-item";
 import * as React from "react";
 import { View } from "react-native";
-import Carousel from "react-native-reanimated-carousel";
-import { renderItem } from "@/utils/render-item";
 import { useSharedValue } from "react-native-reanimated";
+import Carousel from "react-native-reanimated-carousel";
 
 const defaultDataWith6Colors = [
 	"#B0604D",
@@ -75,9 +76,9 @@ function Index() {
 				loop={true}
 				pagingEnabled={true}
 				snapEnabled={true}
-				width={430}
+				width={window.width}
 				style={{
-					width: 430,
+					width: window.width,
 				}}
 				mode="parallax"
 				modeConfig={{

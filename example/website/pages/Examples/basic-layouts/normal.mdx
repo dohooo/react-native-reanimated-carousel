@@ -45,11 +45,11 @@ import Demo from '@/components/Demo'
 <Demo kind="basic-layouts" name="normal" />
 
 ```tsx copy
+import { renderItem } from "@/utils/render-item";
 import * as React from "react";
 import { View } from "react-native";
-import Carousel from "react-native-reanimated-carousel";
-import { renderItem } from "@/utils/render-item";
 import { useSharedValue } from "react-native-reanimated";
+import Carousel from "react-native-reanimated-carousel";
 
 const defaultDataWith6Colors = [
 	"#B0604D",
