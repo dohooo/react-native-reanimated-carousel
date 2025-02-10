@@ -1,5 +1,11 @@
 # react-native-reanimated-carousel
 
+## 4.0.1
+
+### Patch Changes
+
+- [`8bfb7b1`](https://github.com/dohooo/react-native-reanimated-carousel/commit/8bfb7b1a991f3c5bb81988a5d9cccb35d31644f9) Thanks [@dohooo](https://github.com/dohooo)! - Configure Babel for React Native Reanimated build
+
 ## 4.0.0
 
 ### Major Changes
