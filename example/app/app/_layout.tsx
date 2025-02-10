@@ -112,7 +112,7 @@ function RootLayoutNav() {
               </XStack>
             )}
             <Stack
-              initialRouteName="/"
+              initialRouteName="index"
               screenOptions={{
                 headerShown: !inDoc && webHeaderShown,
                 contentStyle: {
