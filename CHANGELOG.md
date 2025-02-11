@@ -1,5 +1,11 @@
 # react-native-reanimated-carousel
 
+## 4.0.2
+
+### Patch Changes
+
+- [`2b91b7e`](https://github.com/dohooo/react-native-reanimated-carousel/commit/2b91b7ef89222ee924da44eff4974774c3c00221) Thanks [@dohooo](https://github.com/dohooo)! - change width breaking the pagination component
+
 ## 4.0.1
 
 ### Patch Changes
