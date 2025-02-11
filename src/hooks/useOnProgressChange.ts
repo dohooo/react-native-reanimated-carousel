@@ -45,6 +45,6 @@ export function useOnProgressChange(
         else onProgressChange.value = absoluteProgress;
       }
     },
-    [loop, autoFillData, rawDataLength, onProgressChange]
+    [loop, autoFillData, rawDataLength, onProgressChange, size]
   );
 }
