@@ -19,6 +19,7 @@ export interface ShapeProps<T extends {}> {
   size?: number;
   onPress?: (index: number) => void;
   customReanimatedStyle?: (progress: number, index: number, length: number) => DefaultStyle;
+  carouselName?: string;
 }
 
 export const Custom = <T extends {}>(props: ShapeProps<T>) => {
@@ -33,6 +34,7 @@ export const Custom = <T extends {}>(props: ShapeProps<T>) => {
     renderItem,
     onPress,
     customReanimatedStyle,
+    carouselName,
   } = props;
 
   if (
@@ -79,6 +81,7 @@ export const Custom = <T extends {}>(props: ShapeProps<T>) => {
             activeDotStyle={activeDotStyle}
             customReanimatedStyle={customReanimatedStyle}
             onPress={() => onPress?.(index)}
+            accessibilityLabel={`Slide ${index + 1} of ${data.length} - ${carouselName}`}
           >
             {renderItem?.(item, index)}
           </PaginationItem>
