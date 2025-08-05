@@ -15,10 +15,7 @@ import Animated, {
 
 import type { DefaultStyle } from "react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes";
 
-export type DotStyle = Omit<
-  ViewStyle,
-  "width" | "height" | "backgroundColor" | "borderRadius"
-> & {
+export type DotStyle = Omit<ViewStyle, "width" | "height" | "backgroundColor" | "borderRadius"> & {
   width?: number;
   height?: number;
   backgroundColor?: string;
@@ -35,11 +32,7 @@ export const PaginationItem: React.FC<
     dotStyle?: DotStyle;
     activeDotStyle?: DotStyle;
     onPress: () => void;
-    customReanimatedStyle?: (
-      progress: number,
-      index: number,
-      length: number
-    ) => DefaultStyle;
+    customReanimatedStyle?: (progress: number, index: number, length: number) => DefaultStyle;
     accessibilityLabel?: string;
   }>
 > = (props) => {
@@ -59,8 +52,7 @@ export const PaginationItem: React.FC<
   } = props;
   const customReanimatedStyleRef = useSharedValue<DefaultStyle>({});
   const handleCustomAnimation = (progress: number) => {
-    customReanimatedStyleRef.value =
-      customReanimatedStyle?.(progress, index, count) ?? {};
+    customReanimatedStyleRef.value = customReanimatedStyle?.(progress, index, count) ?? {};
   };
 
   useDerivedValue(() => {
@@ -83,33 +75,18 @@ export const PaginationItem: React.FC<
       ...restActiveDotStyle
     } = activeDotStyle ?? {};
     let val = Math.abs(animValue?.value - index);
-    if (index === 0 && animValue?.value > count - 1)
-      val = Math.abs(animValue?.value - count);
+    if (index === 0 && animValue?.value > count - 1) val = Math.abs(animValue?.value - count);
 
     const inputRange = [0, 1, 2];
     const restStyle = (val === 0 ? restActiveDotStyle : restDotStyle) ?? {};
 
     return {
-      width: interpolate(
-        val,
-        inputRange,
-        [activeWidth, width, width],
-        Extrapolation.CLAMP
-      ),
-      height: interpolate(
-        val,
-        inputRange,
-        [activeHeight, height, height],
-        Extrapolation.CLAMP
-      ),
+      width: interpolate(val, inputRange, [activeWidth, width, width], Extrapolation.CLAMP),
+      height: interpolate(val, inputRange, [activeHeight, height, height], Extrapolation.CLAMP),
       borderRadius: interpolate(
         val,
         inputRange,
-        [
-          activeBorderRadius ?? borderRadius ?? 0,
-          borderRadius ?? 0,
-          borderRadius ?? 0,
-        ],
+        [activeBorderRadius ?? borderRadius ?? 0, borderRadius ?? 0, borderRadius ?? 0],
         Extrapolation.CLAMP
       ),
       backgroundColor: interpolateColor(val, inputRange, [
@@ -124,24 +101,14 @@ export const PaginationItem: React.FC<
         ...(customReanimatedStyleRef.value?.transform ?? []),
       ] as DefaultStyle["transform"],
     };
-  }, [
-    animValue,
-    index,
-    count,
-    horizontal,
-    dotStyle,
-    activeDotStyle,
-    customReanimatedStyle,
-  ]);
+  }, [animValue, index, count, horizontal, dotStyle, activeDotStyle, customReanimatedStyle]);
 
   return (
     <TouchableWithoutFeedback
       onPress={onPress}
       accessibilityLabel={accessibilityLabel}
       accessibilityRole="button"
-      accessibilityHint={
-        animValue.value === index ? "" : `Go to ${accessibilityLabel}`
-      }
+      accessibilityHint={animValue.value === index ? "" : `Go to ${accessibilityLabel}`}
       accessibilityState={{ selected: animValue.value === index }}
     >
       <Animated.View
