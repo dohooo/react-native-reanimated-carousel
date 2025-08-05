@@ -1,61 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="141" failures="0" errors="0" time="25.496">
-  <testsuite name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected" errors="0" failures="0" skipped="0" timestamp="2024-11-25T09:47:46" time="23.993" tests="18">
-    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `data` prop: should render correctly" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `data` prop: should render correctly" time="0.016">
+<testsuites name="jest tests" tests="263" failures="0" errors="0" time="26.27">
+  <testsuite name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:00:44" time="24.388" tests="19">
+    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `data` prop: should render correctly" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `data` prop: should render correctly" time="0.015">
     </testcase>
-    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `renderItem` prop: should render items correctly" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `renderItem` prop: should render items correctly" time="0.006">
+    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `renderItem` prop: should render items correctly" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `renderItem` prop: should render items correctly" time="0.005">
     </testcase>
-    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected should swipe to the left" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected should swipe to the left" time="2.506">
+    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected should swipe to the left" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected should swipe to the left" time="2.457">
     </testcase>
-    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `loop` prop: should swipe back to the first item when loop is true" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `loop` prop: should swipe back to the first item when loop is true" time="2.521">
+    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `loop` prop: should swipe back to the first item when loop is true" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `loop` prop: should swipe back to the first item when loop is true" time="2.481">
     </testcase>
-    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `onSnapToItem` prop: should call the onSnapToItem callback" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `onSnapToItem` prop: should call the onSnapToItem callback" time="1.857">
+    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `onSnapToItem` prop: should call the onSnapToItem callback" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `onSnapToItem` prop: should call the onSnapToItem callback" time="1.862">
     </testcase>
-    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `autoPlay` prop: should swipe automatically when autoPlay is true" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `autoPlay` prop: should swipe automatically when autoPlay is true" time="3.242">
+    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `autoPlay` prop: should swipe automatically when autoPlay is true" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `autoPlay` prop: should swipe automatically when autoPlay is true" time="3.235">
     </testcase>
-    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `autoPlayReverse` prop: should swipe automatically in reverse when autoPlayReverse is true" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `autoPlayReverse` prop: should swipe automatically in reverse when autoPlayReverse is true" time="6.045">
+    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `autoPlayReverse` prop: should swipe automatically in reverse when autoPlayReverse is true" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `autoPlayReverse` prop: should swipe automatically in reverse when autoPlayReverse is true" time="6.035">
     </testcase>
-    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `defaultIndex` prop: should render the correct item with the defaultIndex props" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `defaultIndex` prop: should render the correct item with the defaultIndex props" time="0.03">
+    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `defaultIndex` prop: should render the correct item with the defaultIndex props" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `defaultIndex` prop: should render the correct item with the defaultIndex props" time="0.021">
     </testcase>
-    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `defaultScrollOffsetValue` prop: should render the correct progress value with the defaultScrollOffsetValue props" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `defaultScrollOffsetValue` prop: should render the correct progress value with the defaultScrollOffsetValue props" time="0.009">
+    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `defaultScrollOffsetValue` prop: should render the correct progress value with the defaultScrollOffsetValue props" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `defaultScrollOffsetValue` prop: should render the correct progress value with the defaultScrollOffsetValue props" time="0.011">
     </testcase>
     <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `ref` prop: should handle the ref props" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `ref` prop: should handle the ref props" time="0.006">
     </testcase>
-    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `autoFillData` prop: should auto fill data array to allow loop playback when the loop props is true" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `autoFillData` prop: should auto fill data array to allow loop playback when the loop props is true" time="0.011">
+    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `autoFillData` prop: should auto fill data array to allow loop playback when the loop props is true" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `autoFillData` prop: should auto fill data array to allow loop playback when the loop props is true" time="0.007">
     </testcase>
-    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `pagingEnabled` prop: should swipe to the next item when pagingEnabled is true" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `pagingEnabled` prop: should swipe to the next item when pagingEnabled is true" time="0.627">
+    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `pagingEnabled` prop: should swipe to the next item when pagingEnabled is true" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `pagingEnabled` prop: should swipe to the next item when pagingEnabled is true" time="0.624">
     </testcase>
-    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `onConfigurePanGesture` prop: should call the onConfigurePanGesture callback" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `onConfigurePanGesture` prop: should call the onConfigurePanGesture callback" time="0.017">
+    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `onConfigurePanGesture` prop: should call the onConfigurePanGesture callback" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `onConfigurePanGesture` prop: should call the onConfigurePanGesture callback" time="0.03">
     </testcase>
-    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `onScrollStart` prop: should call the onScrollStart callback" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `onScrollStart` prop: should call the onScrollStart callback" time="0.009">
+    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `onScrollStart` prop: should call the onScrollStart callback" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `onScrollStart` prop: should call the onScrollStart callback" time="0.011">
     </testcase>
-    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `onScrollEnd` prop: should call the onScrollEnd callback" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `onScrollEnd` prop: should call the onScrollEnd callback" time="0.623">
+    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `onScrollEnd` prop: should call the onScrollEnd callback" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `onScrollEnd` prop: should call the onScrollEnd callback" time="0.622">
     </testcase>
-    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `onProgressChange` prop: should call the onProgressChange callback" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `onProgressChange` prop: should call the onProgressChange callback" time="0.634">
+    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `onProgressChange` prop: should call the onProgressChange callback" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `onProgressChange` prop: should call the onProgressChange callback" time="0.629">
     </testcase>
-    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `fixedDirection` prop: should swipe to the correct direction when fixedDirection is positive" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `fixedDirection` prop: should swipe to the correct direction when fixedDirection is positive" time="1.27">
+    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `fixedDirection` prop: should swipe to the correct direction when fixedDirection is positive" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `fixedDirection` prop: should swipe to the correct direction when fixedDirection is positive" time="1.242">
     </testcase>
-    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `overscrollEnabled` prop: should respect overscrollEnabled=false and prevent scrolling beyond bounds" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `overscrollEnabled` prop: should respect overscrollEnabled=false and prevent scrolling beyond bounds" time="4.054">
+    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `customAnimation` prop: should apply the custom animation" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `customAnimation` prop: should apply the custom animation" time="0.625">
+    </testcase>
+    <testcase classname="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `overscrollEnabled` prop: should respect overscrollEnabled=false and prevent scrolling beyond bounds" name="Test the real swipe behavior of Carousel to ensure it&apos;s working as expected `overscrollEnabled` prop: should respect overscrollEnabled=false and prevent scrolling beyond bounds" time="4.043">
     </testcase>
   </testsuite>
-  <testsuite name="Using RNGH v2 gesture API" errors="0" failures="0" skipped="0" timestamp="2024-11-25T09:48:10" time="0.19" tests="16">
-    <testcase classname="Using RNGH v2 gesture API sends events to handlers" name="Using RNGH v2 gesture API sends events to handlers" time="0.002">
+  <testsuite name="Using RNGH v2 gesture API" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:09" time="0.117" tests="16">
+    <testcase classname="Using RNGH v2 gesture API sends events to handlers" name="Using RNGH v2 gesture API sends events to handlers" time="0.003">
     </testcase>
-    <testcase classname="Using RNGH v2 gesture API sends events with additional data to handlers" name="Using RNGH v2 gesture API sends events with additional data to handlers" time="0.003">
+    <testcase classname="Using RNGH v2 gesture API sends events with additional data to handlers" name="Using RNGH v2 gesture API sends events with additional data to handlers" time="0.001">
     </testcase>
-    <testcase classname="Using RNGH v2 gesture API does not include console.error in the output" name="Using RNGH v2 gesture API does not include console.error in the output" time="0.002">
+    <testcase classname="Using RNGH v2 gesture API does not include console.error in the output" name="Using RNGH v2 gesture API does not include console.error in the output" time="0.001">
     </testcase>
-    <testcase classname="Event list validation throws error when oldState doesn&apos;t correspond to previous event&apos;s state" name="Event list validation throws error when oldState doesn&apos;t correspond to previous event&apos;s state" time="0.016">
+    <testcase classname="Event list validation throws error when oldState doesn&apos;t correspond to previous event&apos;s state" name="Event list validation throws error when oldState doesn&apos;t correspond to previous event&apos;s state" time="0.009">
     </testcase>
     <testcase classname="Event list validation correctly handles events ending with state 5" name="Event list validation correctly handles events ending with state 5" time="0.001">
     </testcase>
     <testcase classname="Event list validation correctly handles events ending with state 1" name="Event list validation correctly handles events ending with state 1" time="0.001">
     </testcase>
-    <testcase classname="Event list validation correctly handles events ending with state 3" name="Event list validation correctly handles events ending with state 3" time="0">
+    <testcase classname="Event list validation correctly handles events ending with state 3" name="Event list validation correctly handles events ending with state 3" time="0.001">
     </testcase>
     <testcase classname="Filling event list with defaults fills oldState if not passed" name="Filling event list with defaults fills oldState if not passed" time="0.001">
     </testcase>
-    <testcase classname="Filling event list with defaults fills missing ACTIVE states" name="Filling event list with defaults fills missing ACTIVE states" time="0.001">
+    <testcase classname="Filling event list with defaults fills missing ACTIVE states" name="Filling event list with defaults fills missing ACTIVE states" time="0">
     </testcase>
     <testcase classname="Filling event list with defaults fills BEGIN and END events for discrete handlers" name="Filling event list with defaults fills BEGIN and END events for discrete handlers" time="0.001">
     </testcase>
@@ -63,79 +65,25 @@
     </testcase>
     <testcase classname="Filling event list with defaults uses event data from first event in filled BEGIN, ACTIVE events" name="Filling event list with defaults uses event data from first event in filled BEGIN, ACTIVE events" time="0.001">
     </testcase>
-    <testcase classname="Filling event list with defaults uses event data from last event in filled END events" name="Filling event list with defaults uses event data from last event in filled END events" time="0">
+    <testcase classname="Filling event list with defaults uses event data from last event in filled END events" name="Filling event list with defaults uses event data from last event in filled END events" time="0.001">
     </testcase>
-    <testcase classname="Filling event list with defaults uses event data filled events" name="Filling event list with defaults uses event data filled events" time="0">
+    <testcase classname="Filling event list with defaults uses event data filled events" name="Filling event list with defaults uses event data filled events" time="0.001">
     </testcase>
     <testcase classname="Filling event list with defaults fills BEGIN and END events when they&apos;re not present, for discrete handlers" name="Filling event list with defaults fills BEGIN and END events when they&apos;re not present, for discrete handlers" time="0.001">
     </testcase>
     <testcase classname="Filling event list with defaults fills BEGIN, ACTIVE and END events when they&apos;re not present, for continuous handlers" name="Filling event list with defaults fills BEGIN, ACTIVE and END events when they&apos;re not present, for continuous handlers" time="0">
     </testcase>
   </testsuite>
-  <testsuite name="useCommonVariables" errors="0" failures="0" skipped="0" timestamp="2024-11-25T09:48:10" time="0.068" tests="1">
-    <testcase classname="useCommonVariables should return the correct values" name="useCommonVariables should return the correct values" time="0.002">
-    </testcase>
-  </testsuite>
-  <testsuite name="useVisibleRanges" errors="0" failures="0" skipped="0" timestamp="2024-11-25T09:48:10" time="0.072" tests="3">
-    <testcase classname="useVisibleRanges should only display the front of the list when loop is false" name="useVisibleRanges should only display the front of the list when loop is false" time="0.001">
-    </testcase>
-    <testcase classname="useVisibleRanges should display the rear of the list and the front of the list when loop is true" name="useVisibleRanges should display the rear of the list and the front of the list when loop is true" time="0">
-    </testcase>
-    <testcase classname="useVisibleRanges should shows the increased range of the list when the loop is false and swiped the carousel." name="useVisibleRanges should shows the increased range of the list when the loop is false and swiped the carousel." time="0">
-    </testcase>
-  </testsuite>
-  <testsuite name="useCheckMounted" errors="0" failures="0" skipped="0" timestamp="2024-11-25T09:48:11" time="0.052" tests="4">
-    <testcase classname="useCheckMounted should be mounted after initialization" name="useCheckMounted should be mounted after initialization" time="0">
-    </testcase>
-    <testcase classname="useCheckMounted should be unmounted after cleanup" name="useCheckMounted should be unmounted after cleanup" time="0.001">
-    </testcase>
-    <testcase classname="useCheckMounted should maintain mounted state during component lifecycle" name="useCheckMounted should maintain mounted state during component lifecycle" time="0">
-    </testcase>
-    <testcase classname="useCheckMounted should handle multiple mount/unmount cycles" name="useCheckMounted should handle multiple mount/unmount cycles" time="0">
-    </testcase>
-  </testsuite>
-  <testsuite name="useAutoPlay" errors="0" failures="0" skipped="0" timestamp="2024-11-25T09:48:11" time="0.053" tests="7">
-    <testcase classname="useAutoPlay should start autoplay when autoPlay is true" name="useAutoPlay should start autoplay when autoPlay is true" time="0.001">
-    </testcase>
-    <testcase classname="useAutoPlay should not start autoplay when autoPlay is false" name="useAutoPlay should not start autoplay when autoPlay is false" time="0">
-    </testcase>
-    <testcase classname="useAutoPlay should play in reverse when autoPlayReverse is true" name="useAutoPlay should play in reverse when autoPlayReverse is true" time="0">
-    </testcase>
-    <testcase classname="useAutoPlay should clear timer on unmount" name="useAutoPlay should clear timer on unmount" time="0">
-    </testcase>
-    <testcase classname="useAutoPlay should pause and resume autoplay" name="useAutoPlay should pause and resume autoplay" time="0.001">
-    </testcase>
-    <testcase classname="useAutoPlay should respect autoPlayInterval timing" name="useAutoPlay should respect autoPlayInterval timing" time="0">
-    </testcase>
-    <testcase classname="useAutoPlay should chain autoplay calls correctly" name="useAutoPlay should chain autoplay calls correctly" time="0">
-    </testcase>
-  </testsuite>
-  <testsuite name="useOnProgressChange" errors="0" failures="0" skipped="0" timestamp="2024-11-25T09:48:11" time="0.051" tests="7">
-    <testcase classname="useOnProgressChange should handle progress change with function callback" name="useOnProgressChange should handle progress change with function callback" time="0.001">
-    </testcase>
-    <testcase classname="useOnProgressChange should handle progress change with shared value" name="useOnProgressChange should handle progress change with shared value" time="0">
-    </testcase>
-    <testcase classname="useOnProgressChange should handle loop mode" name="useOnProgressChange should handle loop mode" time="0">
-    </testcase>
-    <testcase classname="useOnProgressChange should handle autoFillData mode" name="useOnProgressChange should handle autoFillData mode" time="0.001">
-    </testcase>
-    <testcase classname="useOnProgressChange should clamp values when not in loop mode" name="useOnProgressChange should clamp values when not in loop mode" time="0">
-    </testcase>
-    <testcase classname="useOnProgressChange should handle positive offset values" name="useOnProgressChange should handle positive offset values" time="0">
-    </testcase>
-    <testcase classname="useOnProgressChange should not call onProgressChange if not provided" name="useOnProgressChange should not call onProgressChange if not provided" time="0">
-    </testcase>
-  </testsuite>
-  <testsuite name="useCarouselController" errors="0" failures="0" skipped="0" timestamp="2024-11-25T09:48:11" time="0.056" tests="16">
-    <testcase classname="useCarouselController should initialize with default index" name="useCarouselController should initialize with default index" time="0">
+  <testsuite name="useCarouselController" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:09" time="0.386" tests="30">
+    <testcase classname="useCarouselController should initialize with default index" name="useCarouselController should initialize with default index" time="0.003">
     </testcase>
     <testcase classname="useCarouselController should move to next slide" name="useCarouselController should move to next slide" time="0.001">
     </testcase>
     <testcase classname="useCarouselController should move to previous slide" name="useCarouselController should move to previous slide" time="0">
     </testcase>
-    <testcase classname="useCarouselController should handle loop behavior correctly" name="useCarouselController should handle loop behavior correctly" time="0.002">
+    <testcase classname="useCarouselController should handle loop behavior correctly" name="useCarouselController should handle loop behavior correctly" time="0">
     </testcase>
-    <testcase classname="useCarouselController should prevent movement when loop is disabled and at bounds" name="useCarouselController should prevent movement when loop is disabled and at bounds" time="0">
+    <testcase classname="useCarouselController should prevent movement when loop is disabled and at bounds" name="useCarouselController should prevent movement when loop is disabled and at bounds" time="0.001">
     </testcase>
     <testcase classname="useCarouselController should scroll to specific index" name="useCarouselController should scroll to specific index" time="0">
     </testcase>
@@ -157,108 +105,38 @@
     </testcase>
     <testcase classname="useCarouselController imperative handle should respect loop settings through imperative calls" name="useCarouselController imperative handle should respect loop settings through imperative calls" time="0">
     </testcase>
-    <testcase classname="useCarouselController imperative handle should handle multiple slide movements through imperative calls" name="useCarouselController imperative handle should handle multiple slide movements through imperative calls" time="0">
+    <testcase classname="useCarouselController imperative handle should handle multiple slide movements through imperative calls" name="useCarouselController imperative handle should handle multiple slide movements through imperative calls" time="0.001">
+    </testcase>
+    <testcase classname="useCarouselController edge cases and uncovered lines should handle next() without animation - uncovered line 213-214" name="useCarouselController edge cases and uncovered lines should handle next() without animation - uncovered line 213-214" time="0">
+    </testcase>
+    <testcase classname="useCarouselController edge cases and uncovered lines should handle prev() without animation - uncovered line 245-246" name="useCarouselController edge cases and uncovered lines should handle prev() without animation - uncovered line 245-246" time="0">
+    </testcase>
+    <testcase classname="useCarouselController edge cases and uncovered lines should handle scrollTo() without animation when target equals current index - uncovered line 265" name="useCarouselController edge cases and uncovered lines should handle scrollTo() without animation when target equals current index - uncovered line 265" time="0">
+    </testcase>
+    <testcase classname="useCarouselController edge cases and uncovered lines should handle scrollTo() without animation - uncovered line 294-296" name="useCarouselController edge cases and uncovered lines should handle scrollTo() without animation - uncovered line 294-296" time="0.001">
+    </testcase>
+    <testcase classname="useCarouselController edge cases and uncovered lines should handle scrollTo() with count parameter - uncovered line 321-326" name="useCarouselController edge cases and uncovered lines should handle scrollTo() with count parameter - uncovered line 321-326" time="0">
+    </testcase>
+    <testcase classname="useCarouselController edge cases and uncovered lines should handle scrollTo() with invalid count (should return early)" name="useCarouselController edge cases and uncovered lines should handle scrollTo() with invalid count (should return early)" time="0">
+    </testcase>
+    <testcase classname="useCarouselController edge cases and uncovered lines should handle overscroll protection when overscrollEnabled is false" name="useCarouselController edge cases and uncovered lines should handle overscroll protection when overscrollEnabled is false" time="0">
+    </testcase>
+    <testcase classname="useCarouselController edge cases and uncovered lines should call onScrollStart and onScrollEnd callbacks" name="useCarouselController edge cases and uncovered lines should call onScrollStart and onScrollEnd callbacks" time="0.001">
+    </testcase>
+    <testcase classname="useCarouselController edge cases and uncovered lines should handle disabled carousel (empty data)" name="useCarouselController edge cases and uncovered lines should handle disabled carousel (empty data)" time="0">
+    </testcase>
+    <testcase classname="useCarouselController edge cases and uncovered lines should handle autoFillData with computedRealIndexWithAutoFillData" name="useCarouselController edge cases and uncovered lines should handle autoFillData with computedRealIndexWithAutoFillData" time="0">
+    </testcase>
+    <testcase classname="useCarouselController edge cases and uncovered lines should handle fixed direction in scrollTo" name="useCarouselController edge cases and uncovered lines should handle fixed direction in scrollTo" time="0">
+    </testcase>
+    <testcase classname="useCarouselController edge cases and uncovered lines should handle complex loop calculations in scrollTo" name="useCarouselController edge cases and uncovered lines should handle complex loop calculations in scrollTo" time="0">
+    </testcase>
+    <testcase classname="useCarouselController edge cases and uncovered lines should get shared index correctly" name="useCarouselController edge cases and uncovered lines should get shared index correctly" time="0">
+    </testcase>
+    <testcase classname="useCarouselController edge cases and uncovered lines should handle currentFixedPage calculation for non-loop mode" name="useCarouselController edge cases and uncovered lines should handle currentFixedPage calculation for non-loop mode" time="0">
     </testcase>
   </testsuite>
-  <testsuite name="useLayoutConfig" errors="0" failures="0" skipped="0" timestamp="2024-11-25T09:48:11" time="0.053" tests="8">
-    <testcase classname="useLayoutConfig should return normal layout by default" name="useLayoutConfig should return normal layout by default" time="0.001">
-    </testcase>
-    <testcase classname="useLayoutConfig should handle parallax mode" name="useLayoutConfig should handle parallax mode" time="0">
-    </testcase>
-    <testcase classname="useLayoutConfig should handle horizontal-stack mode" name="useLayoutConfig should handle horizontal-stack mode" time="0.002">
-    </testcase>
-    <testcase classname="useLayoutConfig should handle vertical-stack mode" name="useLayoutConfig should handle vertical-stack mode" time="0">
-    </testcase>
-    <testcase classname="useLayoutConfig should handle vertical orientation" name="useLayoutConfig should handle vertical orientation" time="0">
-    </testcase>
-    <testcase classname="useLayoutConfig should handle different offsets" name="useLayoutConfig should handle different offsets" time="0">
-    </testcase>
-    <testcase classname="useLayoutConfig should memoize layout function" name="useLayoutConfig should memoize layout function" time="0.001">
-    </testcase>
-    <testcase classname="useLayoutConfig should update layout when props change" name="useLayoutConfig should update layout when props change" time="0">
-    </testcase>
-  </testsuite>
-  <testsuite name="useInitProps" errors="0" failures="0" skipped="0" timestamp="2024-11-25T09:48:11" time="0.05" tests="7">
-    <testcase classname="useInitProps should initialize with default values" name="useInitProps should initialize with default values" time="0.001">
-    </testcase>
-    <testcase classname="useInitProps should handle custom values" name="useInitProps should handle custom values" time="0">
-    </testcase>
-    <testcase classname="useInitProps should handle stack mode configuration" name="useInitProps should handle stack mode configuration" time="0">
-    </testcase>
-    <testcase classname="useInitProps should handle empty data array" name="useInitProps should handle empty data array" time="0.001">
-    </testcase>
-    <testcase classname="useInitProps should round width and height values" name="useInitProps should round width and height values" time="0">
-    </testcase>
-    <testcase classname="useInitProps should handle enableSnap property" name="useInitProps should handle enableSnap property" time="0">
-    </testcase>
-    <testcase classname="useInitProps should handle vertical-stack mode" name="useInitProps should handle vertical-stack mode" time="0">
-    </testcase>
-  </testsuite>
-  <testsuite name="computeOffsetIfSizeChanged" errors="0" failures="0" skipped="0" timestamp="2024-11-25T09:48:11" time="0.046" tests="5">
-    <testcase classname="computeOffsetIfSizeChanged [CASE 1] should return the correct values when size does not change" name="computeOffsetIfSizeChanged [CASE 1] should return the correct values when size does not change" time="0">
-    </testcase>
-    <testcase classname="computeOffsetIfSizeChanged [CASE 2] should return the correct values when size changes from 500 to 400" name="computeOffsetIfSizeChanged [CASE 2] should return the correct values when size changes from 500 to 400" time="0">
-    </testcase>
-    <testcase classname="computeOffsetIfSizeChanged [CASE 3] should return the correct values when size changes from 500 to 499" name="computeOffsetIfSizeChanged [CASE 3] should return the correct values when size changes from 500 to 499" time="0">
-    </testcase>
-    <testcase classname="computeOffsetIfSizeChanged [CASE 4] should return the correct values when size changes from 500 to 501" name="computeOffsetIfSizeChanged [CASE 4] should return the correct values when size changes from 500 to 501" time="0">
-    </testcase>
-    <testcase classname="computeOffsetIfSizeChanged [CASE 5] should return the correct values when size changes from 224 to 524" name="computeOffsetIfSizeChanged [CASE 5] should return the correct values when size changes from 224 to 524" time="0.001">
-    </testcase>
-  </testsuite>
-  <testsuite name="handlerOffsetDirection" errors="0" failures="0" skipped="0" timestamp="2024-11-25T09:48:11" time="0.052" tests="5">
-    <testcase classname="handlerOffsetDirection should return -1 when default value equals to zero" name="handlerOffsetDirection should return -1 when default value equals to zero" time="0.001">
-    </testcase>
-    <testcase classname="handlerOffsetDirection should return 1 when default value is greater than zero" name="handlerOffsetDirection should return 1 when default value is greater than zero" time="0">
-    </testcase>
-    <testcase classname="handlerOffsetDirection should return -1 when default value is less than zero" name="handlerOffsetDirection should return -1 when default value is less than zero" time="0">
-    </testcase>
-    <testcase classname="handlerOffsetDirection should return 1 when default value equals to zero and fixedDirection is negative" name="handlerOffsetDirection should return 1 when default value equals to zero and fixedDirection is negative" time="0">
-    </testcase>
-    <testcase classname="handlerOffsetDirection should return -1 when default value is greater than zero and fixedDirection is negative" name="handlerOffsetDirection should return -1 when default value is greater than zero and fixedDirection is negative" time="0">
-    </testcase>
-  </testsuite>
-  <testsuite name="useUpdateGestureConfig" errors="0" failures="0" skipped="0" timestamp="2024-11-25T09:48:11" time="0.056" tests="6">
-    <testcase classname="useUpdateGestureConfig should update gesture enabled state" name="useUpdateGestureConfig should update gesture enabled state" time="0.001">
-    </testcase>
-    <testcase classname="useUpdateGestureConfig should handle undefined enabled state" name="useUpdateGestureConfig should handle undefined enabled state" time="0">
-    </testcase>
-    <testcase classname="useUpdateGestureConfig should update when enabled state changes" name="useUpdateGestureConfig should update when enabled state changes" time="0">
-    </testcase>
-    <testcase classname="useUpdateGestureConfig should not update when enabled state remains the same" name="useUpdateGestureConfig should not update when enabled state remains the same" time="0">
-    </testcase>
-    <testcase classname="useUpdateGestureConfig should handle gesture object changes" name="useUpdateGestureConfig should handle gesture object changes" time="0.001">
-    </testcase>
-    <testcase classname="useUpdateGestureConfig should cleanup properly on unmount" name="useUpdateGestureConfig should cleanup properly on unmount" time="0">
-    </testcase>
-  </testsuite>
-  <testsuite name="useSharedValue" errors="0" failures="0" skipped="0" timestamp="2024-11-25T09:48:11" time="0.058" tests="1">
-    <testcase classname="useSharedValue should return the correct values" name="useSharedValue should return the correct values" time="0.001">
-    </testcase>
-  </testsuite>
-  <testsuite name="log utilities" errors="0" failures="0" skipped="0" timestamp="2024-11-25T09:48:11" time="0.05" tests="8">
-    <testcase classname="log utilities log should call console.log with provided arguments" name="log utilities log should call console.log with provided arguments" time="0">
-    </testcase>
-    <testcase classname="log utilities log should handle single argument" name="log utilities log should handle single argument" time="0">
-    </testcase>
-    <testcase classname="log utilities log should handle multiple arguments" name="log utilities log should handle multiple arguments" time="0">
-    </testcase>
-    <testcase classname="log utilities round should round positive numbers correctly" name="log utilities round should round positive numbers correctly" time="0">
-    </testcase>
-    <testcase classname="log utilities round should round negative numbers correctly" name="log utilities round should round negative numbers correctly" time="0">
-    </testcase>
-    <testcase classname="log utilities round should handle zero values" name="log utilities round should handle zero values" time="0">
-    </testcase>
-    <testcase classname="log utilities round should handle integers" name="log utilities round should handle integers" time="0">
-    </testcase>
-    <testcase classname="log utilities round should handle decimal places" name="log utilities round should handle decimal places" time="0">
-    </testcase>
-  </testsuite>
-  <testsuite name="useSharedValue" errors="0" failures="0" skipped="0" timestamp="2024-11-25T09:48:11" time="0.051" tests="1">
-    <testcase classname="useSharedValue retains value on rerender" name="useSharedValue retains value on rerender" time="0.001">
-    </testcase>
-  </testsuite>
-  <testsuite name="computed-with-auto-fill-data utilities" errors="0" failures="0" skipped="0" timestamp="2024-11-25T09:48:11" time="0.05" tests="16">
+  <testsuite name="computed-with-auto-fill-data utilities" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:09" time="0.051" tests="23">
     <testcase classname="computed-with-auto-fill-data utilities computedFillDataWithAutoFillData should handle single item" name="computed-with-auto-fill-data utilities computedFillDataWithAutoFillData should handle single item" time="0">
     </testcase>
     <testcase classname="computed-with-auto-fill-data utilities computedFillDataWithAutoFillData should handle double items" name="computed-with-auto-fill-data utilities computedFillDataWithAutoFillData should handle double items" time="0">
@@ -267,6 +145,12 @@
     </testcase>
     <testcase classname="computed-with-auto-fill-data utilities computedFillDataWithAutoFillData should return original data when loop is false" name="computed-with-auto-fill-data utilities computedFillDataWithAutoFillData should return original data when loop is false" time="0">
     </testcase>
+    <testcase classname="computed-with-auto-fill-data utilities computedFillDataWithAutoFillData should handle empty data array" name="computed-with-auto-fill-data utilities computedFillDataWithAutoFillData should handle empty data array" time="0">
+    </testcase>
+    <testcase classname="computed-with-auto-fill-data utilities computedFillDataWithAutoFillData should handle data length greater than 2" name="computed-with-auto-fill-data utilities computedFillDataWithAutoFillData should handle data length greater than 2" time="0">
+    </testcase>
+    <testcase classname="computed-with-auto-fill-data utilities computedFillDataWithAutoFillData should handle both loop and autoFillData false" name="computed-with-auto-fill-data utilities computedFillDataWithAutoFillData should handle both loop and autoFillData false" time="0">
+    </testcase>
     <testcase classname="computed-with-auto-fill-data utilities computedOffsetXValueWithAutoFillData should handle single item" name="computed-with-auto-fill-data utilities computedOffsetXValueWithAutoFillData should handle single item" time="0">
     </testcase>
     <testcase classname="computed-with-auto-fill-data utilities computedOffsetXValueWithAutoFillData should handle double items" name="computed-with-auto-fill-data utilities computedOffsetXValueWithAutoFillData should handle double items" time="0">
@@ -274,6 +158,14 @@
     <testcase classname="computed-with-auto-fill-data utilities computedOffsetXValueWithAutoFillData should return original value when autoFillData is false" name="computed-with-auto-fill-data utilities computedOffsetXValueWithAutoFillData should return original value when autoFillData is false" time="0">
     </testcase>
     <testcase classname="computed-with-auto-fill-data utilities computedOffsetXValueWithAutoFillData should return original value when loop is false" name="computed-with-auto-fill-data utilities computedOffsetXValueWithAutoFillData should return original value when loop is false" time="0">
+    </testcase>
+    <testcase classname="computed-with-auto-fill-data utilities computedOffsetXValueWithAutoFillData should handle zero value" name="computed-with-auto-fill-data utilities computedOffsetXValueWithAutoFillData should handle zero value" time="0">
+    </testcase>
+    <testcase classname="computed-with-auto-fill-data utilities computedOffsetXValueWithAutoFillData should handle negative values" name="computed-with-auto-fill-data utilities computedOffsetXValueWithAutoFillData should handle negative values" time="0.001">
+    </testcase>
+    <testcase classname="computed-with-auto-fill-data utilities computedOffsetXValueWithAutoFillData should handle fractional values" name="computed-with-auto-fill-data utilities computedOffsetXValueWithAutoFillData should handle fractional values" time="0">
+    </testcase>
+    <testcase classname="computed-with-auto-fill-data utilities computedOffsetXValueWithAutoFillData should handle both conditions false" name="computed-with-auto-fill-data utilities computedOffsetXValueWithAutoFillData should handle both conditions false" time="0">
     </testcase>
     <testcase classname="computed-with-auto-fill-data utilities computedRealIndexWithAutoFillData should handle single item" name="computed-with-auto-fill-data utilities computedRealIndexWithAutoFillData should handle single item" time="0">
     </testcase>
@@ -292,7 +184,385 @@
     <testcase classname="computed-with-auto-fill-data utilities convertToSharedIndex should return original index when loop is false" name="computed-with-auto-fill-data utilities convertToSharedIndex should return original index when loop is false" time="0">
     </testcase>
   </testsuite>
-  <testsuite name="should work as expected" errors="0" failures="0" skipped="0" timestamp="2024-11-25T09:48:11" time="0.049" tests="5">
+  <testsuite name="GlobalStateProvider" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:09" time="0.06" tests="14">
+    <testcase classname="GlobalStateProvider should render children correctly" name="GlobalStateProvider should render children correctly" time="0.003">
+    </testcase>
+    <testcase classname="GlobalStateProvider should provide context value with layout methods" name="GlobalStateProvider should provide context value with layout methods" time="0">
+    </testcase>
+    <testcase classname="GlobalStateProvider should initialize containerSize with default values" name="GlobalStateProvider should initialize containerSize with default values" time="0.001">
+    </testcase>
+    <testcase classname="GlobalStateProvider should initialize itemDimensions with empty object" name="GlobalStateProvider should initialize itemDimensions with empty object" time="0">
+    </testcase>
+    <testcase classname="GlobalStateProvider should provide updateItemDimensions function" name="GlobalStateProvider should provide updateItemDimensions function" time="0">
+    </testcase>
+    <testcase classname="GlobalStateProvider should provide updateContainerSize function" name="GlobalStateProvider should provide updateContainerSize function" time="0.001">
+    </testcase>
+    <testcase classname="GlobalStateProvider should merge props and common with layout" name="GlobalStateProvider should merge props and common with layout" time="0">
+    </testcase>
+    <testcase classname="GlobalStateProvider should handle multiple children" name="GlobalStateProvider should handle multiple children" time="0">
+    </testcase>
+    <testcase classname="GlobalStateProvider should handle updateItemDimensions with multiple items" name="GlobalStateProvider should handle updateItemDimensions with multiple items" time="0.001">
+    </testcase>
+    <testcase classname="useGlobalState should return context value when used within provider" name="useGlobalState should return context value when used within provider" time="0">
+    </testcase>
+    <testcase classname="useGlobalState should provide expected hook functionality" name="useGlobalState should provide expected hook functionality" time="0">
+    </testcase>
+    <testcase classname="useGlobalState should return the same context value as directly accessing context" name="useGlobalState should return the same context value as directly accessing context" time="0.001">
+    </testcase>
+    <testcase classname="useGlobalState should provide all expected properties" name="useGlobalState should provide all expected properties" time="0">
+    </testcase>
+    <testcase classname="GlobalStateContext should have default empty context value" name="GlobalStateContext should have default empty context value" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="LazyView" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:09" time="0.052" tests="5">
+    <testcase classname="LazyView should render children when shouldUpdate is true" name="LazyView should render children when shouldUpdate is true" time="0.002">
+    </testcase>
+    <testcase classname="LazyView should not render children when shouldUpdate is false" name="LazyView should not render children when shouldUpdate is false" time="0.001">
+    </testcase>
+    <testcase classname="LazyView should render empty fragment when shouldUpdate is false" name="LazyView should render empty fragment when shouldUpdate is false" time="0">
+    </testcase>
+    <testcase classname="LazyView should handle multiple children when shouldUpdate is true" name="LazyView should handle multiple children when shouldUpdate is true" time="0">
+    </testcase>
+    <testcase classname="LazyView should not render multiple children when shouldUpdate is false" name="LazyView should not render multiple children when shouldUpdate is false" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="useCommonVariables" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:09" time="0.078" tests="15">
+    <testcase classname="useCommonVariables should return the correct values" name="useCommonVariables should return the correct values" time="0.001">
+    </testcase>
+    <testcase classname="useCommonVariables should handle vertical orientation" name="useCommonVariables should handle vertical orientation" time="0.001">
+    </testcase>
+    <testcase classname="useCommonVariables should calculate defaultHandlerOffsetValue correctly with non-zero defaultIndex" name="useCommonVariables should calculate defaultHandlerOffsetValue correctly with non-zero defaultIndex" time="0">
+    </testcase>
+    <testcase classname="useCommonVariables should use custom defaultScrollOffsetValue when provided" name="useCommonVariables should use custom defaultScrollOffsetValue when provided" time="0">
+    </testcase>
+    <testcase classname="useCommonVariables should handle single data item" name="useCommonVariables should handle single data item" time="0">
+    </testcase>
+    <testcase classname="useCommonVariables should handle zero dataLength" name="useCommonVariables should handle zero dataLength" time="0.001">
+    </testcase>
+    <testcase classname="useCommonVariables should handle negative defaultIndex" name="useCommonVariables should handle negative defaultIndex" time="0">
+    </testcase>
+    <testcase classname="useCommonVariables should handle loop disabled" name="useCommonVariables should handle loop disabled" time="0.001">
+    </testcase>
+    <testcase classname="useCommonVariables should update when props change" name="useCommonVariables should update when props change" time="0">
+    </testcase>
+    <testcase classname="useCommonVariables should handle dataLength changes" name="useCommonVariables should handle dataLength changes" time="0.001">
+    </testcase>
+    <testcase classname="useCommonVariables should handle zero size (edge case)" name="useCommonVariables should handle zero size (edge case)" time="0">
+    </testcase>
+    <testcase classname="useCommonVariables should handle large defaultIndex" name="useCommonVariables should handle large defaultIndex" time="0">
+    </testcase>
+    <testcase classname="useCommonVariables should handle vertical with zero height" name="useCommonVariables should handle vertical with zero height" time="0">
+    </testcase>
+    <testcase classname="useCommonVariables should handle floating point dimensions" name="useCommonVariables should handle floating point dimensions" time="0">
+    </testcase>
+    <testcase classname="useCommonVariables should calculate validLength correctly for different data lengths" name="useCommonVariables should calculate validLength correctly for different data lengths" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="handlerOffsetDirection" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:09" time="0.058" tests="13">
+    <testcase classname="handlerOffsetDirection should return -1 when default value equals to zero" name="handlerOffsetDirection should return -1 when default value equals to zero" time="0.001">
+    </testcase>
+    <testcase classname="handlerOffsetDirection should return 1 when default value is greater than zero" name="handlerOffsetDirection should return 1 when default value is greater than zero" time="0">
+    </testcase>
+    <testcase classname="handlerOffsetDirection should return -1 when default value is less than zero" name="handlerOffsetDirection should return -1 when default value is less than zero" time="0.001">
+    </testcase>
+    <testcase classname="handlerOffsetDirection should return 1 when default value equals to zero and fixedDirection is negative" name="handlerOffsetDirection should return 1 when default value equals to zero and fixedDirection is negative" time="0">
+    </testcase>
+    <testcase classname="handlerOffsetDirection should return -1 when default value is greater than zero and fixedDirection is negative" name="handlerOffsetDirection should return -1 when default value is greater than zero and fixedDirection is negative" time="0">
+    </testcase>
+    <testcase classname="handlerOffsetDirection should handle fractional positive values" name="handlerOffsetDirection should handle fractional positive values" time="0">
+    </testcase>
+    <testcase classname="handlerOffsetDirection should handle fractional negative values" name="handlerOffsetDirection should handle fractional negative values" time="0">
+    </testcase>
+    <testcase classname="handlerOffsetDirection should handle large positive values" name="handlerOffsetDirection should handle large positive values" time="0">
+    </testcase>
+    <testcase classname="handlerOffsetDirection should handle large negative values" name="handlerOffsetDirection should handle large negative values" time="0">
+    </testcase>
+    <testcase classname="handlerOffsetDirection should override with positive fixed direction" name="handlerOffsetDirection should override with positive fixed direction" time="0">
+    </testcase>
+    <testcase classname="handlerOffsetDirection should override with negative fixed direction" name="handlerOffsetDirection should override with negative fixed direction" time="0.001">
+    </testcase>
+    <testcase classname="handlerOffsetDirection should handle very small positive values" name="handlerOffsetDirection should handle very small positive values" time="0">
+    </testcase>
+    <testcase classname="handlerOffsetDirection should handle very small negative values" name="handlerOffsetDirection should handle very small negative values" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="useLayoutConfig" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:09" time="0.058" tests="8">
+    <testcase classname="useLayoutConfig should return normal layout by default" name="useLayoutConfig should return normal layout by default" time="0.001">
+    </testcase>
+    <testcase classname="useLayoutConfig should handle parallax mode" name="useLayoutConfig should handle parallax mode" time="0">
+    </testcase>
+    <testcase classname="useLayoutConfig should handle horizontal-stack mode" name="useLayoutConfig should handle horizontal-stack mode" time="0.001">
+    </testcase>
+    <testcase classname="useLayoutConfig should handle vertical-stack mode" name="useLayoutConfig should handle vertical-stack mode" time="0">
+    </testcase>
+    <testcase classname="useLayoutConfig should handle vertical orientation" name="useLayoutConfig should handle vertical orientation" time="0">
+    </testcase>
+    <testcase classname="useLayoutConfig should handle different offsets" name="useLayoutConfig should handle different offsets" time="0">
+    </testcase>
+    <testcase classname="useLayoutConfig should memoize layout function" name="useLayoutConfig should memoize layout function" time="0">
+    </testcase>
+    <testcase classname="useLayoutConfig should update layout when props change" name="useLayoutConfig should update layout when props change" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="useUpdateGestureConfig" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:09" time="0.051" tests="6">
+    <testcase classname="useUpdateGestureConfig should update gesture enabled state" name="useUpdateGestureConfig should update gesture enabled state" time="0.002">
+    </testcase>
+    <testcase classname="useUpdateGestureConfig should handle undefined enabled state" name="useUpdateGestureConfig should handle undefined enabled state" time="0">
+    </testcase>
+    <testcase classname="useUpdateGestureConfig should update when enabled state changes" name="useUpdateGestureConfig should update when enabled state changes" time="0">
+    </testcase>
+    <testcase classname="useUpdateGestureConfig should not update when enabled state remains the same" name="useUpdateGestureConfig should not update when enabled state remains the same" time="0">
+    </testcase>
+    <testcase classname="useUpdateGestureConfig should handle gesture object changes" name="useUpdateGestureConfig should handle gesture object changes" time="0.001">
+    </testcase>
+    <testcase classname="useUpdateGestureConfig should cleanup properly on unmount" name="useUpdateGestureConfig should cleanup properly on unmount" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="useOnProgressChange" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:10" time="0.052" tests="7">
+    <testcase classname="useOnProgressChange should handle progress change with function callback" name="useOnProgressChange should handle progress change with function callback" time="0.001">
+    </testcase>
+    <testcase classname="useOnProgressChange should handle progress change with shared value" name="useOnProgressChange should handle progress change with shared value" time="0.001">
+    </testcase>
+    <testcase classname="useOnProgressChange should handle loop mode" name="useOnProgressChange should handle loop mode" time="0">
+    </testcase>
+    <testcase classname="useOnProgressChange should handle autoFillData mode" name="useOnProgressChange should handle autoFillData mode" time="0">
+    </testcase>
+    <testcase classname="useOnProgressChange should clamp values when not in loop mode" name="useOnProgressChange should clamp values when not in loop mode" time="0">
+    </testcase>
+    <testcase classname="useOnProgressChange should handle positive offset values" name="useOnProgressChange should handle positive offset values" time="0">
+    </testcase>
+    <testcase classname="useOnProgressChange should not call onProgressChange if not provided" name="useOnProgressChange should not call onProgressChange if not provided" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="useVisibleRanges" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:10" time="0.051" tests="3">
+    <testcase classname="useVisibleRanges should only display the front of the list when loop is false" name="useVisibleRanges should only display the front of the list when loop is false" time="0.002">
+    </testcase>
+    <testcase classname="useVisibleRanges should display the rear of the list and the front of the list when loop is true" name="useVisibleRanges should display the rear of the list and the front of the list when loop is true" time="0.001">
+    </testcase>
+    <testcase classname="useVisibleRanges should shows the increased range of the list when the loop is false and swiped the carousel." name="useVisibleRanges should shows the increased range of the list when the loop is false and swiped the carousel." time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="useAutoPlay" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:10" time="0.056" tests="7">
+    <testcase classname="useAutoPlay should start autoplay when autoPlay is true" name="useAutoPlay should start autoplay when autoPlay is true" time="0.001">
+    </testcase>
+    <testcase classname="useAutoPlay should not start autoplay when autoPlay is false" name="useAutoPlay should not start autoplay when autoPlay is false" time="0.001">
+    </testcase>
+    <testcase classname="useAutoPlay should play in reverse when autoPlayReverse is true" name="useAutoPlay should play in reverse when autoPlayReverse is true" time="0">
+    </testcase>
+    <testcase classname="useAutoPlay should clear timer on unmount" name="useAutoPlay should clear timer on unmount" time="0">
+    </testcase>
+    <testcase classname="useAutoPlay should pause and resume autoplay" name="useAutoPlay should pause and resume autoplay" time="0">
+    </testcase>
+    <testcase classname="useAutoPlay should respect autoPlayInterval timing" name="useAutoPlay should respect autoPlayInterval timing" time="0.001">
+    </testcase>
+    <testcase classname="useAutoPlay should chain autoplay calls correctly" name="useAutoPlay should chain autoplay calls correctly" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="horizontalStackLayout" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:10" time="0.049" tests="15">
+    <testcase classname="horizontalStackLayout should make the rotateZDeg works properly when it is passed in horizontal-stack mode through modeConfig" name="horizontalStackLayout should make the rotateZDeg works properly when it is passed in horizontal-stack mode through modeConfig" time="0">
+    </testcase>
+    <testcase classname="horizontalStackLayout should handle right snap direction" name="horizontalStackLayout should handle right snap direction" time="0">
+    </testcase>
+    <testcase classname="horizontalStackLayout should handle default config" name="horizontalStackLayout should handle default config" time="0.001">
+    </testcase>
+    <testcase classname="horizontalStackLayout should handle edge values" name="horizontalStackLayout should handle edge values" time="0">
+    </testcase>
+    <testcase classname="horizontalStackLayout should handle custom parameters" name="horizontalStackLayout should handle custom parameters" time="0">
+    </testcase>
+    <testcase classname="verticalStackLayout should handle left snap direction" name="verticalStackLayout should handle left snap direction" time="0">
+    </testcase>
+    <testcase classname="verticalStackLayout should handle right snap direction" name="verticalStackLayout should handle right snap direction" time="0">
+    </testcase>
+    <testcase classname="verticalStackLayout should handle default config" name="verticalStackLayout should handle default config" time="0">
+    </testcase>
+    <testcase classname="verticalStackLayout should handle different values" name="verticalStackLayout should handle different values" time="0">
+    </testcase>
+    <testcase classname="verticalStackLayout should handle fractional values" name="verticalStackLayout should handle fractional values" time="0.001">
+    </testcase>
+    <testcase classname="useHorizontalStackLayout should return layout and config for left snap direction" name="useHorizontalStackLayout should return layout and config for left snap direction" time="0">
+    </testcase>
+    <testcase classname="useHorizontalStackLayout should return layout and config for right snap direction" name="useHorizontalStackLayout should return layout and config for right snap direction" time="0">
+    </testcase>
+    <testcase classname="useHorizontalStackLayout should handle default config" name="useHorizontalStackLayout should handle default config" time="0">
+    </testcase>
+    <testcase classname="useHorizontalStackLayout should handle empty custom config" name="useHorizontalStackLayout should handle empty custom config" time="0.001">
+    </testcase>
+    <testcase classname="useHorizontalStackLayout should merge custom config correctly" name="useHorizontalStackLayout should merge custom config correctly" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="dealWithAnimation" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:10" time="0.049" tests="10">
+    <testcase classname="dealWithAnimation should handle spring animation" name="dealWithAnimation should handle spring animation" time="0">
+    </testcase>
+    <testcase classname="dealWithAnimation should handle timing animation" name="dealWithAnimation should handle timing animation" time="0">
+    </testcase>
+    <testcase classname="dealWithAnimation should pass animation config correctly" name="dealWithAnimation should pass animation config correctly" time="0">
+    </testcase>
+    <testcase classname="dealWithAnimation should handle animation completion" name="dealWithAnimation should handle animation completion" time="0">
+    </testcase>
+    <testcase classname="dealWithAnimation should handle spring animation with different values" name="dealWithAnimation should handle spring animation with different values" time="0.001">
+    </testcase>
+    <testcase classname="dealWithAnimation should handle timing animation with different values" name="dealWithAnimation should handle timing animation with different values" time="0">
+    </testcase>
+    <testcase classname="dealWithAnimation should handle empty spring config" name="dealWithAnimation should handle empty spring config" time="0">
+    </testcase>
+    <testcase classname="dealWithAnimation should handle empty timing config" name="dealWithAnimation should handle empty timing config" time="0">
+    </testcase>
+    <testcase classname="dealWithAnimation should handle fractional values" name="dealWithAnimation should handle fractional values" time="0">
+    </testcase>
+    <testcase classname="dealWithAnimation should create different animation functions for different configs" name="dealWithAnimation should create different animation functions for different configs" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="useCheckMounted" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:10" time="0.049" tests="4">
+    <testcase classname="useCheckMounted should be mounted after initialization" name="useCheckMounted should be mounted after initialization" time="0.001">
+    </testcase>
+    <testcase classname="useCheckMounted should be unmounted after cleanup" name="useCheckMounted should be unmounted after cleanup" time="0">
+    </testcase>
+    <testcase classname="useCheckMounted should maintain mounted state during component lifecycle" name="useCheckMounted should maintain mounted state during component lifecycle" time="0">
+    </testcase>
+    <testcase classname="useCheckMounted should handle multiple mount/unmount cycles" name="useCheckMounted should handle multiple mount/unmount cycles" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="useInitProps" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:10" time="0.053" tests="7">
+    <testcase classname="useInitProps should initialize with default values" name="useInitProps should initialize with default values" time="0.001">
+    </testcase>
+    <testcase classname="useInitProps should handle custom values" name="useInitProps should handle custom values" time="0">
+    </testcase>
+    <testcase classname="useInitProps should handle stack mode configuration" name="useInitProps should handle stack mode configuration" time="0">
+    </testcase>
+    <testcase classname="useInitProps should handle empty data array" name="useInitProps should handle empty data array" time="0">
+    </testcase>
+    <testcase classname="useInitProps should round width and height values" name="useInitProps should round width and height values" time="0.001">
+    </testcase>
+    <testcase classname="useInitProps should handle enableSnap property" name="useInitProps should handle enableSnap property" time="0">
+    </testcase>
+    <testcase classname="useInitProps should handle vertical-stack mode" name="useInitProps should handle vertical-stack mode" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="useSharedValue" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:10" time="0.049" tests="1">
+    <testcase classname="useSharedValue should return the correct values" name="useSharedValue should return the correct values" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="useSharedValue" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:10" time="0.047" tests="1">
+    <testcase classname="useSharedValue retains value on rerender" name="useSharedValue retains value on rerender" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="log utilities" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:10" time="0.07" tests="19">
+    <testcase classname="log utilities log should call console.log with provided arguments" name="log utilities log should call console.log with provided arguments" time="0.001">
+    </testcase>
+    <testcase classname="log utilities log should handle single argument" name="log utilities log should handle single argument" time="0">
+    </testcase>
+    <testcase classname="log utilities log should handle multiple arguments" name="log utilities log should handle multiple arguments" time="0">
+    </testcase>
+    <testcase classname="log utilities log should handle no arguments" name="log utilities log should handle no arguments" time="0">
+    </testcase>
+    <testcase classname="log utilities log should handle null and undefined" name="log utilities log should handle null and undefined" time="0">
+    </testcase>
+    <testcase classname="log utilities log should handle complex objects" name="log utilities log should handle complex objects" time="0">
+    </testcase>
+    <testcase classname="log utilities log should handle arrays" name="log utilities log should handle arrays" time="0">
+    </testcase>
+    <testcase classname="log utilities log should handle mixed types" name="log utilities log should handle mixed types" time="0.001">
+    </testcase>
+    <testcase classname="log utilities round should round positive numbers correctly" name="log utilities round should round positive numbers correctly" time="0">
+    </testcase>
+    <testcase classname="log utilities round should round negative numbers correctly" name="log utilities round should round negative numbers correctly" time="0">
+    </testcase>
+    <testcase classname="log utilities round should handle zero values" name="log utilities round should handle zero values" time="0">
+    </testcase>
+    <testcase classname="log utilities round should handle integers" name="log utilities round should handle integers" time="0">
+    </testcase>
+    <testcase classname="log utilities round should handle decimal places" name="log utilities round should handle decimal places" time="0">
+    </testcase>
+    <testcase classname="log utilities round should handle edge cases" name="log utilities round should handle edge cases" time="0">
+    </testcase>
+    <testcase classname="log utilities round should handle very large numbers" name="log utilities round should handle very large numbers" time="0">
+    </testcase>
+    <testcase classname="log utilities round should handle very small numbers" name="log utilities round should handle very small numbers" time="0">
+    </testcase>
+    <testcase classname="log utilities round should handle Infinity" name="log utilities round should handle Infinity" time="0.001">
+    </testcase>
+    <testcase classname="log utilities round should handle NaN" name="log utilities round should handle NaN" time="0">
+    </testcase>
+    <testcase classname="log utilities round should handle floating point precision issues" name="log utilities round should handle floating point precision issues" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="parallaxLayout" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:10" time="0.049" tests="18">
+    <testcase classname="parallaxLayout should create layout function with default config" name="parallaxLayout should create layout function with default config" time="0">
+    </testcase>
+    <testcase classname="parallaxLayout should return transform object for horizontal layout" name="parallaxLayout should return transform object for horizontal layout" time="0">
+    </testcase>
+    <testcase classname="parallaxLayout should return transform object for vertical layout" name="parallaxLayout should return transform object for vertical layout" time="0">
+    </testcase>
+    <testcase classname="parallaxLayout should handle center position (value = 0)" name="parallaxLayout should handle center position (value = 0)" time="0">
+    </testcase>
+    <testcase classname="parallaxLayout should handle left position (value = -1)" name="parallaxLayout should handle left position (value = -1)" time="0">
+    </testcase>
+    <testcase classname="parallaxLayout should handle right position (value = 1)" name="parallaxLayout should handle right position (value = 1)" time="0">
+    </testcase>
+    <testcase classname="parallaxLayout should handle custom parallaxScrollingOffset" name="parallaxLayout should handle custom parallaxScrollingOffset" time="0">
+    </testcase>
+    <testcase classname="parallaxLayout should handle custom parallaxScrollingScale" name="parallaxLayout should handle custom parallaxScrollingScale" time="0.001">
+    </testcase>
+    <testcase classname="parallaxLayout should handle custom parallaxAdjacentItemScale" name="parallaxLayout should handle custom parallaxAdjacentItemScale" time="0">
+    </testcase>
+    <testcase classname="parallaxLayout should handle vertical layout with custom config" name="parallaxLayout should handle vertical layout with custom config" time="0">
+    </testcase>
+    <testcase classname="parallaxLayout should handle edge case values" name="parallaxLayout should handle edge case values" time="0.001">
+    </testcase>
+    <testcase classname="parallaxLayout should handle fractional values" name="parallaxLayout should handle fractional values" time="0">
+    </testcase>
+    <testcase classname="parallaxLayout should handle zero size" name="parallaxLayout should handle zero size" time="0">
+    </testcase>
+    <testcase classname="parallaxLayout should handle negative size" name="parallaxLayout should handle negative size" time="0">
+    </testcase>
+    <testcase classname="parallaxLayout should handle all config properties at once" name="parallaxLayout should handle all config properties at once" time="0">
+    </testcase>
+    <testcase classname="parallaxLayout should handle empty mode config" name="parallaxLayout should handle empty mode config" time="0">
+    </testcase>
+    <testcase classname="parallaxLayout should handle undefined mode config" name="parallaxLayout should handle undefined mode config" time="0">
+    </testcase>
+    <testcase classname="parallaxLayout should maintain consistent zIndex calculation" name="parallaxLayout should maintain consistent zIndex calculation" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="computeOffsetIfDataChanged" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:10" time="0.045" tests="12">
+    <testcase classname="computeOffsetIfDataChanged should return the correct values, if index is 0" name="computeOffsetIfDataChanged should return the correct values, if index is 0" time="0">
+    </testcase>
+    <testcase classname="computeOffsetIfDataChanged should return the correct values, if index is 1" name="computeOffsetIfDataChanged should return the correct values, if index is 1" time="0">
+    </testcase>
+    <testcase classname="computeOffsetIfDataChanged should handle positive direction" name="computeOffsetIfDataChanged should handle positive direction" time="0">
+    </testcase>
+    <testcase classname="computeOffsetIfDataChanged should handle data reduction with positive direction where prevIndex &gt; currentLength - 1" name="computeOffsetIfDataChanged should handle data reduction with positive direction where prevIndex &gt; currentLength - 1" time="0">
+    </testcase>
+    <testcase classname="computeOffsetIfDataChanged should handle data reduction with negative direction where prevIndex &gt; currentLength - 1" name="computeOffsetIfDataChanged should handle data reduction with negative direction where prevIndex &gt; currentLength - 1" time="0">
+    </testcase>
+    <testcase classname="computeOffsetIfDataChanged should handle edge case with zero previous length" name="computeOffsetIfDataChanged should handle edge case with zero previous length" time="0.001">
+    </testcase>
+    <testcase classname="computeOffsetIfDataChanged should handle edge case with equal lengths" name="computeOffsetIfDataChanged should handle edge case with equal lengths" time="0">
+    </testcase>
+    <testcase classname="computeOffsetIfDataChanged should handle large offset values" name="computeOffsetIfDataChanged should handle large offset values" time="0">
+    </testcase>
+    <testcase classname="omitZero should return 0 when first parameter is 0" name="omitZero should return 0 when first parameter is 0" time="0">
+    </testcase>
+    <testcase classname="omitZero should return second parameter when first parameter is not 0" name="omitZero should return second parameter when first parameter is not 0" time="0">
+    </testcase>
+    <testcase classname="omitZero should handle negative first parameter" name="omitZero should handle negative first parameter" time="0">
+    </testcase>
+    <testcase classname="omitZero should handle floating point numbers" name="omitZero should handle floating point numbers" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="computeOffsetIfSizeChanged" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:10" time="0.044" tests="5">
+    <testcase classname="computeOffsetIfSizeChanged [CASE 1] should return the correct values when size does not change" name="computeOffsetIfSizeChanged [CASE 1] should return the correct values when size does not change" time="0.001">
+    </testcase>
+    <testcase classname="computeOffsetIfSizeChanged [CASE 2] should return the correct values when size changes from 500 to 400" name="computeOffsetIfSizeChanged [CASE 2] should return the correct values when size changes from 500 to 400" time="0">
+    </testcase>
+    <testcase classname="computeOffsetIfSizeChanged [CASE 3] should return the correct values when size changes from 500 to 499" name="computeOffsetIfSizeChanged [CASE 3] should return the correct values when size changes from 500 to 499" time="0">
+    </testcase>
+    <testcase classname="computeOffsetIfSizeChanged [CASE 4] should return the correct values when size changes from 500 to 501" name="computeOffsetIfSizeChanged [CASE 4] should return the correct values when size changes from 500 to 501" time="0">
+    </testcase>
+    <testcase classname="computeOffsetIfSizeChanged [CASE 5] should return the correct values when size changes from 224 to 524" name="computeOffsetIfSizeChanged [CASE 5] should return the correct values when size changes from 224 to 524" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="should work as expected" errors="0" failures="0" skipped="0" timestamp="2025-08-05T08:01:10" time="0.046" tests="5">
     <testcase classname="should work as expected The direction is negative, And changing length of data set from 4 to 3, the new index will to be 2." name="should work as expected The direction is negative, And changing length of data set from 4 to 3, the new index will to be 2." time="0">
     </testcase>
     <testcase classname="should work as expected The direction is negative, Changing length of data set from 4 to 3, the index remains original." name="should work as expected The direction is negative, Changing length of data set from 4 to 3, the index remains original." time="0">
@@ -302,26 +572,6 @@
     <testcase classname="should work as expected The direction is negative, Changing length of data set from 4 to 5, the index remains original." name="should work as expected The direction is negative, Changing length of data set from 4 to 5, the index remains original." time="0">
     </testcase>
     <testcase classname="should work as expected Changing length of data set from 0 to 3, the index remains original." name="should work as expected Changing length of data set from 0 to 3, the index remains original." time="0.001">
-    </testcase>
-  </testsuite>
-  <testsuite name="dealWithAnimation" errors="0" failures="0" skipped="0" timestamp="2024-11-25T09:48:11" time="0.048" tests="4">
-    <testcase classname="dealWithAnimation should handle spring animation" name="dealWithAnimation should handle spring animation" time="0.002">
-    </testcase>
-    <testcase classname="dealWithAnimation should handle timing animation" name="dealWithAnimation should handle timing animation" time="0">
-    </testcase>
-    <testcase classname="dealWithAnimation should pass animation config correctly" name="dealWithAnimation should pass animation config correctly" time="0">
-    </testcase>
-    <testcase classname="dealWithAnimation should handle animation completion" name="dealWithAnimation should handle animation completion" time="0">
-    </testcase>
-  </testsuite>
-  <testsuite name="horizontalStackLayout" errors="0" failures="0" skipped="0" timestamp="2024-11-25T09:48:11" time="0.048" tests="1">
-    <testcase classname="horizontalStackLayout should make the rotateZDeg works properly when it is passed in horizontal-stack mode through modeConfig" name="horizontalStackLayout should make the rotateZDeg works properly when it is passed in horizontal-stack mode through modeConfig" time="0.001">
-    </testcase>
-  </testsuite>
-  <testsuite name="computeOffsetIfDataChanged" errors="0" failures="0" skipped="0" timestamp="2024-11-25T09:48:11" time="0.057" tests="2">
-    <testcase classname="computeOffsetIfDataChanged should return the correct values, if index is 0" name="computeOffsetIfDataChanged should return the correct values, if index is 0" time="0">
-    </testcase>
-    <testcase classname="computeOffsetIfDataChanged should return the correct values, if index is 1" name="computeOffsetIfDataChanged should return the correct values, if index is 1" time="0.001">
     </testcase>
   </testsuite>
 </testsuites>
