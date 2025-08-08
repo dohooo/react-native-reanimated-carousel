@@ -1,5 +1,34 @@
 # react-native-reanimated-carousel
 
+## 4.0.3
+
+### Patch Changes
+
+- [#834](https://github.com/dohooo/react-native-reanimated-carousel/pull/834) [`1d2767b`](https://github.com/dohooo/react-native-reanimated-carousel/commit/1d2767b566939ff76d92c51b0f4aeea8b71a9eaa) Thanks [@dohooo](https://github.com/dohooo)! - Add accessibility support to pagination components and replace deprecated TouchableWithoutFeedback with Pressable
+
+  - Add comprehensive accessibility props (accessibilityLabel, accessibilityRole, accessibilityHint, accessibilityState) to both Basic and Custom pagination components
+  - Add carouselName prop to allow descriptive accessibility labels
+  - Replace TouchableWithoutFeedback with Pressable to remove deprecation warnings
+  - Improve screen reader support with proper labeling and state information
+
+  Co-authored-by: AlexJackson01 <alex@example.com>
+
+- [#834](https://github.com/dohooo/react-native-reanimated-carousel/pull/834) [`1d2767b`](https://github.com/dohooo/react-native-reanimated-carousel/commit/1d2767b566939ff76d92c51b0f4aeea8b71a9eaa) Thanks [@dohooo](https://github.com/dohooo)! - Add comprehensive programmatic control documentation
+
+  - Add new "Programmatic Control" documentation page with detailed examples
+  - Clarify that there's no React-style controlled component mode
+  - Update migration guide to use correct terminology and link to new docs
+  - Provide examples for common use cases: pagination, navigation buttons, dynamic content, auto-advance, and jump-to-item patterns
+  - Include warnings about race conditions and timing considerations
+
+- [#834](https://github.com/dohooo/react-native-reanimated-carousel/pull/834) [`1d2767b`](https://github.com/dohooo/react-native-reanimated-carousel/commit/1d2767b566939ff76d92c51b0f4aeea8b71a9eaa) Thanks [@dohooo](https://github.com/dohooo)! - Replace deprecated TouchableWithoutFeedback with Pressable in pagination components
+
+  Fixes deprecation warnings by replacing TouchableWithoutFeedback with the recommended Pressable component in both Basic and Custom pagination items. This change maintains the same functionality while using the modern React Native API.
+
+  Closes #812
+
+- [#834](https://github.com/dohooo/react-native-reanimated-carousel/pull/834) [`1d2767b`](https://github.com/dohooo/react-native-reanimated-carousel/commit/1d2767b566939ff76d92c51b0f4aeea8b71a9eaa) Thanks [@dohooo](https://github.com/dohooo)! - Update homepage in package.json
+
 ## 4.0.2
 
 ### Patch Changes
