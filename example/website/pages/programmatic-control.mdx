@@ -1,0 +1,356 @@
+---
+id: programmatic-control
+title: Programmatic Control
+sidebar_label: Programmatic Control
+description: Learn how to control the carousel programmatically using refs and methods
+keywords:
+  - react-native-reanimated-carousel
+  - programmatic control
+  - carousel control
+  - scrollTo
+  - next
+  - prev
+  - imperative API
+  - controlled component
+slug: /programmatic-control
+---
+
+# Programmatic Control
+
+import { Callout } from 'nextra/components'
+
+---
+
+Learn how to control the carousel programmatically using imperative methods via refs.
+
+<Callout type="info">
+  **Note:** This library doesn't support React-style controlled components (with an `index` prop). Instead, it uses an imperative API via refs for programmatic control.
+</Callout>
+
+## Overview
+
+The carousel provides several methods to control its behavior programmatically:
+
+- **`scrollTo`** - Scroll to a specific index or relative position
+- **`next`** - Move to the next item(s)
+- **`prev`** - Move to the previous item(s)
+- **`getCurrentIndex`** - Get the current active index
+
+## Basic Setup
+
+First, create a ref and attach it to the carousel:
+
+```tsx
+import React, { useRef } from 'react';
+import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
+
+function MyCarousel() {
+  const carouselRef = useRef<ICarouselInstance>(null);
+  
+  return (
+    <Carousel
+      ref={carouselRef}
+      // ... other props
+    />
+  );
+}
+```
+
+## Methods
+
+### scrollTo
+
+The most versatile method for controlling carousel navigation.
+
+#### Scroll to specific index
+
+```tsx
+// Jump to index 3 with animation
+carouselRef.current?.scrollTo({ 
+  index: 3, 
+  animated: true 
+});
+
+// Jump to index 0 without animation
+carouselRef.current?.scrollTo({ 
+  index: 0, 
+  animated: false 
+});
+```
+
+#### Scroll relative to current position
+
+```tsx
+// Move 2 items forward (equivalent to calling next twice)
+carouselRef.current?.scrollTo({ 
+  count: 2, 
+  animated: true 
+});
+
+// Move 1 item backward (equivalent to calling prev once)
+carouselRef.current?.scrollTo({ 
+  count: -1, 
+  animated: true 
+});
+```
+
+#### With callback
+
+```tsx
+carouselRef.current?.scrollTo({
+  index: 2,
+  animated: true,
+  onFinished: () => {
+    console.log('Scroll completed!');
+  }
+});
+```
+
+### next & prev
+
+Simplified methods for moving forward or backward:
+
+```tsx
+// Move to next item
+carouselRef.current?.next({ animated: true });
+
+// Move 3 items forward
+carouselRef.current?.next({ 
+  count: 3, 
+  animated: true 
+});
+
+// Move to previous item
+carouselRef.current?.prev({ animated: true });
+
+// Move 2 items backward
+carouselRef.current?.prev({ 
+  count: 2, 
+  animated: false 
+});
+```
+
+### getCurrentIndex
+
+Get the current active index:
+
+```tsx
+const currentIndex = carouselRef.current?.getCurrentIndex();
+console.log('Current index:', currentIndex);
+```
+
+## Practical Examples
+
+### Pagination Control
+
+```tsx
+import React, { useRef } from 'react';
+import { View, TouchableOpacity, Text } from 'react-native';
+import { useSharedValue } from 'react-native-reanimated';
+import Carousel, { ICarouselInstance, Pagination } from 'react-native-reanimated-carousel';
+
+function CarouselWithPagination() {
+  const carouselRef = useRef<ICarouselInstance>(null);
+  const progress = useSharedValue<number>(0);
+  const data = [...new Array(5).keys()];
+
+  const onPressPagination = (index: number) => {
+    carouselRef.current?.scrollTo({
+      count: index - progress.value,
+      animated: true,
+    });
+  };
+
+  return (
+    <View>
+      <Carousel
+        ref={carouselRef}
+        data={data}
+        onProgressChange={progress}
+        // ... other props
+      />
+      
+      <Pagination.Basic
+        progress={progress}
+        data={data}
+        onPress={onPressPagination}
+      />
+    </View>
+  );
+}
+```
+
+### Navigation Buttons
+
+```tsx
+function CarouselWithButtons() {
+  const carouselRef = useRef<ICarouselInstance>(null);
+
+  return (
+    <View>
+      <Carousel
+        ref={carouselRef}
+        // ... props
+      />
+      
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <TouchableOpacity 
+          onPress={() => carouselRef.current?.prev({ animated: true })}
+        >
+          <Text>Previous</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity 
+          onPress={() => carouselRef.current?.next({ animated: true })}
+        >
+          <Text>Next</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+```
+
+### Dynamic Content Updates
+
+When updating data and needing to scroll to new items:
+
+```tsx
+function DynamicCarousel() {
+  const carouselRef = useRef<ICarouselInstance>(null);
+  const [items, setItems] = useState(initialItems);
+
+  const addItemAndNavigate = (newItem) => {
+    const newItems = [...items, newItem];
+    setItems(newItems);
+    
+    // Wait for next render cycle before scrolling
+    setTimeout(() => {
+      carouselRef.current?.scrollTo({
+        index: newItems.length - 1,
+        animated: true
+      });
+    }, 0);
+  };
+
+  // Alternative: Use useEffect to handle timing
+  useEffect(() => {
+    if (items.length > initialItems.length) {
+      // Scroll to the last item when new items are added
+      carouselRef.current?.scrollTo({
+        index: items.length - 1,
+        animated: true
+      });
+    }
+  }, [items]);
+
+  return (
+    <Carousel
+      ref={carouselRef}
+      data={items}
+      // ... other props
+    />
+  );
+}
+```
+
+## Common Patterns
+
+### Auto-advance Carousel
+
+```tsx
+function AutoAdvanceCarousel() {
+  const carouselRef = useRef<ICarouselInstance>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const data = [...new Array(5).keys()];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const nextIndex = (currentIndex + 1) % data.length;
+      carouselRef.current?.scrollTo({
+        index: nextIndex,
+        animated: true
+      });
+      setCurrentIndex(nextIndex);
+    }, 3000);
+
+    return () => clearInterval(timer);
+  }, [currentIndex, data.length]);
+
+  return (
+    <Carousel
+      ref={carouselRef}
+      data={data}
+      // ... other props
+    />
+  );
+}
+```
+
+### Jump to Item by ID
+
+```tsx
+function SearchableCarousel() {
+  const carouselRef = useRef<ICarouselInstance>(null);
+  const data = [
+    { id: 'item1', title: 'Item 1' },
+    { id: 'item2', title: 'Item 2' },
+    { id: 'item3', title: 'Item 3' },
+  ];
+
+  const jumpToItemById = (itemId: string) => {
+    const index = data.findIndex(item => item.id === itemId);
+    if (index !== -1) {
+      carouselRef.current?.scrollTo({
+        index,
+        animated: true
+      });
+    }
+  };
+
+  return (
+    <View>
+      <Carousel
+        ref={carouselRef}
+        data={data}
+        // ... other props
+      />
+      
+      <TouchableOpacity onPress={() => jumpToItemById('item2')}>
+        <Text>Jump to Item 2</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+```
+
+## Important Notes
+
+<Callout type="warning">
+  **Race Condition Warning:** When updating data and immediately calling scroll methods, you might encounter race conditions. The carousel may not have rendered the new data yet. Use `setTimeout` or `useEffect` to ensure proper timing.
+</Callout>
+
+<Callout type="info">
+  **No Controlled Component Pattern:** Unlike typical React components, this carousel doesn't support controlled mode via props (like `currentIndex={index}`). All programmatic control must be done through the imperative ref API.
+</Callout>
+
+## API Reference
+
+### scrollTo Options
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `index` | `number` | - | Target index to scroll to |
+| `count` | `number` | - | Relative position change (positive = forward, negative = backward) |
+| `animated` | `boolean` | `true` | Whether to animate the scroll |
+| `onFinished` | `() => void` | - | Callback when scroll completes |
+
+### next/prev Options
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `count` | `number` | `1` | Number of items to advance |
+| `animated` | `boolean` | `true` | Whether to animate the scroll |
+| `onFinished` | `() => void` | - | Callback when scroll completes |
+
+This imperative approach gives you full control over the carousel's navigation while maintaining smooth animations and proper state management.
