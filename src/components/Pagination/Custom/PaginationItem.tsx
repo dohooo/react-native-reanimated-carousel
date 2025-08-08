@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
 import React from "react";
-import { TouchableWithoutFeedback } from "react-native";
+import { Pressable } from "react-native";
 import type { ViewStyle } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 import Animated, {
@@ -102,7 +102,7 @@ export const PaginationItem: React.FC<
   }, [animValue, index, count, horizontal, dotStyle, activeDotStyle, customReanimatedStyle]);
 
   return (
-    <TouchableWithoutFeedback onPress={onPress}>
+    <Pressable onPress={onPress}>
       <Animated.View
         style={[
           {
@@ -119,6 +119,6 @@ export const PaginationItem: React.FC<
       >
         {children}
       </Animated.View>
-    </TouchableWithoutFeedback>
+    </Pressable>
   );
 };
