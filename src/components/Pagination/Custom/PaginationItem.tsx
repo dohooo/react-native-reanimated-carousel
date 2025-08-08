@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
 import React from "react";
-import { TouchableWithoutFeedback } from "react-native";
+import { Pressable } from "react-native";
 import type { ViewStyle } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 import Animated, {
@@ -33,6 +33,7 @@ export const PaginationItem: React.FC<
     activeDotStyle?: DotStyle;
     onPress: () => void;
     customReanimatedStyle?: (progress: number, index: number, length: number) => DefaultStyle;
+    accessibilityLabel?: string;
   }>
 > = (props) => {
   const defaultDotSize = 10;
@@ -47,6 +48,7 @@ export const PaginationItem: React.FC<
     children,
     customReanimatedStyle,
     onPress,
+    accessibilityLabel,
   } = props;
   const customReanimatedStyleRef = useSharedValue<DefaultStyle>({});
   const handleCustomAnimation = (progress: number) => {
@@ -102,7 +104,13 @@ export const PaginationItem: React.FC<
   }, [animValue, index, count, horizontal, dotStyle, activeDotStyle, customReanimatedStyle]);
 
   return (
-    <TouchableWithoutFeedback onPress={onPress}>
+    <Pressable
+      onPress={onPress}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole="button"
+      accessibilityHint={animValue.value === index ? "" : `Go to ${accessibilityLabel}`}
+      accessibilityState={{ selected: animValue.value === index }}
+    >
       <Animated.View
         style={[
           {
@@ -119,6 +127,6 @@ export const PaginationItem: React.FC<
       >
         {children}
       </Animated.View>
-    </TouchableWithoutFeedback>
+    </Pressable>
   );
 };
