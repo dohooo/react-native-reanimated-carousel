@@ -76,3 +76,6 @@ lib/
 
 # Jest
 coverage/
+
+# Issue tasks
+.issue-tasks/
