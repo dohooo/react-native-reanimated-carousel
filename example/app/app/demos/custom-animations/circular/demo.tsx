@@ -4,9 +4,9 @@ import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { interpolate } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
+import { SlideItem } from "@/components/SlideItem";
 import { window } from "@/constants/sizes";
 import { getImages } from "@/utils/get-images";
-import { SlideItem } from "@/components/SlideItem";
 
 const PAGE_WIDTH = window.width;
 
@@ -18,28 +18,14 @@ function Index() {
     (value: number) => {
       "worklet";
 
-      const itemGap = interpolate(
-        value,
-        [-3, -2, -1, 0, 1, 2, 3],
-        [-30, -15, 0, 0, 0, 15, 30],
-      );
+      const itemGap = interpolate(value, [-3, -2, -1, 0, 1, 2, 3], [-30, -15, 0, 0, 0, 15, 30]);
 
       const translateX =
-        interpolate(value, [-1, 0, 1], [-itemSize, 0, itemSize]) +
-        centerOffset -
-        itemGap;
+        interpolate(value, [-1, 0, 1], [-itemSize, 0, itemSize]) + centerOffset - itemGap;
 
-      const translateY = interpolate(
-        value,
-        [-1, -0.5, 0, 0.5, 1],
-        [60, 45, 40, 45, 60],
-      );
+      const translateY = interpolate(value, [-1, -0.5, 0, 0.5, 1], [60, 45, 40, 45, 60]);
 
-      const scale = interpolate(
-        value,
-        [-1, -0.5, 0, 0.5, 1],
-        [0.8, 0.85, 1.1, 0.85, 0.8],
-      );
+      const scale = interpolate(value, [-1, -0.5, 0, 0.5, 1], [0.8, 0.85, 1.1, 0.85, 0.8]);
 
       return {
         transform: [
@@ -53,14 +39,11 @@ function Index() {
         ],
       };
     },
-    [centerOffset],
+    [centerOffset]
   );
 
   return (
-    <View
-      id="carousel-component"
-      dataSet={{ kind: "custom-animations", name: "circular" }}
-    >
+    <View id="carousel-component" dataSet={{ kind: "custom-animations", name: "circular" }}>
       <Carousel
         width={itemSize}
         height={itemSize}

@@ -45,8 +45,10 @@ import Demo from '@/components/Demo'
 <Demo kind="custom-animations" name="anim-tab-bar" />
 
 ```tsx copy
+import { ElementsText, window } from "@/constants/sizes";
+import { useToggleButton } from "@/hooks/useToggleButton";
 import * as React from "react";
-import { View, Pressable } from "react-native";
+import { Pressable, View } from "react-native";
 import Animated, {
 	Extrapolation,
 	interpolate,
@@ -57,8 +59,6 @@ import Animated, {
 } from "react-native-reanimated";
 import type { ICarouselInstance } from "react-native-reanimated-carousel";
 import Carousel from "react-native-reanimated-carousel";
-import { ElementsText, window } from "@/constants/sizes";
-import { useToggleButton } from "@/hooks/useToggleButton";
 
 const PAGE_WIDTH = 60;
 const PAGE_HEIGHT = 40;

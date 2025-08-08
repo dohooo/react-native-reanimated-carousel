@@ -1,10 +1,7 @@
 import * as React from "react";
 import type { ImageSourcePropType } from "react-native";
 import { Image, StyleSheet, View } from "react-native";
-import Animated, {
-  interpolate,
-  useAnimatedStyle,
-} from "react-native-reanimated";
+import Animated, { interpolate, useAnimatedStyle } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
 
 import { BlurView as _BlurView } from "expo-blur";
@@ -12,10 +9,10 @@ import { BlurView as _BlurView } from "expo-blur";
 import { parallaxLayout } from "./parallax";
 
 import SButton from "@/components/SButton";
-import { ElementsText, window } from "@/constants/sizes";
-import { fruitItems } from "@/utils/items";
 import { SlideItem } from "@/components/SlideItem";
+import { ElementsText, window } from "@/constants/sizes";
 import { CaptureWrapper } from "@/store/CaptureProvider";
+import { fruitItems } from "@/utils/items";
 
 const BlurView = Animated.createAnimatedComponent(_BlurView);
 
@@ -39,13 +36,7 @@ function Index() {
           width={PAGE_WIDTH}
           data={[...fruitItems, ...fruitItems]}
           renderItem={({ item, index, animationValue }) => {
-            return (
-              <CustomItem
-                key={index}
-                index={index}
-                animationValue={animationValue}
-              />
-            );
+            return <CustomItem key={index} index={index} animationValue={animationValue} />;
           }}
           customAnimation={parallaxLayout(
             {
@@ -56,7 +47,7 @@ function Index() {
               parallaxScrollingScale: 1,
               parallaxAdjacentItemScale: 0.5,
               parallaxScrollingOffset: 40,
-            },
+            }
           )}
           scrollAnimationDuration={1200}
         />
@@ -98,11 +89,7 @@ const CustomItem: React.FC<ItemProps> = ({ index, animationValue }) => {
       <View style={{ flex: 1, width: "100%" }}>
         <SlideItem index={index} rounded />
       </View>
-      <BlurView
-        intensity={50}
-        pointerEvents="none"
-        style={[StyleSheet.absoluteFill, maskStyle]}
-      />
+      <BlurView intensity={50} pointerEvents="none" style={[StyleSheet.absoluteFill, maskStyle]} />
     </View>
   );
 };

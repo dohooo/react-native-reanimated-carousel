@@ -45,10 +45,10 @@ import Demo from '@/components/Demo'
 <Demo kind="basic-layouts" name="left-align" />
 
 ```tsx copy
+import { renderItem } from "@/utils/render-item";
 import * as React from "react";
 import { View } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
-import { renderItem } from "@/utils/render-item";
 
 const defaultDataWith6Colors = [
 	"#B0604D",

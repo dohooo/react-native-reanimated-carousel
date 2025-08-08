@@ -4,13 +4,13 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
 
 import { useColor } from "@/hooks/useColor";
-import { routes } from "./routes";
 import { Stack, Text } from "tamagui";
+import { routes } from "./routes";
 
-import * as MediaLibrary from "expo-media-library";
-import { useEffect, useMemo } from "react";
 import { IS_DEV } from "@/constants/env";
 import { IS_WEB } from "@/constants/platform";
+import * as MediaLibrary from "expo-media-library";
+import { useEffect, useMemo } from "react";
 
 const ListItem = ({
   name,
@@ -66,7 +66,7 @@ export default function Home() {
     data: readonly {
       readonly name: string;
       readonly title: string;
-    }[],
+    }[]
   ) => [
     <SectionHeader key={title} title={title} color={colors} />,
     ...data.map((item, index) => (
@@ -83,13 +83,14 @@ export default function Home() {
     () =>
       routes.reduce((acc, _, index) => {
         return [
+          // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
           ...acc,
           typeof acc[index - 1] === "undefined"
             ? 0
             : acc[index - 1] + 1 + routes[index - 1].demos.length,
         ];
       }, [] as number[]),
-    [routes],
+    [routes]
   );
 
   return (

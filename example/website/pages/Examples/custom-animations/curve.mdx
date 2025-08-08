@@ -114,12 +114,7 @@ function Index() {
 							},
 							{ perspective: 150 },
 							{
-								rotateY: `${interpolate(
-									value,
-									[-1, 0, 1],
-									[30, 0, -30],
-									Extrapolation.CLAMP,
-								)}deg`,
+								rotateY: `${interpolate(value, [-1, 0, 1], [30, 0, -30], Extrapolation.CLAMP)}deg`,
 							},
 						],
 					};

@@ -8,7 +8,7 @@ import type { DefaultStyle } from "react-native-reanimated/lib/typescript/reanim
 import type { DotStyle } from "./PaginationItem";
 import { PaginationItem } from "./PaginationItem";
 
-export interface ShapeProps<T extends {} = {}> {
+export interface ShapeProps<T extends {}> {
   progress: SharedValue<number>;
   horizontal?: boolean;
   data: Array<T>;
@@ -18,11 +18,7 @@ export interface ShapeProps<T extends {} = {}> {
   activeDotStyle?: DotStyle;
   size?: number;
   onPress?: (index: number) => void;
-  customReanimatedStyle?: (
-    progress: number,
-    index: number,
-    length: number,
-  ) => DefaultStyle;
+  customReanimatedStyle?: (progress: number, index: number, length: number) => DefaultStyle;
 }
 
 export const Custom = <T extends {}>(props: ShapeProps<T>) => {
@@ -48,16 +44,8 @@ export const Custom = <T extends {}>(props: ShapeProps<T>) => {
   )
     throw new Error("size/width/height must be a number");
 
-  const maxItemWidth = Math.max(
-    size ?? 0,
-    dotStyle?.width ?? 0,
-    activeDotStyle?.width ?? 0,
-  );
-  const maxItemHeight = Math.max(
-    size ?? 0,
-    dotStyle?.height ?? 0,
-    activeDotStyle?.height ?? 0,
-  );
+  const maxItemWidth = Math.max(size ?? 0, dotStyle?.width ?? 0, activeDotStyle?.width ?? 0);
+  const maxItemHeight = Math.max(size ?? 0, dotStyle?.height ?? 0, activeDotStyle?.height ?? 0);
 
   return (
     <View

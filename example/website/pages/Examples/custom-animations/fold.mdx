@@ -52,8 +52,8 @@ import type Animated from "react-native-reanimated";
 import { Extrapolation, interpolate } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
-import { window } from "@/constants/sizes";
 import { SlideItem } from "@/components/SlideItem";
+import { window } from "@/constants/sizes";
 import { getImages } from "@/utils/get-images";
 
 const PAGE_WIDTH = window.width;
@@ -82,9 +82,12 @@ function Index() {
 				itemOffsetInput.map((item) => {
 					if (item < 0) {
 						return (-itemSize + sideItemWidth) * Math.abs(item);
-					} else if (item > 0) {
+					}
+
+					if (item > 0) {
 						return (itemSize - sideItemWidth) * (Math.abs(item) - 1);
 					}
+
 					return 0;
 				}) as number[],
 			);

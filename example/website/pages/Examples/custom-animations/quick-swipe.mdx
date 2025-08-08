@@ -50,8 +50,11 @@ import type { ICarouselInstance } from "react-native-reanimated-carousel";
 import Carousel from "react-native-reanimated-carousel";
 
 import { SBItem } from "@/components/SBItem";
+import { IS_WEB } from "@/constants/platform";
 import { window } from "@/constants/sizes";
+import * as Haptics from "expo-haptics";
 import { Image, ImageSourcePropType, View, ViewStyle } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
 	Easing,
 	Extrapolation,
@@ -62,10 +65,7 @@ import Animated, {
 	useSharedValue,
 	withTiming,
 } from "react-native-reanimated";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import * as Haptics from "expo-haptics";
 import { getImages } from "./images";
-import { IS_WEB } from "@/constants/platform";
 
 const data = getImages().slice(0, 68);
 

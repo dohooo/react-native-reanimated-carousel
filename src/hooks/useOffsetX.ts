@@ -1,20 +1,16 @@
 import type Animated from "react-native-reanimated";
-import {
-  Extrapolation,
-  interpolate,
-  useDerivedValue,
-} from "react-native-reanimated";
+import { Extrapolation, interpolate, useDerivedValue } from "react-native-reanimated";
 
 import type { IVisibleRanges } from "./useVisibleRanges";
 
 export interface IOpts {
-  index: number
-  size: number
-  handlerOffset: Animated.SharedValue<number>
-  dataLength: number
-  type?: "positive" | "negative"
-  viewCount?: number
-  loop?: boolean
+  index: number;
+  size: number;
+  handlerOffset: Animated.SharedValue<number>;
+  dataLength: number;
+  type?: "positive" | "negative";
+  viewCount?: number;
+  loop?: boolean;
 }
 
 export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
@@ -34,12 +30,10 @@ export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
   const HALF_WIDTH = 0.5 * size;
 
   const viewCount = _viewCount ?? Math.round((ITEM_LENGTH - 1) / 2);
-  const positiveCount
-    = type === "positive" ? viewCount : VALID_LENGTH - viewCount;
+  const positiveCount = type === "positive" ? viewCount : VALID_LENGTH - viewCount;
 
   let startPos = size * index;
-  if (index > positiveCount)
-    startPos = (index - ITEM_LENGTH) * size;
+  if (index > positiveCount) startPos = (index - ITEM_LENGTH) * size;
 
   const MAX = positiveCount * size;
   const MIN = -((VALID_LENGTH - positiveCount) * size);
@@ -48,8 +42,8 @@ export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
     const { negativeRange, positiveRange } = visibleRanges.value;
 
     if (
-      (index >= negativeRange[0] && index <= negativeRange[1])
-      || (index >= positiveRange[0] && index <= positiveRange[1])
+      (index >= negativeRange[0] && index <= negativeRange[1]) ||
+      (index >= positiveRange[0] && index <= positiveRange[1])
     ) {
       if (loop) {
         const inputRange = [
@@ -72,19 +66,14 @@ export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
           startPos,
         ];
 
-        return interpolate(
-          handlerOffset.value,
-          inputRange,
-          outputRange,
-          Extrapolation.CLAMP,
-        );
+        return interpolate(handlerOffset.value, inputRange, outputRange, Extrapolation.CLAMP);
       }
 
       return handlerOffset.value + size * index;
     }
 
     return Number.MAX_SAFE_INTEGER;
-  }, [loop, dataLength, viewCount, type, size, visibleRanges]);
+  }, [loop, dataLength, viewCount, type, size, visibleRanges, handlerOffset]);
 
   return x;
 };

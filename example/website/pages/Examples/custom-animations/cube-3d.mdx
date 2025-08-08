@@ -112,12 +112,7 @@ function CubeItem() {
 				Extrapolation.CLAMP,
 			);
 
-			const rotateY = `${interpolate(
-				value,
-				[-1, 0, 1],
-				[-90, 0, 90],
-				Extrapolation.CLAMP,
-			)}deg`;
+			const rotateY = `${interpolate(value, [-1, 0, 1], [-90, 0, 90], Extrapolation.CLAMP)}deg`;
 
 			const transform = {
 				transform: [{ scale }, { translateX }, { perspective }, { rotateY }],

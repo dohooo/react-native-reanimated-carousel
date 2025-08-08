@@ -1,12 +1,12 @@
 import * as React from "react";
-import { Text, View, Image } from "react-native";
+import { Image, Text, View } from "react-native";
 import { interpolate } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import { faker } from "@faker-js/faker";
 
-import { window } from "@/constants/sizes";
 import { SlideItem } from "@/components/SlideItem";
+import { window } from "@/constants/sizes";
 
 function Index() {
   const headerHeight = 100;
@@ -24,29 +24,22 @@ function Index() {
     (value: number) => {
       "worklet";
 
-      const translateY = interpolate(
-        value,
-        [-1, 0, 1],
-        [-ITEM_HEIGHT, 0, ITEM_HEIGHT],
-      );
+      const translateY = interpolate(value, [-1, 0, 1], [-ITEM_HEIGHT, 0, ITEM_HEIGHT]);
       const right = interpolate(
         value,
         [-1, -0.2, 1],
-        [RIGHT_OFFSET / 2, RIGHT_OFFSET, RIGHT_OFFSET / 3],
+        [RIGHT_OFFSET / 2, RIGHT_OFFSET, RIGHT_OFFSET / 3]
       );
       return {
         transform: [{ translateY }],
         right,
       };
     },
-    [RIGHT_OFFSET],
+    [RIGHT_OFFSET]
   );
 
   return (
-    <View
-      id="carousel-component"
-      dataSet={{ kind: "custom-animations", name: "flow" }}
-    >
+    <View id="carousel-component" dataSet={{ kind: "custom-animations", name: "flow" }}>
       <Carousel
         loop
         vertical

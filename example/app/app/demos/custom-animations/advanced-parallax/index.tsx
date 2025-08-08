@@ -1,10 +1,6 @@
 import * as React from "react";
 import { View } from "react-native";
-import Animated, {
-  interpolate,
-  interpolateColor,
-  useAnimatedStyle,
-} from "react-native-reanimated";
+import Animated, { interpolate, interpolateColor, useAnimatedStyle } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import { SBItem } from "@/components/SBItem";
@@ -23,7 +19,7 @@ const CustomItem: React.FC<ItemProps> = ({ index, animationValue }) => {
     const backgroundColor = interpolateColor(
       animationValue.value,
       [-1, 0, 1],
-      ["#000000dd", "transparent", "#000000dd"],
+      ["#000000dd", "transparent", "#000000dd"]
     );
 
     return {
@@ -33,12 +29,7 @@ const CustomItem: React.FC<ItemProps> = ({ index, animationValue }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <SBItem
-        rounded={false}
-        key={index}
-        index={index}
-        style={{ borderRadius: 0 }}
-      />
+      <SBItem rounded={false} key={index} index={index} style={{ borderRadius: 0 }} />
       <Animated.View
         pointerEvents="none"
         style={[
@@ -61,11 +52,7 @@ function Index() {
     "worklet";
 
     const zIndex = interpolate(value, [-1, 0, 1], [10, 20, 30]);
-    const translateX = interpolate(
-      value,
-      [-2, 0, 1],
-      [-PAGE_WIDTH, 0, PAGE_WIDTH],
-    );
+    const translateX = interpolate(value, [-2, 0, 1], [-PAGE_WIDTH, 0, PAGE_WIDTH]);
 
     return {
       transform: [{ translateX }],
@@ -83,13 +70,7 @@ function Index() {
           width={PAGE_WIDTH}
           data={[...new Array(6).keys()]}
           renderItem={({ index, animationValue }) => {
-            return (
-              <CustomItem
-                key={index}
-                index={index}
-                animationValue={animationValue}
-              />
-            );
+            return <CustomItem key={index} index={index} animationValue={animationValue} />;
           }}
           customAnimation={animationStyle}
           scrollAnimationDuration={1200}

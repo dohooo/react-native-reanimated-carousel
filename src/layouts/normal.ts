@@ -11,11 +11,11 @@ export function normalLayout(opts: { size: number; vertical: boolean }) {
       transform: [
         vertical
           ? {
-            translateY: translate,
-          }
+              translateY: translate,
+            }
           : {
-            translateX: translate,
-          },
+              translateX: translate,
+            },
       ],
     };
   };

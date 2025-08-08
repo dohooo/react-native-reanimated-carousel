@@ -1,21 +1,6 @@
+import { Check, Check as CheckIcon, ChevronDown, ChevronUp } from "@tamagui/lucide-icons";
 import * as React from "react";
-import {
-  Check,
-  Check as CheckIcon,
-  ChevronDown,
-  ChevronUp,
-} from "@tamagui/lucide-icons";
-import {
-  Switch,
-  XStack,
-  Label,
-  Checkbox,
-  Button,
-  Select,
-  Adapt,
-  Sheet,
-  YStack,
-} from "tamagui";
+import { Adapt, Button, Checkbox, Label, Select, Sheet, Switch, XStack, YStack } from "tamagui";
 import { LinearGradient } from "tamagui/linear-gradient";
 
 interface SwitchActionItemProps {
@@ -69,10 +54,7 @@ interface ButtonActionItemProps {
   action: () => void;
 }
 
-export const CustomButtonActionItem: React.FC<ButtonActionItemProps> = ({
-  label,
-  action,
-}) => (
+export const CustomButtonActionItem: React.FC<ButtonActionItemProps> = ({ label, action }) => (
   <Button themeInverse onPress={action}>
     {label}
   </Button>
@@ -94,11 +76,7 @@ export const CustomSelectActionItem: React.FC<SelectActionItemProps> = ({
   return (
     <XStack justifyContent="space-between" alignItems="center">
       <Label fontSize={"$4"}>{label}</Label>
-      <Select
-        value={value}
-        onValueChange={onValueChange}
-        disablePreventBodyScroll
-      >
+      <Select value={value} onValueChange={onValueChange} disablePreventBodyScroll>
         <Select.Trigger width={"auto"} iconAfter={ChevronDown}>
           <Select.Value placeholder="Something" />
         </Select.Trigger>
@@ -154,11 +132,7 @@ export const CustomSelectActionItem: React.FC<SelectActionItemProps> = ({
                 () =>
                   options.map((item, i) => {
                     return (
-                      <Select.Item
-                        index={i}
-                        key={item.value}
-                        value={item.value.toLowerCase()}
-                      >
+                      <Select.Item index={i} key={item.value} value={item.value.toLowerCase()}>
                         <Select.ItemText>{item.label}</Select.ItemText>
                         <Select.ItemIndicator marginLeft="auto">
                           <Check size={16} />
@@ -166,7 +140,7 @@ export const CustomSelectActionItem: React.FC<SelectActionItemProps> = ({
                       </Select.Item>
                     );
                   }),
-                [options],
+                [options]
               )}
             </Select.Group>
           </Select.Viewport>

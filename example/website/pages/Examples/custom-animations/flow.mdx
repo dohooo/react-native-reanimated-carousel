@@ -46,14 +46,14 @@ import Demo from '@/components/Demo'
 
 ```tsx copy
 import * as React from "react";
-import { Text, View, Image } from "react-native";
+import { Image, Text, View } from "react-native";
 import { interpolate } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import { faker } from "@faker-js/faker";
 
-import { window } from "@/constants/sizes";
 import { SlideItem } from "@/components/SlideItem";
+import { window } from "@/constants/sizes";
 
 function Index() {
 	const headerHeight = 100;

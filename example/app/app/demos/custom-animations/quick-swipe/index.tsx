@@ -4,8 +4,12 @@ import Carousel from "react-native-reanimated-carousel";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { SBItem } from "@/components/SBItem";
+import { IS_WEB } from "@/constants/platform";
 import { window } from "@/constants/sizes";
+import { CaptureWrapper } from "@/store/CaptureProvider";
+import * as Haptics from "expo-haptics";
 import { Image, ImageSourcePropType, ViewStyle } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   Easing,
   Extrapolation,
@@ -16,11 +20,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import * as Haptics from "expo-haptics";
 import { getImages } from "./images";
-import { CaptureWrapper } from "@/store/CaptureProvider";
-import { IS_WEB } from "@/constants/platform";
 
 const data = getImages().slice(0, 68);
 
@@ -90,10 +90,7 @@ const ThumbnailPagination: React.FC<{
   const inactiveWidth = 30;
   const activeWidth = inactiveWidth * 2;
   const itemGap = 5;
-  const totalWidth =
-    inactiveWidth * (data.length - 1) +
-    activeWidth +
-    itemGap * (data.length - 1);
+  const totalWidth = inactiveWidth * (data.length - 1) + activeWidth + itemGap * (data.length - 1);
   const swipeProgress = useSharedValue<number>(0);
   const activeIndex = useSharedValue<number>(0);
 
@@ -110,7 +107,7 @@ const ThumbnailPagination: React.FC<{
       Gesture.Pan().onUpdate((event) => {
         swipeProgress.value = Math.min(Math.max(event.x, 0), containerWidth);
       }),
-    [activeWidth, inactiveWidth, containerWidth],
+    [activeWidth, inactiveWidth, containerWidth]
   );
 
   const animStyles = useAnimatedStyle(() => {
@@ -137,7 +134,7 @@ const ThumbnailPagination: React.FC<{
             swipeProgress.value,
             [0, containerWidth],
             [0, totalWidth - containerWidth],
-            Extrapolation.CLAMP,
+            Extrapolation.CLAMP
           ),
         },
       ],
@@ -147,7 +144,7 @@ const ThumbnailPagination: React.FC<{
   useAnimatedReaction(
     () => activeIndex.value,
     (activeIndex) => onIndexChange && runOnJS(onIndexChange)(activeIndex),
-    [onIndexChange],
+    [onIndexChange]
   );
 
   return (
@@ -219,11 +216,8 @@ const ThumbnailPaginationItem: React.FC<{
       const extraWidth = onTheRight ? activeWidth - inactiveWidth : 0;
 
       const inputRange = [
-        index * (inactiveWidth + itemGap) +
-          (index === activeIndex.value ? 0 : extraWidth) -
-          0.1,
-        index * (inactiveWidth + itemGap) +
-          (index === activeIndex.value ? 0 : extraWidth),
+        index * (inactiveWidth + itemGap) + (index === activeIndex.value ? 0 : extraWidth) - 0.1,
+        index * (inactiveWidth + itemGap) + (index === activeIndex.value ? 0 : extraWidth),
         (index + 1) * (inactiveWidth + itemGap) + extraWidth,
         (index + 1) * (inactiveWidth + itemGap) + extraWidth + 0.1,
       ];
@@ -232,21 +226,13 @@ const ThumbnailPaginationItem: React.FC<{
         (swipeProgress.value / containerWidth) * totalWidth,
         inputRange,
         [0, 1, 1, 0],
-        Extrapolation.CLAMP,
+        Extrapolation.CLAMP
       );
     },
     (_isActiveAnimVal) => {
       isActive.value = _isActiveAnimVal;
     },
-    [
-      containerWidth,
-      totalItems,
-      index,
-      activeIndex,
-      activeWidth,
-      inactiveWidth,
-      itemGap,
-    ],
+    [containerWidth, totalItems, index, activeIndex, activeWidth, inactiveWidth, itemGap]
   );
 
   useAnimatedReaction(
@@ -258,7 +244,7 @@ const ThumbnailPaginationItem: React.FC<{
         activeIndex.value = index;
       }
     },
-    [],
+    []
   );
 
   const animStyles = useAnimatedStyle(() => {
@@ -266,7 +252,7 @@ const ThumbnailPaginationItem: React.FC<{
       isActive.value,
       [0, 1, 1, 0],
       [inactiveWidth, activeWidth, activeWidth, inactiveWidth],
-      Extrapolation.CLAMP,
+      Extrapolation.CLAMP
     );
 
     return {

@@ -1,0 +1,307 @@
+---
+id: migration-v4
+title: Migration Guide to v4.x
+sidebar_label: Migration to v4.x
+description: Guide for migrating to react-native-reanimated-carousel v4.x
+keywords:
+  - react-native-reanimated-carousel
+  - reanimated-carousel
+  - reanimated carousel
+  - react-native
+  - snap-carousel
+  - react native
+  - snap carousel
+  - ios
+  - android
+  - carousel
+  - snap
+  - reanimated
+image: 
+slug: /migration-v4
+---
+
+# Migration Guide to v4.x
+
+This guide will help you migrate your application from react-native-reanimated-carousel v3.x to v4.x.
+
+## Version Requirements
+
+Before upgrading, ensure your project meets these version requirements:
+
+```json
+{
+  "react": ">=18.0.0",
+  "react-native": ">=0.70.3",
+  "react-native-gesture-handler": ">=2.9.0",
+  "react-native-reanimated": ">=3.0.0"
+}
+```
+
+## Breaking Changes
+
+### 1. Gesture Handler Configuration
+
+The `panGestureHandlerProps` has been replaced with `onConfigurePanGesture`:
+
+```tsx
+// Before (v3.x)
+<Carousel
+  panGestureHandlerProps={{
+    activeOffsetX: [-10, 10],
+  }}
+/>
+
+// After (v4.x)
+<Carousel
+  onConfigurePanGesture={(gesture) => {
+    'worklet';
+    gesture.activeOffsetX([-10, 10]);
+  }}
+/>
+```
+
+### 2. Event Name Changes
+
+- `onScrollBegin` has been renamed to `onScrollStart`
+
+```tsx
+// Before (v3.x)
+<Carousel onScrollBegin={() => console.log('Started scrolling')} />
+
+// After (v4.x)
+<Carousel onScrollStart={() => console.log('Started scrolling')} />
+```
+
+### 3. Animation API Updates
+
+The `customAnimation` function now receives the item index as a second parameter:
+
+```tsx
+// Before (v3.x)
+<Carousel
+  customAnimation={(value) => ({
+    opacity: value
+  })}
+/>
+
+// After (v4.x)
+<Carousel
+  customAnimation={(value, index) => ({
+    opacity: value,
+    transform: [{ 
+      scale: index % 2 ? 1 : 1.1 
+    }]
+  })}
+/>
+```
+
+### 4. Event Handler Worklets
+
+All gesture callbacks now run as worklets by default:
+
+```tsx
+// Before (v3.x)
+<Carousel
+  onGestureStart={runOnJS(() => {
+    console.log('Gesture started');
+  })}
+/>
+
+// After (v4.x)
+<Carousel
+  onGestureStart={() => {
+    'worklet';
+    console.log('Gesture started');
+  }}
+/>
+```
+
+## New Features
+
+### 1. Container Styling
+
+A dedicated `containerStyle` prop has been added for styling the carousel container:
+
+```tsx
+<Carousel
+  containerStyle={{
+    backgroundColor: 'white',
+    borderRadius: 8,
+  }}
+/>
+```
+
+### 2. Minimum Scroll Distance
+
+New `minScrollDistancePerSwipe` prop to prevent unintended item switches:
+
+```tsx
+<Carousel
+  minScrollDistancePerSwipe={15}
+/>
+```
+
+### 3. Fixed Direction Scrolling
+
+Control scroll direction with the new `fixedDirection` prop:
+
+```tsx
+<Carousel
+  fixedDirection="positive"  // or "negative"
+/>
+```
+
+### 4. Progress Change Handling
+
+The `onProgressChange` now supports direct SharedValue updates:
+
+```tsx
+// Before (v3.x)
+const progress = useSharedValue(0);
+<Carousel
+  onProgressChange={(offsetProgress, absoluteProgress) => {
+    progress.value = absoluteProgress;
+  }}
+/>
+
+// After (v4.x)
+const progress = useSharedValue(0);
+<Carousel
+  onProgressChange={progress}
+/>
+```
+
+### 5. Enhanced Pagination Components
+
+New Pagination components with improved customization:
+
+```tsx
+// Basic Pagination
+<Pagination.Basic
+  progress={progress}
+  data={data}
+  dotStyle={{ backgroundColor: "#262626" }}
+  activeDotStyle={{ backgroundColor: "#f1f1f1" }}
+/>
+
+// Custom Pagination with Animation
+<Pagination.Custom
+  progress={progress}
+  data={data}
+  customReanimatedStyle={(progress, index) => {
+    'worklet';
+    return {
+      transform: [{
+        scale: interpolate(progress.value, 
+          [index - 1, index, index + 1], 
+          [0.8, 1, 0.8]
+        )
+      }]
+    }
+  }}
+/>
+```
+
+### 6. Improved Web Support
+
+Better handling of window size changes in browser environments and enhanced web compatibility.
+
+## Technical Improvements
+
+- Improved performance with reduced rendering work
+- Better handling of pointer events in ItemLayout component
+- Fixed parallax layout compatibility with the new architecture
+- Enhanced type definitions and exported TAnimationStyle type
+- Fixed issues with spring animations and gesture handling
+- Improved behavior for non-controlled components
+
+## Breaking Changes in Behavior
+
+### Default Index Handling
+
+The `defaultIndex` prop behavior has changed:
+
+```tsx
+// Before (v3.x) - defaultIndex changes would reset the carousel
+<Carousel defaultIndex={index} />
+
+// After (v4.x) - subsequent defaultIndex changes are ignored
+// Use controlled mode if you need to programmatically change the index
+<Carousel 
+  defaultIndex={index} // Only initial value is considered
+/>
+```
+
+## Migration Steps
+
+1. **Update Dependencies**
+   - Ensure all peer dependencies meet the minimum version requirements
+   - Update react-native-reanimated-carousel to version 4.x
+
+2. **Update Gesture Handling**
+   - Replace all instances of `panGestureHandlerProps` with `onConfigurePanGesture`
+   - Update gesture configurations to use the new worklet-based API
+
+3. **Update Event Handlers**
+   - Rename `onScrollBegin` to `onScrollStart`
+   - Update any code relying on these event callbacks
+
+4. **Review Animation Code**
+   - Update custom animations to handle the new index parameter if needed
+   - Test all custom animations with the new API
+
+5. **Optional Enhancements**
+   - Consider using the new `containerStyle` prop for better styling control
+   - Implement `minScrollDistancePerSwipe` if needed
+   - Evaluate if `fixedDirection` would improve your carousel behavior
+
+6. **Migrate Pagination**
+   - If using custom pagination, migrate to the new Pagination components
+   - Verify behavior with defaultIndex if using it
+
+7. **Verify Web Compatibility**
+   - Test in browser environments to ensure smooth web compatibility
+   - Update type definitions if needed
+   - Test pointer event handling in custom implementations
+
+## Example Migration
+
+Here's a complete example showing the migration of a typical carousel implementation:
+
+```tsx
+// Before (v3.x)
+<Carousel
+  loop
+  width={width}
+  height={height}
+  data={data}
+  onScrollBegin={() => console.log('scroll started')}
+  panGestureHandlerProps={{
+    activeOffsetX: [-10, 10]
+  }}
+  enableSnap={true}
+  customAnimation={(value) => ({
+    opacity: value
+  })}
+/>
+
+// After (v4.x)
+<Carousel
+  loop
+  width={width}
+  height={height}
+  data={data}
+  onScrollStart={() => console.log('scroll started')}
+  onConfigurePanGesture={(gesture) => {
+    'worklet';
+    gesture.activeOffsetX([-10, 10]);
+  }}
+  snapEnabled={true}
+  customAnimation={(value, index) => ({
+    opacity: value
+  })}
+  containerStyle={{
+    borderRadius: 8
+  }}
+/>
+```

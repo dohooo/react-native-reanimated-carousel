@@ -1,4 +1,3 @@
-/* eslint-disable import/order */
 const { join } = require("path");
 const dotenv = require("dotenv");
 

@@ -5,26 +5,20 @@ import { useDerivedValue } from "react-native-reanimated";
 type Range = [number, number];
 
 export interface VisibleRanges {
-  negativeRange: Range
-  positiveRange: Range
+  negativeRange: Range;
+  positiveRange: Range;
 }
 
 export type IVisibleRanges = Animated.SharedValue<VisibleRanges>;
 
 export function useVisibleRanges(options: {
-  total: number
-  viewSize: number
-  windowSize?: number
-  translation: Animated.SharedValue<number>
-  loop?: boolean
+  total: number;
+  viewSize: number;
+  windowSize?: number;
+  translation: Animated.SharedValue<number>;
+  loop?: boolean;
 }): IVisibleRanges {
-  const {
-    total = 0,
-    viewSize,
-    translation,
-    windowSize: _windowSize,
-    loop,
-  } = options;
+  const { total = 0, viewSize, translation, windowSize: _windowSize, loop } = options;
 
   const windowSize = _windowSize ?? total;
   const cachedRanges = useRef<VisibleRanges>(null!);
@@ -45,8 +39,7 @@ export function useVisibleRanges(options: {
         negativeRange: [0 + currentIndex - (windowSize - 1), 0 + currentIndex],
         positiveRange: [0 + currentIndex, currentIndex + (windowSize - 1)],
       };
-    }
-    else {
+    } else {
       const negativeRange: Range = [
         (currentIndex - negativeCount + total) % total,
         (currentIndex - 1 + total) % total,
@@ -71,14 +64,8 @@ export function useVisibleRanges(options: {
     }
 
     if (
-      isArraysEqual(
-        cachedRanges.current?.negativeRange ?? [],
-        newRanges.negativeRange,
-      )
-      && isArraysEqual(
-        cachedRanges.current?.positiveRange ?? [],
-        newRanges.positiveRange,
-      )
+      isArraysEqual(cachedRanges.current?.negativeRange ?? [], newRanges.negativeRange) &&
+      isArraysEqual(cachedRanges.current?.positiveRange ?? [], newRanges.positiveRange)
     )
       return cachedRanges.current;
 

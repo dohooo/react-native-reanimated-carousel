@@ -10,10 +10,10 @@ import Animated, {
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import SButton from "@/components/SButton";
-import { ElementsText, window } from "@/constants/sizes";
-import { CaptureWrapper } from "@/store/CaptureProvider";
 import { SlideItem } from "@/components/SlideItem";
 import { PURPLE_IMAGES } from "@/constants/purple-images";
+import { ElementsText, window } from "@/constants/sizes";
+import { CaptureWrapper } from "@/store/CaptureProvider";
 
 const PAGE_WIDTH = window.width;
 
@@ -24,11 +24,7 @@ function Index() {
     "worklet";
 
     const zIndex = interpolate(value, [-1, 0, 1], [-1000, 0, 1000]);
-    const translateX = interpolate(
-      value,
-      [-1, 0, 1],
-      [-PAGE_WIDTH, 0, PAGE_WIDTH],
-    );
+    const translateX = interpolate(value, [-1, 0, 1], [-PAGE_WIDTH, 0, PAGE_WIDTH]);
 
     return {
       transform: [{ translateX }],
@@ -52,9 +48,7 @@ function Index() {
             pressAnim.value = withTiming(0);
           }}
           renderItem={({ index }) => {
-            return (
-              <CustomItem index={index} key={index} pressAnim={pressAnim} />
-            );
+            return <CustomItem index={index} key={index} pressAnim={pressAnim} />;
           }}
           customAnimation={animationStyle}
           scrollAnimationDuration={1200}

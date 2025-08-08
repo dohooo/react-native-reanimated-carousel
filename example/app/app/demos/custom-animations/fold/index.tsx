@@ -6,8 +6,8 @@ import { Extrapolation, interpolate } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import SButton from "@/components/SButton";
-import { ElementsText, window } from "@/constants/sizes";
 import { SlideItem } from "@/components/SlideItem";
+import { ElementsText, window } from "@/constants/sizes";
 import { CaptureWrapper } from "@/store/CaptureProvider";
 import { getImages } from "@/utils/get-images";
 
@@ -39,23 +39,24 @@ function Index() {
         itemOffsetInput.map((item) => {
           if (item < 0) {
             return (-itemSize + sideItemWidth) * Math.abs(item);
-          } else if (item > 0) {
+          }
+
+          if (item > 0) {
             return (itemSize - sideItemWidth) * (Math.abs(item) - 1);
           }
+
           return 0;
-        }) as number[],
+        }) as number[]
       );
 
       const translate =
-        interpolate(value, [-1, 0, 1], [-itemSize, 0, itemSize]) +
-        centerOffset -
-        itemOffset;
+        interpolate(value, [-1, 0, 1], [-itemSize, 0, itemSize]) + centerOffset - itemOffset;
 
       const width = interpolate(
         value,
         [-1, 0, 1],
         [sideItemWidth, itemSize, sideItemWidth],
-        Extrapolation.CLAMP,
+        Extrapolation.CLAMP
       );
 
       return {
@@ -68,7 +69,7 @@ function Index() {
         overflow: "hidden",
       };
     },
-    [centerOffset, itemSize, sideItemWidth, sideItemCount],
+    [centerOffset, itemSize, sideItemWidth, sideItemCount]
   );
 
   return (

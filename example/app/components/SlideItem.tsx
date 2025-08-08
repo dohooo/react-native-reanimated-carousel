@@ -1,13 +1,13 @@
 import { PURPLE_IMAGES } from "@/constants/purple-images";
 import React, { useMemo } from "react";
 import {
-  type StyleProp,
-  type ViewProps,
-  type ImageStyle,
-  StyleSheet,
-  View,
-  Text,
   ImageSourcePropType,
+  type ImageStyle,
+  type StyleProp,
+  StyleSheet,
+  Text,
+  View,
+  type ViewProps,
 } from "react-native";
 import type { AnimatedProps } from "react-native-reanimated";
 import Animated from "react-native-reanimated";
@@ -20,17 +20,11 @@ interface Props extends AnimatedProps<ViewProps> {
 }
 
 export const SlideItem: React.FC<Props> = (props) => {
-  const {
-    style,
-    index = 0,
-    rounded = false,
-    testID,
-    ...animatedViewProps
-  } = props;
+  const { style, index = 0, rounded = false, testID, ...animatedViewProps } = props;
 
   const source = useMemo(
     () => props.source || PURPLE_IMAGES[index % PURPLE_IMAGES.length],
-    [index, props.source],
+    [index, props.source]
   );
 
   return (

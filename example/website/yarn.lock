@@ -1197,6 +1197,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"core-js@npm:^3.38.1":
+  version: 3.39.0
+  resolution: "core-js@npm:3.39.0"
+  checksum: a3d34e669783dfc878e545f1983f60d9ff48a3867cd1d7ff8839b849e053002a208c7c14a5ca354b8e0b54982901e2f83dc87c3d9b95de0a94b4071d1c74e5f6
+  languageName: node
+  linkType: hard
+
 "cose-base@npm:^1.0.0":
   version: 1.0.3
   resolution: "cose-base@npm:1.0.3"
@@ -4777,14 +4784,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"posthog-js@npm:^1.167.0":
-  version: 1.167.0
-  resolution: "posthog-js@npm:1.167.0"
+"posthog-js@npm:^1.180.1":
+  version: 1.180.1
+  resolution: "posthog-js@npm:1.180.1"
   dependencies:
+    core-js: "npm:^3.38.1"
     fflate: "npm:^0.4.8"
     preact: "npm:^10.19.3"
-    web-vitals: "npm:^4.0.1"
-  checksum: 7b1332cecb86094f9c08394065f459dfcb99d5de72deb79a36f1fa16be6bf88ec3524d1699b8cf1cac3d637fdf307ad95e614477cdbc3ad703d0cecfb2f3374a
+    web-vitals: "npm:^4.2.0"
+  checksum: 85002f613709c198e6e0e3cda71c9a1e9fea299467d48691b89ba099c7a71dd77c52a2e21b81bb7ab82a9c6fd093bbdf570e11d6b0952f02a9c2372ec3b3c56a
   languageName: node
   linkType: hard
 
@@ -4982,7 +4990,7 @@ __metadata:
     nextra: "npm:2.13.2"
     nextra-theme-docs: "npm:2.13.2"
     postcss: "npm:^8.4.32"
-    posthog-js: "npm:^1.167.0"
+    posthog-js: "npm:^1.180.1"
     prettier: "npm:^3.3.3"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
@@ -6161,10 +6169,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web-vitals@npm:^4.0.1":
-  version: 4.2.3
-  resolution: "web-vitals@npm:4.2.3"
-  checksum: f4f1b0d6e0dd06b50a1d48c5cbe8a2804f26c5778d7c9bd0a8f591c147fd044f35465a3e95659b9ca801bfd85742e0ac70c3416228c4241d858fcecb8b396503
+"web-vitals@npm:^4.2.0":
+  version: 4.2.4
+  resolution: "web-vitals@npm:4.2.4"
+  checksum: 68cd1c2625a04b26e7eab67110623396afc6c9ef8c3a76f4e780aefe5b7d4ca1691737a0b99119e1d1ca9a463c4d468c0f0090b1875b6d784589d3a4a8503313
   languageName: node
   linkType: hard
 
