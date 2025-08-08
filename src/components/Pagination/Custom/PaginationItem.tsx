@@ -33,6 +33,7 @@ export const PaginationItem: React.FC<
     activeDotStyle?: DotStyle;
     onPress: () => void;
     customReanimatedStyle?: (progress: number, index: number, length: number) => DefaultStyle;
+    accessibilityLabel?: string;
   }>
 > = (props) => {
   const defaultDotSize = 10;
@@ -47,6 +48,7 @@ export const PaginationItem: React.FC<
     children,
     customReanimatedStyle,
     onPress,
+    accessibilityLabel,
   } = props;
   const customReanimatedStyleRef = useSharedValue<DefaultStyle>({});
   const handleCustomAnimation = (progress: number) => {
@@ -102,7 +104,13 @@ export const PaginationItem: React.FC<
   }, [animValue, index, count, horizontal, dotStyle, activeDotStyle, customReanimatedStyle]);
 
   return (
-    <Pressable onPress={onPress}>
+    <Pressable
+      onPress={onPress}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole="button"
+      accessibilityHint={animValue.value === index ? "" : `Go to ${accessibilityLabel}`}
+      accessibilityState={{ selected: animValue.value === index }}
+    >
       <Animated.View
         style={[
           {

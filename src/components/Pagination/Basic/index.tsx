@@ -15,6 +15,7 @@ export interface BasicProps<T> {
   activeDotStyle?: DotStyle;
   size?: number;
   onPress?: (index: number) => void;
+  carouselName?: string;
 }
 
 export const Basic = <T extends {}>(props: BasicProps<T>) => {
@@ -28,6 +29,7 @@ export const Basic = <T extends {}>(props: BasicProps<T>) => {
     containerStyle,
     renderItem,
     onPress,
+    carouselName,
   } = props;
 
   if (
@@ -66,6 +68,7 @@ export const Basic = <T extends {}>(props: BasicProps<T>) => {
             horizontal={!horizontal}
             activeDotStyle={activeDotStyle}
             onPress={() => onPress?.(index)}
+            accessibilityLabel={`Slide ${index + 1} of ${data.length} - ${carouselName}`}
           >
             {renderItem?.(item, index)}
           </PaginationItem>
