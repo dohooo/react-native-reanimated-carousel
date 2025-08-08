@@ -438,7 +438,7 @@ describe("useCarouselController imperative handle", () => {
 });
 
 describe("useCarouselController edge cases and uncovered lines", () => {
-  let mockHandlerOffset: ReturnType<typeof useSharedValue<number>>;
+  let mockHandlerOffset: ReturnType<typeof useSharedValue>;
   let ref: ReturnType<typeof useRef>;
   let defaultProps: any;
 
