@@ -226,10 +226,15 @@ The `defaultIndex` prop behavior has changed:
 <Carousel defaultIndex={index} />
 
 // After (v4.x) - subsequent defaultIndex changes are ignored
-// Use controlled mode if you need to programmatically change the index
+// Use programmatic control if you need to change the index after mount
 <Carousel 
   defaultIndex={index} // Only initial value is considered
+  ref={carouselRef}
 />
+
+// To change index programmatically, use the ref:
+// carouselRef.current?.scrollTo({ index: newIndex, animated: true })
+// See: /programmatic-control for detailed examples
 ```
 
 ## Migration Steps
