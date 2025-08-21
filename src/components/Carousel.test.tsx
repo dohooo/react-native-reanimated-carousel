@@ -671,7 +671,7 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     ]);
 
     /**
-     * Go to 1st slide. After swiping right, execute ref.scrollTo({})
+     * Go to 1st slide. After right overscroll, execute ref.scrollTo({})
      */
     scrollToIndex?.({
       index: 1,
