@@ -44,7 +44,7 @@ export function useCommonVariables(props: TInitializeCarouselProps<any>): ICommo
     ({ shouldComputed, previousLength, currentLength }) => {
       if (shouldComputed) {
         // direction -> 1 | -1
-        const direction = handlerOffsetDirection(handlerOffset);
+        const direction = handlerOffsetDirection(handlerOffset, undefined, loop);
 
         handlerOffset.value = computeOffsetIfDataChanged({
           direction,

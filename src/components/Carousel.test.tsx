@@ -10,7 +10,7 @@ import { fireGestureHandler, getByGestureTestId } from "react-native-gesture-han
 
 import Carousel from "./Carousel";
 
-import type { TCarouselProps } from "../types";
+import type { TCarouselActionOptions, TCarouselProps } from "../types";
 
 jest.setTimeout(1000 * 12);
 
@@ -561,6 +561,123 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     nextSlide?.();
     await waitFor(() => {
       expect(progress.current).toBe(2);
+    });
+  });
+
+  it("should scroll to correct page when calling next() or scrollTo() after right overscroll at first page with loop=false and overscrollEnabled=true", async () => {
+    const handlerOffset = { current: 0 };
+    let nextSlide: (() => void) | undefined;
+    let scrollToIndex: ((opts?: TCarouselActionOptions) => void) | undefined;
+    const Wrapper: FC<Partial<TCarouselProps<string>>> = React.forwardRef((customProps, ref) => {
+      const progressAnimVal = useSharedValue(0);
+      const mockHandlerOffset = useSharedValue(handlerOffset.current);
+      const defaultRenderItem = ({
+        item,
+        index,
+      }: {
+        item: string;
+        index: number;
+      }) => (
+        <Animated.View
+          testID={`carousel-item-${index}`}
+          style={{ width: slideWidth, height: slideHeight, flex: 1 }}
+        >
+          {item}
+        </Animated.View>
+      );
+      const { renderItem = defaultRenderItem, ...defaultProps } = createDefaultProps(
+        progressAnimVal,
+        customProps
+      );
+
+      useDerivedValue(() => {
+        handlerOffset.current = mockHandlerOffset.value;
+      }, [mockHandlerOffset]);
+
+      return (
+        <Carousel
+          {...defaultProps}
+          defaultScrollOffsetValue={mockHandlerOffset}
+          renderItem={renderItem}
+          ref={ref}
+        />
+      );
+    });
+
+    const { getByTestId } = render(
+      <Wrapper
+        ref={(ref) => {
+          if (ref) {
+            nextSlide = ref.next;
+            scrollToIndex = ref.scrollTo;
+          }
+        }}
+        loop={false}
+        overscrollEnabled
+      />
+    );
+    await verifyInitialRender(getByTestId);
+
+    // Simulate right overscroll at 1st page (index 0)
+    fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
+      { state: State.BEGAN, translationX: 0, velocityX: 0 },
+      {
+        state: State.ACTIVE,
+        translationX: slideWidth / 4,
+        velocityX: slideWidth,
+      },
+      {
+        state: State.ACTIVE,
+        translationX: 0.00003996,
+        velocityX: slideWidth,
+      },
+      {
+        state: State.END,
+        translationX: 0.00003996,
+        velocityX: slideWidth,
+      },
+    ]);
+
+    /**
+     * Call next() after overscroll - should move to next page correctly
+     */
+    nextSlide?.();
+    await waitFor(() => {
+      expect(handlerOffset.current).toBe(-1 * slideWidth); // Should move to page 1
+    });
+
+    // Simulate right overscroll at 1st page (index 0)
+    fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
+      {
+        state: State.BEGAN,
+        translationX: 0,
+        velocityX: -slideWidth,
+      },
+      {
+        state: State.ACTIVE,
+        translationX: slideWidth,
+        velocityX: slideWidth,
+      },
+      {
+        state: State.ACTIVE,
+        translationX: slideWidth + 0.00003996,
+        velocityX: slideWidth,
+      },
+      {
+        state: State.END,
+        translationX: slideWidth + 0.00003996,
+        velocityX: slideWidth,
+      },
+    ]);
+
+    /**
+     * Go to 1st slide. After swiping right, execute ref.scrollTo({})
+     */
+    scrollToIndex?.({
+      index: 1,
+    });
+    await waitFor(() => {
+      expect(handlerOffset.current).toBe(-1 * slideWidth); // Should move to page 1
     });
   });
 });

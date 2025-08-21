@@ -142,7 +142,9 @@ describe("useCarouselController", () => {
   });
 
   it("should move to next slide", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
+    const { result } = renderHook(() => useCarouselController(defaultProps), {
+      wrapper,
+    });
 
     act(() => {
       result.current.next();
@@ -152,7 +154,9 @@ describe("useCarouselController", () => {
   });
 
   it("should move to previous slide", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
+    const { result } = renderHook(() => useCarouselController(defaultProps), {
+      wrapper,
+    });
 
     act(() => {
       result.current.prev();
@@ -213,7 +217,9 @@ describe("useCarouselController", () => {
   });
 
   it("should scroll to specific index", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
+    const { result } = renderHook(() => useCarouselController(defaultProps), {
+      wrapper,
+    });
 
     act(() => {
       result.current.scrollTo({ index: 3 });
@@ -224,7 +230,9 @@ describe("useCarouselController", () => {
 
   it("should handle animation callbacks", () => {
     const onFinished = jest.fn();
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
+    const { result } = renderHook(() => useCarouselController(defaultProps), {
+      wrapper,
+    });
 
     act(() => {
       result.current.next({
@@ -258,7 +266,9 @@ describe("useCarouselController", () => {
   });
 
   it("should handle non-animated transitions", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
+    const { result } = renderHook(() => useCarouselController(defaultProps), {
+      wrapper,
+    });
 
     act(() => {
       result.current.scrollTo({ index: 2, animated: false });
@@ -268,7 +278,9 @@ describe("useCarouselController", () => {
   });
 
   it("should handle multiple slide movements", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
+    const { result } = renderHook(() => useCarouselController(defaultProps), {
+      wrapper,
+    });
 
     act(() => {
       result.current.next({ count: 2 });
@@ -304,7 +316,9 @@ describe("useCarouselController", () => {
   });
 
   it("should handle runOnJS correctly", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
+    const { result } = renderHook(() => useCarouselController(defaultProps), {
+      wrapper,
+    });
 
     act(() => {
       result.current.next();
@@ -353,7 +367,9 @@ describe("useCarouselController imperative handle", () => {
   // });
 
   it("should maintain correct index through imperative calls", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
+    const { result } = renderHook(() => useCarouselController(defaultProps), {
+      wrapper,
+    });
 
     // Get handle methods
     const createHandle = (useImperativeHandle as jest.Mock).mock.calls[0][1];
@@ -378,7 +394,9 @@ describe("useCarouselController imperative handle", () => {
   });
 
   it("should handle animation callbacks through imperative calls", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
+    const { result } = renderHook(() => useCarouselController(defaultProps), {
+      wrapper,
+    });
     const onFinished = jest.fn();
 
     // Get handle methods
@@ -422,7 +440,9 @@ describe("useCarouselController imperative handle", () => {
   });
 
   it("should handle multiple slide movements through imperative calls", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
+    const { result } = renderHook(() => useCarouselController(defaultProps), {
+      wrapper,
+    });
 
     // Get handle methods
     const createHandle = (useImperativeHandle as jest.Mock).mock.calls[0][1];
@@ -459,7 +479,9 @@ describe("useCarouselController edge cases and uncovered lines", () => {
   });
 
   it("should handle next() without animation - uncovered line 213-214", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
+    const { result } = renderHook(() => useCarouselController(defaultProps), {
+      wrapper,
+    });
     const onFinished = jest.fn();
 
     act(() => {
@@ -497,7 +519,9 @@ describe("useCarouselController edge cases and uncovered lines", () => {
   });
 
   it("should handle scrollTo() without animation when target equals current index - uncovered line 265", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
+    const { result } = renderHook(() => useCarouselController(defaultProps), {
+      wrapper,
+    });
 
     // Set index to 1
     act(() => {
@@ -536,7 +560,9 @@ describe("useCarouselController edge cases and uncovered lines", () => {
   });
 
   it("should handle scrollTo() with count parameter - uncovered line 321-326", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
+    const { result } = renderHook(() => useCarouselController(defaultProps), {
+      wrapper,
+    });
 
     // Test negative count
     act(() => {
@@ -554,7 +580,9 @@ describe("useCarouselController edge cases and uncovered lines", () => {
   });
 
   it("should handle scrollTo() with invalid count (should return early)", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
+    const { result } = renderHook(() => useCarouselController(defaultProps), {
+      wrapper,
+    });
 
     act(() => {
       result.current.scrollTo({ count: 0 }); // Should return early
@@ -703,7 +731,9 @@ describe("useCarouselController edge cases and uncovered lines", () => {
   });
 
   it("should get shared index correctly", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
+    const { result } = renderHook(() => useCarouselController(defaultProps), {
+      wrapper,
+    });
 
     const sharedIndex = result.current.getSharedIndex();
     expect(typeof sharedIndex).toBe("number");
@@ -727,5 +757,38 @@ describe("useCarouselController edge cases and uncovered lines", () => {
     });
 
     expect(typeof mockHandlerOffset.value).toBe("number");
+  });
+
+  it("should return index 0 when overscrolling right at first page in non-loop mode", () => {
+    const { result } = renderHook(
+      () =>
+        useCarouselController({
+          ...defaultProps,
+          loop: false,
+        }),
+      { wrapper }
+    );
+
+    // This small positive value (0.00003996) simulates the overscroll scenario
+    // where user scrolls right at index 0, creating a slight positive offset
+    mockHandlerOffset.value = 0.00003996;
+
+    act(() => {
+      result.current.scrollTo({
+        index: 3,
+      });
+    });
+
+    expect(mockHandlerOffset.value).toBe(-3 * 300);
+
+    // This small positive value (0.00003996) simulates the overscroll scenario
+    // where user scrolls right at index 0, creating a slight positive offset
+    mockHandlerOffset.value = 0.00003996;
+
+    act(() => {
+      result.current.next();
+    });
+
+    expect(mockHandlerOffset.value).toBe(-1 * 300);
   });
 });

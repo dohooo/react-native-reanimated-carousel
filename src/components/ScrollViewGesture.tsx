@@ -129,7 +129,10 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       const origin = translation.value;
       const velocity = scrollEndVelocityValue;
       // Default to scroll in the direction of the slide (with deceleration)
-      let finalTranslation: number = withDecay({ velocity, deceleration: 0.999 });
+      let finalTranslation: number = withDecay({
+        velocity,
+        deceleration: 0.999,
+      });
 
       // If the distance of the swipe exceeds the max scroll distance, keep the view at the current position
       if (
