@@ -759,7 +759,7 @@ describe("useCarouselController edge cases and uncovered lines", () => {
     expect(typeof mockHandlerOffset.value).toBe("number");
   });
 
-  it("should handle scrollTo() and next() correctly after right overscroll at first page in non-loop mode", () => {
+  it("should handle scrollTo() and next() correctly after left overscroll at first page in non-loop mode", () => {
     const { result } = renderHook(
       () =>
         useCarouselController({

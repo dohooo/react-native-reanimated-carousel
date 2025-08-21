@@ -80,14 +80,14 @@ export function useCarouselController(options: IOpts): ICarouselController {
     if (loop) return -Math.round(handlerOffset.value / size);
 
     /* FIX: Handle overscroll edge case when loop=false
-     * Without this fix, when overscrolling to the right at index 0:
+     * Without this fix, when overscrolling to the left at index 0:
      * - handlerOffset.value becomes slightly positive during overscroll
      * - fixed calculation results in a small positive value
      * - Returned index becomes dataInfo.length - fixed ≈ dataInfo.length (incorrect)
-     * This causes unwanted next() API calls during right overscroll
+     * This causes unwanted next() API calls during left overscroll
      *
      * The fix ensures Math.round(handlerOffset.value / size) returns 0 during
-     * right overscroll at index 0, maintaining correct page index
+     * left overscroll at index 0, maintaining correct page index
      */
     const fixed = Math.round(handlerOffset.value / size) % dataInfo.length;
     return Math.round(

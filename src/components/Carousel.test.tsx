@@ -564,7 +564,7 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     });
   });
 
-  it("should scroll to correct page when calling next() or scrollTo() after right overscroll at first page with loop=false and overscrollEnabled=true", async () => {
+  it("should scroll to correct page when calling next() or scrollTo() after left overscroll at first page with loop=false and overscrollEnabled=true", async () => {
     const handlerOffset = { current: 0 };
     let nextSlide: (() => void) | undefined;
     let scrollToIndex: ((opts?: TCarouselActionOptions) => void) | undefined;
@@ -618,7 +618,7 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     );
     await verifyInitialRender(getByTestId);
 
-    // Simulate right overscroll at 1st page (index 0)
+    // Simulate left overscroll at 1st page (index 0)
     fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
       { state: State.BEGAN, translationX: 0, velocityX: 0 },
       {
@@ -646,7 +646,7 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
       expect(handlerOffset.current).toBe(-1 * slideWidth); // Should move to page 1
     });
 
-    // Simulate right overscroll at 1st page (index 0)
+    // Simulate left overscroll at 1st page (index 0)
     fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
       {
         state: State.BEGAN,
@@ -671,7 +671,7 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     ]);
 
     /**
-     * Go to 1st slide. After right overscroll, execute ref.scrollTo({})
+     * Go to 1st slide. After left overscroll, execute ref.scrollTo({})
      */
     scrollToIndex?.({
       index: 1,
