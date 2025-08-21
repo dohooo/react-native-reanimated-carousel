@@ -770,7 +770,7 @@ describe("useCarouselController edge cases and uncovered lines", () => {
     );
 
     // This small positive value (0.00003996) simulates the overscroll scenario
-    // where user scrolls right at index 0, creating a slight positive offset
+    // where user scrolls right at index 3, creating a slight positive offset
     mockHandlerOffset.value = 0.00003996;
 
     act(() => {
