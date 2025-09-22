@@ -1,20 +1,16 @@
 import * as React from "react";
-import type { ImageSourcePropType } from "react-native";
-import { Image, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Animated, { interpolate, useAnimatedStyle } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
 
 import { BlurView as _BlurView } from "expo-blur";
 
-import { parallaxLayout } from "./parallax";
+import { parallaxLayout } from "@/features/custom-animations/blur-rotate/parallax";
 
-import { SBItem } from "@/components/SBItem";
-import SButton from "@/components/SButton";
 import { SlideItem } from "@/components/SlideItem";
 import { PURPLE_IMAGES } from "@/constants/purple-images";
-import { ElementsText, HEADER_HEIGHT, window } from "@/constants/sizes";
-import { CaptureWrapper } from "@/store/CaptureProvider";
-import { fruitItems } from "@/utils/items";
+import { HEADER_HEIGHT, window } from "@/constants/sizes";
 
 const BlurView = Animated.createAnimatedComponent(_BlurView);
 
@@ -52,7 +48,7 @@ function Index() {
 
 interface ItemProps {
   index: number;
-  animationValue: Animated.SharedValue<number>;
+  animationValue: SharedValue<number>;
 }
 const CustomItem: React.FC<ItemProps> = ({ index, animationValue }) => {
   const maskStyle = useAnimatedStyle(() => {

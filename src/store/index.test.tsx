@@ -1,15 +1,8 @@
-import { render } from "@testing-library/react-native";
+import { act, render } from "@testing-library/react-native";
 import React from "react";
 import { Text } from "react-native";
 
 import { GlobalStateContext, GlobalStateProvider, useGlobalState } from "./index";
-
-// Mock react-native-reanimated
-jest.mock("react-native-reanimated", () => ({
-  useSharedValue: jest.fn((initialValue) => ({
-    value: initialValue,
-  })),
-}));
 
 describe("GlobalStateProvider", () => {
   const mockProps = {
@@ -112,8 +105,10 @@ describe("GlobalStateProvider", () => {
 
     expect(typeof contextValue.layout.updateItemDimensions).toBe("function");
 
-    // Test the function
-    contextValue.layout.updateItemDimensions(0, { width: 100, height: 50 });
+    act(() => {
+      contextValue.layout.updateItemDimensions(0, { width: 100, height: 50 });
+    });
+
     expect(contextValue.layout.itemDimensions.value).toEqual({
       0: { width: 100, height: 50 },
     });
@@ -135,8 +130,10 @@ describe("GlobalStateProvider", () => {
 
     expect(typeof contextValue.layout.updateContainerSize).toBe("function");
 
-    // Test the function
-    contextValue.layout.updateContainerSize({ width: 400, height: 300 });
+    act(() => {
+      contextValue.layout.updateContainerSize({ width: 400, height: 300 });
+    });
+
     expect(contextValue.layout.containerSize.value).toEqual({ width: 400, height: 300 });
   });
 
@@ -184,10 +181,11 @@ describe("GlobalStateProvider", () => {
       </GlobalStateProvider>
     );
 
-    // Add multiple items
-    contextValue.layout.updateItemDimensions(0, { width: 100, height: 50 });
-    contextValue.layout.updateItemDimensions(1, { width: 120, height: 60 });
-    contextValue.layout.updateItemDimensions(2, { width: 90, height: 45 });
+    act(() => {
+      contextValue.layout.updateItemDimensions(0, { width: 100, height: 50 });
+      contextValue.layout.updateItemDimensions(1, { width: 120, height: 60 });
+      contextValue.layout.updateItemDimensions(2, { width: 90, height: 45 });
+    });
 
     expect(contextValue.layout.itemDimensions.value).toEqual({
       0: { width: 100, height: 50 },
@@ -223,12 +221,10 @@ describe("useGlobalState", () => {
   });
 
   it("should provide expected hook functionality", () => {
-    // Test that hook returns context when used correctly
     let hookResult: any;
 
     const TestComponent = () => {
-      const context = useGlobalState();
-      hookResult = context;
+      hookResult = useGlobalState();
       return <Text>Test</Text>;
     };
 

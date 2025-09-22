@@ -1,4 +1,4 @@
-import type Animated from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 import { Extrapolation, interpolate, useDerivedValue } from "react-native-reanimated";
 
 import type { IVisibleRanges } from "./useVisibleRanges";
@@ -6,7 +6,7 @@ import type { IVisibleRanges } from "./useVisibleRanges";
 export interface IOpts {
   index: number;
   size: number;
-  handlerOffset: Animated.SharedValue<number>;
+  handlerOffset: SharedValue<number>;
   dataLength: number;
   type?: "positive" | "negative";
   viewCount?: number;

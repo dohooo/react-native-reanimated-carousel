@@ -1,12 +1,12 @@
 import * as React from "react";
-import type { ImageSourcePropType } from "react-native";
-import { Image, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Animated, { interpolate, useAnimatedStyle } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
 
 import { BlurView as _BlurView } from "expo-blur";
 
-import { parallaxLayout } from "./parallax";
+import { parallaxLayout } from "@/features/custom-animations/blur-parallax/parallax";
 
 import SButton from "@/components/SButton";
 import { SlideItem } from "@/components/SlideItem";
@@ -65,7 +65,7 @@ function Index() {
 
 interface ItemProps {
   index: number;
-  animationValue: Animated.SharedValue<number>;
+  animationValue: SharedValue<number>;
 }
 const CustomItem: React.FC<ItemProps> = ({ index, animationValue }) => {
   const maskStyle = useAnimatedStyle(() => {

@@ -1,4 +1,4 @@
-import type Animated from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 import { useAnimatedReaction, useSharedValue } from "react-native-reanimated";
 
 import type { TInitializeCarouselProps } from "./useInitProps";
@@ -10,7 +10,7 @@ import { handlerOffsetDirection } from "../utils/handleroffset-direction";
 interface ICommonVariables {
   size: number;
   validLength: number;
-  handlerOffset: Animated.SharedValue<number>;
+  handlerOffset: SharedValue<number>;
 }
 
 export function useCommonVariables(props: TInitializeCarouselProps<any>): ICommonVariables {

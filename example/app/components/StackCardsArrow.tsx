@@ -12,6 +12,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 
 export enum ArrowDirection {
   IS_VERTICAL = 0,
@@ -19,7 +20,7 @@ export enum ArrowDirection {
 }
 
 export const Arrow: React.FC<{
-  directionAnim: Animated.SharedValue<ArrowDirection>;
+  directionAnim: SharedValue<ArrowDirection>;
 }> = ({ directionAnim }) => {
   const translateAnim = useSharedValue(0);
   const scaleAnim = useSharedValue(0);

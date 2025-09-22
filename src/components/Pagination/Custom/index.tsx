@@ -1,9 +1,7 @@
 import React from "react";
-import type { StyleProp, ViewStyle } from "react-native";
+import type { ImageStyle, StyleProp, TextStyle, ViewStyle } from "react-native";
 import { View } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
-
-import type { DefaultStyle } from "react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes";
 
 import type { DotStyle } from "./PaginationItem";
 import { PaginationItem } from "./PaginationItem";
@@ -18,9 +16,11 @@ export interface ShapeProps<T extends {}> {
   activeDotStyle?: DotStyle;
   size?: number;
   onPress?: (index: number) => void;
-  customReanimatedStyle?: (progress: number, index: number, length: number) => DefaultStyle;
+  customReanimatedStyle?: (progress: number, index: number, length: number) => AnimatedDefaultStyle;
   carouselName?: string;
 }
+
+type AnimatedDefaultStyle = ViewStyle | ImageStyle | TextStyle;
 
 export const Custom = <T extends {}>(props: ShapeProps<T>) => {
   const {

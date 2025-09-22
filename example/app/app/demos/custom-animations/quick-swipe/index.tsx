@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { SBItem } from "@/components/SBItem";
 import { IS_WEB } from "@/constants/platform";
 import { window } from "@/constants/sizes";
+import { getImages } from "@/features/custom-animations/quick-swipe/images";
 import { CaptureWrapper } from "@/store/CaptureProvider";
 import * as Haptics from "expo-haptics";
 import { Image, ImageSourcePropType, ViewStyle } from "react-native";
@@ -20,7 +21,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { getImages } from "./images";
+import type { SharedValue } from "react-native-reanimated";
 
 const data = getImages().slice(0, 68);
 
@@ -186,8 +187,8 @@ const ThumbnailPaginationItem: React.FC<{
   source: ImageSourcePropType;
   containerWidth: number;
   totalItems: number;
-  activeIndex: Animated.SharedValue<number>;
-  swipeProgress: Animated.SharedValue<number>;
+  activeIndex: SharedValue<number>;
+  swipeProgress: SharedValue<number>;
   activeWidth: number;
   totalWidth: number;
   inactiveWidth: number;

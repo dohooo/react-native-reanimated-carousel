@@ -1,6 +1,7 @@
 import * as React from "react";
 import { View } from "react-native";
 import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
 
 import SButton from "@/components/SButton";
@@ -53,7 +54,7 @@ function Index() {
 
 const Card: React.FC<{
   index: number;
-  animationValue: Animated.SharedValue<number>;
+  animationValue: SharedValue<number>;
 }> = ({ index, animationValue }) => {
   const WIDTH = PAGE_WIDTH / 1.5;
   const HEIGHT = PAGE_HEIGHT / 1.5;

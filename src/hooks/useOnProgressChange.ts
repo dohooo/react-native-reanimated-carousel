@@ -1,4 +1,4 @@
-import type Animated from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 import { runOnJS, useAnimatedReaction } from "react-native-reanimated";
 
 import type { TCarouselProps } from "../types";
@@ -9,7 +9,7 @@ export function useOnProgressChange(
     size: number;
     autoFillData: boolean;
     loop: boolean;
-    offsetX: Animated.SharedValue<number>;
+    offsetX: SharedValue<number>;
     rawDataLength: number;
   } & Pick<TCarouselProps, "onProgressChange">
 ) {

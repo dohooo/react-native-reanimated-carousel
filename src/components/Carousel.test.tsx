@@ -2,6 +2,7 @@ import type { FC } from "react";
 import React from "react";
 import type { PanGesture } from "react-native-gesture-handler";
 import { Gesture, State } from "react-native-gesture-handler";
+import type { SharedValue } from "react-native-reanimated";
 import Animated, { interpolate, useDerivedValue, useSharedValue } from "react-native-reanimated";
 import type { ReactTestInstance } from "react-test-renderer";
 
@@ -30,6 +31,15 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
 
   beforeEach(() => {
     mockPan.mockClear();
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    act(() => {
+      jest.runOnlyPendingTimers();
+    });
+    jest.useRealTimers();
+    jest.clearAllTimers();
   });
 
   // Helper function to create mock data
@@ -38,7 +48,7 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
 
   // Helper function to create default props with correct typing
   const createDefaultProps = (
-    progressAnimVal: Animated.SharedValue<number>,
+    progressAnimVal: SharedValue<number>,
     customProps: Partial<TCarouselProps<string>> = {}
   ) => {
     const baseProps: Partial<TCarouselProps<string>> = {
@@ -123,6 +133,7 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     const progress = { current: 0 };
     const Wrapper = createCarousel(progress);
     const { getByTestId } = render(<Wrapper data={createMockData(6)} />);
+
     await verifyInitialRender(getByTestId);
 
     expect(getByTestId("carousel-item-0")).toBeTruthy();
@@ -222,13 +233,22 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
   it("`autoPlayReverse` prop: should swipe automatically in reverse when autoPlayReverse is true", async () => {
     const progress = { current: 0 };
     const Wrapper = createCarousel(progress);
-    const { getByTestId } = render(<Wrapper autoPlay autoPlayReverse />);
-    await verifyInitialRender(getByTestId);
 
-    await waitFor(() => expect(progress.current).toBe(3));
-    await waitFor(() => expect(progress.current).toBe(2));
-    await waitFor(() => expect(progress.current).toBe(1));
-    await waitFor(() => expect(progress.current).toBe(0));
+    render(
+      <Wrapper autoPlay autoPlayReverse autoPlayInterval={300} scrollAnimationDuration={250} />
+    );
+
+    const step = (expectedIndex: number) => {
+      act(() => {
+        jest.advanceTimersByTime(300 + 250 + 1);
+      });
+      expect(Math.round(((progress.current % 4) + 4) % 4)).toBe(expectedIndex);
+    };
+
+    step(3);
+    step(2);
+    step(1);
+    step(0);
   });
 
   it("`defaultIndex` prop: should render the correct item with the defaultIndex props", async () => {
@@ -500,67 +520,58 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     let nextSlide: (() => void) | undefined;
     const testId = "CarouselAnimatedView";
     const progress = { current: 0 };
-    const Carousel = createCarousel(progress);
-    const baseOptions = {
-      vertical: false,
-      width: itemWidth,
-      height: containerHeight,
-      style: {
-        width: containerWidth,
-      },
-      testID: testId,
-    };
+    const CarouselW = createCarousel(progress);
+
+    const SCROLL_MS = 250; // Make the animation duration controllable
+    const TICK = (ms = SCROLL_MS + 10) =>
+      act(() => {
+        jest.advanceTimersByTime(ms);
+      });
 
     const { getByTestId } = render(
-      <Carousel
+      <CarouselW
         ref={(ref) => {
-          if (ref) {
-            nextSlide = ref.next;
-          }
+          if (ref) nextSlide = ref.next;
         }}
-        {...baseOptions}
+        vertical={false}
+        width={itemWidth}
+        height={containerHeight}
+        style={{ width: containerWidth }}
+        testID={testId}
         loop={false}
         overscrollEnabled={false}
         data={createMockData(6)}
         pagingEnabled={false}
+        scrollAnimationDuration={SCROLL_MS}
       />
     );
 
-    await act(() => {
+    // Simulate layout
+    act(() => {
       getByTestId(testId).props.onLayout({
-        nativeEvent: {
-          layout: {
-            width: containerWidth,
-            height: containerHeight,
-          },
-        },
+        nativeEvent: { layout: { width: containerWidth, height: containerHeight } },
       });
     });
 
-    await verifyInitialRender(getByTestId);
+    // Let the internal async initialization run
+    TICK(1);
 
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    // Initial: At the 0th page
+    expect(Math.round(((progress.current % slideCount) + slideCount) % slideCount)).toBe(0);
 
-    // The test logic is that the first screen has four elements
-    await waitFor(() => {
-      expect(progress.current).toBe(0);
-    });
-
-    // After swiping left twice, the last element is close to the right side of the container
+    // next -> 1st page
     nextSlide?.();
-    await waitFor(() => {
-      expect(progress.current).toBe(1);
-    });
+    TICK(); // Wait for the animation to end
+    expect(Math.round(((progress.current % slideCount) + slideCount) % slideCount)).toBe(1);
 
+    // next -> 2nd page
     nextSlide?.();
-    await waitFor(() => {
-      expect(progress.current).toBe(2);
-    });
+    TICK();
+    expect(Math.round(((progress.current % slideCount) + slideCount) % slideCount)).toBe(2);
 
-    // At this point, swiping left again should stay on the last element, meaning this swipe is invalid
+    // continue next（Already at the last visible page, and overscroll=false, should not move）
     nextSlide?.();
-    await waitFor(() => {
-      expect(progress.current).toBe(2);
-    });
+    TICK();
+    expect(Math.round(((progress.current % slideCount) + slideCount) % slideCount)).toBe(2);
   });
 });

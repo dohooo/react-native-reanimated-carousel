@@ -16,6 +16,7 @@ import Animated, {
   useSharedValue,
   withDecay,
 } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 
 import { Easing } from "../constants";
 import { usePanGestureProxy } from "../hooks/usePanGestureProxy";
@@ -28,7 +29,7 @@ interface Props {
   infinite?: boolean;
   testID?: string;
   style?: StyleProp<ViewStyle>;
-  translation: Animated.SharedValue<number>;
+  translation: SharedValue<number>;
   onLayout?: (e: LayoutChangeEvent) => void;
   onScrollStart?: () => void;
   onScrollEnd?: () => void;

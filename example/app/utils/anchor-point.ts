@@ -23,38 +23,47 @@ export const withAnchorPoint = (transform: TransformsStyle, anchorPoint: Point, 
 
   if (!isValidSize(size)) return transform;
 
-  let injectedTransform = transform.transform;
-  if (!injectedTransform) return transform;
+  const existingTransform = transform.transform;
+  if (!existingTransform) return transform;
+
+  const transformArray = Array.isArray(existingTransform)
+    ? [...existingTransform]
+    : [existingTransform];
+
+  let injectedTransform = transformArray;
 
   if (anchorPoint.x !== defaultAnchorPoint.x && size.width) {
-    const shiftTranslateX = [];
+    const shiftTranslateX = [
+      {
+        translateX: size.width * (anchorPoint.x - defaultAnchorPoint.x),
+      },
+    ];
 
-    // shift before rotation
-    shiftTranslateX.push({
-      translateX: size.width * (anchorPoint.x - defaultAnchorPoint.x),
-    });
-    // @ts-ignore
-    injectedTransform = [...shiftTranslateX, ...injectedTransform];
-    // shift after rotation
-    // @ts-ignore
-    injectedTransform.push({
-      translateX: size.width * (defaultAnchorPoint.x - anchorPoint.x),
-    });
+    injectedTransform = [
+      ...shiftTranslateX,
+      ...injectedTransform,
+      {
+        translateX: size.width * (defaultAnchorPoint.x - anchorPoint.x),
+      },
+    ];
   }
 
   if (!Array.isArray(injectedTransform)) return { transform: injectedTransform };
 
   if (anchorPoint.y !== defaultAnchorPoint.y && size.height) {
-    const shiftTranslateY = [];
-    // shift before rotation
-    shiftTranslateY.push({
-      translateY: size.height * (anchorPoint.y - defaultAnchorPoint.y),
-    });
-    injectedTransform = [...shiftTranslateY, ...injectedTransform];
-    // shift after rotation
-    injectedTransform.push({
-      translateY: size.height * (defaultAnchorPoint.y - anchorPoint.y),
-    });
+    const shiftTranslateY = [
+      {
+        translateY: size.height * (anchorPoint.y - defaultAnchorPoint.y),
+      },
+    ];
+
+    injectedTransform = [
+      ...shiftTranslateY,
+      ...injectedTransform,
+      {
+        translateY: size.height * (defaultAnchorPoint.y - anchorPoint.y),
+      },
+    ];
   }
 
   return { transform: injectedTransform };

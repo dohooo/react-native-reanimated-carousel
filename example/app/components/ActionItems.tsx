@@ -1,6 +1,21 @@
-import { Check, Check as CheckIcon, ChevronDown, ChevronUp } from "@tamagui/lucide-icons";
+import {
+  Check,
+  Check as CheckIconRaw,
+  ChevronDown as ChevronDownRaw,
+  ChevronUp as ChevronUpRaw,
+} from "@tamagui/lucide-icons";
 import * as React from "react";
 import { Adapt, Button, Checkbox, Label, Select, Sheet, Switch, XStack, YStack } from "tamagui";
+
+type IconProps = {
+  size?: number;
+  color?: string;
+};
+
+const ChevronDownIcon = ChevronDownRaw as React.ComponentType<IconProps>;
+const ChevronUpIcon = ChevronUpRaw as React.ComponentType<IconProps>;
+const CheckIcon = CheckIconRaw as React.ComponentType<IconProps>;
+const CheckIconMinimal = Check as React.ComponentType<IconProps>;
 import { LinearGradient } from "tamagui/linear-gradient";
 
 interface SwitchActionItemProps {
@@ -77,7 +92,7 @@ export const CustomSelectActionItem: React.FC<SelectActionItemProps> = ({
     <XStack justifyContent="space-between" alignItems="center">
       <Label fontSize={"$4"}>{label}</Label>
       <Select value={value} onValueChange={onValueChange} disablePreventBodyScroll>
-        <Select.Trigger width={"auto"} iconAfter={ChevronDown}>
+        <Select.Trigger width={"auto"} iconAfter={<ChevronDownIcon />}>
           <Select.Value placeholder="Something" />
         </Select.Trigger>
 
@@ -114,7 +129,7 @@ export const CustomSelectActionItem: React.FC<SelectActionItemProps> = ({
             height="$3"
           >
             <YStack zIndex={10}>
-              <ChevronUp size={20} />
+              <ChevronUpIcon size={20} />
             </YStack>
             <LinearGradient
               start={[0, 0]}
@@ -135,7 +150,7 @@ export const CustomSelectActionItem: React.FC<SelectActionItemProps> = ({
                       <Select.Item index={i} key={item.value} value={item.value.toLowerCase()}>
                         <Select.ItemText>{item.label}</Select.ItemText>
                         <Select.ItemIndicator marginLeft="auto">
-                          <Check size={16} />
+                          <CheckIconMinimal size={16} />
                         </Select.ItemIndicator>
                       </Select.Item>
                     );
@@ -153,7 +168,7 @@ export const CustomSelectActionItem: React.FC<SelectActionItemProps> = ({
             height="$3"
           >
             <YStack zIndex={10}>
-              <ChevronDown size={20} />
+              <ChevronDownIcon size={20} />
             </YStack>
             <LinearGradient
               start={[0, 0]}

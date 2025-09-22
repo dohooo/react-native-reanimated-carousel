@@ -17,7 +17,7 @@ export function CarouselAdvancedSettingsPanel({
   extraSettings,
   extraButtons,
 }: {
-  carouselRef: React.RefObject<ICarouselInstance>;
+  carouselRef: React.RefObject<ICarouselInstance | null>;
   advancedSettings: Partial<AdvancedSettings>;
   onAdvancedSettingsChange: (settings: Partial<AdvancedSettings>) => void;
   extraSettings?: React.ReactNode[];

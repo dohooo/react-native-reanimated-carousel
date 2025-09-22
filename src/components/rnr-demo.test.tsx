@@ -1,46 +1,53 @@
+import { render } from "@testing-library/react-native";
 import type { FC } from "react";
 import React from "react";
-import Animated, { useAnimatedStyle, useDerivedValue } from "react-native-reanimated";
-import renderer from "react-test-renderer";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
-describe("useSharedValue", () => {
-  it("retains value on rerender", () => {
+describe("Carousel Animations", () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
+  });
+
+  it("animates opacity with timing", () => {
+    const TestComponent: FC<{ value: number }> = ({ value }) => {
+      const sharedValue = useSharedValue(value);
+
+      // Using withTiming to wrap the value change, so it can be tested
+      const animatedStyle = useAnimatedStyle(() => ({
+        opacity: withTiming(sharedValue.value, { duration: 500 }),
+      }));
+
+      // When the prop changes, update the shared value
+      React.useEffect(() => {
+        sharedValue.value = value;
+      }, [value, sharedValue]);
+
+      return <Animated.View testID="animated-view" style={animatedStyle} />;
+    };
+
     const initialValue = 0;
     const updatedValue = 1;
 
-    interface Props {
-      key: string;
-      value: number;
-    }
+    const { getByTestId, rerender } = render(<TestComponent value={initialValue} />);
+    const view = getByTestId("animated-view");
 
-    const TestComponent: FC<Props> = (props) => {
-      const opacity = useDerivedValue(() => props.value, [props.value]);
-      const animatedStyle = useAnimatedStyle(
-        () => ({
-          opacity: opacity.value,
-        }),
-        [opacity]
-      );
+    // Verify the initial state
+    expect(view).toHaveAnimatedStyle({ opacity: initialValue });
 
-      return <Animated.View style={animatedStyle} />;
-    };
+    // Trigger the value change
+    rerender(<TestComponent value={updatedValue} />);
 
-    // When rendering with initial value
-    const wrapper = renderer.create(<TestComponent key="box" value={initialValue} />);
+    // Advance the animation to the middle point
+    jest.advanceTimersByTime(250);
+    expect(view).toHaveAnimatedStyle({ opacity: 0.5 }); // Animation middle value
 
-    expect(
-      typeof wrapper.root.children[0] !== "string"
-        ? wrapper.root.children[0].props.style.jestAnimatedStyle.current.value.opacity
-        : false
-    ).toBe(initialValue);
-
-    // When rendering with updated value
-    wrapper.update(<TestComponent key="box" value={updatedValue} />);
-
-    expect(
-      typeof wrapper.root.children[0] !== "string"
-        ? wrapper.root.children[0].props.style.jestAnimatedStyle.current.value.opacity
-        : false
-    ).toBe(initialValue);
+    // Advance the animation to the completion
+    jest.advanceTimersByTime(250);
+    expect(view).toHaveAnimatedStyle({ opacity: updatedValue }); // Animation completion
   });
 });

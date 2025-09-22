@@ -1,8 +1,8 @@
 import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import type Animated from "react-native-reanimated";
 import { Extrapolation, interpolate } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import SButton from "@/components/SButton";
@@ -116,7 +116,7 @@ function Index() {
 
 const Item: React.FC<{
   index: number;
-  animationValue: Animated.SharedValue<number>;
+  animationValue: SharedValue<number>;
 }> = ({ index }) => {
   return (
     <TouchableWithoutFeedback

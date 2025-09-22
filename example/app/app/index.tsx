@@ -4,8 +4,8 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
 
 import { useColor } from "@/hooks/useColor";
+import { routes } from "@/utils/routes";
 import { Stack, Text } from "tamagui";
-import { routes } from "./routes";
 
 import { IS_DEV } from "@/constants/env";
 import { IS_WEB } from "@/constants/platform";

@@ -18,7 +18,7 @@ export const ItemLayout: React.FC<{
   visibleRanges: IVisibleRanges;
   animationStyle: TAnimationStyle;
   children: (ctx: {
-    animationValue: Animated.SharedValue<number>;
+    animationValue: SharedValue<number>;
   }) => React.ReactElement;
 }> = (props) => {
   const { handlerOffset, index, children, visibleRanges, animationStyle } = props;

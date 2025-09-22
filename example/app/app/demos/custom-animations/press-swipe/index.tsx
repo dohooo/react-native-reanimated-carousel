@@ -1,5 +1,4 @@
 import * as React from "react";
-import type { ImageSourcePropType } from "react-native";
 import { View } from "react-native";
 import Animated, {
   interpolate,
@@ -7,6 +6,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import SButton from "@/components/SButton";
@@ -66,7 +66,7 @@ function Index() {
 }
 
 interface ItemProps {
-  pressAnim: Animated.SharedValue<number>;
+  pressAnim: SharedValue<number>;
   index: number;
 }
 
