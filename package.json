@@ -52,9 +52,10 @@
 	},
 	"peerDependencies": {
 		"react": ">=18.0.0",
-		"react-native": ">=0.70.3",
+		"react-native": ">=0.80.0",
 		"react-native-gesture-handler": ">=2.9.0",
-		"react-native-reanimated": ">=3.0.0"
+		"react-native-reanimated": ">=4.0.0",
+		"react-native-worklets": ">=0.5.0"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.28.4",

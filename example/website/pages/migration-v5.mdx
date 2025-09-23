@@ -1,0 +1,89 @@
+---
+id: migration-v5
+title: Migration Guide to v5.x
+sidebar_label: Migration to v5.x
+description: Guide for migrating to react-native-reanimated-carousel v5.x
+keywords:
+  - react-native-reanimated-carousel
+  - reanimated-carousel
+  - migration
+  - v5
+  - expo 54
+  - dynamic sizing
+  - react-native
+  - reanimated
+image:
+slug: /migration-v5
+---
+
+# Migration Guide to v5.x
+
+This guide will help you migrate your application from react-native-reanimated-carousel v4.x to v5.x.
+
+## 🎯 What's New in v5.x
+
+### Dynamic Sizing (Auto-sizing)
+The biggest feature in v5.x is **automatic dimension calculation**. You no longer need to manually specify `width` and `height` props!
+
+### Expo 54 Support
+Full compatibility with Expo SDK 54 and the latest React Native ecosystem.
+
+## 📦 Version Requirements
+
+Before upgrading, ensure your project meets these version requirements:
+
+```json
+{
+  "react": ">=18.0.0",
+  "react-native": ">=0.80.0",
+  "react-native-gesture-handler": ">=2.9.0",
+  "react-native-reanimated": ">=4.0.0",
+  "react-native-worklets": ">=0.5.0"
+}
+```
+
+## 💥 Breaking Changes
+
+### 1. React Native Reanimated v4
+
+**Required:** Upgrade to `react-native-reanimated@^4.1.0`
+
+```bash
+npm install react-native-reanimated@^4.1.0
+```
+
+Follow the [Reanimated v4 migration guide](https://docs.swmansion.com/react-native-reanimated/) for any breaking changes.
+
+### 2. React Native Worklets (New Dependency)
+
+**Required:** Install `react-native-worklets@^0.5.1`
+
+```bash
+npm install react-native-worklets@^0.5.1
+```
+
+This package is required by Reanimated v4 and replaces the deprecated `runOnJS` function with `scheduleOnRN`.
+
+## ✨ New Features
+
+### Dynamic Sizing
+
+The most requested feature! Carousel now automatically measures container dimensions:
+
+```tsx
+// ✅ v5.x - Auto-sizing (beta)
+<Carousel
+  data={data}
+  renderItem={renderItem}
+  // width and height are now optional!
+  // Carousel automatically measures container
+/>
+
+// ✅ v5.x - Still works (explicit sizing)
+<Carousel
+  width={300}
+  height={200}
+  data={data}
+  renderItem={renderItem}
+/>
+```
