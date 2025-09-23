@@ -53,5 +53,6 @@ export function useAutoPlay(opts: {
   return {
     pause,
     start,
+    trigger: play,
   };
 }

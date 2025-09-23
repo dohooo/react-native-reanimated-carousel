@@ -15,13 +15,13 @@ import Animated, {
   Easing,
   Extrapolation,
   interpolate,
-  runOnJS,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
 import type { SharedValue } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 
 const data = getImages().slice(0, 68);
 
@@ -144,7 +144,7 @@ const ThumbnailPagination: React.FC<{
 
   useAnimatedReaction(
     () => activeIndex.value,
-    (activeIndex) => onIndexChange && runOnJS(onIndexChange)(activeIndex),
+    (activeIndex) => onIndexChange && scheduleOnRN(onIndexChange, activeIndex),
     [onIndexChange]
   );
 

@@ -25,11 +25,12 @@ export const ItemLayout: React.FC<{
 
   const {
     props: { loop, dataLength, width, height, vertical, customConfig, mode, modeConfig },
-    // TODO: For dynamic dimension in the future
+    common,
     // layout: { updateItemDimensions },
   } = useGlobalState();
 
-  const size = vertical ? height : width;
+  const fallbackSize = common.size;
+  const size = (vertical ? height : width) ?? fallbackSize;
 
   let offsetXConfig: IOpts = {
     handlerOffset,
@@ -55,11 +56,14 @@ export const ItemLayout: React.FC<{
   }
 
   const x = useOffsetX(offsetXConfig, visibleRanges);
-  const animationValue = useDerivedValue(() => x.value / size, [x, size]);
-  const animatedStyle = useAnimatedStyle<ViewStyle>(
-    () => animationStyle(x.value / size, index),
-    [animationStyle, index, x, size]
-  );
+  const animationValue = useDerivedValue(() => {
+    if (!size) return 0;
+    return x.value / size;
+  }, [x, size]);
+  const animatedStyle = useAnimatedStyle<ViewStyle>(() => {
+    const safeSize = size || 1;
+    return animationStyle(x.value / safeSize, index);
+  }, [animationStyle, index, x, size]);
 
   // TODO: For dynamic dimension in the future
   // function handleLayout(e: LayoutChangeEvent) {

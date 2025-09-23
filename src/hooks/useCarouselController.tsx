@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
-import { SharedValue, runOnJS, useAnimatedReaction, useSharedValue } from "react-native-reanimated";
+import { SharedValue, useAnimatedReaction, useSharedValue } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 
 import { Easing } from "../constants";
 import { useGlobalState } from "../store";
@@ -58,8 +59,9 @@ export function useCarouselController(options: IOpts): ICarouselController {
   const globalState = useGlobalState();
 
   const {
-    props: { overscrollEnabled },
+    props: { overscrollEnabled, vertical, width, height },
     layout: { containerSize },
+    common: { sizePhase, resolvedSize },
   } = globalState;
 
   const dataInfo = React.useMemo(
@@ -77,6 +79,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
   const sharedPreIndex = useRef<number>(defaultIndex);
 
   const currentFixedPage = React.useCallback(() => {
+    if (size <= 0) return 0;
     if (loop) return -Math.round(handlerOffset.value / size);
 
     const fixed = (handlerOffset.value / size) % dataInfo.length;
@@ -91,6 +94,13 @@ export function useCarouselController(options: IOpts): ICarouselController {
 
   useAnimatedReaction(
     () => {
+      if (size <= 0) {
+        return {
+          i: 0,
+          newSharedIndexValue: 0,
+        };
+      }
+
       const handlerOffsetValue = handlerOffset.value;
       const toInt = round(handlerOffsetValue / size) % dataInfo.length;
       const isPositive = handlerOffsetValue <= 0;
@@ -110,7 +120,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
     },
     ({ i, newSharedIndexValue }) => {
       index.value = i;
-      runOnJS(setSharedIndex)(newSharedIndexValue);
+      scheduleOnRN(setSharedIndex, newSharedIndexValue);
     },
     [sharedPreIndex, sharedIndex, size, dataInfo, index, loop, autoFillData, handlerOffset]
   );
@@ -127,8 +137,11 @@ export function useCarouselController(options: IOpts): ICarouselController {
   }, [index, autoFillData, dataInfo, loop]);
 
   const canSliding = React.useCallback(() => {
-    return !dataInfo.disable;
-  }, [dataInfo]);
+    const currentSize = resolvedSize.value ?? size;
+    const ready = sizePhase.value === "ready" && !!currentSize;
+
+    return !dataInfo.disable && ready;
+  }, [dataInfo, resolvedSize, sizePhase, size]);
 
   const onScrollEnd = React.useCallback(() => {
     options.onScrollEnd?.();
@@ -144,8 +157,8 @@ export function useCarouselController(options: IOpts): ICarouselController {
       const callback = (isFinished: boolean) => {
         "worklet";
         if (isFinished) {
-          runOnJS(onScrollEnd)();
-          onFinished && runOnJS(onFinished)();
+          scheduleOnRN(onScrollEnd);
+          onFinished && scheduleOnRN(onFinished);
         }
       };
 
@@ -197,9 +210,38 @@ export function useCarouselController(options: IOpts): ICarouselController {
       This ensures we don't scroll beyond the last set of fully visible items,
       maintaining a clean UX without partial item visibility at the edges.
       */
-      const visibleContentWidth = (dataInfo.length - index.value) * size;
-      if (!overscrollEnabled && !(visibleContentWidth > containerSize.value.width)) {
-        return;
+      // For overscroll calculation, use the intended item size, not the measured container size
+      // In the new dynamic size system, `size` might be the container size from layout measurement,
+      // but for overscroll we need the actual item size from the width/height props
+      const itemSize = vertical ? height || size : width || size;
+      const visibleContentWidth = (dataInfo.length - index.value) * itemSize;
+
+      // Get effective container width, with fallback for cases where containerSize
+      // hasn't been updated yet (e.g., in tests or during initialization)
+      const getEffectiveContainerWidth = () => {
+        // 1. Use measured value if available
+        if (containerSize.value.width > 0) {
+          return containerSize.value.width;
+        }
+
+        // 2. Fallback to props width/height when no measurement available
+        if (!vertical && width && width > 0) {
+          return width;
+        }
+        if (vertical && height && height > 0) {
+          return height;
+        }
+
+        // 3. Final fallback - assume multiple items are visible
+        return itemSize * 3; // Assume 3 items per view as reasonable default
+      };
+
+      const effectiveContainerWidth = getEffectiveContainerWidth();
+
+      if (!overscrollEnabled && effectiveContainerWidth > 0) {
+        if (!(visibleContentWidth > effectiveContainerWidth)) {
+          return;
+        }
       }
 
       onScrollStart?.();
@@ -224,6 +266,11 @@ export function useCarouselController(options: IOpts): ICarouselController {
       size,
       scrollWithTiming,
       currentFixedPage,
+      overscrollEnabled,
+      containerSize,
+      vertical,
+      width,
+      height,
     ]
   );
 

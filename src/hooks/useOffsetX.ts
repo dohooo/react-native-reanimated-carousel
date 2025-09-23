@@ -39,6 +39,8 @@ export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
   const MIN = -((VALID_LENGTH - positiveCount) * size);
 
   const x = useDerivedValue(() => {
+    if (!size) return 0;
+
     const { negativeRange, positiveRange } = visibleRanges.value;
 
     if (

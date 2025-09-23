@@ -3,13 +3,13 @@ import { View } from "react-native";
 import Animated, {
   interpolate,
   interpolateColor,
-  runOnJS,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
 import type { SharedValue } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
+import { scheduleOnRN } from "react-native-worklets";
 
 import { Arrow, ArrowDirection } from "@/components/StackCardsArrow";
 
@@ -46,10 +46,10 @@ function Index() {
     (direction) => {
       switch (direction) {
         case ArrowDirection.IS_VERTICAL:
-          runOnJS(setIsVertical)(true);
+          scheduleOnRN(setIsVertical, true);
           break;
         case ArrowDirection.IS_HORIZONTAL:
-          runOnJS(setIsVertical)(false);
+          scheduleOnRN(setIsVertical, false);
           break;
       }
     },

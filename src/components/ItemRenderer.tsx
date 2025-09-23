@@ -2,7 +2,8 @@ import React from "react";
 import type { FC } from "react";
 import type { ViewStyle } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
-import { runOnJS, useAnimatedReaction } from "react-native-reanimated";
+import { useAnimatedReaction } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 
 import type { TAnimationStyle } from "./ItemLayout";
 import { ItemLayout } from "./ItemLayout";
@@ -55,7 +56,7 @@ export const ItemRenderer: FC<Props> = (props) => {
 
   useAnimatedReaction(
     () => visibleRanges.value,
-    (ranges) => runOnJS(setDisplayedItems)(ranges),
+    (ranges) => scheduleOnRN(setDisplayedItems, ranges),
     [visibleRanges]
   );
 

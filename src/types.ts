@@ -14,13 +14,13 @@ export type IComputedDirectionTypes<T, VP = {}, HP = {}> =
          */
         vertical: true;
         /**
-         * Layout items vertically instead of horizontally
-         */
-        /**
          * Specified carousel container width.
          */
         width?: number;
-        height: number;
+        /**
+         * Specified carousel container height.
+         */
+        height?: number;
       })
   | (T &
       HP & {
@@ -29,12 +29,12 @@ export type IComputedDirectionTypes<T, VP = {}, HP = {}> =
          */
         vertical?: false;
         /**
-         * Layout items vertically instead of horizontally
-         */
-        /**
          * Specified carousel container width.
          */
-        width: number;
+        width?: number;
+        /**
+         * Specified carousel container height.
+         */
         height?: number;
       });
 

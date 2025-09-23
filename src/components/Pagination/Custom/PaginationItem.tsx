@@ -8,10 +8,10 @@ import Animated, {
   interpolate,
   interpolateColor,
   useAnimatedStyle,
-  runOnJS,
   useSharedValue,
   useDerivedValue,
 } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 
 type AnimatedDefaultStyle = ViewStyle | ImageStyle | TextStyle;
 
@@ -60,7 +60,7 @@ export const PaginationItem: React.FC<
   };
 
   useDerivedValue(() => {
-    runOnJS(handleCustomAnimation)(animValue?.value);
+    scheduleOnRN(handleCustomAnimation, animValue?.value);
   });
 
   const animStyle = useAnimatedStyle((): AnimatedDefaultStyle => {

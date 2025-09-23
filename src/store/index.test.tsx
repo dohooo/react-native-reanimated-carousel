@@ -2,7 +2,10 @@ import { act, render } from "@testing-library/react-native";
 import React from "react";
 import { Text } from "react-native";
 
-import { GlobalStateContext, GlobalStateProvider, useGlobalState } from "./index";
+import { ICommonVariables } from "../hooks/useCommonVariables";
+import { GlobalStateContext, GlobalStateProvider, IContext, useGlobalState } from "./index";
+
+const createSharedValue = <T,>(initial: T) => ({ value: initial });
 
 describe("GlobalStateProvider", () => {
   const mockProps = {
@@ -15,9 +18,12 @@ describe("GlobalStateProvider", () => {
   const mockCommon = {
     size: 300,
     validLength: 3,
-  };
+    handlerOffset: createSharedValue(0),
+    resolvedSize: createSharedValue<number | null>(300),
+    sizePhase: createSharedValue("ready" as const),
+  } as ICommonVariables;
 
-  const mockValue = {
+  const mockValue: Pick<IContext, "props" | "common"> = {
     props: mockProps,
     common: mockCommon,
   };
@@ -196,9 +202,15 @@ describe("GlobalStateProvider", () => {
 });
 
 describe("useGlobalState", () => {
-  const mockValue = {
+  const mockValue: Pick<IContext, "props" | "common"> = {
     props: { width: 300, data: [1, 2, 3], renderItem: () => <Text>Item</Text> } as any,
-    common: { size: 300, validLength: 3 },
+    common: {
+      size: 300,
+      validLength: 3,
+      handlerOffset: createSharedValue(0),
+      resolvedSize: createSharedValue<number | null>(300),
+      sizePhase: createSharedValue("ready" as const),
+    } as ICommonVariables,
   };
 
   it("should return context value when used within provider", () => {
@@ -228,9 +240,9 @@ describe("useGlobalState", () => {
       return <Text>Test</Text>;
     };
 
-    const mockValue = {
+    const mockValue: Pick<IContext, "props" | "common"> = {
       props: { width: 300, data: [1, 2, 3], renderItem: () => <Text>Item</Text> } as any,
-      common: { size: 300, validLength: 3 },
+      common: { size: 300, validLength: 3 } as ICommonVariables,
     };
 
     render(
