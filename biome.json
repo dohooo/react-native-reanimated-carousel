@@ -58,7 +58,8 @@
       "scripts/**/*",
       "package.json",
       "junit.xml",
-      "example/app/.tamagui/tamagui.config.json"
+      "example/app/.tamagui/tamagui.config.json",
+      ".changeset"
     ]
   }
 }

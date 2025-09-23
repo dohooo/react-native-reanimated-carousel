@@ -1,0 +1,8 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "react-native-reanimated-carousel": "4.0.3"
+  },
+  "changesets": []
+}
