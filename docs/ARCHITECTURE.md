@@ -399,7 +399,7 @@ useAnimatedReaction(
   },
   ({ offsetProgress, absoluteProgress }) => {
     if (typeof onProgressChange === "function") {
-      runOnJS(onProgressChange)(offsetProgress, absoluteProgress);
+      scheduleOnRN(onProgressChange, offsetProgress, absoluteProgress);
     } else if (onProgressChange) {
       onProgressChange.value = absoluteProgress;
     }
@@ -1900,10 +1900,10 @@ import 'react-native-reanimated/lib/reanimated2/jestUtils';
 it('should update shared value correctly', () => {
   const sharedValue = useSharedValue(0);
   
-  // Use runOnJS for async assertions
+  // Use scheduleOnRN for async assertions
   const expectation = jest.fn();
   
-  runOnJS(expectation)(sharedValue.value);
+  scheduleOnRN(expectation, sharedValue.value);
   
   expect(expectation).toHaveBeenCalledWith(expectedValue);
 });

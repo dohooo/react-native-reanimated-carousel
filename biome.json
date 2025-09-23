@@ -57,7 +57,9 @@
       "example/app/android/**/*",
       "scripts/**/*",
       "package.json",
-      "junit.xml"
+      "junit.xml",
+      "example/app/.tamagui/tamagui.config.json",
+      ".changeset"
     ]
   }
 }

@@ -16,6 +16,15 @@
 -   [Getting Started](https://rn-carousel.dev)
 -   [Examples](https://rn-carousel.dev/Examples/summary)
 
+## 📊 Version Compatibility
+
+| Carousel Version | Expo SDK | React Native | Reanimated | Gesture Handler | Worklets   |
+|------------------|----------|--------------|------------|-----------------|------------|
+| **v5.0.0-beta**  | **54+**  | **0.80+**    | **4.0.0+** | **2.9.0+**      | **0.5.0+** |
+| v4.x             | 50-53    | 0.70.3+      | 3.0.0+     | 2.9.0+          | ❌          |
+| v3.x             | 47-49    | 0.66.0+      | 2.0.0+     | 2.0.0+          | ❌          |
+
+
 ## Sponsors
 
 <p align="center">

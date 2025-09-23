@@ -17,10 +17,10 @@ import { MAX_WIDTH } from "@/constants/sizes";
 import { useInDoc } from "@/hooks/useInDoc";
 import { CaptureProvider } from "@/store/CaptureProvider";
 import { useWebContext } from "@/store/WebProvider";
+import { routes } from "@/utils/routes";
 import { Link } from "expo-router";
 import Stack from "expo-router/stack";
 import { useReducedMotion } from "react-native-reanimated";
-import { routes } from "./routes";
 
 export {
   // Catch any errors thrown by the Layout component.

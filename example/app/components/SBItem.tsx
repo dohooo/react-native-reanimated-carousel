@@ -1,20 +1,21 @@
 import React from "react";
 import type { ImageSourcePropType, StyleProp, ViewProps, ViewStyle } from "react-native";
 import { LongPressGestureHandler } from "react-native-gesture-handler";
-import type { AnimateProps } from "react-native-reanimated";
+import type { AnimatedProps } from "react-native-reanimated";
 import Animated from "react-native-reanimated";
 
 import Constants from "expo-constants";
 
 import { SlideItem } from "./SlideItem";
 
-interface Props extends AnimateProps<ViewProps> {
+interface Props extends AnimatedProps<ViewProps> {
   style?: StyleProp<ViewStyle>;
   index?: number;
   pretty?: boolean;
   showIndex?: boolean;
   img?: ImageSourcePropType;
   rounded?: boolean;
+  testID?: string;
 }
 
 export const SBItem: React.FC<Props> = (props) => {

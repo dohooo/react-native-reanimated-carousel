@@ -9,13 +9,14 @@ import { GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   cancelAnimation,
   measure,
-  runOnJS,
   useAnimatedReaction,
   useAnimatedRef,
   useDerivedValue,
   useSharedValue,
   withDecay,
 } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 
 import { Easing } from "../constants";
 import { usePanGestureProxy } from "../hooks/usePanGestureProxy";
@@ -28,7 +29,7 @@ interface Props {
   infinite?: boolean;
   testID?: string;
   style?: StyleProp<ViewStyle>;
-  translation: Animated.SharedValue<number>;
+  translation: SharedValue<number>;
   onLayout?: (e: LayoutChangeEvent) => void;
   onScrollStart?: () => void;
   onScrollEnd?: () => void;
@@ -53,7 +54,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       minScrollDistancePerSwipe,
       fixedDirection,
     },
-    common: { size },
+    common: { size, resolvedSize, sizePhase },
     layout: { updateContainerSize },
   } = useGlobalState();
 
@@ -78,10 +79,16 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
   const containerRef = useAnimatedRef<Animated.View>();
   const maxScrollDistancePerSwipeIsSet = typeof maxScrollDistancePerSwipe === "number";
   const minScrollDistancePerSwipeIsSet = typeof minScrollDistancePerSwipe === "number";
+  const sizeReady = useDerivedValue(() => {
+    const currentSize = resolvedSize.value ?? 0;
+    return sizePhase.value === "ready" && currentSize > 0;
+  }, [resolvedSize, sizePhase]);
 
   // Get the limit of the scroll.
   const getLimit = React.useCallback(() => {
     "worklet";
+
+    if (size <= 0) return 0;
 
     if (!loop && !overscrollEnabled) {
       const measurement = measure(containerRef);
@@ -112,7 +119,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
         toValue,
         (isFinished: boolean) => {
           "worklet";
-          if (isFinished) onFinished && runOnJS(onFinished)();
+          if (isFinished) onFinished && scheduleOnRN(onFinished);
         }
       );
     },
@@ -126,6 +133,9 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       onFinished?: () => void
     ) => {
       "worklet";
+      if (size <= 0) {
+        return;
+      }
       const origin = translation.value;
       const velocity = scrollEndVelocityValue;
       // Default to scroll in the direction of the slide (with deceleration)
@@ -210,7 +220,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       "worklet";
       if (isFinished) {
         touching.value = false;
-        onScrollEnd && runOnJS(onScrollEnd)();
+        onScrollEnd && scheduleOnRN(onScrollEnd);
       }
     },
     [onScrollEnd, touching]
@@ -226,6 +236,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
 
   const resetBoundary = React.useCallback(() => {
     "worklet";
+    if (size <= 0) return;
     if (touching.value) return;
 
     if (translation.value > 0) {
@@ -271,10 +282,12 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
   const onGestureStart = useCallback(
     (_: PanGestureHandlerEventPayload) => {
       "worklet";
-
+      if (!sizeReady.value || size <= 0) {
+        return;
+      }
       touching.value = true;
       validStart.value = true;
-      onScrollStart && runOnJS(onScrollStart)();
+      onScrollStart && scheduleOnRN(onScrollStart);
 
       max.value = (maxPage - 1) * size;
       if (!loop && !overscrollEnabled) max.value = getLimit();
@@ -293,13 +306,16 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       overscrollEnabled,
       getLimit,
       onScrollStart,
+      sizeReady,
     ]
   );
 
   const onGestureUpdate = useCallback(
     (e: PanGestureHandlerEventPayload) => {
       "worklet";
-
+      if (!sizeReady.value || size <= 0) {
+        return;
+      }
       if (panOffset.value === undefined) {
         // This may happen if `onGestureStart` is called as a part of the
         // JS thread (instead of the UI thread / worklet). If so, when
@@ -349,12 +365,18 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       translation,
       validStart,
       touching,
+      sizeReady,
     ]
   );
 
   const onGestureEnd = useCallback(
     (e: GestureStateChangeEvent<PanGestureHandlerEventPayload>, _success: boolean) => {
       "worklet";
+
+      if (!sizeReady.value || size <= 0) {
+        panOffset.value = undefined;
+        return;
+      }
 
       if (panOffset.value === undefined) {
         // console.warn("onGestureEnd: panOffset is undefined");
@@ -425,6 +447,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       endWithSpring,
       withSpring,
       onScrollEnd,
+      sizeReady,
     ]
   );
 
@@ -439,12 +462,25 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
   const onLayout = React.useCallback(
     (e: LayoutChangeEvent) => {
       "worklet";
+
+      const measuredWidth = e.nativeEvent.layout.width;
+      const measuredHeight = e.nativeEvent.layout.height;
+      const measuredSize = Math.round((vertical ? measuredHeight : measuredWidth) || 0);
+
+      if (measuredSize > 0) {
+        const current = resolvedSize.value ?? 0;
+        if (Math.abs(current - measuredSize) > 0) {
+          sizePhase.value = current > 0 ? "updating" : sizePhase.value;
+          resolvedSize.value = measuredSize;
+        }
+      }
+
       updateContainerSize({
-        width: e.nativeEvent.layout.width,
-        height: e.nativeEvent.layout.height,
+        width: measuredWidth,
+        height: measuredHeight,
       });
     },
-    [updateContainerSize]
+    [updateContainerSize, resolvedSize, sizePhase, vertical]
   );
 
   return (

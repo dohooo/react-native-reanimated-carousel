@@ -5,7 +5,8 @@ const escape = require("escape-string-regexp");
 const { getDefaultConfig } = require("expo/metro-config");
 const config = getDefaultConfig(__dirname);
 const { transformer, resolver } = config;
-const exclusionList = require("metro-config/src/defaults/exclusionList");
+const defaultWatchFolders = config.watchFolders ?? [];
+// const { createBlacklist } = require("metro-config");
 
 const root = path.resolve(__dirname, "../..");
 const rootPak = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
@@ -24,7 +25,7 @@ module.exports = {
   ...config,
 
   projectRoot: __dirname,
-  watchFolders: [root],
+  watchFolders: [...defaultWatchFolders, root],
 
   // We need to make sure that only one version is loaded for peerDependencies
   // So we blacklist them at the root, and alias them to the versions in example's node_modules
@@ -32,11 +33,12 @@ module.exports = {
     ...resolver,
     assetExts: resolver.assetExts.filter((ext) => ext !== "svg"),
     sourceExts: [...resolver.sourceExts, "svg"],
-    blacklistRE: exclusionList([new RegExp(`^${escape(path.join(root, "node_modules"))}\\/.*$`)]),
+    blockList: [new RegExp(`^${escape(path.join(root, "node_modules"))}\\/.*$`)],
     extraNodeModules: modules.reduce((acc, name) => {
       acc[name] = path.join(__dirname, "node_modules", name);
       return acc;
     }, {}),
+    unstable_enablePackageExports: false
   },
 
   transformer: {

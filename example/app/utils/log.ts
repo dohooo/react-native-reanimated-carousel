@@ -1,6 +1,6 @@
 /**
  * In worklet
- * e.g. runOnJS(log)(...);
+ * e.g. scheduleOnRN(log, ...);
  */
 export function log(...msg: any) {
   console.log(...msg);

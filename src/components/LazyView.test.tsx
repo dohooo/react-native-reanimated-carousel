@@ -26,13 +26,13 @@ describe("LazyView", () => {
   });
 
   it("should render empty fragment when shouldUpdate is false", () => {
-    const { container } = render(
+    const { toJSON } = render(
       <LazyView shouldUpdate={false}>
         <Text>Test Child</Text>
       </LazyView>
     );
 
-    expect(container.children.length).toBe(0);
+    expect(toJSON()).toBeNull();
   });
 
   it("should handle multiple children when shouldUpdate is true", () => {

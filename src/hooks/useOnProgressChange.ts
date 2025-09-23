@@ -1,5 +1,6 @@
-import type Animated from "react-native-reanimated";
-import { runOnJS, useAnimatedReaction } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
+import { useAnimatedReaction } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 
 import type { TCarouselProps } from "../types";
 import { computedOffsetXValueWithAutoFillData } from "../utils/computed-with-auto-fill-data";
@@ -7,13 +8,14 @@ import { computedOffsetXValueWithAutoFillData } from "../utils/computed-with-aut
 export function useOnProgressChange(
   opts: {
     size: number;
+    sizeReady: SharedValue<boolean>;
     autoFillData: boolean;
     loop: boolean;
-    offsetX: Animated.SharedValue<number>;
+    offsetX: SharedValue<number>;
     rawDataLength: number;
   } & Pick<TCarouselProps, "onProgressChange">
 ) {
-  const { autoFillData, loop, offsetX, size, rawDataLength, onProgressChange } = opts;
+  const { autoFillData, loop, offsetX, size, rawDataLength, onProgressChange, sizeReady } = opts;
 
   // remember `isFunc` here because we can't accurately check typeof
   // from within useAnimatedReaction because its code has been workletized;
@@ -22,26 +24,29 @@ export function useOnProgressChange(
   const isFunc = typeof onProgressChange === "function";
 
   useAnimatedReaction(
-    () => offsetX.value,
-    (_value) => {
+    () => ({ offset: offsetX.value, ready: sizeReady.value }),
+    ({ offset, ready }) => {
+      const safeSize = size > 0 ? size : 0;
+      if (!ready || safeSize <= 0) return;
+
       let value = computedOffsetXValueWithAutoFillData({
-        value: _value,
+        value: offset,
         rawDataLength,
-        size,
+        size: safeSize,
         autoFillData,
         loop,
       });
 
       if (!loop) {
-        value = Math.max(-((rawDataLength - 1) * size), Math.min(value, 0));
+        value = Math.max(-((rawDataLength - 1) * safeSize), Math.min(value, 0));
       }
 
-      let absoluteProgress = Math.abs(value / size);
+      let absoluteProgress = Math.abs(value / safeSize);
 
       if (value > 0) absoluteProgress = rawDataLength - absoluteProgress;
 
       if (onProgressChange) {
-        if (isFunc) runOnJS(onProgressChange)(value, absoluteProgress);
+        if (isFunc) scheduleOnRN(onProgressChange, value, absoluteProgress);
         else onProgressChange.value = absoluteProgress;
       }
     },

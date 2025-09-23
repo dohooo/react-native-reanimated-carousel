@@ -1,8 +1,7 @@
 module.exports = {
   preset: "react-native",
   modulePathIgnorePatterns: ["example", "docs", "assets", ".yarn", "lib"],
-  setupFiles: ["./test/jest-setup.js", "./node_modules/react-native-gesture-handler/jestSetup.js"],
-  setupFilesAfterEnv: ["@testing-library/jest-native/extend-expect"],
+  setupFilesAfterEnv: ["./test/jest-setup.js"],
   coverageReporters: ["text", "lcov", "cobertura"],
   collectCoverageFrom: [
     "src/**/*.{ts,tsx}",
@@ -19,6 +18,7 @@ module.exports = {
       statements: 70,
     },
   },
-  testEnvironment: "node",
-  transformIgnorePatterns: [],
+  transformIgnorePatterns: [
+    "<rootDir>/node_modules/(?!(@react-native|react-native|@react-navigation))",
+  ],
 };

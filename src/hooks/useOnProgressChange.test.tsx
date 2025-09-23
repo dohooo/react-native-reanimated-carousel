@@ -20,7 +20,6 @@ jest.mock("react-native-reanimated", () => {
         reactionCallback = null;
       };
     }),
-    runOnJS: jest.fn((fn) => fn),
     Easing: {
       bezier: () => ({
         factory: () => 0,
@@ -33,6 +32,14 @@ jest.mock("react-native-reanimated", () => {
   };
 });
 
+jest.mock("react-native-worklets", () => {
+  const mockScheduleOnRN = jest.fn((fn, ...args) => fn(...args));
+  return {
+    scheduleOnRN: mockScheduleOnRN,
+    mockScheduleOnRN,
+  };
+});
+
 // Mock computedOffsetXValueWithAutoFillData
 jest.mock("../utils/computed-with-auto-fill-data", () => ({
   computedOffsetXValueWithAutoFillData: jest.fn(({ value }) => value),
@@ -40,6 +47,7 @@ jest.mock("../utils/computed-with-auto-fill-data", () => ({
 
 describe("useOnProgressChange", () => {
   const mockOffsetX = useSharedValue(0);
+  const mockSizeReady = useSharedValue(true);
   const mockOnProgressChange = jest.fn();
   const { __triggerReaction } = jest.requireMock("react-native-reanimated");
 
@@ -52,6 +60,7 @@ describe("useOnProgressChange", () => {
     renderHook(() =>
       useOnProgressChange({
         size: 300,
+        sizeReady: mockSizeReady,
         autoFillData: false,
         loop: false,
         offsetX: mockOffsetX,
@@ -61,7 +70,7 @@ describe("useOnProgressChange", () => {
     );
 
     mockOffsetX.value = -300; // Move to next slide
-    __triggerReaction(mockOffsetX.value);
+    __triggerReaction({ offset: mockOffsetX.value, ready: mockSizeReady.value });
     expect(mockOnProgressChange).toHaveBeenCalledWith(-300, 1);
   });
 
@@ -70,6 +79,7 @@ describe("useOnProgressChange", () => {
     renderHook(() =>
       useOnProgressChange({
         size: 300,
+        sizeReady: mockSizeReady,
         autoFillData: false,
         loop: false,
         offsetX: mockOffsetX,
@@ -79,7 +89,7 @@ describe("useOnProgressChange", () => {
     );
 
     mockOffsetX.value = -300; // Move to next slide
-    __triggerReaction(mockOffsetX.value);
+    __triggerReaction({ offset: mockOffsetX.value, ready: mockSizeReady.value });
     expect(progressValue.value).toBe(1);
   });
 
@@ -87,6 +97,7 @@ describe("useOnProgressChange", () => {
     renderHook(() =>
       useOnProgressChange({
         size: 300,
+        sizeReady: mockSizeReady,
         autoFillData: false,
         loop: true,
         offsetX: mockOffsetX,
@@ -96,7 +107,7 @@ describe("useOnProgressChange", () => {
     );
 
     mockOffsetX.value = -1500; // Move to last slide
-    __triggerReaction(mockOffsetX.value);
+    __triggerReaction({ offset: mockOffsetX.value, ready: mockSizeReady.value });
     expect(mockOnProgressChange).toHaveBeenCalledWith(-1500, 5);
   });
 
@@ -104,6 +115,7 @@ describe("useOnProgressChange", () => {
     renderHook(() =>
       useOnProgressChange({
         size: 300,
+        sizeReady: mockSizeReady,
         autoFillData: true,
         loop: false,
         offsetX: mockOffsetX,
@@ -113,7 +125,7 @@ describe("useOnProgressChange", () => {
     );
 
     mockOffsetX.value = -300; // Move to next slide
-    __triggerReaction(mockOffsetX.value);
+    __triggerReaction({ offset: mockOffsetX.value, ready: mockSizeReady.value });
     expect(mockOnProgressChange).toHaveBeenCalledWith(-300, 1);
   });
 
@@ -121,6 +133,7 @@ describe("useOnProgressChange", () => {
     renderHook(() =>
       useOnProgressChange({
         size: 300,
+        sizeReady: mockSizeReady,
         autoFillData: false,
         loop: false,
         offsetX: mockOffsetX,
@@ -130,11 +143,11 @@ describe("useOnProgressChange", () => {
     );
 
     mockOffsetX.value = 300; // Try to move before first slide
-    __triggerReaction(mockOffsetX.value);
+    __triggerReaction({ offset: mockOffsetX.value, ready: mockSizeReady.value });
     expect(mockOnProgressChange).toHaveBeenCalledWith(0, 0);
 
     mockOffsetX.value = -900; // Try to move after last slide
-    __triggerReaction(mockOffsetX.value);
+    __triggerReaction({ offset: mockOffsetX.value, ready: mockSizeReady.value });
     expect(mockOnProgressChange).toHaveBeenCalledWith(-600, 2);
   });
 
@@ -142,6 +155,7 @@ describe("useOnProgressChange", () => {
     renderHook(() =>
       useOnProgressChange({
         size: 300,
+        sizeReady: mockSizeReady,
         autoFillData: false,
         loop: true,
         offsetX: mockOffsetX,
@@ -151,7 +165,7 @@ describe("useOnProgressChange", () => {
     );
 
     mockOffsetX.value = 300; // Move backwards
-    __triggerReaction(mockOffsetX.value);
+    __triggerReaction({ offset: mockOffsetX.value, ready: mockSizeReady.value });
     expect(mockOnProgressChange).toHaveBeenCalledWith(300, 4);
   });
 
@@ -159,6 +173,7 @@ describe("useOnProgressChange", () => {
     renderHook(() =>
       useOnProgressChange({
         size: 300,
+        sizeReady: mockSizeReady,
         autoFillData: false,
         loop: false,
         offsetX: mockOffsetX,
@@ -166,7 +181,27 @@ describe("useOnProgressChange", () => {
       })
     );
 
-    mockOffsetX.value = -300;
+    mockOffsetX.value = -300; // Move to next slide
+    __triggerReaction({ offset: mockOffsetX.value, ready: mockSizeReady.value });
+    // Should not throw any errors or call any callbacks
+  });
+
+  it("should not trigger progress change when size is not ready", () => {
+    const mockSizeNotReady = useSharedValue(false);
+    renderHook(() =>
+      useOnProgressChange({
+        size: 300,
+        sizeReady: mockSizeNotReady,
+        autoFillData: false,
+        loop: false,
+        offsetX: mockOffsetX,
+        rawDataLength: 5,
+        onProgressChange: mockOnProgressChange,
+      })
+    );
+
+    mockOffsetX.value = -300; // Move to next slide
+    __triggerReaction({ offset: mockOffsetX.value, ready: mockSizeNotReady.value });
     expect(mockOnProgressChange).not.toHaveBeenCalled();
   });
 });

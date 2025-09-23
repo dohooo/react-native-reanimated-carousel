@@ -1,7 +1,6 @@
 import type { StyleProp, ViewStyle } from "react-native";
 import type { PanGesture } from "react-native-gesture-handler";
 import type { SharedValue, WithSpringConfig, WithTimingConfig } from "react-native-reanimated";
-import type Animated from "react-native-reanimated";
 
 import type { TParallaxModeProps } from "./layouts/parallax";
 import type { TStackModeProps } from "./layouts/stack";
@@ -15,13 +14,13 @@ export type IComputedDirectionTypes<T, VP = {}, HP = {}> =
          */
         vertical: true;
         /**
-         * Layout items vertically instead of horizontally
-         */
-        /**
          * Specified carousel container width.
          */
         width?: number;
-        height: number;
+        /**
+         * Specified carousel container height.
+         */
+        height?: number;
       })
   | (T &
       HP & {
@@ -30,12 +29,12 @@ export type IComputedDirectionTypes<T, VP = {}, HP = {}> =
          */
         vertical?: false;
         /**
-         * Layout items vertically instead of horizontally
-         */
-        /**
          * Specified carousel container width.
          */
-        width: number;
+        width?: number;
+        /**
+         * Specified carousel container height.
+         */
         height?: number;
       });
 
@@ -256,7 +255,7 @@ export interface ICarouselInstance {
 export interface CarouselRenderItemInfo<ItemT> {
   item: ItemT;
   index: number;
-  animationValue: Animated.SharedValue<number>;
+  animationValue: SharedValue<number>;
 }
 
 export type CarouselRenderItem<ItemT> = (info: CarouselRenderItemInfo<ItemT>) => React.ReactElement;

@@ -10,6 +10,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 import type { ICarouselInstance } from "react-native-reanimated-carousel";
 import Carousel from "react-native-reanimated-carousel";
 
@@ -67,7 +68,7 @@ function Index() {
 export default Index;
 
 interface Props {
-  animationValue: Animated.SharedValue<number>;
+  animationValue: SharedValue<number>;
   label: string;
   onPress?: () => void;
 }

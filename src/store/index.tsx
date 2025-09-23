@@ -1,16 +1,14 @@
 import React from "react";
 
 import { SharedValue, useSharedValue } from "react-native-reanimated";
+import type { ICommonVariables } from "../hooks/useCommonVariables";
 import type { TInitializeCarouselProps } from "../hooks/useInitProps";
 
 type ItemDimensions = Record<number, { width: number; height: number }>;
 
 export interface IContext {
   props: TInitializeCarouselProps<any>;
-  common: {
-    size: number;
-    validLength: number;
-  };
+  common: ICommonVariables;
   layout: {
     containerSize: SharedValue<{ width: number; height: number }>;
     updateContainerSize: (dimensions: { width: number; height: number }) => void;

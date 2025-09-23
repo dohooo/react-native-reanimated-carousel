@@ -6,6 +6,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
 
 import { SBItem } from "@/components/SBItem";
@@ -135,7 +136,7 @@ const PaginationItem: React.FC<{
   index: number;
   backgroundColor: string;
   length: number;
-  animValue: Animated.SharedValue<number>;
+  animValue: SharedValue<number>;
   isRotate?: boolean;
 }> = (props) => {
   const { animValue, index, length, backgroundColor, isRotate } = props;

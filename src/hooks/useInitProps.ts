@@ -7,13 +7,7 @@ type TGetRequiredProps<P extends keyof TCarouselProps> = Record<P, Required<TCar
 
 export type TInitializeCarouselProps<T> = TCarouselProps<T> &
   TGetRequiredProps<
-    | "defaultIndex"
-    | "loop"
-    | "width"
-    | "height"
-    | "scrollAnimationDuration"
-    | "autoPlayInterval"
-    | "autoFillData"
+    "defaultIndex" | "loop" | "scrollAnimationDuration" | "autoPlayInterval" | "autoFillData"
   > & {
     // Raw data that has not been processed
     rawData: T[];
@@ -39,8 +33,8 @@ export function useInitProps<T>(props: TCarouselProps<T>): TInitializeCarouselPr
     height: _height,
   } = props;
 
-  const width = Math.round(_width || 0);
-  const height = Math.round(_height || 0);
+  const width = typeof _width === "number" ? Math.round(_width) : undefined;
+  const height = typeof _height === "number" ? Math.round(_height) : undefined;
   const autoPlayInterval = Math.max(_autoPlayInterval, 0);
 
   const data = React.useMemo<T[]>(() => {

@@ -6,5 +6,9 @@ export function computeOffsetIfSizeChanged(params: {
   "worklet";
   const { handlerOffset, prevSize, size } = params;
 
+  if (!prevSize) {
+    return handlerOffset;
+  }
+
   return (handlerOffset / prevSize) * size;
 }

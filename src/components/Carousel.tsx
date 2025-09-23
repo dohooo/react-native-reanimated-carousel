@@ -19,4 +19,10 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>((_prop
   );
 });
 
-export default Carousel as <T>(props: React.PropsWithChildren<TCarouselProps<T>>) => JSX.Element;
+type CarouselComponent = <T>(
+  props: React.PropsWithChildren<TCarouselProps<T>> & {
+    ref?: React.Ref<ICarouselInstance>;
+  }
+) => React.ReactElement;
+
+export default Carousel as CarouselComponent;

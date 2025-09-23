@@ -1,6 +1,7 @@
 import * as React from "react";
 import { View } from "react-native";
 import Animated, { interpolate, interpolateColor, useAnimatedStyle } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import { SBItem } from "@/components/SBItem";
@@ -12,7 +13,7 @@ const PAGE_WIDTH = window.width;
 
 interface ItemProps {
   index: number;
-  animationValue: Animated.SharedValue<number>;
+  animationValue: SharedValue<number>;
 }
 const CustomItem: React.FC<ItemProps> = ({ index, animationValue }) => {
   const maskStyle = useAnimatedStyle(() => {

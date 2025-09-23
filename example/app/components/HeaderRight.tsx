@@ -2,14 +2,21 @@ import { QRCode } from "@/components/QRCode";
 import { IS_DEV } from "@/constants/env";
 import { IS_WEB } from "@/constants/platform";
 import { useCapture } from "@/store/CaptureProvider";
-import { Box, Camera, Divide, Star } from "@tamagui/lucide-icons";
-import { Href, usePathname, useRouter } from "expo-router";
+import { Box, Camera } from "@tamagui/lucide-icons";
+import { usePathname, useRouter } from "expo-router";
 import { reloadAsync } from "expo-updates";
 import React from "react";
-import { ColorValue, I18nManager, Platform, Text, View } from "react-native";
+import { ColorValue, I18nManager, Platform, Text } from "react-native";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
-import Animated from "react-native-reanimated";
 import { XStack } from "tamagui";
+
+type IconProps = {
+  size?: number;
+  color?: string;
+};
+
+const BoxIcon = Box as React.ComponentType<IconProps>;
+const CameraIcon = Camera as React.ComponentType<IconProps>;
 
 interface HeaderRightProps {
   tintColor?: ColorValue;
@@ -31,9 +38,9 @@ export const HeaderRight: React.FC<HeaderRightProps> = ({ tintColor, isRTL, setI
   function demoToggle() {
     const isDemoPage = pathname.endsWith("/demo");
     if (isDemoPage) {
-      router.replace(pathname.replace(/\/demo$/, "") as Href<string | object>);
+      router.replace(pathname.replace(/\/demo$/, "") as never);
     } else {
-      router.replace(`${pathname}/demo` as Href<string | object>);
+      router.replace(`${pathname}/demo` as never);
     }
   }
 
@@ -49,7 +56,7 @@ export const HeaderRight: React.FC<HeaderRightProps> = ({ tintColor, isRTL, setI
       {IS_DEV && !IS_WEB && inDemos && (
         <>
           <TouchableOpacity onPress={demoToggle}>
-            <Box size={20} />
+            <BoxIcon size={20} />
           </TouchableOpacity>
           <Text>|</Text>
         </>
@@ -57,7 +64,7 @@ export const HeaderRight: React.FC<HeaderRightProps> = ({ tintColor, isRTL, setI
       {IS_DEV && !IS_WEB && inDemos && (
         <>
           <TouchableOpacity onPress={capture}>
-            <Camera size={20} />
+            <CameraIcon size={20} />
           </TouchableOpacity>
           <Text>|</Text>
         </>

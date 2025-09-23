@@ -17,10 +17,18 @@ interface Props extends AnimatedProps<ViewProps> {
   index?: number;
   rounded?: boolean;
   source?: ImageSourcePropType;
+  colorFill?: boolean;
 }
 
 export const SlideItem: React.FC<Props> = (props) => {
-  const { style, index = 0, rounded = false, testID, ...animatedViewProps } = props;
+  const {
+    style,
+    index = 0,
+    rounded = false,
+    testID,
+    colorFill = false,
+    ...animatedViewProps
+  } = props;
 
   const source = useMemo(
     () => props.source || PURPLE_IMAGES[index % PURPLE_IMAGES.length],
@@ -29,11 +37,14 @@ export const SlideItem: React.FC<Props> = (props) => {
 
   return (
     <Animated.View testID={testID} style={{ flex: 1 }} {...animatedViewProps}>
-      <Animated.Image
-        style={[style, styles.container, rounded && { borderRadius: 15 }]}
-        source={source}
-        resizeMode="cover"
-      />
+      {!colorFill && (
+        <Animated.Image
+          style={[style, styles.container, rounded && { borderRadius: 15 }]}
+          source={source}
+          resizeMode="cover"
+        />
+      )}
+      {colorFill && <View style={[styles.colorFill, rounded && { borderRadius: 15 }]} />}
       <View style={styles.overlay}>
         <View style={styles.overlayTextContainer}>
           <Text style={styles.overlayText}>{index}</Text>
@@ -70,5 +81,13 @@ const styles = StyleSheet.create({
     minHeight: 40,
     justifyContent: "center",
     alignItems: "center",
+  },
+  colorFill: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "gray",
   },
 });

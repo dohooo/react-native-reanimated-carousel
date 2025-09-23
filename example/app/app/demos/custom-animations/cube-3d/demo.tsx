@@ -1,11 +1,12 @@
 import * as React from "react";
-import { View, ViewStyle } from "react-native";
+import { View } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
   interpolateColor,
   useAnimatedStyle,
 } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import { SBItem } from "@/components/SBItem";
@@ -106,7 +107,7 @@ function CubeItem() {
 
 interface ItemProps {
   index: number;
-  animationValue: Animated.SharedValue<number>;
+  animationValue: SharedValue<number>;
 }
 const CustomItem: React.FC<ItemProps> = ({ index, animationValue }) => {
   const maskStyle = useAnimatedStyle(() => {

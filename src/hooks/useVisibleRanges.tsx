@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import type Animated from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 import { useDerivedValue } from "react-native-reanimated";
 
 type Range = [number, number];
@@ -9,19 +9,19 @@ export interface VisibleRanges {
   positiveRange: Range;
 }
 
-export type IVisibleRanges = Animated.SharedValue<VisibleRanges>;
+export type IVisibleRanges = SharedValue<VisibleRanges>;
 
 export function useVisibleRanges(options: {
   total: number;
   viewSize: number;
   windowSize?: number;
-  translation: Animated.SharedValue<number>;
+  translation: SharedValue<number>;
   loop?: boolean;
 }): IVisibleRanges {
   const { total = 0, viewSize, translation, windowSize: _windowSize, loop } = options;
 
   const windowSize = _windowSize ?? total;
-  const cachedRanges = useRef<VisibleRanges>(null!);
+  const cachedRanges = useRef<VisibleRanges | null>(null);
 
   const ranges = useDerivedValue(() => {
     const positiveCount = Math.round(windowSize / 2);
@@ -64,13 +64,15 @@ export function useVisibleRanges(options: {
     }
 
     if (
-      isArraysEqual(cachedRanges.current?.negativeRange ?? [], newRanges.negativeRange) &&
-      isArraysEqual(cachedRanges.current?.positiveRange ?? [], newRanges.positiveRange)
-    )
+      cachedRanges.current &&
+      isArraysEqual(cachedRanges.current.negativeRange, newRanges.negativeRange) &&
+      isArraysEqual(cachedRanges.current.positiveRange, newRanges.positiveRange)
+    ) {
       return cachedRanges.current;
+    }
 
     cachedRanges.current = newRanges;
-    return cachedRanges.current;
+    return newRanges;
   }, [loop, total, windowSize, translation]);
 
   return ranges;

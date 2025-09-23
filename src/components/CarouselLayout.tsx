@@ -1,10 +1,10 @@
 import React from "react";
 import { StyleSheet, type ViewStyle } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { runOnJS, useAnimatedStyle, useDerivedValue } from "react-native-reanimated";
+import { useAnimatedReaction, useAnimatedStyle, useDerivedValue } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 import { useAutoPlay } from "../hooks/useAutoPlay";
 import { useCarouselController } from "../hooks/useCarouselController";
-import { useCommonVariables } from "../hooks/useCommonVariables";
 import { useLayoutConfig } from "../hooks/useLayoutConfig";
 import { useOnProgressChange } from "../hooks/useOnProgressChange";
 import { useGlobalState } from "../store";
@@ -16,7 +16,7 @@ import { ScrollViewGesture } from "./ScrollViewGesture";
 export type TAnimationStyle = (value: number) => ViewStyle;
 
 export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) => {
-  const { props, layout } = useGlobalState();
+  const { props, layout, common } = useGlobalState();
   const { itemDimensions } = layout;
 
   const {
@@ -51,23 +51,33 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
     defaultIndex,
   } = props;
 
-  const commonVariables = useCommonVariables(props);
-  const { size, handlerOffset } = commonVariables;
+  const { size, handlerOffset, resolvedSize, sizePhase } = common;
   const layoutConfig = useLayoutConfig({ ...props, size });
 
+  const isSizeReady = useDerivedValue(() => {
+    const currentSize = resolvedSize.value ?? 0;
+    return sizePhase.value === "ready" && currentSize > 0;
+  }, [resolvedSize, sizePhase]);
+
   const offsetX = useDerivedValue(() => {
-    const totalSize = size * dataLength;
-    const x = handlerOffset.value % totalSize;
+    const currentSize = resolvedSize.value ?? 0;
+    if (currentSize <= 0) return 0;
 
-    if (!loop) return handlerOffset.value;
+    const totalSize = currentSize * dataLength;
+    const value = handlerOffset.value;
+    if (!loop || totalSize === 0) {
+      return value;
+    }
 
+    const x = value % totalSize;
     return Number.isNaN(x) ? 0 : x;
-  }, [loop, size, dataLength, handlerOffset]);
+  }, [loop, dataLength, handlerOffset, resolvedSize]);
 
   useOnProgressChange({
     autoFillData,
     loop,
     size,
+    sizeReady: isSizeReady,
     offsetX,
     rawDataLength,
     onProgressChange,
@@ -84,8 +94,8 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
     defaultIndex,
     fixedDirection,
     duration: scrollAnimationDuration,
-    onScrollEnd: () => runOnJS(_onScrollEnd)(),
-    onScrollStart: () => !!onScrollStart && runOnJS(onScrollStart)(),
+    onScrollEnd: () => scheduleOnRN(_onScrollEnd),
+    onScrollStart: () => !!onScrollStart && scheduleOnRN(onScrollStart),
   });
 
   const {
@@ -108,12 +118,28 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
     if (onScrollEnd) onScrollEnd(realIndex);
   }, [loop, autoFillData, rawDataLength, getSharedIndex, onSnapToItem, onScrollEnd]);
 
-  const { start: startAutoPlay, pause: pauseAutoPlay } = useAutoPlay({
+  const {
+    start: startAutoPlay,
+    pause: pauseAutoPlay,
+    trigger: triggerAutoPlay,
+  } = useAutoPlay({
     autoPlay,
     autoPlayInterval,
     autoPlayReverse,
     carouselController,
   });
+
+  useAnimatedReaction(
+    () => ({ ready: isSizeReady.value }),
+    (state, previous) => {
+      if (!autoPlay) return;
+      if (state.ready === previous?.ready) return;
+
+      if (state.ready) scheduleOnRN(triggerAutoPlay);
+      else scheduleOnRN(pauseAutoPlay);
+    },
+    [autoPlay]
+  );
 
   const scrollViewGestureOnScrollStart = React.useCallback(() => {
     pauseAutoPlay();
@@ -130,18 +156,12 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
   const scrollViewGestureOnTouchEnd = React.useCallback(startAutoPlay, [startAutoPlay]);
 
   const layoutStyle = useAnimatedStyle(() => {
-    // const dimension = itemDimensions.value[index.value];
-
-    // if (!dimension) {
-    //   return {};
-    // }
     return {
-      // height: dimension.height, // For dynamic dimension in the future
-
       width: width || "100%", // [width is deprecated]
       height: height || "100%", // [height is deprecated]
+      opacity: isSizeReady.value ? 1 : 0,
     };
-  }, [width, height, size, itemDimensions]);
+  }, [width, height, itemDimensions, isSizeReady]);
 
   return (
     <GestureHandlerRootView style={[styles.layoutContainer, containerStyle]}>

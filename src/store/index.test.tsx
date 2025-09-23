@@ -1,15 +1,11 @@
-import { render } from "@testing-library/react-native";
+import { act, render } from "@testing-library/react-native";
 import React from "react";
 import { Text } from "react-native";
 
-import { GlobalStateContext, GlobalStateProvider, useGlobalState } from "./index";
+import { ICommonVariables } from "../hooks/useCommonVariables";
+import { GlobalStateContext, GlobalStateProvider, IContext, useGlobalState } from "./index";
 
-// Mock react-native-reanimated
-jest.mock("react-native-reanimated", () => ({
-  useSharedValue: jest.fn((initialValue) => ({
-    value: initialValue,
-  })),
-}));
+const createSharedValue = <T,>(initial: T) => ({ value: initial });
 
 describe("GlobalStateProvider", () => {
   const mockProps = {
@@ -22,9 +18,12 @@ describe("GlobalStateProvider", () => {
   const mockCommon = {
     size: 300,
     validLength: 3,
-  };
+    handlerOffset: createSharedValue(0),
+    resolvedSize: createSharedValue<number | null>(300),
+    sizePhase: createSharedValue("ready" as const),
+  } as ICommonVariables;
 
-  const mockValue = {
+  const mockValue: Pick<IContext, "props" | "common"> = {
     props: mockProps,
     common: mockCommon,
   };
@@ -112,8 +111,10 @@ describe("GlobalStateProvider", () => {
 
     expect(typeof contextValue.layout.updateItemDimensions).toBe("function");
 
-    // Test the function
-    contextValue.layout.updateItemDimensions(0, { width: 100, height: 50 });
+    act(() => {
+      contextValue.layout.updateItemDimensions(0, { width: 100, height: 50 });
+    });
+
     expect(contextValue.layout.itemDimensions.value).toEqual({
       0: { width: 100, height: 50 },
     });
@@ -135,8 +136,10 @@ describe("GlobalStateProvider", () => {
 
     expect(typeof contextValue.layout.updateContainerSize).toBe("function");
 
-    // Test the function
-    contextValue.layout.updateContainerSize({ width: 400, height: 300 });
+    act(() => {
+      contextValue.layout.updateContainerSize({ width: 400, height: 300 });
+    });
+
     expect(contextValue.layout.containerSize.value).toEqual({ width: 400, height: 300 });
   });
 
@@ -184,10 +187,11 @@ describe("GlobalStateProvider", () => {
       </GlobalStateProvider>
     );
 
-    // Add multiple items
-    contextValue.layout.updateItemDimensions(0, { width: 100, height: 50 });
-    contextValue.layout.updateItemDimensions(1, { width: 120, height: 60 });
-    contextValue.layout.updateItemDimensions(2, { width: 90, height: 45 });
+    act(() => {
+      contextValue.layout.updateItemDimensions(0, { width: 100, height: 50 });
+      contextValue.layout.updateItemDimensions(1, { width: 120, height: 60 });
+      contextValue.layout.updateItemDimensions(2, { width: 90, height: 45 });
+    });
 
     expect(contextValue.layout.itemDimensions.value).toEqual({
       0: { width: 100, height: 50 },
@@ -198,9 +202,15 @@ describe("GlobalStateProvider", () => {
 });
 
 describe("useGlobalState", () => {
-  const mockValue = {
+  const mockValue: Pick<IContext, "props" | "common"> = {
     props: { width: 300, data: [1, 2, 3], renderItem: () => <Text>Item</Text> } as any,
-    common: { size: 300, validLength: 3 },
+    common: {
+      size: 300,
+      validLength: 3,
+      handlerOffset: createSharedValue(0),
+      resolvedSize: createSharedValue<number | null>(300),
+      sizePhase: createSharedValue("ready" as const),
+    } as ICommonVariables,
   };
 
   it("should return context value when used within provider", () => {
@@ -223,18 +233,16 @@ describe("useGlobalState", () => {
   });
 
   it("should provide expected hook functionality", () => {
-    // Test that hook returns context when used correctly
     let hookResult: any;
 
     const TestComponent = () => {
-      const context = useGlobalState();
-      hookResult = context;
+      hookResult = useGlobalState();
       return <Text>Test</Text>;
     };
 
-    const mockValue = {
+    const mockValue: Pick<IContext, "props" | "common"> = {
       props: { width: 300, data: [1, 2, 3], renderItem: () => <Text>Item</Text> } as any,
-      common: { size: 300, validLength: 3 },
+      common: { size: 300, validLength: 3 } as ICommonVariables,
     };
 
     render(

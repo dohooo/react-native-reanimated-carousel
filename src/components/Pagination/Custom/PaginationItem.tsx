@@ -1,19 +1,19 @@
 import type { PropsWithChildren } from "react";
 import React from "react";
 import { Pressable } from "react-native";
-import type { ViewStyle } from "react-native";
+import type { ImageStyle, TextStyle, ViewStyle } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 import Animated, {
   Extrapolation,
   interpolate,
   interpolateColor,
   useAnimatedStyle,
-  runOnJS,
   useSharedValue,
   useDerivedValue,
 } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 
-import type { DefaultStyle } from "react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes";
+type AnimatedDefaultStyle = ViewStyle | ImageStyle | TextStyle;
 
 export type DotStyle = Omit<ViewStyle, "width" | "height" | "backgroundColor" | "borderRadius"> & {
   width?: number;
@@ -32,7 +32,11 @@ export const PaginationItem: React.FC<
     dotStyle?: DotStyle;
     activeDotStyle?: DotStyle;
     onPress: () => void;
-    customReanimatedStyle?: (progress: number, index: number, length: number) => DefaultStyle;
+    customReanimatedStyle?: (
+      progress: number,
+      index: number,
+      length: number
+    ) => AnimatedDefaultStyle;
     accessibilityLabel?: string;
   }>
 > = (props) => {
@@ -50,16 +54,16 @@ export const PaginationItem: React.FC<
     onPress,
     accessibilityLabel,
   } = props;
-  const customReanimatedStyleRef = useSharedValue<DefaultStyle>({});
+  const customReanimatedStyleRef = useSharedValue<AnimatedDefaultStyle>({});
   const handleCustomAnimation = (progress: number) => {
     customReanimatedStyleRef.value = customReanimatedStyle?.(progress, index, count) ?? {};
   };
 
   useDerivedValue(() => {
-    runOnJS(handleCustomAnimation)(animValue?.value);
+    scheduleOnRN(handleCustomAnimation, animValue?.value);
   });
 
-  const animStyle = useAnimatedStyle((): DefaultStyle => {
+  const animStyle = useAnimatedStyle((): AnimatedDefaultStyle => {
     const {
       width = size || defaultDotSize,
       height = size || defaultDotSize,
@@ -99,7 +103,7 @@ export const PaginationItem: React.FC<
       transform: [
         ...(restStyle?.transform ?? []),
         ...(customReanimatedStyleRef.value?.transform ?? []),
-      ] as DefaultStyle["transform"],
+      ] as AnimatedDefaultStyle["transform"],
     };
   }, [animValue, index, count, horizontal, dotStyle, activeDotStyle, customReanimatedStyle]);
 

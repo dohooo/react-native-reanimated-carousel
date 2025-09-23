@@ -3,14 +3,15 @@ import { View } from "react-native";
 import Animated, {
   interpolate,
   interpolateColor,
-  runOnJS,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
+import { scheduleOnRN } from "react-native-worklets";
 
-import { Arrow, ArrowDirection } from "./Arrow";
+import { Arrow, ArrowDirection } from "@/components/StackCardsArrow";
 
 import { window } from "@/constants/sizes";
 
@@ -45,10 +46,10 @@ function Index() {
     (direction) => {
       switch (direction) {
         case ArrowDirection.IS_VERTICAL:
-          runOnJS(setIsVertical)(true);
+          scheduleOnRN(setIsVertical, true);
           break;
         case ArrowDirection.IS_HORIZONTAL:
-          runOnJS(setIsVertical)(false);
+          scheduleOnRN(setIsVertical, false);
           break;
       }
     },
@@ -86,8 +87,8 @@ function Index() {
 
 const Item: React.FC<{
   index: number;
-  animationValue: Animated.SharedValue<number>;
-  directionAnim: Animated.SharedValue<ArrowDirection>;
+  animationValue: SharedValue<number>;
+  directionAnim: SharedValue<ArrowDirection>;
 }> = ({ animationValue, directionAnim }) => {
   const maskStyle = useAnimatedStyle(() => {
     const zIndex = interpolate(animationValue.value, [-1, 0, 1], [300, 0, -300]);

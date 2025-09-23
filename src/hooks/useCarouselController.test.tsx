@@ -8,15 +8,10 @@ import { View } from "react-native";
 import { GlobalStateContext, IContext } from "../store";
 import { ICarouselInstance } from "../types";
 import { useCarouselController } from "./useCarouselController";
+import { TCarouselSizePhase } from "./useCommonVariables";
 
 // Mock Reanimated
 jest.mock("react-native-reanimated", () => {
-  const mockRunOnJS = jest.fn((fn) => {
-    return (...args: any[]) => {
-      return fn(...args);
-    };
-  });
-
   const mockAnimatedReaction = jest.fn((deps, cb) => {
     const depsResult = deps();
     cb(depsResult);
@@ -36,9 +31,7 @@ jest.mock("react-native-reanimated", () => {
 
       return toValue;
     }),
-    runOnJS: mockRunOnJS,
     mockAnimatedReaction,
-    mockRunOnJS,
     Easing: {
       bezier: () => ({
         factory: () => 0,
@@ -47,9 +40,18 @@ jest.mock("react-native-reanimated", () => {
   };
 });
 
-// Get mock functions for testing
-const { mockAnimatedReaction, mockRunOnJS } = jest.requireMock("react-native-reanimated");
+jest.mock("react-native-worklets", () => {
+  const mockScheduleOnRN = jest.fn((fn, ...args) => fn(...args));
+  return {
+    scheduleOnRN: mockScheduleOnRN,
+    mockScheduleOnRN,
+  };
+});
 
+// Get mock functions for testing
+const { mockAnimatedReaction } = jest.requireMock("react-native-reanimated");
+
+const { mockScheduleOnRN } = jest.requireMock("react-native-worklets");
 // Update the React mock to include useRef
 jest.mock("react", () => {
   const originalModule = jest.requireActual("react");
@@ -84,6 +86,9 @@ const mockGlobalState: IContext = {
   common: {
     size: 300,
     validLength: 5,
+    handlerOffset: useSharedValue(0),
+    resolvedSize: useSharedValue<number | null>(300),
+    sizePhase: useSharedValue<TCarouselSizePhase>("ready"),
   },
   layout: {
     // @ts-ignore
@@ -101,7 +106,7 @@ const wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 );
 
 describe("useCarouselController", () => {
-  let mockHandlerOffset: ReturnType<typeof useSharedValue>;
+  let mockHandlerOffset: ReturnType<typeof useSharedValue<number>>;
   let ref: ReturnType<typeof useRef>;
   let defaultProps: any;
 
@@ -300,22 +305,22 @@ describe("useCarouselController", () => {
     renderHook(() => useCarouselController(defaultProps), { wrapper });
 
     expect(mockAnimatedReaction).toHaveBeenCalled();
-    expect(mockRunOnJS).toHaveBeenCalled();
+    expect(mockScheduleOnRN).toHaveBeenCalled();
   });
 
-  it("should handle runOnJS correctly", () => {
+  it("should handle scheduleOnRN correctly", () => {
     const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
 
     act(() => {
       result.current.next();
     });
 
-    expect(mockRunOnJS).toHaveBeenCalled();
+    expect(mockScheduleOnRN).toHaveBeenCalled();
   });
 });
 
 describe("useCarouselController imperative handle", () => {
-  let mockHandlerOffset: ReturnType<typeof useSharedValue>;
+  let mockHandlerOffset: ReturnType<typeof useSharedValue<number>>;
   let ref: ReturnType<typeof useRef>;
   let defaultProps: any;
 
@@ -438,13 +443,13 @@ describe("useCarouselController imperative handle", () => {
 });
 
 describe("useCarouselController edge cases and uncovered lines", () => {
-  let mockHandlerOffset: ReturnType<typeof useSharedValue>;
+  let mockHandlerOffset: ReturnType<typeof useSharedValue<number>>;
   let ref: ReturnType<typeof useRef>;
   let defaultProps: any;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockHandlerOffset = useSharedValue(0);
+    mockHandlerOffset = useSharedValue<number>(0);
     ref = useRef<ICarouselInstance>(null!);
     defaultProps = {
       ref,
