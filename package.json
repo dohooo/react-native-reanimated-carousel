@@ -139,12 +139,6 @@
 		],
 		"exclude": "**/*.test.{ts,tsx}"
 	},
-	"workspaces": [
-		"example/app"
-	],
-	"installConfig": {
-		"hoistingLimits": "workspaces"
-	},
 	"config": {
 		"commitizen": {
 			"path": "./node_modules/cz-conventional-changelog"
