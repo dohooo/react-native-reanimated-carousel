@@ -4,5 +4,7 @@
   "initialVersions": {
     "react-native-reanimated-carousel": "4.0.3"
   },
-  "changesets": []
+  "changesets": [
+    "honest-baboons-sip"
+  ]
 }
