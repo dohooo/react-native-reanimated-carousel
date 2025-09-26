@@ -124,11 +124,13 @@ export type TCarouselProps<T = any> = {
   // Other props...
 
   /**
-   * @deprecated Use `style` prop instead. e.g. `style={{ width: 300 }}`
+   * @deprecated Previously controlled the outer container width (v4 behaviour).
+   *               Move this value into `style`, e.g. `style={{ width: 300 }}`.
    */
   width?: number;
   /**
-   * @deprecated Use `style` prop instead. e.g. `style={{ height: 200 }}`
+   * @deprecated Previously controlled the outer container height (v4 behaviour).
+   *               Move this value into `style`, e.g. `style={{ height: 200 }}`.
    */
   height?: number;
   /**
