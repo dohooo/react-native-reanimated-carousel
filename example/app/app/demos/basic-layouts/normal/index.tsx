@@ -5,8 +5,9 @@ import { useAdvancedSettings } from "@/hooks/useSettings";
 import { CaptureWrapper } from "@/store/CaptureProvider";
 import { renderItem } from "@/utils/render-item";
 import * as React from "react";
+import type { StyleProp, ViewStyle } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
-import type { ICarouselInstance } from "react-native-reanimated-carousel";
+import type { ICarouselInstance, TCarouselProps } from "react-native-reanimated-carousel";
 import Carousel from "react-native-reanimated-carousel";
 import { Stack } from "tamagui";
 
@@ -29,15 +30,35 @@ function Index() {
     },
   });
 
+  const {
+    width,
+    height,
+    style: advancedStyle,
+    ...restSettings
+  } = advancedSettings as {
+    width?: number;
+    height?: number;
+    style?: StyleProp<ViewStyle>;
+  } & TCarouselProps;
+
+  const mergedStyle = React.useMemo<StyleProp<ViewStyle>>(
+    () =>
+      [
+        typeof width === "number" || typeof height === "number" ? { width, height } : null,
+        advancedStyle,
+      ].filter(Boolean) as StyleProp<ViewStyle>[],
+    [width, height, advancedStyle]
+  );
+
   return (
     <Stack flex={1}>
       <CaptureWrapper>
         <Carousel
-          {...advancedSettings}
+          {...restSettings}
           ref={ref}
           defaultScrollOffsetValue={scrollOffsetValue}
           testID={"xxx"}
-          style={{ width: "100%" }}
+          style={mergedStyle}
           onScrollStart={() => {
             console.log("Scroll start");
           }}

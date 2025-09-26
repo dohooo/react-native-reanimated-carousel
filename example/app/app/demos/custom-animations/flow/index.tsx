@@ -43,80 +43,87 @@ function Index() {
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
       <CaptureWrapper>
-        <Carousel
-          loop
-          vertical
+        <View
           style={{
-            justifyContent: "center",
             width: PAGE_WIDTH,
             height: PAGE_HEIGHT,
+            justifyContent: "center",
+            alignSelf: "center",
           }}
-          width={ITEM_WIDTH}
-          pagingEnabled={false}
-          height={ITEM_HEIGHT}
-          data={[...new Array(10).keys()]}
-          renderItem={({ index }) => {
-            return (
-              <View key={index} style={{ flex: 1, padding: 10 }}>
-                <View
-                  style={{
-                    alignItems: "flex-start",
-                    flex: 1,
-                    justifyContent: "space-between",
-                    flexDirection: "row",
-                    borderRadius: 20,
-                  }}
-                >
+        >
+          <Carousel
+            loop
+            vertical
+            style={{
+              justifyContent: "center",
+              width: ITEM_WIDTH,
+              height: ITEM_HEIGHT,
+            }}
+            pagingEnabled={false}
+            data={[...new Array(10).keys()]}
+            renderItem={({ index }) => {
+              return (
+                <View key={index} style={{ flex: 1, padding: 10 }}>
                   <View
                     style={{
+                      alignItems: "flex-start",
+                      flex: 1,
+                      justifyContent: "space-between",
                       flexDirection: "row",
-                      alignItems: "center",
+                      borderRadius: 20,
                     }}
                   >
                     <View
                       style={{
-                        width: 20,
-                        height: 20,
-                        borderRadius: 10,
-                        marginRight: 5,
-                        backgroundColor: "gray",
-                      }}
-                    />
-                    <Text
-                      numberOfLines={1}
-                      style={{
-                        maxWidth: ITEM_WIDTH * 0.3 - 40,
-                        color: "white",
+                        flexDirection: "row",
+                        alignItems: "center",
                       }}
                     >
-                      {faker.animal.dog()}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      width: ITEM_WIDTH * 0.6,
-                      height: ITEM_HEIGHT - 20,
-                      borderRadius: 10,
-                      overflow: "hidden",
-                    }}
-                  >
+                      <View
+                        style={{
+                          width: 20,
+                          height: 20,
+                          borderRadius: 10,
+                          marginRight: 5,
+                          backgroundColor: "gray",
+                        }}
+                      />
+                      <Text
+                        numberOfLines={1}
+                        style={{
+                          maxWidth: ITEM_WIDTH * 0.3 - 40,
+                          color: "white",
+                        }}
+                      >
+                        {faker.animal.dog()}
+                      </Text>
+                    </View>
                     <View
                       style={{
                         width: ITEM_WIDTH * 0.6,
                         height: ITEM_HEIGHT - 20,
                         borderRadius: 10,
-                        marginRight: 5,
+                        overflow: "hidden",
                       }}
                     >
-                      <SlideItem index={index} />
+                      <View
+                        style={{
+                          width: ITEM_WIDTH * 0.6,
+                          height: ITEM_HEIGHT - 20,
+                          borderRadius: 10,
+                          marginRight: 5,
+                        }}
+                      >
+                        <SlideItem index={index} />
+                      </View>
                     </View>
                   </View>
                 </View>
-              </View>
-            );
-          }}
-          customAnimation={animationStyle}
-        />
+              );
+            }}
+            customAnimation={animationStyle}
+          />
+        </View>
       </CaptureWrapper>
     </View>
   );

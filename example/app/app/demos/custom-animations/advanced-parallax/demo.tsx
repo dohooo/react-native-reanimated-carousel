@@ -68,7 +68,6 @@ function Index() {
         <Carousel
           loop={true}
           style={{ width: PAGE_WIDTH, height: 240 }}
-          width={PAGE_WIDTH}
           data={[...new Array(6).keys()]}
           renderItem={({ index, animationValue }) => {
             return <CustomItem key={index} index={index} animationValue={animationValue} />;

@@ -15,13 +15,12 @@ function Index() {
       <Carousel
         autoPlayInterval={2000}
         data={defaultDataWith6Colors}
-        height={258}
         loop={true}
         pagingEnabled={true}
         snapEnabled={true}
-        width={window.width}
         style={{
           width: window.width,
+          height: 258,
         }}
         mode="parallax"
         modeConfig={{

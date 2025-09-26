@@ -73,7 +73,6 @@ const animationStyle: TAnimationStyle = React.useCallback((value: number) => {
 
 <Carousel
     style={{ width: screen.width, height: 240 }}
-    width={screen.width}
     data={[...new Array(6).keys()]}
     customAnimation={animationStyle}
     renderItem={({ index, animationValue }) => {
@@ -146,13 +145,11 @@ const animationStyle: TAnimationStyle = React.useCallback((value: number) => {
 
 <Carousel
     style={{
-        width: screen.width,
-        height: 240,
+        width: screen.width * 0.7,
+        height: 240 * 0.7,
         justifyContent: 'center',
         alignItems: 'center',
     }}
-    width={screen.width * 0.7}
-    height={240 * 0.7}
     data={[...new Array(6).keys()]}
     customAnimation={animationStyle}
     renderItem={({ index }) => {

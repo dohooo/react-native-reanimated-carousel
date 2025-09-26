@@ -43,13 +43,15 @@ function Index() {
   );
 
   return (
-    <View id="carousel-component" dataSet={{ kind: "custom-animations", name: "circular" }}>
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "circular" }}
+      style={{ width: PAGE_WIDTH, height: PAGE_WIDTH / 2 }}
+    >
       <Carousel
-        width={itemSize}
-        height={itemSize}
         style={{
-          width: PAGE_WIDTH,
-          height: PAGE_WIDTH / 2,
+          width: itemSize,
+          height: itemSize,
         }}
         loop
         data={getImages(12)}

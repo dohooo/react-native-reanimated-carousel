@@ -1,4 +1,5 @@
 import React from "react";
+import { StyleSheet } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 import { useAnimatedReaction, useSharedValue } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
@@ -20,13 +21,13 @@ export interface ICommonVariables {
 }
 
 export function useCommonVariables(props: TInitializeCarouselProps<any>): ICommonVariables {
-  const { vertical, height, width, dataLength, defaultIndex, defaultScrollOffsetValue, loop } =
-    props;
+  const { vertical, style, dataLength, defaultIndex, defaultScrollOffsetValue, loop } = props;
 
   const manualSize = React.useMemo(() => {
+    const { width, height } = StyleSheet.flatten(style) || {};
     const candidate = vertical ? height : width;
     return typeof candidate === "number" && candidate > 0 ? candidate : null;
-  }, [vertical, width, height]);
+  }, [vertical, style]);
 
   const resolvedSize = useSharedValue<number | null>(manualSize);
   const sizePhase = useSharedValue<TCarouselSizePhase>(manualSize ? "ready" : "pending");

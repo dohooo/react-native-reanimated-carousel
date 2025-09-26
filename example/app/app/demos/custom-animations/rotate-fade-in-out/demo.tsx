@@ -31,17 +31,16 @@ function Index() {
     <View
       id="carousel-component"
       dataSet={{ kind: "custom-animations", name: "rotate-fade-in-out" }}
+      style={{ width: window.width, height: 240, justifyContent: "center", alignItems: "center" }}
     >
       <Carousel
         loop
         style={{
-          width: window.width,
-          height: 240,
+          width: PAGE_WIDTH,
+          height: PAGE_HEIGHT,
           justifyContent: "center",
           alignItems: "center",
         }}
-        width={PAGE_WIDTH}
-        height={PAGE_HEIGHT}
         data={[...new Array(6).keys()]}
         renderItem={({ index }) => {
           return <SBItem key={index} index={index} />;

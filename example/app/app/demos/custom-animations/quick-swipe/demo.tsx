@@ -29,8 +29,6 @@ function Index() {
 
   const baseOptions = {
     vertical: false,
-    width: window.width,
-    height: window.width / 2,
   } as const;
 
   return (
@@ -46,7 +44,8 @@ function Index() {
         ref={ref}
         defaultScrollOffsetValue={scrollOffsetValue}
         testID={"xxx"}
-        style={{ width: "100%" }}
+        contentContainerStyle={{ width: "100%" }}
+        style={{ width: window.width, height: window.width / 2 }}
         autoPlay={false}
         autoPlayInterval={1000}
         data={data}

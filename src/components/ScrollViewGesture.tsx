@@ -472,6 +472,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
         if (Math.abs(current - measuredSize) > 0) {
           sizePhase.value = current > 0 ? "updating" : sizePhase.value;
           resolvedSize.value = measuredSize;
+          sizePhase.value = "ready";
         }
       }
 

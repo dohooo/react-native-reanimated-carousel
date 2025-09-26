@@ -69,14 +69,15 @@ function Index() {
   );
 
   return (
-    <View id="carousel-component" dataSet={{ kind: "custom-animations", name: "fold" }}>
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "fold" }}
+      style={{ width: PAGE_WIDTH, height: PAGE_WIDTH / 2, backgroundColor: "black" }}
+    >
       <Carousel
-        width={itemSize}
-        height={PAGE_WIDTH / 2}
         style={{
-          width: PAGE_WIDTH,
+          width: itemSize,
           height: PAGE_WIDTH / 2,
-          backgroundColor: "black",
         }}
         loop
         windowSize={Math.round(dataLength / 2)}

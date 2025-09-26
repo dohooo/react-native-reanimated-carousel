@@ -46,8 +46,11 @@ export function useOnProgressChange(
       if (value > 0) absoluteProgress = rawDataLength - absoluteProgress;
 
       if (onProgressChange) {
-        if (isFunc) scheduleOnRN(onProgressChange, value, absoluteProgress);
-        else onProgressChange.value = absoluteProgress;
+        if (isFunc) {
+          scheduleOnRN(onProgressChange, value, absoluteProgress);
+        } else {
+          (onProgressChange as SharedValue<number>).value = absoluteProgress;
+        }
       }
     },
     [loop, autoFillData, rawDataLength, onProgressChange, size]

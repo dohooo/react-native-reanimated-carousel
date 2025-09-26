@@ -55,30 +55,36 @@ function Index() {
   return (
     <View style={{ flex: 1 }}>
       <CaptureWrapper>
-        <Carousel
-          loop={false}
+        <View
           style={{
             width: PAGE_WIDTH,
             height: PAGE_HEIGHT,
             justifyContent: "center",
             alignItems: "center",
+            alignSelf: "center",
           }}
-          defaultIndex={0}
-          vertical={false}
-          width={PAGE_WIDTH}
-          height={PAGE_HEIGHT}
-          data={data}
-          onConfigurePanGesture={(g) => {
-            g.onChange((e) => {
-              "worklet";
-              directionAnimVal.value = Math.sign(e.translationX);
-            });
-          }}
-          fixedDirection="negative"
-          renderItem={({ index, item }) => <Item key={index} img={item} />}
-          customAnimation={animationStyle}
-          windowSize={5}
-        />
+        >
+          <Carousel
+            loop={false}
+            style={{
+              width: PAGE_WIDTH,
+              height: PAGE_HEIGHT,
+            }}
+            defaultIndex={0}
+            vertical={false}
+            data={data}
+            onConfigurePanGesture={(g) => {
+              g.onChange((e) => {
+                "worklet";
+                directionAnimVal.value = Math.sign(e.translationX);
+              });
+            }}
+            fixedDirection="negative"
+            renderItem={({ index, item }) => <Item key={index} img={item} />}
+            customAnimation={animationStyle}
+            windowSize={5}
+          />
+        </View>
       </CaptureWrapper>
     </View>
   );

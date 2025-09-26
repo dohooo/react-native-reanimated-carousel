@@ -34,23 +34,25 @@ function Index() {
   return (
     <View style={{ flex: 1 }}>
       <CaptureWrapper>
-        <Carousel
-          loop
+        <View
           style={{
             width: window.width,
             height: 240,
             justifyContent: "center",
             alignItems: "center",
           }}
-          width={PAGE_WIDTH}
-          height={PAGE_HEIGHT}
-          data={[...new Array(6).keys()]}
-          renderItem={({ index }) => {
-            return <SBItem key={index} index={index} />;
-          }}
-          autoPlay={AutoPLay.status}
-          customAnimation={animationStyle}
-        />
+        >
+          <Carousel
+            loop
+            style={{ width: PAGE_WIDTH, height: PAGE_HEIGHT }}
+            data={[...new Array(6).keys()]}
+            renderItem={({ index }) => {
+              return <SBItem key={index} index={index} />;
+            }}
+            autoPlay={AutoPLay.status}
+            customAnimation={animationStyle}
+          />
+        </View>
       </CaptureWrapper>
       {AutoPLay.button}
     </View>

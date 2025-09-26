@@ -39,18 +39,20 @@ function Index() {
   );
 
   return (
-    <View id="carousel-component" dataSet={{ kind: "custom-animations", name: "flow" }}>
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "flow" }}
+      style={{ width: PAGE_WIDTH, height: PAGE_HEIGHT, justifyContent: "center" }}
+    >
       <Carousel
         loop
         vertical
         style={{
           justifyContent: "center",
-          width: PAGE_WIDTH,
-          height: PAGE_HEIGHT,
+          width: ITEM_WIDTH,
+          height: ITEM_HEIGHT,
         }}
-        width={ITEM_WIDTH}
         pagingEnabled={false}
-        height={ITEM_HEIGHT}
         data={[...new Array(10).keys()]}
         renderItem={({ index }) => {
           return (

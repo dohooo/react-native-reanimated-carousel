@@ -25,28 +25,34 @@ function Index() {
   return (
     <View style={{ flex: 1 }}>
       <CaptureWrapper>
-        <Carousel
-          vertical
-          loop={false}
-          autoPlay={isAutoPlay}
+        <View
           style={{
             width: PAGE_WIDTH,
             height: PAGE_HEIGHT,
             alignItems: "center",
+            alignSelf: "center",
           }}
-          width={ITEM_WIDTH}
-          height={ITEM_WIDTH}
-          pagingEnabled={false}
-          snapEnabled={false}
-          data={PURPLE_IMAGES}
-          renderItem={({ item, index, animationValue }) => {
-            return <CustomItem key={index} index={index} animationValue={animationValue} />;
-          }}
-          customAnimation={parallaxLayout({
-            size: ITEM_WIDTH,
-          })}
-          scrollAnimationDuration={1200}
-        />
+        >
+          <Carousel
+            vertical
+            loop={false}
+            autoPlay={isAutoPlay}
+            style={{
+              width: ITEM_WIDTH,
+              height: ITEM_WIDTH,
+            }}
+            pagingEnabled={false}
+            snapEnabled={false}
+            data={PURPLE_IMAGES}
+            renderItem={({ item, index, animationValue }) => {
+              return <CustomItem key={index} index={index} animationValue={animationValue} />;
+            }}
+            customAnimation={parallaxLayout({
+              size: ITEM_WIDTH,
+            })}
+            scrollAnimationDuration={1200}
+          />
+        </View>
       </CaptureWrapper>
       <SButton
         onPress={() => {

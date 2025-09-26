@@ -53,19 +53,24 @@ function Index() {
   );
 
   return (
-    <View id="carousel-component" dataSet={{ kind: "custom-animations", name: "tinder" }}>
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "tinder" }}
+      style={{
+        width: PAGE_WIDTH,
+        height: PAGE_HEIGHT,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <Carousel
         loop={false}
         style={{
           width: PAGE_WIDTH,
           height: PAGE_HEIGHT,
-          justifyContent: "center",
-          alignItems: "center",
         }}
         defaultIndex={0}
         vertical={false}
-        width={PAGE_WIDTH}
-        height={PAGE_HEIGHT}
         data={data}
         onConfigurePanGesture={(g) => {
           g.onChange((e) => {

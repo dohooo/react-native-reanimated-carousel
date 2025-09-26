@@ -31,17 +31,14 @@ function Index() {
   }, []);
 
   return (
-    <View id="carousel-component" dataSet={{ kind: "custom-animations", name: "rotate-in-out" }}>
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "rotate-in-out" }}
+      style={{ width: window.width, height: 240, justifyContent: "center", alignItems: "center" }}
+    >
       <Carousel
         loop
-        style={{
-          width: window.width,
-          height: 240,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        width={PAGE_WIDTH}
-        height={PAGE_HEIGHT}
+        style={{ width: PAGE_WIDTH, height: PAGE_HEIGHT }}
         data={[...new Array(6).keys()]}
         renderItem={({ index }) => <SBItem key={index} index={index} />}
         autoPlay={AutoPLay.status}

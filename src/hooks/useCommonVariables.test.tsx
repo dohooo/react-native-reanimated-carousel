@@ -1,254 +1,174 @@
 import { act, renderHook } from "@testing-library/react-hooks";
-
+import { StyleProp, ViewStyle } from "react-native";
 import { SharedValue, useSharedValue } from "react-native-reanimated";
+
 import { useCommonVariables } from "./useCommonVariables";
-import { TInitializeCarouselProps } from "./useInitProps";
+import type { TInitializeCarouselProps } from "./useInitProps";
 
-type UseCommonVariablesInput = Parameters<typeof useCommonVariables>[0];
-
-const input = {
-  vertical: false,
-  width: 700,
-  height: 350,
-  loop: true,
-  enabled: true,
-  testID: "xxx",
-  style: {
-    width: "100%",
-  },
-  autoPlay: false,
-  autoPlayInterval: 2000,
-  data: [0, 1, 2, 3],
-  renderItem: () => null,
-  pagingEnabled: true,
-  defaultIndex: 0,
-  autoFillData: true,
-  dataLength: 4,
-  rawData: [0, 1, 2, 3],
-  rawDataLength: 4,
-  scrollAnimationDuration: 500,
-  snapEnabled: true,
-  overscrollEnabled: true,
-} as unknown as UseCommonVariablesInput;
+function createBaseProps(
+  overrides: Partial<TInitializeCarouselProps<any>> = {}
+): TInitializeCarouselProps<any> {
+  return {
+    defaultIndex: 0,
+    loop: true,
+    scrollAnimationDuration: 500,
+    autoFillData: true,
+    autoPlayInterval: 2000,
+    autoPlay: false,
+    data: [0, 1, 2, 3],
+    dataLength: 4,
+    rawData: [0, 1, 2, 3],
+    rawDataLength: 4,
+    vertical: false,
+    style: { width: 700, height: 350 } as StyleProp<ViewStyle>,
+    renderItem: () => null,
+    pagingEnabled: true,
+    enabled: true,
+    overscrollEnabled: true,
+    snapEnabled: true,
+    testID: "carousel",
+    ...overrides,
+  } as TInitializeCarouselProps<any>;
+}
 
 describe("useCommonVariables", () => {
-  it("should return the correct values", async () => {
-    const hook = renderHook(() => useCommonVariables(input));
+  it("returns expected values when style provides width", () => {
+    const props = createBaseProps();
+    const { result } = renderHook(() => useCommonVariables(props));
 
-    expect(hook.result.current.size).toBe(700);
-    expect(hook.result.current.validLength).toBe(3);
-    expect(hook.result.current.handlerOffset.value).toBe(-0);
-    expect(hook.result.current.resolvedSize.value).toBe(700);
-    expect(hook.result.current.sizePhase.value).toBe("ready");
+    expect(result.current.size).toBe(700);
+    expect(result.current.validLength).toBe(3);
+    expect(result.current.handlerOffset.value).toBeCloseTo(0);
+    expect(result.current.resolvedSize.value).toBe(700);
+    expect(result.current.sizePhase.value).toBe("ready");
   });
 
-  it("should handle vertical orientation", () => {
-    const verticalInput = {
-      ...input,
-      vertical: true,
-    } as TInitializeCarouselProps<any>;
+  it("uses style.height as size when vertical", () => {
+    const props = createBaseProps({ vertical: true, style: { height: 360 } });
+    const { result } = renderHook(() => useCommonVariables(props));
 
-    const hook = renderHook(() => useCommonVariables(verticalInput));
-
-    expect(hook.result.current.size).toBe(350); // Should use height instead of width
-    expect(hook.result.current.validLength).toBe(3);
-    expect(hook.result.current.resolvedSize.value).toBe(350);
-    expect(hook.result.current.sizePhase.value).toBe("ready");
+    expect(result.current.size).toBe(360);
+    expect(result.current.resolvedSize.value).toBe(360);
   });
 
-  it("should calculate defaultHandlerOffsetValue correctly with non-zero defaultIndex", () => {
-    const inputWithDefaultIndex = {
-      ...input,
-      defaultIndex: 2,
-    };
+  it("initializes handlerOffset when defaultIndex is non-zero", () => {
+    const props = createBaseProps({ defaultIndex: 2 });
+    const { result } = renderHook(() => useCommonVariables(props));
 
-    const hook = renderHook(() => useCommonVariables(inputWithDefaultIndex));
-
-    expect(hook.result.current.handlerOffset.value).toBe(-1400); // -2 * 700
+    expect(result.current.handlerOffset.value).toBe(-1400);
   });
 
-  it("should use custom defaultScrollOffsetValue when provided", () => {
-    let _customOffset: SharedValue<number>;
-    const hook = renderHook(() => {
-      const customOffset = useSharedValue<number>(-500);
-      const inputWithCustomOffset = {
-        ...input,
-        defaultScrollOffsetValue: customOffset,
-      } satisfies UseCommonVariablesInput;
-      const vars = useCommonVariables(inputWithCustomOffset);
-      _customOffset = customOffset;
-      return vars;
+  it("respects custom defaultScrollOffsetValue", () => {
+    let shared!: SharedValue<number>;
+    const { result } = renderHook(() => {
+      shared = useSharedValue(-500);
+      const props = createBaseProps({ defaultScrollOffsetValue: shared });
+      return useCommonVariables(props);
     });
 
-    expect(hook.result.current.handlerOffset).toBe(_customOffset!);
-    expect(hook.result.current.handlerOffset.value).toBe(-500);
+    expect(result.current.handlerOffset).toBe(shared);
+    expect(result.current.handlerOffset.value).toBe(-500);
   });
 
-  it("should handle single data item", () => {
-    const singleItemInput = {
-      ...input,
-      dataLength: 1,
-      data: [0],
-    };
+  it("sets validLength to 0 when dataLength is 1", () => {
+    const props = createBaseProps({ dataLength: 1, data: [0] });
+    const { result } = renderHook(() => useCommonVariables(props));
 
-    const hook = renderHook(() => useCommonVariables(singleItemInput));
-
-    expect(hook.result.current.validLength).toBe(0); // dataLength - 1
+    expect(result.current.validLength).toBe(0);
   });
 
-  it("should handle zero dataLength", () => {
-    const emptyInput = {
-      ...input,
-      dataLength: 0,
-      data: [],
-    };
+  it("sets validLength to -1 when dataLength is 0", () => {
+    const props = createBaseProps({ dataLength: 0, data: [] });
+    const { result } = renderHook(() => useCommonVariables(props));
 
-    const hook = renderHook(() => useCommonVariables(emptyInput));
-
-    expect(hook.result.current.validLength).toBe(-1); // dataLength - 1
+    expect(result.current.validLength).toBe(-1);
   });
 
-  it("should handle negative defaultIndex", () => {
-    const negativeIndexInput = {
-      ...input,
-      defaultIndex: -1,
-    };
+  it("handles negative defaultIndex", () => {
+    const props = createBaseProps({ defaultIndex: -1 });
+    const { result } = renderHook(() => useCommonVariables(props));
 
-    const hook = renderHook(() => useCommonVariables(negativeIndexInput));
-
-    expect(hook.result.current.handlerOffset.value).toBe(-700); // -Math.abs(-1 * 700)
+    expect(result.current.handlerOffset.value).toBe(-700);
   });
 
-  it("should handle loop disabled", () => {
-    const noLoopInput = {
-      ...input,
-      loop: false,
-    };
+  it("keeps size calculation when loop is disabled", () => {
+    const props = createBaseProps({ loop: false });
+    const { result } = renderHook(() => useCommonVariables(props));
 
-    const hook = renderHook(() => useCommonVariables(noLoopInput));
-
-    expect(hook.result.current.size).toBe(700);
-    expect(hook.result.current.validLength).toBe(3);
+    expect(result.current.size).toBe(700);
+    expect(result.current.validLength).toBe(3);
   });
 
-  it("should update when props change", () => {
-    const hook = renderHook(({ props }) => useCommonVariables(props), {
-      initialProps: { props: input },
-    });
-
-    expect(hook.result.current.size).toBe(700);
+  it("syncs resolvedSize when style width changes", () => {
+    const initial = createBaseProps();
+    const hook = renderHook(({ p }) => useCommonVariables(p), { initialProps: { p: initial } });
     expect(hook.result.current.resolvedSize.value).toBe(700);
 
-    // Update width
-    const updatedInput = {
-      ...input,
-      width: 800,
-    };
+    const updated = createBaseProps({ style: { width: 800 } });
+    act(() => {
+      hook.rerender({ p: updated });
+    });
+
+    expect(hook.result.current.resolvedSize.value).toBe(800);
+  });
+
+  it("updates validLength when dataLength changes", () => {
+    const hook = renderHook(({ p }) => useCommonVariables(p), {
+      initialProps: { p: createBaseProps() },
+    });
+    expect(hook.result.current.validLength).toBe(3);
 
     act(() => {
-      hook.rerender({ props: updatedInput });
+      hook.rerender({ p: createBaseProps({ dataLength: 6, data: [0, 1, 2, 3, 4, 5] }) });
     });
 
-    // resolvedSize should be updated immediately for manual size
-    expect(hook.result.current.resolvedSize.value).toBe(800);
-    // Note: size state update is async via useAnimatedReaction,
-    // which may not complete in test environment
-  });
-
-  it("should handle dataLength changes", () => {
-    const hook = renderHook(({ props }) => useCommonVariables(props), {
-      initialProps: { props: input },
-    });
-
-    expect(hook.result.current.validLength).toBe(3);
-
-    // Update dataLength
-    const updatedInput = {
-      ...input,
-      dataLength: 6,
-    };
-
-    hook.rerender({ props: updatedInput });
     expect(hook.result.current.validLength).toBe(5);
   });
 
-  it("should handle zero size (edge case)", () => {
-    const zeroSizeInput = {
-      ...input,
-      width: 0,
-    };
+  it("remains pending when style lacks numeric size", () => {
+    const props = createBaseProps({ style: { width: "100%" } });
+    const { result } = renderHook(() => useCommonVariables(props));
 
-    const hook = renderHook(() => useCommonVariables(zeroSizeInput));
-
-    expect(hook.result.current.size).toBe(0);
-    expect(hook.result.current.handlerOffset.value).toBe(0); // -Math.abs(0 * 0) = 0
+    expect(result.current.size).toBe(0);
+    expect(result.current.resolvedSize.value).toBeNull();
+    expect(result.current.sizePhase.value).toBe("pending");
   });
 
-  it("should handle large defaultIndex", () => {
-    const largeIndexInput = {
-      ...input,
-      defaultIndex: 10,
-    };
+  it("keeps handlerOffset at zero when width is 0", () => {
+    const props = createBaseProps({ style: { width: 0 } });
+    const { result } = renderHook(() => useCommonVariables(props));
 
-    const hook = renderHook(() => useCommonVariables(largeIndexInput));
-
-    expect(hook.result.current.handlerOffset.value).toBe(-7000); // -Math.abs(10 * 700)
+    expect(result.current.size).toBe(0);
+    expect(result.current.handlerOffset.value).toBeCloseTo(0);
   });
 
-  it("should handle vertical with zero height", () => {
-    const verticalZeroHeightInput = {
-      ...input,
-      vertical: true,
-      height: 0,
-    } as TInitializeCarouselProps<any>;
+  it("handles large defaultIndex values", () => {
+    const props = createBaseProps({ defaultIndex: 10 });
+    const { result } = renderHook(() => useCommonVariables(props));
 
-    const hook = renderHook(() => useCommonVariables(verticalZeroHeightInput));
-
-    expect(hook.result.current.size).toBe(0);
+    expect(result.current.handlerOffset.value).toBe(-7000);
   });
 
-  it("should handle floating point dimensions", () => {
-    const floatInput = {
-      ...input,
-      width: 700.5,
-      height: 350.25,
-    };
+  it("returns zero size when vertical height is 0", () => {
+    const props = createBaseProps({ vertical: true, style: { height: 0 } });
+    const { result } = renderHook(() => useCommonVariables(props));
 
-    const hook = renderHook(() => useCommonVariables(floatInput));
-
-    expect(hook.result.current.size).toBe(700.5);
+    expect(result.current.size).toBe(0);
   });
 
-  it("should calculate validLength correctly for different data lengths", () => {
-    const testCases = [
-      { dataLength: 0, expected: -1 },
-      { dataLength: 1, expected: 0 },
-      { dataLength: 5, expected: 4 },
-      { dataLength: 100, expected: 99 },
-    ];
+  it("accepts floating point dimensions", () => {
+    const props = createBaseProps({ style: { width: 700.5 } });
+    const { result } = renderHook(() => useCommonVariables(props));
 
-    for (const { dataLength, expected } of testCases) {
-      const testInput = {
-        ...input,
-        dataLength,
-      };
-
-      const hook = renderHook(() => useCommonVariables(testInput));
-      expect(hook.result.current.validLength).toBe(expected);
-    }
+    expect(result.current.size).toBe(700.5);
+    expect(result.current.resolvedSize.value).toBe(700.5);
   });
 
-  it("should handle undefined width/height with pending state", () => {
-    const noSizeInput = {
-      ...input,
-      width: undefined,
-      height: undefined,
-    };
+  it("stays pending when only height is provided", () => {
+    const props = createBaseProps({ style: { height: 200 } });
+    const { result } = renderHook(() => useCommonVariables(props));
 
-    const hook = renderHook(() => useCommonVariables(noSizeInput));
-
-    expect(hook.result.current.size).toBe(0);
-    expect(hook.result.current.resolvedSize.value).toBeNull();
-    expect(hook.result.current.sizePhase.value).toBe("pending");
+    expect(result.current.size).toBe(0);
+    expect(result.current.sizePhase.value).toBe("pending");
   });
 });

@@ -20,17 +20,18 @@ function Index() {
   const ITEM_WIDTH = PAGE_WIDTH * 0.8;
 
   return (
-    <View id="carousel-component" dataSet={{ kind: "custom-animations", name: "blur-rotate" }}>
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "blur-rotate" }}
+      style={{ width: PAGE_WIDTH, height: PAGE_HEIGHT, alignItems: "center" }}
+    >
       <Carousel
         vertical
         loop={false}
         style={{
-          width: PAGE_WIDTH,
-          height: PAGE_HEIGHT,
-          alignItems: "center",
+          width: ITEM_WIDTH,
+          height: ITEM_WIDTH,
         }}
-        width={ITEM_WIDTH}
-        height={ITEM_WIDTH}
         pagingEnabled={false}
         snapEnabled={false}
         data={PURPLE_IMAGES}

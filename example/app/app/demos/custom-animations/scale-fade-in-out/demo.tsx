@@ -27,18 +27,17 @@ function Index() {
     <View
       id="carousel-component"
       dataSet={{ kind: "custom-animations", name: "scale-fade-in-out" }}
+      style={{ width: PAGE_WIDTH, height: 240, justifyContent: "center", alignItems: "center" }}
     >
       <Carousel
         loop
         style={{
-          width: PAGE_WIDTH,
-          height: 240,
+          width: PAGE_WIDTH * 0.7,
+          height: 240 * 0.7,
           justifyContent: "center",
           alignItems: "center",
         }}
         autoPlay
-        width={PAGE_WIDTH * 0.7}
-        height={240 * 0.7}
         data={[...new Array(6).keys()]}
         renderItem={({ index }) => {
           return <SBItem key={index} index={index} />;

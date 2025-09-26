@@ -23,8 +23,6 @@ function Index() {
   const progressValue = useSharedValue<number>(0);
   const baseOptions = {
     vertical: false,
-    width: PAGE_WIDTH,
-    height: PAGE_WIDTH * 0.6,
   } as const;
 
   return (
@@ -38,8 +36,8 @@ function Index() {
           {...baseOptions}
           loop
           style={{
-            height: window.width / 2,
-            width: window.width,
+            width: PAGE_WIDTH,
+            height: PAGE_WIDTH * 0.6,
             justifyContent: "center",
             alignItems: "center",
           }}
@@ -88,8 +86,8 @@ function Index() {
                 transform,
                 { x: 0.5, y: 0.5 },
                 {
-                  width: baseOptions.width,
-                  height: baseOptions.height,
+                  width: PAGE_WIDTH,
+                  height: PAGE_WIDTH * 0.6,
                 }
               ),
             };

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { View } from "react-native";
-import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
+import type { StyleProp, ViewStyle } from "react-native";
+import Carousel, { ICarouselInstance, TCarouselProps } from "react-native-reanimated-carousel";
 
 import { CustomSelectActionItem } from "@/components/ActionItems";
 import { CarouselAdvancedSettingsPanel } from "@/components/CarouselAdvancedSettingsPanel";
@@ -31,20 +32,39 @@ function Index() {
     },
   });
 
+  const {
+    width,
+    height,
+    style: advancedStyle,
+    ...restSettings
+  } = advancedSettings as {
+    width?: number;
+    height?: number;
+    style?: StyleProp<ViewStyle>;
+  } & TCarouselProps;
+
+  const baseDimensions = React.useMemo(() => {
+    if (typeof width === "number" || typeof height === "number") {
+      return { width, height };
+    }
+    return { width: 280, height: 210 };
+  }, [width, height]);
+
+  const mergedStyle = React.useMemo<StyleProp<ViewStyle>>(
+    () =>
+      [baseDimensions, { alignItems: "center", justifyContent: "center" }, advancedStyle].filter(
+        Boolean
+      ) as StyleProp<ViewStyle>[],
+    [baseDimensions, advancedStyle]
+  );
+
   return (
     <View style={{ flex: 1 }}>
       <CaptureWrapper>
         <Carousel
           ref={ref}
-          {...advancedSettings}
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-            height: 240,
-          }}
-          width={280}
-          height={210}
+          {...restSettings}
+          style={mergedStyle}
           mode={mode}
           modeConfig={{
             snapDirection,

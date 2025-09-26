@@ -14,14 +14,12 @@ function Index() {
       <Carousel
         testID={"xxx"}
         loop={true}
-        width={430}
-        height={258}
         snapEnabled={true}
         pagingEnabled={true}
         autoPlayInterval={2000}
         data={defaultDataWith6Colors}
         defaultScrollOffsetValue={scrollOffsetValue}
-        style={{ width: "100%" }}
+        style={{ width: 430, height: 258 }}
         onScrollStart={() => {
           console.log("Scroll start");
         }}

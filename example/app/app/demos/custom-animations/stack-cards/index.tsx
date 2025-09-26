@@ -68,8 +68,6 @@ function Index() {
           backgroundColor: "black",
         }}
         vertical={isVertical}
-        width={PAGE_WIDTH}
-        height={PAGE_HEIGHT}
         data={[...new Array(6).keys()]}
         renderItem={({ index, animationValue }) => (
           <Item

@@ -83,11 +83,11 @@ function Index() {
 		<View
 			id="carousel-component"
 			dataSet={{ kind: "custom-animations", name: "press-swipe" }}
+			style={{ width: PAGE_WIDTH, height: 240 }}
 		>
 			<Carousel
 				loop={true}
 				style={{ width: PAGE_WIDTH, height: 240 }}
-				width={PAGE_WIDTH}
 				data={PURPLE_IMAGES}
 				onScrollStart={() => {
 					pressAnim.value = withTiming(1);

@@ -52,12 +52,11 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     customProps: Partial<TCarouselProps<string>> = {}
   ) => {
     const baseProps: Partial<TCarouselProps<string>> = {
-      width: slideWidth,
-      height: slideHeight,
       data: createMockData(),
       defaultIndex: 0,
-      testID: "carousel-swipe-container",
-      onProgressChange: progressAnimVal,
+      onProgressChange: (offsetProgress, absoluteProgress) => {
+        progressAnimVal.value = absoluteProgress;
+      },
     };
 
     return {
@@ -129,10 +128,99 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     );
   };
 
+  describe("TDD: Test upcoming refactoring for style props", () => {
+    beforeEach(() => {
+      jest.spyOn(console, "warn").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      (console.warn as jest.Mock).mockRestore();
+    });
+
+    it("should show a deprecation warning when using the `width` prop", () => {
+      const progress = { current: 0 };
+      const Wrapper = createCarousel(progress);
+      render(<Wrapper width={300} style={{ height: 200 }} />);
+      expect(console.warn).toHaveBeenCalledWith(expect.stringContaining("is deprecated"));
+    });
+
+    it("should take width from the new `style` prop", async () => {
+      const progress = { current: 0 };
+      const Wrapper = createCarousel(progress);
+      const { getByTestId } = render(
+        <Wrapper style={{ width: 450, height: 200 }} testID="carousel-container" />
+      );
+      await verifyInitialRender(getByTestId);
+
+      const outerContainer = getByTestId("carousel-container");
+      expect(outerContainer.props.style).toContainEqual({ width: 450, height: 200 });
+    });
+
+    it("should apply styles from the new `contentContainerStyle` prop", async () => {
+      const progress = { current: 0 };
+      const Wrapper = createCarousel(progress);
+      const { getByTestId } = render(
+        <Wrapper
+          style={{ width: slideWidth, height: slideHeight }}
+          contentContainerStyle={{ padding: 20 }}
+        />
+      );
+      await verifyInitialRender(getByTestId);
+
+      const contentContainer = getByTestId("carousel-content-container");
+      expect(contentContainer.props.style).toContainEqual({ padding: 20 });
+    });
+
+    it("should warn when `contentContainerStyle` contains conflicting props", async () => {
+      const progress = { current: 0 };
+      const Wrapper = createCarousel(progress);
+      const { getByTestId } = render(
+        <Wrapper
+          style={{ width: slideWidth, height: slideHeight }}
+          contentContainerStyle={{ opacity: 0.5 }}
+        />
+      );
+      await verifyInitialRender(getByTestId);
+
+      expect(console.warn).toHaveBeenCalledWith(
+        expect.stringContaining("conflict with animations")
+      );
+    });
+
+    it("should auto-size when no width is provided in `style`", async () => {
+      const progress = { current: 0 };
+      const Wrapper = createCarousel(progress);
+      const { getByTestId } = render(<Wrapper style={{ height: 200 }} />);
+
+      const contentContainer = getByTestId("carousel-content-container");
+
+      // Initially, width should be '100%'
+      expect(contentContainer.props.style[1].width).toBe("100%");
+      expect(typeof contentContainer.props.onLayout).toBe("function");
+
+      // Simulate onLayout event
+      act(() => {
+        contentContainer.props.onLayout?.({
+          nativeEvent: { layout: { width: 350, height: 200 } },
+        } as any);
+      });
+
+      act(() => {
+        jest.runOnlyPendingTimers();
+      });
+
+      // No assertions on rendered items because reanimated mock does not process animated updates.
+      // Ensure invoking layout measurement does not throw and that the carousel exposes the expected
+      // measurement callback for auto-sizing scenarios.
+    });
+  });
+
   it("`data` prop: should render correctly", async () => {
     const progress = { current: 0 };
     const Wrapper = createCarousel(progress);
-    const { getByTestId } = render(<Wrapper data={createMockData(6)} />);
+    const { getByTestId } = render(
+      <Wrapper style={{ width: slideWidth, height: slideHeight }} data={createMockData(6)} />
+    );
 
     await verifyInitialRender(getByTestId);
 
@@ -149,6 +237,7 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     const Wrapper = createCarousel(progress);
     const { getByTestId } = render(
       <Wrapper
+        style={{ width: slideWidth, height: slideHeight }}
         renderItem={({ item, index }) => (
           <Animated.Text testID={`item-${index}`}>{item}</Animated.Text>
         )}
@@ -161,7 +250,7 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
   it("should swipe to the left", async () => {
     const progress = { current: 0 };
     const Wrapper = createCarousel(progress);
-    const { getByTestId } = render(<Wrapper />);
+    const { getByTestId } = render(<Wrapper style={{ width: slideWidth, height: slideHeight }} />);
     await verifyInitialRender(getByTestId);
 
     // Test swipe sequence
@@ -175,7 +264,9 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     const progress = { current: 0 };
     const Wrapper = createCarousel(progress);
     {
-      const { getByTestId } = render(<Wrapper loop />);
+      const { getByTestId } = render(
+        <Wrapper style={{ width: slideWidth, height: slideHeight }} loop />
+      );
       await verifyInitialRender(getByTestId);
 
       // Test swipe sequence
@@ -186,7 +277,9 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     }
 
     {
-      const { getByTestId } = render(<Wrapper loop={false} />);
+      const { getByTestId } = render(
+        <Wrapper style={{ width: slideWidth, height: slideHeight }} loop={false} />
+      );
       await verifyInitialRender(getByTestId);
 
       fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
@@ -204,7 +297,9 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     const progress = { current: 0 };
     const onSnapToItem = jest.fn();
     const Wrapper = createCarousel(progress);
-    const { getByTestId } = render(<Wrapper onSnapToItem={onSnapToItem} />);
+    const { getByTestId } = render(
+      <Wrapper style={{ width: slideWidth, height: slideHeight }} onSnapToItem={onSnapToItem} />
+    );
     await verifyInitialRender(getByTestId);
     expect(onSnapToItem).not.toHaveBeenCalled();
 
@@ -221,7 +316,9 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
   it("`autoPlay` prop: should swipe automatically when autoPlay is true", async () => {
     const progress = { current: 0 };
     const Wrapper = createCarousel(progress);
-    const { getByTestId } = render(<Wrapper autoPlay autoPlayInterval={300} />);
+    const { getByTestId } = render(
+      <Wrapper style={{ width: slideWidth, height: slideHeight }} autoPlay autoPlayInterval={300} />
+    );
     await verifyInitialRender(getByTestId);
 
     await waitFor(() => expect(progress.current).toBe(1));
@@ -235,7 +332,13 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     const Wrapper = createCarousel(progress);
 
     render(
-      <Wrapper autoPlay autoPlayReverse autoPlayInterval={300} scrollAnimationDuration={250} />
+      <Wrapper
+        style={{ width: slideWidth, height: slideHeight }}
+        autoPlay
+        autoPlayReverse
+        autoPlayInterval={300}
+        scrollAnimationDuration={250}
+      />
     );
 
     const step = (expectedIndex: number) => {
@@ -254,7 +357,9 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
   it("`defaultIndex` prop: should render the correct item with the defaultIndex props", async () => {
     const progress = { current: 0 };
     const Wrapper = createCarousel(progress);
-    const { getByTestId } = render(<Wrapper defaultIndex={2} />);
+    const { getByTestId } = render(
+      <Wrapper style={{ width: slideWidth, height: slideHeight }} defaultIndex={2} />
+    );
     await verifyInitialRender(getByTestId);
 
     await waitFor(() => expect(progress.current).toBe(2));
@@ -266,7 +371,12 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     const WrapperWithCustomProps = () => {
       const defaultScrollOffsetValue = useSharedValue(-slideWidth);
 
-      return <Wrapper defaultScrollOffsetValue={defaultScrollOffsetValue} />;
+      return (
+        <Wrapper
+          style={{ width: slideWidth, height: slideHeight }}
+          defaultScrollOffsetValue={defaultScrollOffsetValue}
+        />
+      );
     };
 
     render(<WrapperWithCustomProps />);
@@ -282,6 +392,7 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     }> = ({ refSetupCallback }) => {
       return (
         <Wrapper
+          style={{ width: slideWidth, height: slideHeight }}
           ref={(ref) => {
             refSetupCallback(!!ref);
           }}
@@ -298,14 +409,26 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     const progress = { current: 0 };
     const Wrapper = createCarousel(progress);
     {
-      const { getAllByTestId } = render(<Wrapper autoFillData data={createMockData(1)} />);
+      const { getAllByTestId } = render(
+        <Wrapper
+          style={{ width: slideWidth, height: slideHeight }}
+          autoFillData
+          data={createMockData(1)}
+        />
+      );
       await waitFor(() => {
         expect(getAllByTestId("carousel-item-0").length).toBe(3);
       });
     }
 
     {
-      const { getAllByTestId } = render(<Wrapper autoFillData={false} data={createMockData(1)} />);
+      const { getAllByTestId } = render(
+        <Wrapper
+          style={{ width: slideWidth, height: slideHeight }}
+          autoFillData={false}
+          data={createMockData(1)}
+        />
+      );
       await waitFor(() => {
         expect(getAllByTestId("carousel-item-0").length).toBe(1);
       });
@@ -316,7 +439,9 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     const progress = { current: 0 };
     const Wrapper = createCarousel(progress);
     {
-      const { getByTestId } = render(<Wrapper pagingEnabled={false} />);
+      const { getByTestId } = render(
+        <Wrapper style={{ width: slideWidth, height: slideHeight }} pagingEnabled={false} />
+      );
       await verifyInitialRender(getByTestId);
 
       fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
@@ -333,7 +458,9 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     }
 
     {
-      const { getByTestId } = render(<Wrapper pagingEnabled />);
+      const { getByTestId } = render(
+        <Wrapper style={{ width: slideWidth, height: slideHeight }} pagingEnabled />
+      );
       await verifyInitialRender(getByTestId);
 
       fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
@@ -360,6 +487,7 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     let _pan: PanGesture | null = null;
     render(
       <Wrapper
+        style={{ width: slideWidth, height: slideHeight }}
         onConfigurePanGesture={(pan) => {
           _pan = pan;
           return pan;
@@ -367,7 +495,9 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
       />
     );
 
-    const { getByTestId } = render(<Wrapper pagingEnabled={false} />);
+    const { getByTestId } = render(
+      <Wrapper style={{ width: slideWidth, height: slideHeight }} pagingEnabled={false} />
+    );
     await verifyInitialRender(getByTestId);
     expect(_pan).not.toBeNull();
   });
@@ -381,7 +511,9 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
       startedProgress = progress.current;
     };
     const Wrapper = createCarousel(progress);
-    const { getByTestId } = render(<Wrapper onScrollStart={onScrollStart} />);
+    const { getByTestId } = render(
+      <Wrapper style={{ width: slideWidth, height: slideHeight }} onScrollStart={onScrollStart} />
+    );
     await verifyInitialRender(getByTestId);
 
     fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
@@ -404,7 +536,9 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
       endedProgress = progress.current;
     });
     const Wrapper = createCarousel(progress);
-    const { getByTestId } = render(<Wrapper onScrollEnd={onScrollEnd} />);
+    const { getByTestId } = render(
+      <Wrapper style={{ width: slideWidth, height: slideHeight }} onScrollEnd={onScrollEnd} />
+    );
     await verifyInitialRender(getByTestId);
 
     fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
@@ -428,7 +562,11 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     });
     const Wrapper = createCarousel(offsetProgressVal);
     const { getByTestId } = render(
-      <Wrapper onProgressChange={onProgressChange} defaultIndex={0} />
+      <Wrapper
+        style={{ width: slideWidth, height: slideHeight }}
+        onProgressChange={onProgressChange}
+        defaultIndex={0}
+      />
     );
     await verifyInitialRender(getByTestId);
 
@@ -453,7 +591,9 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     {
       const progress = { current: 0 };
       const Wrapper = createCarousel(progress);
-      const { getByTestId } = render(<Wrapper fixedDirection="positive" />);
+      const { getByTestId } = render(
+        <Wrapper style={{ width: slideWidth, height: slideHeight }} fixedDirection="positive" />
+      );
       await verifyInitialRender(getByTestId);
 
       swipeToLeftOnce({ velocityX: slideWidth });
@@ -465,7 +605,9 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     {
       const progress = { current: 0 };
       const Wrapper = createCarousel(progress);
-      const { getByTestId } = render(<Wrapper fixedDirection="negative" />);
+      const { getByTestId } = render(
+        <Wrapper style={{ width: slideWidth, height: slideHeight }} fixedDirection="negative" />
+      );
       await verifyInitialRender(getByTestId);
 
       swipeToLeftOnce({ velocityX: -slideWidth });
@@ -479,6 +621,7 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     const Wrapper = createCarousel(progress);
     const { getByTestId } = render(
       <Wrapper
+        style={{ width: slideWidth, height: slideHeight }}
         customAnimation={(value: number, index: number) => {
           "worklet";
 
@@ -515,7 +658,6 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
   it("`overscrollEnabled` prop: should respect overscrollEnabled=false and prevent scrolling beyond bounds", async () => {
     const containerWidth = slideWidth;
     const containerHeight = containerWidth / 2;
-    const itemWidth = containerWidth / 4;
 
     let nextSlide: (() => void) | undefined;
     const testId = "CarouselAnimatedView";
@@ -534,9 +676,7 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
           if (ref) nextSlide = ref.next;
         }}
         vertical={false}
-        width={itemWidth}
-        height={containerHeight}
-        style={{ width: containerWidth }}
+        style={{ width: containerWidth, height: containerHeight }}
         testID={testId}
         loop={false}
         overscrollEnabled={false}
@@ -548,7 +688,7 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
 
     // Simulate layout
     act(() => {
-      getByTestId(testId).props.onLayout({
+      getByTestId("carousel-content-container").props.onLayout({
         nativeEvent: { layout: { width: containerWidth, height: containerHeight } },
       });
     });
@@ -556,22 +696,45 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     // Let the internal async initialization run
     TICK(1);
 
+    const getProgress = () =>
+      Math.round(((progress.current % slideCount) + slideCount) % slideCount);
+    const captured: number[] = [];
+    const pushExpect = (expected: number) => {
+      captured.push(getProgress());
+      expect(captured[captured.length - 1]).toBe(expected);
+    };
+
     // Initial: At the 0th page
-    expect(Math.round(((progress.current % slideCount) + slideCount) % slideCount)).toBe(0);
+    pushExpect(0);
 
     // next -> 1st page
     nextSlide?.();
     TICK(); // Wait for the animation to end
-    expect(Math.round(((progress.current % slideCount) + slideCount) % slideCount)).toBe(1);
+    pushExpect(1);
 
     // next -> 2nd page
     nextSlide?.();
     TICK();
-    expect(Math.round(((progress.current % slideCount) + slideCount) % slideCount)).toBe(2);
+    pushExpect(2);
 
-    // continue next（Already at the last visible page, and overscroll=false, should not move）
+    // next -> 3rd page (still allowed; still enough content)
     nextSlide?.();
     TICK();
-    expect(Math.round(((progress.current % slideCount) + slideCount) % slideCount)).toBe(2);
+    pushExpect(3);
+
+    // next -> 4th page
+    nextSlide?.();
+    TICK();
+    pushExpect(0);
+
+    // next -> 5th page (last item)
+    nextSlide?.();
+    TICK();
+    pushExpect(1);
+
+    // continue next（Already at the last page, and overscroll=false, should not move）
+    nextSlide?.();
+    TICK();
+    pushExpect(1);
   });
 });

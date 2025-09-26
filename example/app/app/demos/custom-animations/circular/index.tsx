@@ -52,44 +52,50 @@ function Index() {
   return (
     <View style={{ flex: 1 }}>
       <CaptureWrapper>
-        <Carousel
-          width={itemSize}
-          height={itemSize}
+        <View
           style={{
             width: PAGE_WIDTH,
             height: PAGE_WIDTH / 2,
+            alignSelf: "center",
           }}
-          loop
-          autoPlay={isAutoPlay}
-          autoPlayInterval={isFast ? 100 : 2000}
-          data={getImages(12)}
-          renderItem={({ index }) => (
-            <TouchableWithoutFeedback
-              key={index}
-              onPress={() => {
-                console.log(index);
-              }}
-              containerStyle={{ flex: 1 }}
-              style={{ flex: 1 }}
-            >
-              <View
-                style={{
-                  backgroundColor: "white",
-                  flex: 1,
-                  borderRadius: 50,
-                  justifyContent: "center",
-                  overflow: "hidden",
-                  alignItems: "center",
+        >
+          <Carousel
+            style={{
+              width: itemSize,
+              height: itemSize,
+            }}
+            loop
+            autoPlay={isAutoPlay}
+            autoPlayInterval={isFast ? 100 : 2000}
+            data={getImages(12)}
+            renderItem={({ index }) => (
+              <TouchableWithoutFeedback
+                key={index}
+                onPress={() => {
+                  console.log(index);
                 }}
+                containerStyle={{ flex: 1 }}
+                style={{ flex: 1 }}
               >
-                <View style={{ width: "100%", height: "100%" }}>
-                  <SlideItem index={index} />
+                <View
+                  style={{
+                    backgroundColor: "white",
+                    flex: 1,
+                    borderRadius: 50,
+                    justifyContent: "center",
+                    overflow: "hidden",
+                    alignItems: "center",
+                  }}
+                >
+                  <View style={{ width: "100%", height: "100%" }}>
+                    <SlideItem index={index} />
+                  </View>
                 </View>
-              </View>
-            </TouchableWithoutFeedback>
-          )}
-          customAnimation={animationStyle}
-        />
+              </TouchableWithoutFeedback>
+            )}
+            customAnimation={animationStyle}
+          />
+        </View>
       </CaptureWrapper>
       <SButton
         onPress={() => {

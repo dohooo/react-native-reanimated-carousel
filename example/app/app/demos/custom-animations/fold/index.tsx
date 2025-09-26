@@ -75,25 +75,31 @@ function Index() {
   return (
     <View style={{ flex: 1 }}>
       <CaptureWrapper>
-        <Carousel
-          width={itemSize}
-          height={PAGE_WIDTH / 2}
+        <View
           style={{
             width: PAGE_WIDTH,
             height: PAGE_WIDTH / 2,
             backgroundColor: "black",
+            alignSelf: "center",
           }}
-          loop
-          windowSize={Math.round(dataLength / 2)}
-          scrollAnimationDuration={1500}
-          autoPlay={isAutoPlay}
-          autoPlayInterval={isFast ? 100 : 1200}
-          data={getImages(10)}
-          renderItem={({ index, animationValue }) => (
-            <Item animationValue={animationValue} index={index} key={index} />
-          )}
-          customAnimation={animationStyle}
-        />
+        >
+          <Carousel
+            style={{
+              width: itemSize,
+              height: PAGE_WIDTH / 2,
+            }}
+            loop
+            windowSize={Math.round(dataLength / 2)}
+            scrollAnimationDuration={1500}
+            autoPlay={isAutoPlay}
+            autoPlayInterval={isFast ? 100 : 1200}
+            data={getImages(10)}
+            renderItem={({ index, animationValue }) => (
+              <Item animationValue={animationValue} index={index} key={index} />
+            )}
+            customAnimation={animationStyle}
+          />
+        </View>
       </CaptureWrapper>
 
       <SButton
