@@ -53,6 +53,7 @@ import Animated, {
 	useSharedValue,
 	withTiming,
 } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import { SlideItem } from "@/components/SlideItem";
@@ -83,7 +84,6 @@ function Index() {
 		<View
 			id="carousel-component"
 			dataSet={{ kind: "custom-animations", name: "press-swipe" }}
-			style={{ width: PAGE_WIDTH, height: 240 }}
 		>
 			<Carousel
 				loop={true}
@@ -106,7 +106,7 @@ function Index() {
 }
 
 interface ItemProps {
-	pressAnim: Animated.SharedValue<number>;
+	pressAnim: SharedValue<number>;
 	index: number;
 }
 

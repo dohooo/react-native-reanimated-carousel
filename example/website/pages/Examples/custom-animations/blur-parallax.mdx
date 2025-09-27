@@ -46,22 +46,20 @@ import Demo from '@/components/Demo'
 
 ```tsx copy
 import * as React from "react";
-import type { ImageSourcePropType } from "react-native";
-import { Image, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Animated, {
 	interpolate,
 	useAnimatedStyle,
 } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
 
 import { BlurView as _BlurView } from "expo-blur";
 
-import { parallaxLayout } from "./parallax";
+import { parallaxLayout } from "@/features/custom-animations/blur-parallax/parallax";
 
-import SButton from "@/components/SButton";
 import { SlideItem } from "@/components/SlideItem";
-import { ElementsText, window } from "@/constants/sizes";
-import { CaptureWrapper } from "@/store/CaptureProvider";
+import { window } from "@/constants/sizes";
 import { fruitItems } from "@/utils/items";
 
 const BlurView = Animated.createAnimatedComponent(_BlurView);
@@ -73,26 +71,30 @@ function Index() {
 		<View
 			id="carousel-component"
 			dataSet={{ kind: "custom-animations", name: "blur-parallax" }}
-			style={{ width: window.width, height: 240, justifyContent: "center", alignItems: "center" }}
+			style={{
+				width: window.width,
+				height: 240,
+				justifyContent: "center",
+				alignItems: "center",
+			}}
 		>
 			<Carousel
-				loop={true}
+				loop
 				style={{
-					width: PAGE_WIDTH,
+					width: window.width,
 					height: 240,
 					justifyContent: "center",
 					alignItems: "center",
+					overflow: "visible",
+				}}
+				contentContainerStyle={{
+					width: PAGE_WIDTH,
+					overflow: "visible",
 				}}
 				data={[...fruitItems, ...fruitItems]}
-				renderItem={({ item, index, animationValue }) => {
-					return (
-						<CustomItem
-							key={index}
-							index={index}
-							animationValue={animationValue}
-						/>
-					);
-				}}
+				renderItem={({ index, animationValue }) => (
+					<CustomItem index={index} animationValue={animationValue} />
+				)}
 				customAnimation={parallaxLayout(
 					{
 						size: PAGE_WIDTH,
@@ -112,7 +114,7 @@ function Index() {
 
 interface ItemProps {
 	index: number;
-	animationValue: Animated.SharedValue<number>;
+	animationValue: SharedValue<number>;
 }
 const CustomItem: React.FC<ItemProps> = ({ index, animationValue }) => {
 	const maskStyle = useAnimatedStyle(() => {

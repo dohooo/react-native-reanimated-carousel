@@ -18,16 +18,40 @@ export interface ICommonVariables {
   handlerOffset: SharedValue<number>;
   resolvedSize: SharedValue<number | null>;
   sizePhase: SharedValue<TCarouselSizePhase>;
+  sizeExplicit: boolean;
 }
 
 export function useCommonVariables(props: TInitializeCarouselProps<any>): ICommonVariables {
-  const { vertical, style, dataLength, defaultIndex, defaultScrollOffsetValue, loop } = props;
+  const {
+    vertical,
+    style,
+    dataLength,
+    defaultIndex,
+    defaultScrollOffsetValue,
+    loop,
+    width: explicitWidth,
+    height: explicitHeight,
+    itemWidth: explicitItemWidth,
+    itemHeight: explicitItemHeight,
+  } = props;
 
   const manualSize = React.useMemo(() => {
+    const explicitPageSize = vertical ? explicitItemHeight : explicitItemWidth;
+    if (typeof explicitPageSize === "number" && explicitPageSize > 0) {
+      return explicitPageSize;
+    }
+
+    // NOTE: `width`/`height` props are deprecated in v5. They are still respected here to
+    // maintain backwards compatibility with v4-style usage. Remove once the props are dropped.
+    const explicitCandidate = vertical ? explicitHeight : explicitWidth;
+    if (typeof explicitCandidate === "number" && explicitCandidate > 0) {
+      return explicitCandidate;
+    }
+
     const { width, height } = StyleSheet.flatten(style) || {};
     const candidate = vertical ? height : width;
     return typeof candidate === "number" && candidate > 0 ? candidate : null;
-  }, [vertical, style]);
+  }, [vertical, style, explicitWidth, explicitHeight, explicitItemHeight, explicitItemWidth]);
 
   const resolvedSize = useSharedValue<number | null>(manualSize);
   const sizePhase = useSharedValue<TCarouselSizePhase>(manualSize ? "ready" : "pending");
@@ -37,6 +61,10 @@ export function useCommonVariables(props: TInitializeCarouselProps<any>): ICommo
   const handlerOffset = defaultScrollOffsetValue ?? _handlerOffset;
   const prevDataLength = useSharedValue(dataLength);
   const prevSize = useSharedValue(manualSize ?? 0);
+  const sizeExplicit = React.useMemo(() => {
+    const explicitPageSize = vertical ? explicitItemHeight : explicitItemWidth;
+    return typeof explicitPageSize === "number" && explicitPageSize > 0;
+  }, [explicitItemHeight, explicitItemWidth, vertical]);
 
   const [size, setSize] = React.useState<number>(manualSize ?? 0);
 
@@ -135,5 +163,6 @@ export function useCommonVariables(props: TInitializeCarouselProps<any>): ICommo
     handlerOffset,
     resolvedSize,
     sizePhase,
+    sizeExplicit,
   };
 }

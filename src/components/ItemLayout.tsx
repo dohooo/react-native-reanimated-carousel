@@ -1,7 +1,12 @@
 import React from "react";
-import type { ViewStyle } from "react-native";
+import type { LayoutChangeEvent, ViewStyle } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
-import Animated, { useAnimatedStyle, useDerivedValue } from "react-native-reanimated";
+import Animated, {
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+} from "react-native-reanimated";
+import { scheduleOnUI } from "react-native-worklets";
 
 import { TCarouselProps } from "src/types";
 import type { IOpts } from "../hooks/useOffsetX";
@@ -26,11 +31,40 @@ export const ItemLayout: React.FC<{
   const {
     props: { loop, dataLength, width, height, vertical, customConfig, mode, modeConfig },
     common,
-    // layout: { updateItemDimensions },
+    layout: { updateItemDimensions },
   } = useGlobalState();
 
+  const measuredSize = useSharedValue<{ width: number | null; height: number | null }>({
+    width: null,
+    height: null,
+  });
+
   const fallbackSize = common.size;
-  const size = (vertical ? height : width) ?? fallbackSize;
+  // NOTE: `width`/`height` props are deprecated from v5 onwards. We still read them here so
+  // existing apps keep their layout until the props are fully removed.
+  const explicitAxisSize = vertical ? height : width;
+  const size = (explicitAxisSize ?? fallbackSize) || 0;
+  const effectivePageSize = size > 0 ? size : undefined;
+
+  const dimensionsStyle = useAnimatedStyle<ViewStyle>(() => {
+    const widthCandidate = vertical ? width : explicitAxisSize;
+    const heightCandidate = vertical ? explicitAxisSize : height;
+
+    const computedWidth =
+      typeof widthCandidate === "number"
+        ? widthCandidate
+        : (measuredSize.value.width ?? (vertical ? "100%" : (effectivePageSize ?? "100%")));
+
+    const computedHeight =
+      typeof heightCandidate === "number"
+        ? heightCandidate
+        : (measuredSize.value.height ?? (vertical ? (effectivePageSize ?? "100%") : "100%"));
+
+    return {
+      width: computedWidth,
+      height: computedHeight,
+    };
+  }, [vertical, width, height, explicitAxisSize, effectivePageSize]);
 
   let offsetXConfig: IOpts = {
     handlerOffset,
@@ -71,18 +105,49 @@ export const ItemLayout: React.FC<{
   //   updateItemDimensions(index, { width, height });
   // }
 
+  const child = children({ animationValue });
+
+  type LayoutableProps = {
+    collapsable?: boolean;
+    onLayout?: (event: LayoutChangeEvent) => void;
+  };
+
+  const enhancedChild = React.isValidElement<LayoutableProps>(child)
+    ? React.cloneElement(child, {
+        collapsable: false,
+        onLayout: (event: LayoutChangeEvent) => {
+          const { width: layoutWidth, height: layoutHeight } = event.nativeEvent.layout;
+          if (layoutWidth > 0 && layoutHeight > 0) {
+            scheduleOnUI(() => {
+              const { width: prevWidth, height: prevHeight } = measuredSize.value;
+              if (prevWidth === layoutWidth && prevHeight === layoutHeight) return;
+
+              measuredSize.value = {
+                width: layoutWidth,
+                height: layoutHeight,
+              };
+              updateItemDimensions(index, {
+                width: layoutWidth,
+                height: layoutHeight,
+              });
+            });
+          }
+
+          child.props?.onLayout?.(event);
+        },
+      })
+    : child;
+
   return (
     <Animated.View
       style={[
         {
-          width: width || "100%",
-          height: height || "100%",
           position: "absolute",
           pointerEvents: "box-none",
         },
+        dimensionsStyle,
         animatedStyle,
       ]}
-      // onLayout={handleLayout}
       /**
        * We use this testID to know when the carousel item is ready to be tested in test.
        * e.g.
@@ -90,7 +155,7 @@ export const ItemLayout: React.FC<{
        * */
       testID={`__CAROUSEL_ITEM_${index}__`}
     >
-      {children({ animationValue })}
+      {enhancedChild}
     </Animated.View>
   );
 };

@@ -36,14 +36,16 @@ function Index() {
       <Carousel
         loop
         style={{
-          width: PAGE_WIDTH,
-          height: PAGE_HEIGHT,
+          width: window.width,
+          height: 240,
           justifyContent: "center",
           alignItems: "center",
         }}
         data={[...new Array(6).keys()]}
         renderItem={({ index }) => {
-          return <SBItem key={index} index={index} />;
+          return (
+            <SBItem key={index} index={index} style={{ width: PAGE_WIDTH, height: PAGE_HEIGHT }} />
+          );
         }}
         autoPlay
         customAnimation={animationStyle}

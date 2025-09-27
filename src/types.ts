@@ -120,6 +120,18 @@ export type TCarouselProps<T = any> = {
    * Carousel content container style.
    */
   contentContainerStyle?: StyleProp<ViewStyle>;
+  /**
+   * Horizontal page size used for snapping and animations.
+   * Useful when you want multiple items visible in a single viewport.
+   * Defaults to the carousel container width when not provided.
+   */
+  itemWidth?: number;
+  /**
+   * Vertical page size used for snapping and animations.
+   * Useful when you want multiple rows visible at once in vertical mode.
+   * Defaults to the carousel container height when not provided.
+   */
+  itemHeight?: number;
 
   // Other props...
 

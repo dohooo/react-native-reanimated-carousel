@@ -54,7 +54,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       minScrollDistancePerSwipe,
       fixedDirection,
     },
-    common: { size, resolvedSize, sizePhase },
+    common: { size, resolvedSize, sizePhase, sizeExplicit },
     layout: { updateContainerSize },
   } = useGlobalState();
 
@@ -467,7 +467,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       const measuredHeight = e.nativeEvent.layout.height;
       const measuredSize = Math.round((vertical ? measuredHeight : measuredWidth) || 0);
 
-      if (measuredSize > 0) {
+      if (!sizeExplicit && measuredSize > 0) {
         const current = resolvedSize.value ?? 0;
         if (Math.abs(current - measuredSize) > 0) {
           sizePhase.value = current > 0 ? "updating" : sizePhase.value;

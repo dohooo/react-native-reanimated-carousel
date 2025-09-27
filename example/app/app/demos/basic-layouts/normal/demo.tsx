@@ -4,6 +4,8 @@ import { View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
 
+import { window } from "@/constants/sizes";
+
 const defaultDataWith6Colors = ["#B0604D", "#899F9C", "#B3C680", "#5C6265", "#F5D399", "#F1F1F1"];
 
 function Index() {
@@ -19,7 +21,7 @@ function Index() {
         autoPlayInterval={2000}
         data={defaultDataWith6Colors}
         defaultScrollOffsetValue={scrollOffsetValue}
-        style={{ width: 430, height: 258 }}
+        style={{ width: window.width, height: 258 }}
         onScrollStart={() => {
           console.log("Scroll start");
         }}

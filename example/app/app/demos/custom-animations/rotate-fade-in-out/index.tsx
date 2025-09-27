@@ -37,31 +37,27 @@ function Index() {
   return (
     <View style={{ flex: 1 }}>
       <CaptureWrapper>
-        <View
+        <Carousel
+          loop
           style={{
             width: window.width,
             height: 240,
             justifyContent: "center",
             alignItems: "center",
-            alignSelf: "center",
           }}
-        >
-          <Carousel
-            loop
-            style={{
-              width: PAGE_WIDTH,
-              height: PAGE_HEIGHT,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-            data={[...new Array(6).keys()]}
-            renderItem={({ index }) => {
-              return <SBItem key={index} index={index} />;
-            }}
-            autoPlay={AutoPLay.status}
-            customAnimation={animationStyle}
-          />
-        </View>
+          data={[...new Array(6).keys()]}
+          renderItem={({ index }) => {
+            return (
+              <SBItem
+                key={index}
+                index={index}
+                style={{ width: PAGE_WIDTH, height: PAGE_HEIGHT }}
+              />
+            );
+          }}
+          autoPlay={AutoPLay.status}
+          customAnimation={animationStyle}
+        />
       </CaptureWrapper>
       {AutoPLay.button}
     </View>

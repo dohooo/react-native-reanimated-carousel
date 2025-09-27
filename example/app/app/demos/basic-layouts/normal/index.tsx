@@ -21,44 +21,25 @@ function Index() {
       autoPlayInterval: 2000,
       autoPlayReverse: false,
       data: defaultDataWith6Colors,
-      height: 258,
       loop: true,
       pagingEnabled: true,
       snapEnabled: true,
       vertical: false,
-      width: window.width,
     },
   });
-
-  const {
-    width,
-    height,
-    style: advancedStyle,
-    ...restSettings
-  } = advancedSettings as {
-    width?: number;
-    height?: number;
-    style?: StyleProp<ViewStyle>;
-  } & TCarouselProps;
-
-  const mergedStyle = React.useMemo<StyleProp<ViewStyle>>(
-    () =>
-      [
-        typeof width === "number" || typeof height === "number" ? { width, height } : null,
-        advancedStyle,
-      ].filter(Boolean) as StyleProp<ViewStyle>[],
-    [width, height, advancedStyle]
-  );
 
   return (
     <Stack flex={1}>
       <CaptureWrapper>
         <Carousel
-          {...restSettings}
+          {...advancedSettings}
           ref={ref}
           defaultScrollOffsetValue={scrollOffsetValue}
           testID={"xxx"}
-          style={mergedStyle}
+          style={{
+            height: 258,
+            width: window.width,
+          }}
           onScrollStart={() => {
             console.log("Scroll start");
           }}

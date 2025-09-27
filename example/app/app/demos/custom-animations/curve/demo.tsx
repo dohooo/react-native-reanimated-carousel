@@ -11,26 +11,27 @@ const PAGE_WIDTH = window.width / 5;
 const colors = ["#26292E", "#899F9C", "#B3C680", "#5C6265", "#F5D399", "#F1F1F1"];
 
 function Index() {
-  const baseOptions = {
-    vertical: false,
-  } as const;
+  const containerHeight = window.width / 2;
 
   return (
     <View
-      style={{
-        alignItems: "center",
-      }}
       id="carousel-component"
       dataSet={{ kind: "custom-animations", name: "curve" }}
+      style={{ width: window.width, height: containerHeight, justifyContent: "center" }}
     >
       <Carousel
-        {...baseOptions}
         loop
+        pagingEnabled={false}
         style={{
-          width: PAGE_WIDTH,
+          width: window.width,
           height: PAGE_WIDTH * 0.6,
           justifyContent: "center",
           alignItems: "center",
+          overflow: "visible",
+        }}
+        contentContainerStyle={{
+          width: PAGE_WIDTH,
+          overflow: "visible",
         }}
         autoPlayInterval={150}
         scrollAnimationDuration={600}

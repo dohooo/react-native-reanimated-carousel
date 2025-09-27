@@ -1,6 +1,7 @@
 import * as React from "react";
 import { View } from "react-native";
 import Animated, {
+  Extrapolation,
   interpolate,
   interpolateColor,
   useAnimatedReaction,
@@ -25,20 +26,37 @@ function Index() {
   const animationStyle: TAnimationStyle = React.useCallback(
     (value: number) => {
       "worklet";
-      const translateY = interpolate(value, [-1, 0, 1], [-PAGE_HEIGHT, 0, 0]);
+      const isVertical = directionAnim.value === ArrowDirection.IS_VERTICAL;
+      const STACK_SPACING = isVertical ? PAGE_HEIGHT * 0.08 : PAGE_WIDTH * 0.08;
+      const translateY = interpolate(
+        value,
+        [-1, 0, 1],
+        [-PAGE_HEIGHT, 0, STACK_SPACING],
+        Extrapolation.CLAMP
+      );
+      const translateX = interpolate(
+        value,
+        [-1, 0, 1],
+        [-PAGE_WIDTH, 0, STACK_SPACING],
+        Extrapolation.CLAMP
+      );
 
-      const translateX = interpolate(value, [-1, 0, 1], [-PAGE_WIDTH, 0, 0]);
+      const opacity = value <= 0 ? 1 : interpolate(value, [0, 1], [1, 0], Extrapolation.CLAMP);
 
-      const zIndex = interpolate(value, [-1, 0, 1], [300, 0, -300]);
+      const zIndex =
+        value <= 0
+          ? interpolate(value, [-1, 0], [0, 200], Extrapolation.CLAMP)
+          : interpolate(value, [0, 1], [100, 0], Extrapolation.CLAMP);
 
-      const scale = interpolate(value, [-1, 0, 1], [1, 1, 0.85]);
+      const scale = interpolate(value, [-1, 0, 1], [1, 1, 0.85], Extrapolation.CLAMP);
 
       return {
         transform: [isVertical ? { translateY } : { translateX }, { scale }],
+        opacity,
         zIndex,
       };
     },
-    [PAGE_HEIGHT, PAGE_WIDTH, isVertical]
+    [PAGE_HEIGHT, PAGE_WIDTH, directionAnim]
   );
 
   useAnimatedReaction(

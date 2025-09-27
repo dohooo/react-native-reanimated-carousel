@@ -37,10 +37,15 @@ function Index() {
             loop={true}
             autoPlay={isAutoPlay}
             style={{
-              width: PAGE_WIDTH,
+              width: window.width,
               height: 240,
               justifyContent: "center",
               alignItems: "center",
+              overflow: "visible",
+            }}
+            contentContainerStyle={{
+              width: PAGE_WIDTH,
+              overflow: "visible",
             }}
             data={[...fruitItems, ...fruitItems]}
             renderItem={({ item, index, animationValue }) => {

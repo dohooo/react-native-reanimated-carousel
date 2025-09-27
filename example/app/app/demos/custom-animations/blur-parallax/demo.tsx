@@ -24,17 +24,22 @@ function Index() {
       style={{ width: window.width, height: 240, justifyContent: "center", alignItems: "center" }}
     >
       <Carousel
-        loop={true}
+        loop
         style={{
-          width: PAGE_WIDTH,
+          width: window.width,
           height: 240,
           justifyContent: "center",
           alignItems: "center",
+          overflow: "visible",
+        }}
+        contentContainerStyle={{
+          width: PAGE_WIDTH,
+          overflow: "visible",
         }}
         data={[...fruitItems, ...fruitItems]}
-        renderItem={({ item, index, animationValue }) => {
-          return <CustomItem key={index} index={index} animationValue={animationValue} />;
-        }}
+        renderItem={({ index, animationValue }) => (
+          <CustomItem index={index} animationValue={animationValue} />
+        )}
         customAnimation={parallaxLayout(
           {
             size: PAGE_WIDTH,

@@ -48,10 +48,12 @@ import Demo from '@/components/Demo'
 import * as React from "react";
 import { View } from "react-native";
 import Animated, {
+	Extrapolation,
 	interpolate,
 	interpolateColor,
 	useAnimatedStyle,
 } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import { SBItem } from "@/components/SBItem";
@@ -62,7 +64,7 @@ const PAGE_WIDTH = window.width;
 
 interface ItemProps {
 	index: number;
-	animationValue: Animated.SharedValue<number>;
+	animationValue: SharedValue<number>;
 }
 const CustomItem: React.FC<ItemProps> = ({ index, animationValue }) => {
 	const maskStyle = useAnimatedStyle(() => {
@@ -102,21 +104,31 @@ const CustomItem: React.FC<ItemProps> = ({ index, animationValue }) => {
 	);
 };
 function Index() {
-	const animationStyle: TAnimationStyle = React.useCallback((value: number) => {
-		"worklet";
+	const [isAutoPlay, setIsAutoPlay] = React.useState(false);
 
-		const zIndex = interpolate(value, [-1, 0, 1], [10, 20, 30]);
-		const translateX = interpolate(
-			value,
-			[-2, 0, 1],
-			[-PAGE_WIDTH, 0, PAGE_WIDTH],
-		);
+	const animationStyle: TAnimationStyle = React.useCallback(
+		(value: number, index: number) => {
+			"worklet";
 
-		return {
-			transform: [{ translateX }],
-			zIndex,
-		};
-	}, []);
+			const zIndex = interpolate(
+				value,
+				value > 0 ? [0, 1] : [-1, 0],
+				value > 0 ? [10, 20] : [-10, 0],
+				Extrapolation.CLAMP,
+			);
+			const translateX = interpolate(
+				value,
+				[-2, 0, 1],
+				[-PAGE_WIDTH, 0, PAGE_WIDTH],
+			);
+
+			return {
+				transform: [{ translateX }],
+				zIndex,
+			};
+		},
+		[],
+	);
 
 	return (
 		<View
@@ -125,7 +137,8 @@ function Index() {
 		>
 			<CaptureWrapper>
 				<Carousel
-					loop={true}
+					loop={false}
+					autoPlay={isAutoPlay}
 					style={{ width: PAGE_WIDTH, height: 240 }}
 					data={[...new Array(6).keys()]}
 					renderItem={({ index, animationValue }) => {

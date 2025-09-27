@@ -1,10 +1,9 @@
 import * as React from "react";
-import { Image, Text, View } from "react-native";
-import { interpolate } from "react-native-reanimated";
+import { Text, View } from "react-native";
+import { Extrapolation, interpolate } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import { faker } from "@faker-js/faker";
-import { BlurView } from "expo-blur";
 
 import { SlideItem } from "@/components/SlideItem";
 import { window } from "@/constants/sizes";
@@ -27,14 +26,13 @@ function Index() {
       "worklet";
 
       const translateY = interpolate(value, [-1, 0, 1], [-ITEM_HEIGHT, 0, ITEM_HEIGHT]);
-      const right = interpolate(
-        value,
-        [-1, -0.2, 1],
-        [RIGHT_OFFSET / 2, RIGHT_OFFSET, RIGHT_OFFSET / 3]
-      );
+      const right = interpolate(value, [1, 2, 3], [RIGHT_OFFSET, RIGHT_OFFSET * 2, RIGHT_OFFSET]);
+      const opacity = interpolate(value, [1, 2, 3], [0.35, 1, 0.35], Extrapolation.CLAMP);
+
       return {
         transform: [{ translateY }],
         right,
+        opacity,
       };
     },
     [RIGHT_OFFSET]
@@ -43,87 +41,80 @@ function Index() {
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
       <CaptureWrapper>
-        <View
+        <Carousel
+          loop
+          vertical
           style={{
             width: PAGE_WIDTH,
             height: PAGE_HEIGHT,
-            justifyContent: "center",
-            alignSelf: "center",
           }}
-        >
-          <Carousel
-            loop
-            vertical
-            style={{
-              justifyContent: "center",
-              width: ITEM_WIDTH,
-              height: ITEM_HEIGHT,
-            }}
-            pagingEnabled={false}
-            data={[...new Array(10).keys()]}
-            renderItem={({ index }) => {
-              return (
-                <View key={index} style={{ flex: 1, padding: 10 }}>
+          pagingEnabled={false}
+          data={[...new Array(10).keys()].map((v) => faker.animal.dog())}
+          renderItem={({ index, item }) => {
+            return (
+              <View
+                key={index}
+                style={{ flex: 1, padding: 10, width: ITEM_WIDTH, height: ITEM_HEIGHT }}
+              >
+                <View
+                  style={{
+                    alignItems: "flex-start",
+                    flex: 1,
+                    justifyContent: "space-between",
+                    flexDirection: "row",
+                    borderRadius: 20,
+                  }}
+                >
                   <View
                     style={{
-                      alignItems: "flex-start",
-                      flex: 1,
-                      justifyContent: "space-between",
                       flexDirection: "row",
-                      borderRadius: 20,
+                      alignItems: "center",
                     }}
                   >
                     <View
                       style={{
-                        flexDirection: "row",
-                        alignItems: "center",
+                        width: 20,
+                        height: 20,
+                        borderRadius: 10,
+                        marginRight: 5,
+                        backgroundColor: "gray",
+                      }}
+                    />
+                    <Text
+                      numberOfLines={1}
+                      style={{
+                        maxWidth: ITEM_WIDTH * 0.3 - 40,
+                        color: "white",
                       }}
                     >
-                      <View
-                        style={{
-                          width: 20,
-                          height: 20,
-                          borderRadius: 10,
-                          marginRight: 5,
-                          backgroundColor: "gray",
-                        }}
-                      />
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          maxWidth: ITEM_WIDTH * 0.3 - 40,
-                          color: "white",
-                        }}
-                      >
-                        {faker.animal.dog()}
-                      </Text>
-                    </View>
+                      {item}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      width: ITEM_WIDTH * 0.6,
+                      height: ITEM_HEIGHT - 20,
+                      borderRadius: 10,
+                      overflow: "hidden",
+                    }}
+                  >
                     <View
                       style={{
                         width: ITEM_WIDTH * 0.6,
                         height: ITEM_HEIGHT - 20,
                         borderRadius: 10,
-                        overflow: "hidden",
+                        marginRight: 5,
                       }}
                     >
-                      <View
-                        style={{
-                          width: ITEM_WIDTH * 0.6,
-                          height: ITEM_HEIGHT - 20,
-                          borderRadius: 10,
-                          marginRight: 5,
-                        }}
-                      >
-                        <SlideItem index={index} />
-                      </View>
+                      <SlideItem index={index} />
                     </View>
                   </View>
                 </View>
-              );
-            }}
-            customAnimation={animationStyle}
-          />
-        </View>
+              </View>
+            );
+          }}
+          customAnimation={animationStyle}
+        />
       </CaptureWrapper>
     </View>
   );

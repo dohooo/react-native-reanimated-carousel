@@ -11,7 +11,7 @@ import { parallaxLayout } from "@/features/custom-animations/blur-rotate/paralla
 import SButton from "@/components/SButton";
 import { SlideItem } from "@/components/SlideItem";
 import { PURPLE_IMAGES } from "@/constants/purple-images";
-import { ElementsText, HEADER_HEIGHT, window } from "@/constants/sizes";
+import { ElementsText, window } from "@/constants/sizes";
 import { CaptureWrapper } from "@/store/CaptureProvider";
 
 const BlurView = Animated.createAnimatedComponent(_BlurView);
@@ -19,40 +19,34 @@ const BlurView = Animated.createAnimatedComponent(_BlurView);
 function Index() {
   const [isAutoPlay, setIsAutoPlay] = React.useState(false);
   const PAGE_WIDTH = window.width;
-  const PAGE_HEIGHT = window.height - HEADER_HEIGHT;
   const ITEM_WIDTH = PAGE_WIDTH * 0.8;
 
   return (
     <View style={{ flex: 1 }}>
       <CaptureWrapper>
-        <View
+        <Carousel
+          vertical
+          loop={false}
+          autoPlay={isAutoPlay}
           style={{
             width: PAGE_WIDTH,
-            height: PAGE_HEIGHT,
-            alignItems: "center",
-            alignSelf: "center",
+            height: ITEM_WIDTH,
           }}
-        >
-          <Carousel
-            vertical
-            loop={false}
-            autoPlay={isAutoPlay}
-            style={{
-              width: ITEM_WIDTH,
-              height: ITEM_WIDTH,
-            }}
-            pagingEnabled={false}
-            snapEnabled={false}
-            data={PURPLE_IMAGES}
-            renderItem={({ item, index, animationValue }) => {
-              return <CustomItem key={index} index={index} animationValue={animationValue} />;
-            }}
-            customAnimation={parallaxLayout({
-              size: ITEM_WIDTH,
-            })}
-            scrollAnimationDuration={1200}
-          />
-        </View>
+          contentContainerStyle={{
+            width: PAGE_WIDTH,
+            height: ITEM_WIDTH,
+          }}
+          pagingEnabled={false}
+          snapEnabled={false}
+          data={PURPLE_IMAGES}
+          renderItem={({ index, animationValue }) => {
+            return <CustomItem key={index} index={index} animationValue={animationValue} />;
+          }}
+          customAnimation={parallaxLayout({
+            size: ITEM_WIDTH,
+          })}
+          scrollAnimationDuration={1200}
+        />
       </CaptureWrapper>
       <SButton
         onPress={() => {

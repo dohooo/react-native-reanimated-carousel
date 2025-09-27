@@ -75,31 +75,27 @@ function Index() {
   return (
     <View style={{ flex: 1 }}>
       <CaptureWrapper>
-        <View
+        <Carousel
           style={{
             width: PAGE_WIDTH,
             height: PAGE_WIDTH / 2,
             backgroundColor: "black",
-            alignSelf: "center",
           }}
-        >
-          <Carousel
-            style={{
-              width: itemSize,
-              height: PAGE_WIDTH / 2,
-            }}
-            loop
-            windowSize={Math.round(dataLength / 2)}
-            scrollAnimationDuration={1500}
-            autoPlay={isAutoPlay}
-            autoPlayInterval={isFast ? 100 : 1200}
-            data={getImages(10)}
-            renderItem={({ index, animationValue }) => (
-              <Item animationValue={animationValue} index={index} key={index} />
-            )}
-            customAnimation={animationStyle}
-          />
-        </View>
+          contentContainerStyle={{
+            width: PAGE_WIDTH,
+            height: PAGE_WIDTH / 2,
+          }}
+          loop
+          windowSize={Math.round(dataLength / 2)}
+          scrollAnimationDuration={1500}
+          autoPlay={isAutoPlay}
+          autoPlayInterval={isFast ? 100 : 1200}
+          data={getImages(10)}
+          renderItem={({ index, animationValue }) => (
+            <Item animationValue={animationValue} index={index} key={index} />
+          )}
+          customAnimation={animationStyle}
+        />
       </CaptureWrapper>
 
       <SButton
@@ -141,7 +137,7 @@ const Item: React.FC<{
           alignItems: "center",
         }}
       >
-        <View style={{ width: "100%", height: "100%" }}>
+        <View style={{ width: "101%", height: "100%" }}>
           <SlideItem index={index} />
         </View>
       </View>

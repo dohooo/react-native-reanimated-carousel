@@ -32,8 +32,8 @@ function Index() {
       <Carousel
         loop
         style={{
-          width: PAGE_WIDTH * 0.7,
-          height: 240 * 0.7,
+          width: PAGE_WIDTH,
+          height: 240,
           justifyContent: "center",
           alignItems: "center",
         }}

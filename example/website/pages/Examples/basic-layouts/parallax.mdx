@@ -84,7 +84,9 @@ function Index() {
 					parallaxScrollingScale: 0.9,
 					parallaxScrollingOffset: 50,
 				}}
-				onProgressChange={progress}
+				onProgressChange={(offsetProgress, absoluteProgress) => {
+					progress.value = absoluteProgress;
+				}}
 				renderItem={renderItem({ rounded: true })}
 			/>
 		</View>

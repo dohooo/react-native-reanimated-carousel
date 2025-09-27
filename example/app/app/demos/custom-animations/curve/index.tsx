@@ -21,9 +21,7 @@ const colors = ["#26292E", "#899F9C", "#B3C680", "#5C6265", "#F5D399", "#F1F1F1"
 function Index() {
   const [autoPlay, setAutoPlay] = React.useState(false);
   const progressValue = useSharedValue<number>(0);
-  const baseOptions = {
-    vertical: false,
-  } as const;
+  const containerHeight = window.width / 2;
 
   return (
     <View
@@ -31,15 +29,27 @@ function Index() {
         alignItems: "center",
       }}
     >
-      <CaptureWrapper>
+      <CaptureWrapper
+        style={{
+          width: window.width,
+          height: containerHeight,
+          justifyContent: "center",
+          overflow: "visible",
+        }}
+      >
         <Carousel
-          {...baseOptions}
           loop
+          pagingEnabled={false}
           style={{
-            width: PAGE_WIDTH,
+            width: window.width,
             height: PAGE_WIDTH * 0.6,
+            overflow: "visible",
             justifyContent: "center",
             alignItems: "center",
+          }}
+          contentContainerStyle={{
+            width: PAGE_WIDTH,
+            overflow: "visible",
           }}
           autoPlay={autoPlay}
           autoPlayInterval={150}
