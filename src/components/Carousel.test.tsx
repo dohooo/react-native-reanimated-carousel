@@ -258,11 +258,7 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
       const progress = { current: 0 };
       const Wrapper = createCarousel(progress);
       const { getByTestId } = render(
-        <Wrapper
-          style={{ width: 900, height: 200 }}
-          itemWidth={300}
-          data={createMockData(6)}
-        />
+        <Wrapper style={{ width: 900, height: 200 }} itemWidth={300} data={createMockData(6)} />
       );
       await verifyInitialRender(getByTestId);
 
