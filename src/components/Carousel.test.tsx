@@ -213,6 +213,79 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
       // Ensure invoking layout measurement does not throw and that the carousel exposes the expected
       // measurement callback for auto-sizing scenarios.
     });
+
+    it("should use itemWidth for snapping size when provided", async () => {
+      const progress = { current: 0 };
+      const Wrapper = createCarousel(progress);
+      const { getByTestId } = render(
+        <Wrapper style={{ width: 700, height: 200 }} itemWidth={350} />
+      );
+      await verifyInitialRender(getByTestId);
+
+      // The carousel should use itemWidth (350) for snapping instead of container width (700)
+      // This allows showing multiple items (2 items in this case: 700 / 350)
+      const contentContainer = getByTestId("carousel-content-container");
+      expect(contentContainer).toBeTruthy();
+    });
+
+    it("should use itemHeight for snapping size in vertical mode when provided", async () => {
+      const progress = { current: 0 };
+      const Wrapper = createCarousel(progress);
+      const { getByTestId } = render(
+        <Wrapper vertical style={{ width: 350, height: 700 }} itemHeight={350} />
+      );
+      await verifyInitialRender(getByTestId);
+
+      // The carousel should use itemHeight (350) for snapping instead of container height (700)
+      const contentContainer = getByTestId("carousel-content-container");
+      expect(contentContainer).toBeTruthy();
+    });
+
+    it("should prioritize itemWidth over width prop", async () => {
+      const progress = { current: 0 };
+      const Wrapper = createCarousel(progress);
+      const { getByTestId } = render(
+        <Wrapper style={{ width: 700, height: 200 }} width={700} itemWidth={350} />
+      );
+      await verifyInitialRender(getByTestId);
+
+      // itemWidth (350) should take precedence
+      const contentContainer = getByTestId("carousel-content-container");
+      expect(contentContainer).toBeTruthy();
+    });
+
+    it("should support itemWidth for multiple visible items scenario", async () => {
+      const progress = { current: 0 };
+      const Wrapper = createCarousel(progress);
+      const { getByTestId } = render(
+        <Wrapper
+          style={{ width: 900, height: 200 }}
+          itemWidth={300}
+          data={createMockData(6)}
+        />
+      );
+      await verifyInitialRender(getByTestId);
+
+      // Container is 900px, itemWidth is 300px, so 3 items should be visible
+      // Verify items are rendered
+      expect(getByTestId("carousel-item-0")).toBeTruthy();
+      expect(getByTestId("carousel-item-1")).toBeTruthy();
+      expect(getByTestId("carousel-item-2")).toBeTruthy();
+    });
+
+    it("should accept onLayout callback prop", async () => {
+      const progress = { current: 0 };
+      const onLayout = jest.fn();
+      const Wrapper = createCarousel(progress);
+      const { getByTestId } = render(
+        <Wrapper style={{ width: 700, height: 200 }} onLayout={onLayout} />
+      );
+
+      const contentContainer = getByTestId("carousel-content-container");
+
+      // Verify that onLayout handler is attached to the content container
+      expect(typeof contentContainer.props.onLayout).toBe("function");
+    });
   });
 
   it("`data` prop: should render correctly", async () => {

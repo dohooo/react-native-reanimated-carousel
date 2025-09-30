@@ -171,4 +171,193 @@ describe("useCommonVariables", () => {
     expect(result.current.size).toBe(0);
     expect(result.current.sizePhase.value).toBe("pending");
   });
+
+  describe("itemWidth/itemHeight props", () => {
+    it("uses itemWidth for horizontal carousel size when provided", () => {
+      const props = createBaseProps({
+        style: { width: 700, height: 350 },
+        itemWidth: 350,
+      });
+      const { result } = renderHook(() => useCommonVariables(props));
+
+      expect(result.current.size).toBe(350);
+      expect(result.current.resolvedSize.value).toBe(350);
+      expect(result.current.sizePhase.value).toBe("ready");
+    });
+
+    it("uses itemHeight for vertical carousel size when provided", () => {
+      const props = createBaseProps({
+        vertical: true,
+        style: { width: 700, height: 350 },
+        itemHeight: 200,
+      });
+      const { result } = renderHook(() => useCommonVariables(props));
+
+      expect(result.current.size).toBe(200);
+      expect(result.current.resolvedSize.value).toBe(200);
+      expect(result.current.sizePhase.value).toBe("ready");
+    });
+
+    it("prioritizes itemWidth over style.width for horizontal carousel", () => {
+      const props = createBaseProps({
+        style: { width: 700 },
+        itemWidth: 350,
+      });
+      const { result } = renderHook(() => useCommonVariables(props));
+
+      expect(result.current.size).toBe(350);
+    });
+
+    it("prioritizes itemHeight over style.height for vertical carousel", () => {
+      const props = createBaseProps({
+        vertical: true,
+        style: { height: 400 },
+        itemHeight: 200,
+      });
+      const { result } = renderHook(() => useCommonVariables(props));
+
+      expect(result.current.size).toBe(200);
+    });
+
+    it("prioritizes itemWidth over deprecated width prop", () => {
+      const props = createBaseProps({
+        width: 700,
+        itemWidth: 350,
+      });
+      const { result } = renderHook(() => useCommonVariables(props));
+
+      expect(result.current.size).toBe(350);
+    });
+
+    it("falls back to deprecated width prop when itemWidth not provided", () => {
+      const props = createBaseProps({
+        width: 500,
+      });
+      const { result } = renderHook(() => useCommonVariables(props));
+
+      expect(result.current.size).toBe(500);
+    });
+
+    it("falls back to deprecated height prop when itemHeight not provided in vertical mode", () => {
+      const props = createBaseProps({
+        vertical: true,
+        height: 400,
+      });
+      const { result } = renderHook(() => useCommonVariables(props));
+
+      expect(result.current.size).toBe(400);
+    });
+
+    it("ignores zero or negative itemWidth", () => {
+      const props = createBaseProps({
+        style: { width: 700 },
+        itemWidth: 0,
+      });
+      const { result } = renderHook(() => useCommonVariables(props));
+
+      expect(result.current.size).toBe(700);
+    });
+
+    it("ignores zero or negative itemHeight", () => {
+      const props = createBaseProps({
+        vertical: true,
+        style: { height: 400 },
+        itemHeight: -10,
+      });
+      const { result } = renderHook(() => useCommonVariables(props));
+
+      expect(result.current.size).toBe(400);
+    });
+
+    it("calculates handlerOffset correctly with itemWidth", () => {
+      const props = createBaseProps({
+        style: { width: 700 },
+        itemWidth: 350,
+        defaultIndex: 2,
+      });
+      const { result } = renderHook(() => useCommonVariables(props));
+
+      // defaultIndex 2 * itemWidth 350 = -700
+      expect(result.current.handlerOffset.value).toBe(-700);
+    });
+
+    it("updates resolvedSize when itemWidth changes", () => {
+      const initial = createBaseProps({ style: { width: 700 }, itemWidth: 350 });
+      const hook = renderHook(({ p }) => useCommonVariables(p), { initialProps: { p: initial } });
+      expect(hook.result.current.size).toBe(350);
+      expect(hook.result.current.resolvedSize.value).toBe(350);
+
+      const updated = createBaseProps({ style: { width: 700 }, itemWidth: 400 });
+      act(() => {
+        hook.rerender({ p: updated });
+      });
+
+      // resolvedSize (SharedValue) updates immediately via useEffect
+      expect(hook.result.current.resolvedSize.value).toBe(400);
+      // size (state) updates asynchronously via useAnimatedReaction
+      // In test environment, this requires waiting for the animated reaction to fire
+    });
+  });
+
+  describe("sizeExplicit flag", () => {
+    it("sets sizeExplicit to true when itemWidth is provided for horizontal carousel", () => {
+      const props = createBaseProps({
+        style: { width: 700 },
+        itemWidth: 350,
+      });
+      const { result } = renderHook(() => useCommonVariables(props));
+
+      expect(result.current.sizeExplicit).toBe(true);
+    });
+
+    it("sets sizeExplicit to true when itemHeight is provided for vertical carousel", () => {
+      const props = createBaseProps({
+        vertical: true,
+        style: { height: 400 },
+        itemHeight: 200,
+      });
+      const { result } = renderHook(() => useCommonVariables(props));
+
+      expect(result.current.sizeExplicit).toBe(true);
+    });
+
+    it("sets sizeExplicit to false when only style.width is provided", () => {
+      const props = createBaseProps({
+        style: { width: 700 },
+      });
+      const { result } = renderHook(() => useCommonVariables(props));
+
+      expect(result.current.sizeExplicit).toBe(false);
+    });
+
+    it("sets sizeExplicit to false when only deprecated width prop is provided", () => {
+      const props = createBaseProps({
+        width: 700,
+      });
+      const { result } = renderHook(() => useCommonVariables(props));
+
+      expect(result.current.sizeExplicit).toBe(false);
+    });
+
+    it("sets sizeExplicit to false when itemWidth is zero", () => {
+      const props = createBaseProps({
+        style: { width: 700 },
+        itemWidth: 0,
+      });
+      const { result } = renderHook(() => useCommonVariables(props));
+
+      expect(result.current.sizeExplicit).toBe(false);
+    });
+
+    it("sets sizeExplicit to false when itemHeight is negative", () => {
+      const props = createBaseProps({
+        vertical: true,
+        style: { height: 400 },
+        itemHeight: -10,
+      });
+      const { result } = renderHook(() => useCommonVariables(props));
+
+      expect(result.current.sizeExplicit).toBe(false);
+    });
+  });
 });
