@@ -78,7 +78,7 @@ export const PaginationItem: React.FC<
   
   useAnimatedReaction(() => animValue.value, (animValue) => {
     setIsSelected(animValue === index)
-  })
+  }, [animValue, index])
 
   return (
     <Pressable
