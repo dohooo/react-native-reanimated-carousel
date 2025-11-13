@@ -77,7 +77,7 @@ export const PaginationItem: React.FC<
   const [isSelected, setIsSelected] = useState(false)
   
   useAnimatedReaction(() => animValue.value, (animValue) => {
-    setIsSelected(animValue === index)
+    scheduleOnRN(setIsSelected, animValue === index)
   }, [animValue, index])
 
   return (

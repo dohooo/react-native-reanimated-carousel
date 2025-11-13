@@ -10,7 +10,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   useDerivedValue,
-  useAnimatedReaction,
+  useAnimatedReaction
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 
@@ -111,7 +111,7 @@ export const PaginationItem: React.FC<
   const [isSelected, setIsSelected] = useState(false)
   
   useAnimatedReaction(() => animValue.value, (animValue) => {
-    setIsSelected(animValue === index)
+    scheduleOnRN(setIsSelected, animValue === index)
   }, [animValue, index])
 
   return (
