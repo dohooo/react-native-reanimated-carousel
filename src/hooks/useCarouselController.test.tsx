@@ -321,6 +321,302 @@ describe("useCarouselController", () => {
     mockGlobalState.layout.containerSize.value = { width: 300, height: 300 };
   });
 
+  it("should fall back to propWidth when container size is unknown", () => {
+    mockGlobalState.props.overscrollEnabled = false;
+    mockGlobalState.props.loop = false;
+    mockGlobalState.props.width = 240;
+    mockGlobalState.common.size = 100;
+    mockGlobalState.common.resolvedSize.value = 100;
+    mockGlobalState.layout.containerSize.value = { width: 0, height: 0 };
+    mockHandlerOffset.value = 0;
+
+    const { result } = renderHook(
+      () =>
+        useCarouselController({
+          ...defaultProps,
+          size: 100,
+          width: 240,
+          loop: false,
+          handlerOffset: mockHandlerOffset,
+        }),
+      { wrapper }
+    );
+
+    result.current.index.value = 4; // remaining width = 1 * 100 < effective width 240
+
+    act(() => {
+      result.current.next();
+    });
+
+    expect(mockHandlerOffset.value).toBe(0);
+
+    // reset
+    mockGlobalState.props.overscrollEnabled = true;
+    mockGlobalState.props.loop = true;
+    mockGlobalState.props.width = 300;
+    mockGlobalState.common.size = 300;
+    mockGlobalState.common.resolvedSize.value = 300;
+    mockGlobalState.layout.containerSize.value = { width: 300, height: 300 };
+  });
+
+  it("should fall back to style width when container and prop width are unavailable", () => {
+    mockGlobalState.props.overscrollEnabled = false;
+    mockGlobalState.props.loop = false;
+    mockGlobalState.props.width = undefined as any;
+    mockGlobalState.props.style = { width: 220 };
+    mockGlobalState.common.size = 100;
+    mockGlobalState.common.resolvedSize.value = 100;
+    mockGlobalState.layout.containerSize.value = { width: 0, height: 0 };
+    mockHandlerOffset.value = 0;
+
+    const { result } = renderHook(
+      () =>
+        useCarouselController({
+          ...defaultProps,
+          size: 100,
+          style: mockGlobalState.props.style,
+          width: undefined,
+          loop: false,
+          handlerOffset: mockHandlerOffset,
+        }),
+      { wrapper }
+    );
+
+    result.current.index.value = 4;
+
+    act(() => {
+      result.current.next();
+    });
+
+    expect(mockHandlerOffset.value).toBe(0);
+
+    mockGlobalState.props.overscrollEnabled = true;
+    mockGlobalState.props.loop = true;
+    mockGlobalState.props.width = 300;
+    mockGlobalState.props.style = {};
+    mockGlobalState.common.size = 300;
+    mockGlobalState.common.resolvedSize.value = 300;
+    mockGlobalState.layout.containerSize.value = { width: 300, height: 300 };
+  });
+
+  it("should fall back to propHeight in vertical mode when container size is unknown", () => {
+    mockGlobalState.props.overscrollEnabled = false;
+    mockGlobalState.props.loop = false;
+    mockGlobalState.props.vertical = true;
+    mockGlobalState.props.height = 150;
+    mockGlobalState.common.size = 80;
+    mockGlobalState.common.resolvedSize.value = 80;
+    mockGlobalState.layout.containerSize.value = { width: 0, height: 0 };
+    mockHandlerOffset.value = 0;
+
+    const { result } = renderHook(
+      () =>
+        useCarouselController({
+          ...defaultProps,
+          size: 80,
+          height: 150,
+          loop: false,
+          handlerOffset: mockHandlerOffset,
+          dataLength: 5,
+        }),
+      { wrapper }
+    );
+
+    result.current.index.value = 4;
+
+    act(() => {
+      result.current.next();
+    });
+
+    expect(mockHandlerOffset.value).toBe(0);
+
+    // reset
+    mockGlobalState.props.overscrollEnabled = true;
+    mockGlobalState.props.loop = true;
+    mockGlobalState.props.vertical = false;
+    mockGlobalState.props.height = 300;
+    mockGlobalState.common.size = 300;
+    mockGlobalState.common.resolvedSize.value = 300;
+    mockGlobalState.layout.containerSize.value = { width: 300, height: 300 };
+  });
+
+  it("should use propWidth branch when container width is zero", () => {
+    mockGlobalState.props.overscrollEnabled = false;
+    mockGlobalState.props.loop = false;
+    mockGlobalState.props.width = 240;
+    mockGlobalState.props.style = {};
+    mockGlobalState.common.size = 120;
+    mockGlobalState.common.resolvedSize.value = 120;
+    mockGlobalState.layout.containerSize.value = { width: 0, height: 0 };
+    mockHandlerOffset.value = 0;
+
+    const { result } = renderHook(
+      () =>
+        useCarouselController({
+          ...defaultProps,
+          size: 120,
+          width: 240,
+          loop: false,
+          handlerOffset: mockHandlerOffset,
+        }),
+      { wrapper }
+    );
+
+    // at index 3 of 5, remaining width = 2 * 120 = 240, equals effective width; overscroll block triggers
+    result.current.index.value = 3;
+
+    act(() => {
+      result.current.next();
+    });
+
+    expect(mockHandlerOffset.value).toBe(0);
+
+    // reset
+    mockGlobalState.props.overscrollEnabled = true;
+    mockGlobalState.props.loop = true;
+    mockGlobalState.props.width = 300;
+    mockGlobalState.props.style = {};
+    mockGlobalState.common.size = 300;
+    mockGlobalState.common.resolvedSize.value = 300;
+    mockGlobalState.layout.containerSize.value = { width: 300, height: 300 };
+  });
+
+  it("should fall back to style height in vertical mode when container and prop height are unavailable", () => {
+    mockGlobalState.props.overscrollEnabled = false;
+    mockGlobalState.props.loop = false;
+    mockGlobalState.props.vertical = true;
+    mockGlobalState.props.height = undefined as any;
+    mockGlobalState.props.style = { height: 160 };
+    mockGlobalState.common.size = 80;
+    mockGlobalState.common.resolvedSize.value = 80;
+    mockGlobalState.layout.containerSize.value = { width: 0, height: 0 };
+    mockHandlerOffset.value = 0;
+
+    const { result } = renderHook(
+      () =>
+        useCarouselController({
+          ...defaultProps,
+          size: 80,
+          style: mockGlobalState.props.style,
+          height: undefined,
+          loop: false,
+          handlerOffset: mockHandlerOffset,
+          dataLength: 5,
+        }),
+      { wrapper }
+    );
+
+    result.current.index.value = 4;
+
+    act(() => {
+      result.current.next();
+    });
+
+    expect(mockHandlerOffset.value).toBe(0);
+
+    mockGlobalState.props.overscrollEnabled = true;
+    mockGlobalState.props.loop = true;
+    mockGlobalState.props.vertical = false;
+    mockGlobalState.props.height = 300;
+    mockGlobalState.props.style = {};
+    mockGlobalState.common.size = 300;
+    mockGlobalState.common.resolvedSize.value = 300;
+    mockGlobalState.layout.containerSize.value = { width: 300, height: 300 };
+  });
+
+  it("should use pageSize fallback multiplier when no size info is available", () => {
+    mockGlobalState.props.overscrollEnabled = false;
+    mockGlobalState.props.loop = false;
+    mockGlobalState.props.width = undefined as any;
+    mockGlobalState.props.height = undefined as any;
+    mockGlobalState.common.size = 100;
+    mockGlobalState.common.resolvedSize.value = 100;
+    mockGlobalState.layout.containerSize.value = { width: 0, height: 0 };
+    mockHandlerOffset.value = 0;
+
+    const { result } = renderHook(
+      () =>
+        useCarouselController({
+          ...defaultProps,
+          size: 100,
+          width: undefined,
+          height: undefined,
+          loop: false,
+          handlerOffset: mockHandlerOffset,
+        }),
+      { wrapper }
+    );
+
+    act(() => {
+      result.current.next({ animated: false });
+    });
+
+    expect(mockHandlerOffset.value).toBe(-100);
+
+    // reset
+    mockGlobalState.props.overscrollEnabled = true;
+    mockGlobalState.props.loop = true;
+    mockGlobalState.props.width = 300;
+    mockGlobalState.props.height = 300;
+    mockGlobalState.common.size = 300;
+    mockGlobalState.common.resolvedSize.value = 300;
+    mockGlobalState.layout.containerSize.value = { width: 300, height: 300 };
+  });
+
+  it("should use propHeight branch when container height is zero (vertical)", () => {
+    mockGlobalState.props.overscrollEnabled = false;
+    mockGlobalState.props.loop = false;
+    mockGlobalState.props.vertical = true;
+    mockGlobalState.props.height = 180;
+    mockGlobalState.props.style = {};
+    mockGlobalState.common.size = 90;
+    mockGlobalState.common.resolvedSize.value = 90;
+    mockGlobalState.layout.containerSize.value = { width: 0, height: 0 };
+    mockHandlerOffset.value = 0;
+
+    const { result } = renderHook(
+      () =>
+        useCarouselController({
+          ...defaultProps,
+          vertical: true,
+          size: 90,
+          height: 180,
+          loop: false,
+          handlerOffset: mockHandlerOffset,
+          dataLength: 5,
+        }),
+      { wrapper }
+    );
+
+    result.current.index.value = 3; // remaining height = 2 * 90 = 180, equals effective height
+
+    act(() => {
+      result.current.next();
+    });
+
+    expect(mockHandlerOffset.value).toBe(0);
+
+    mockGlobalState.props.overscrollEnabled = true;
+    mockGlobalState.props.loop = true;
+    mockGlobalState.props.vertical = false;
+    mockGlobalState.props.height = 300;
+    mockGlobalState.props.style = {};
+    mockGlobalState.common.size = 300;
+    mockGlobalState.common.resolvedSize.value = 300;
+    mockGlobalState.layout.containerSize.value = { width: 300, height: 300 };
+  });
+
+  it("should animate scrollTo when animated is true", () => {
+    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
+
+    act(() => {
+      result.current.scrollTo({ index: 1, animated: true });
+    });
+
+    expect(result.current.index.value).toBe(1);
+    expect(mockHandlerOffset.value).toBe(-300);
+  });
+
   // it("should maintain correct index with autoFillData", () => {
   //   const { result } = renderHook(
   //     () =>
