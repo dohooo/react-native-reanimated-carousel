@@ -1,5 +1,47 @@
 # react-native-reanimated-carousel
 
+## 5.0.0-beta.1
+
+### Minor Changes
+
+- [#853](https://github.com/dohooo/react-native-reanimated-carousel/pull/853) [`c595958`](https://github.com/dohooo/react-native-reanimated-carousel/commit/c59595896381c36cc395f95b8631aee503cfd927) Thanks [@dohooo](https://github.com/dohooo)! - - add `itemWidth`/`itemHeight` props so horizontal and vertical carousels can define their snapping step explicitly (e.g. to show multiple cards per page)
+
+  - default behaviour still falls back to the carousel container size or legacy `width`/`height` props
+
+- [#853](https://github.com/dohooo/react-native-reanimated-carousel/pull/853) [`c595958`](https://github.com/dohooo/react-native-reanimated-carousel/commit/c59595896381c36cc395f95b8631aee503cfd927) Thanks [@dohooo](https://github.com/dohooo)! - ## ✨ Style API refresh
+
+  - `style` now controls the outer carousel container (positioning, width/height, margins).
+  - New `contentContainerStyle` replaces `containerStyle` for styling the scrollable content.
+  - `width` and `height` props are deprecated; define size via `style` instead.
+
+  ### Migration Example
+
+  ```tsx
+  // Before
+  <Carousel
+    width={300}
+    height={200}
+    containerStyle={{ paddingHorizontal: 16 }}
+  />
+
+  // After
+  <Carousel
+    style={{ width: 300, height: 200 }}
+    contentContainerStyle={{ paddingHorizontal: 16 }}
+  />
+  ```
+
+  - Any layout logic still works; simply move `width`/`height` into `style` and container tweaks into `contentContainerStyle`.
+  - `contentContainerStyle` runs on the JS thread—avoid adding `opacity` / `transform` there if you rely on built-in animations.
+
+### Patch Changes
+
+- [#872](https://github.com/dohooo/react-native-reanimated-carousel/pull/872) [`12c1a63`](https://github.com/dohooo/react-native-reanimated-carousel/commit/12c1a636185e476ba71698f6fe507217c6326d50) Thanks [@dohooo](https://github.com/dohooo)! - Clamp visible ranges for non-loop overdrag and add test to ensure the first item stays visible when dragging right on the first page. Credits to PR #869 reporter.
+
+- [#871](https://github.com/dohooo/react-native-reanimated-carousel/pull/871) [`bc7daaf`](https://github.com/dohooo/react-native-reanimated-carousel/commit/bc7daafbe9c927b54fe0b57c7c137382da7f382f) Thanks [@dohooo](https://github.com/dohooo)! - Fix non-loop overscroll direction so tiny positive offsets at the first page no longer wrap to the last page when calling next()/scrollTo(), and add integration coverage for the scenario. Thanks to @hennessyevan for the original report and PR 839 inspiration.
+
+- [#866](https://github.com/dohooo/react-native-reanimated-carousel/pull/866) [`566bf52`](https://github.com/dohooo/react-native-reanimated-carousel/commit/566bf52ef775b861febc74dc602d3f5e7289004c) Thanks [@hennessyevan](https://github.com/hennessyevan)! - Fix pagination accessibility state by syncing selection with scheduleOnRN instead of reading reanimated values during render, and add coverage to avoid test warnings.
+
 ## 5.0.0-beta.0
 
 ### Major Changes
@@ -16,24 +58,26 @@
   #### Migration Guide
 
   **Before:**
+
   ```jsx
   <Carousel
     width={300}
     height={200}
-    style={{ backgroundColor: 'red' }} // Applied to inner container
+    style={{ backgroundColor: "red" }} // Applied to inner container
     containerStyle={{ margin: 10 }} // Applied to outer container
   />
   ```
 
   **After:**
+
   ```jsx
   <Carousel
-    style={{ 
-      width: 300, 
-      height: 200, 
-      margin: 10 
+    style={{
+      width: 300,
+      height: 200,
+      margin: 10,
     }} // Applied to outer container
-    contentContainerStyle={{ backgroundColor: 'red' }} // Applied to inner container
+    contentContainerStyle={{ backgroundColor: "red" }} // Applied to inner container
   />
   ```
 

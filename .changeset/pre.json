@@ -5,6 +5,11 @@
     "react-native-reanimated-carousel": "4.0.3"
   },
   "changesets": [
-    "honest-baboons-sip"
+    "blue-news-stare",
+    "fix-nonloop-overdrag-visible-ranges",
+    "fix-nonloop-overscroll",
+    "fix-pagination-accessibility",
+    "honest-baboons-sip",
+    "odd-news-carry"
   ]
 }
