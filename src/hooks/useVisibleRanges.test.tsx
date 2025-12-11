@@ -26,7 +26,7 @@ describe("useVisibleRanges", () => {
     expect(expected).toMatchInlineSnapshot(`
             {
               "negativeRange": [
-                -3,
+                0,
                 0,
               ],
               "positiveRange": [
@@ -124,7 +124,7 @@ describe("useVisibleRanges", () => {
     expect(slide0hook).toMatchInlineSnapshot(`
             {
               "negativeRange": [
-                -3,
+                0,
                 0,
               ],
               "positiveRange": [
@@ -138,7 +138,7 @@ describe("useVisibleRanges", () => {
     expect(slide1hook).toMatchInlineSnapshot(`
             {
               "negativeRange": [
-                -2,
+                0,
                 1,
               ],
               "positiveRange": [
@@ -152,7 +152,7 @@ describe("useVisibleRanges", () => {
     expect(slide2hook).toMatchInlineSnapshot(`
             {
               "negativeRange": [
-                -1,
+                0,
                 2,
               ],
               "positiveRange": [
@@ -175,5 +175,26 @@ describe("useVisibleRanges", () => {
               ],
             }
         `);
+  });
+
+  it("should clamp ranges on right overdrag in non-loop mode", () => {
+    const hook = renderHook(() => {
+      // Simulate overdrag to the right at the first page (positive translation)
+      const translation = useSharedValue(viewSize * 0.25);
+      const range = useVisibleRanges({
+        total: 5,
+        translation,
+        viewSize,
+        windowSize: 3,
+        loop: false,
+      });
+
+      return range;
+    });
+
+    expect(hook.result.current.value).toEqual({
+      negativeRange: [0, 0],
+      positiveRange: [0, 2],
+    });
   });
 });
