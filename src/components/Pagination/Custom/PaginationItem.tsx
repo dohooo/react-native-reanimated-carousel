@@ -10,7 +10,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   useDerivedValue,
-  useAnimatedReaction
+  useAnimatedReaction,
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 
@@ -60,9 +60,19 @@ export const PaginationItem: React.FC<
     customReanimatedStyleRef.value = customReanimatedStyle?.(progress, index, count) ?? {};
   };
 
+  const [isSelected, setIsSelected] = useState(false);
+
   useDerivedValue(() => {
     scheduleOnRN(handleCustomAnimation, animValue?.value);
   });
+
+  useAnimatedReaction(
+    () => animValue.value,
+    (value) => {
+      scheduleOnRN(setIsSelected, value === index);
+    },
+    [animValue, index]
+  );
 
   const animStyle = useAnimatedStyle((): AnimatedDefaultStyle => {
     const {
@@ -107,12 +117,6 @@ export const PaginationItem: React.FC<
       ] as AnimatedDefaultStyle["transform"],
     };
   }, [animValue, index, count, horizontal, dotStyle, activeDotStyle, customReanimatedStyle]);
-
-  const [isSelected, setIsSelected] = useState(false)
-  
-  useAnimatedReaction(() => animValue.value, (animValue) => {
-    scheduleOnRN(setIsSelected, animValue === index)
-  }, [animValue, index])
 
   return (
     <Pressable

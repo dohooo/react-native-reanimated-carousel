@@ -1,8 +1,13 @@
 import { fireEvent, render } from "@testing-library/react-native";
 import { View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
+import { act } from "react-test-renderer";
 
 import { Pagination } from ".";
+
+jest.mock("react-native-worklets", () => ({
+  scheduleOnRN: (fn: (...args: unknown[]) => void, ...args: unknown[]) => fn(...args),
+}));
 
 describe("Pagination.Basic", () => {
   it("throws when size/dot width/height are non-number", () => {
@@ -21,7 +26,7 @@ describe("Pagination.Basic", () => {
     expect(() => render(<Test />)).toThrow("size/width/height must be a number");
   });
 
-  it("renders dots and calls onPress", () => {
+  it("renders dots and calls onPress", async () => {
     const handlePress = jest.fn();
     const Test = () => {
       const progress = useSharedValue(0);
@@ -36,6 +41,7 @@ describe("Pagination.Basic", () => {
     };
 
     const { UNSAFE_root } = render(<Test />);
+    await act(async () => {});
 
     const buttons = UNSAFE_root.findAll(
       (node) =>
@@ -50,7 +56,9 @@ describe("Pagination.Basic", () => {
 
     expect(uniqueByLabel).toHaveLength(3);
 
-    fireEvent.press(uniqueByLabel[1]);
+    await act(async () => {
+      fireEvent.press(uniqueByLabel[1]);
+    });
     expect(handlePress).toHaveBeenCalledWith(1);
   });
 });
@@ -72,7 +80,7 @@ describe("Pagination.Custom", () => {
     expect(() => render(<Test />)).toThrow("size/width/height must be a number");
   });
 
-  it("uses max item dimensions for container min sizes", () => {
+  it("uses max item dimensions for container min sizes", async () => {
     const Test = () => {
       const progress = useSharedValue(0);
       return (
@@ -87,6 +95,7 @@ describe("Pagination.Custom", () => {
     };
 
     const { UNSAFE_root } = render(<Test />);
+    await act(async () => {});
 
     // @ts-expect-error
     const container = UNSAFE_root.findByType(View);
