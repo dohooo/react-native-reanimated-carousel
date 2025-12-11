@@ -45,8 +45,6 @@ function Index() {
               borderBottomWidth: 1,
               borderBottomColor: "#002a57",
             }}
-            width={PAGE_WIDTH}
-            height={PAGE_HEIGHT}
             data={DATA}
             renderItem={({ item, animationValue }) => {
               return (

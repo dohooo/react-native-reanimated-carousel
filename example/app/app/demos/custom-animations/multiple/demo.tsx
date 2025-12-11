@@ -12,18 +12,24 @@ const COUNT = 6;
 
 function Index() {
   return (
-    <View id="carousel-component" dataSet={{ kind: "custom-animations", name: "multiple" }}>
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "multiple" }}
+      style={{ width: PAGE_WIDTH, height: PAGE_WIDTH / 2 }}
+    >
       <Carousel
         loop
         autoPlay
         vertical={false}
-        width={PAGE_WIDTH / COUNT}
-        height={PAGE_WIDTH / 2}
-        style={{
-          width: PAGE_WIDTH,
-        }}
+        style={{ width: PAGE_WIDTH, height: PAGE_WIDTH / 2 }}
+        itemWidth={PAGE_WIDTH / COUNT}
+        itemHeight={PAGE_WIDTH / 2}
         data={PURPLE_IMAGES}
-        renderItem={({ index }) => <SBItem key={index} index={index} />}
+        renderItem={({ index }) => (
+          <View style={{ width: PAGE_WIDTH / COUNT, height: PAGE_WIDTH / 2 }}>
+            <SBItem key={index} index={index} />
+          </View>
+        )}
       />
     </View>
   );

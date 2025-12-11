@@ -1,9 +1,15 @@
 import type { PropsWithChildren } from "react";
-import React from "react";
+import React, { useState } from "react";
 import type { ViewStyle } from "react-native";
 import { Pressable, View } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
-import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
+import Animated, {
+  Extrapolation,
+  interpolate,
+  useAnimatedReaction,
+  useAnimatedStyle,
+} from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 
 export type DotStyle = Omit<ViewStyle, "width" | "height"> & {
   width?: number;
@@ -55,6 +61,16 @@ export const PaginationItem: React.FC<
   const width = sizes.width;
   const height = sizes.height;
 
+  const [isSelected, setIsSelected] = useState(false);
+
+  useAnimatedReaction(
+    () => animValue.value,
+    (value) => {
+      scheduleOnRN(setIsSelected, value === index);
+    },
+    [animValue, index]
+  );
+
   const animStyle = useAnimatedStyle(() => {
     const size = horizontal ? height : width;
     let inputRange = [index - 1, index, index + 1];
@@ -79,8 +95,8 @@ export const PaginationItem: React.FC<
       onPress={onPress}
       accessibilityLabel={accessibilityLabel}
       accessibilityRole="button"
-      accessibilityHint={animValue.value === index ? "" : `Go to ${accessibilityLabel}`}
-      accessibilityState={{ selected: animValue.value === index }}
+      accessibilityHint={isSelected ? "" : `Go to ${accessibilityLabel}`}
+      accessibilityState={{ selected: isSelected }}
     >
       <View
         style={[

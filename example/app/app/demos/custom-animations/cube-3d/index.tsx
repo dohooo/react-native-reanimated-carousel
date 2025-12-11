@@ -90,8 +90,6 @@ function CubeItem() {
         }}
         pagingEnabled={false}
         snapEnabled={false}
-        width={PAGE_WIDTH}
-        height={PAGE_HEIGHT}
         data={[...new Array(6).keys()]}
         renderItem={({ index, animationValue }) => {
           return <CustomItem key={index} index={index} animationValue={animationValue} />;

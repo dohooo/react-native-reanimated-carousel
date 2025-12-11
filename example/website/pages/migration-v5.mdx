@@ -79,10 +79,9 @@ The most requested feature! Carousel now automatically measures container dimens
   // Carousel automatically measures container
 />
 
-// ✅ v5.x - Still works (explicit sizing)
+// ✅ v5.x - Still works (explicit sizing via style prop)
 <Carousel
-  width={300}
-  height={200}
+  style={{ width: 300, height: 200 }}
   data={data}
   renderItem={renderItem}
 />

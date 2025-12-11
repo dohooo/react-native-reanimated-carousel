@@ -1,6 +1,11 @@
 import * as React from "react";
 import { View } from "react-native";
-import Animated, { interpolate, interpolateColor, useAnimatedStyle } from "react-native-reanimated";
+import Animated, {
+  Extrapolation,
+  interpolate,
+  interpolateColor,
+  useAnimatedStyle,
+} from "react-native-reanimated";
 import type { SharedValue } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
@@ -47,10 +52,17 @@ const CustomItem: React.FC<ItemProps> = ({ index, animationValue }) => {
   );
 };
 function Index() {
-  const animationStyle: TAnimationStyle = React.useCallback((value: number) => {
+  const [isAutoPlay, setIsAutoPlay] = React.useState(false);
+
+  const animationStyle: TAnimationStyle = React.useCallback((value: number, index: number) => {
     "worklet";
 
-    const zIndex = interpolate(value, [-1, 0, 1], [10, 20, 30]);
+    const zIndex = interpolate(
+      value,
+      value > 0 ? [0, 1] : [-1, 0],
+      value > 0 ? [10, 20] : [-10, 0],
+      Extrapolation.CLAMP
+    );
     const translateX = interpolate(value, [-2, 0, 1], [-PAGE_WIDTH, 0, PAGE_WIDTH]);
 
     return {
@@ -66,9 +78,9 @@ function Index() {
     >
       <CaptureWrapper>
         <Carousel
-          loop={true}
+          loop={false}
+          autoPlay={isAutoPlay}
           style={{ width: PAGE_WIDTH, height: 240 }}
-          width={PAGE_WIDTH}
           data={[...new Array(6).keys()]}
           renderItem={({ index, animationValue }) => {
             return <CustomItem key={index} index={index} animationValue={animationValue} />;

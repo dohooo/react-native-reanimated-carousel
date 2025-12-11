@@ -82,3 +82,6 @@ coverage/
 
 # Agents Docs
 *.local.md
+
+# Claude
+CLAUDE.md

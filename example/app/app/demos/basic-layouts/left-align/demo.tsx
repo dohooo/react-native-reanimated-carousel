@@ -10,13 +10,11 @@ function Index() {
     <View id="carousel-component" dataSet={{ kind: "basic-layouts", name: "left-align" }}>
       <Carousel
         loop={true}
-        width={430}
-        height={258}
         snapEnabled={true}
         pagingEnabled={true}
         autoPlayInterval={2000}
         data={defaultDataWith6Colors}
-        style={{ width: "100%" }}
+        style={{ width: 430, height: 258 }}
         onSnapToItem={(index) => console.log("current index:", index)}
         renderItem={renderItem({ rounded: true, style: { marginRight: 8 } })}
       />
