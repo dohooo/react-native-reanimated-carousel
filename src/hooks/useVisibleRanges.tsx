@@ -28,18 +28,23 @@ export function useVisibleRanges(options: {
     const negativeCount = windowSize - positiveCount;
 
     let currentIndex = Math.round(-translation.value / viewSize);
-    currentIndex = currentIndex < 0 ? (currentIndex % total) + total : currentIndex;
 
     let newRanges: VisibleRanges;
 
     if (!loop) {
+      // Clamp currentIndex to valid range [0, total-1] for non-loop mode
+      // When overdragging right, translation.value becomes positive, making currentIndex negative
+      currentIndex = Math.max(0, Math.min(total - 1, currentIndex));
+
       // Adjusting negative range if the carousel is not loopable.
       // So, It will be only displayed the positive items.
       newRanges = {
-        negativeRange: [0 + currentIndex - (windowSize - 1), 0 + currentIndex],
-        positiveRange: [0 + currentIndex, currentIndex + (windowSize - 1)],
+        negativeRange: [Math.max(0, currentIndex - (windowSize - 1)), currentIndex],
+        positiveRange: [currentIndex, Math.min(total - 1, currentIndex + (windowSize - 1))],
       };
     } else {
+      currentIndex = currentIndex < 0 ? (currentIndex % total) + total : currentIndex;
+
       const negativeRange: Range = [
         (currentIndex - negativeCount + total) % total,
         (currentIndex - 1 + total) % total,
