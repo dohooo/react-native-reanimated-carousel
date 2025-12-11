@@ -6,6 +6,37 @@
 
 - [#850](https://github.com/dohooo/react-native-reanimated-carousel/pull/850) [`9b388e6`](https://github.com/dohooo/react-native-reanimated-carousel/commit/9b388e6f6237126c4ed25c2442c4b788aad7adf6) Thanks [@dohooo](https://github.com/dohooo)! - # 🎯 Support for Expo 54 & Dynamic Sizing
 
+- Style props refactoring:
+
+  - **BREAKING CHANGE**: The styling props have been refactored for clarity and consistency with React Native's `ScrollView`.
+  - **DEPRECATED**: `width` and `height` props are now deprecated. Please use the `style` prop to define component size.
+  - **NEW**: The `style` prop now controls the outer container's style and is the primary way to set `width` and `height`.
+  - **NEW**: A new `contentContainerStyle` prop has been added to control the style of the inner scrollable content.
+
+  #### Migration Guide
+
+  **Before:**
+  ```jsx
+  <Carousel
+    width={300}
+    height={200}
+    style={{ backgroundColor: 'red' }} // Applied to inner container
+    containerStyle={{ margin: 10 }} // Applied to outer container
+  />
+  ```
+
+  **After:**
+  ```jsx
+  <Carousel
+    style={{ 
+      width: 300, 
+      height: 200, 
+      margin: 10 
+    }} // Applied to outer container
+    contentContainerStyle={{ backgroundColor: 'red' }} // Applied to inner container
+  />
+  ```
+
   ## ✨ Major Features
 
   ### Dynamic Sizing Support

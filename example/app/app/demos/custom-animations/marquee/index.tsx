@@ -62,11 +62,10 @@ function Index() {
               }}
             >
               <Carousel
-                width={layout?.width ?? PAGE_WIDTH}
-                height={30}
                 style={[
                   {
-                    width: 200,
+                    width: layout?.width ?? PAGE_WIDTH,
+                    height: 30,
                   },
                 ]}
                 snapEnabled={false}

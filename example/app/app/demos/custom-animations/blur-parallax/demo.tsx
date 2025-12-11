@@ -18,20 +18,28 @@ const PAGE_WIDTH = window.width / 2;
 
 function Index() {
   return (
-    <View id="carousel-component" dataSet={{ kind: "custom-animations", name: "blur-parallax" }}>
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "blur-parallax" }}
+      style={{ width: window.width, height: 240, justifyContent: "center", alignItems: "center" }}
+    >
       <Carousel
-        loop={true}
+        loop
         style={{
           width: window.width,
           height: 240,
           justifyContent: "center",
           alignItems: "center",
+          overflow: "visible",
         }}
-        width={PAGE_WIDTH}
+        contentContainerStyle={{
+          width: PAGE_WIDTH,
+          overflow: "visible",
+        }}
         data={[...fruitItems, ...fruitItems]}
-        renderItem={({ item, index, animationValue }) => {
-          return <CustomItem key={index} index={index} animationValue={animationValue} />;
-        }}
+        renderItem={({ index, animationValue }) => (
+          <CustomItem index={index} animationValue={animationValue} />
+        )}
         customAnimation={parallaxLayout(
           {
             size: PAGE_WIDTH,

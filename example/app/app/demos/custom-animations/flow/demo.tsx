@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Image, Text, View } from "react-native";
-import { interpolate } from "react-native-reanimated";
+import { Text, View } from "react-native";
+import { Extrapolation, interpolate } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
 import { faker } from "@faker-js/faker";
@@ -25,36 +25,39 @@ function Index() {
       "worklet";
 
       const translateY = interpolate(value, [-1, 0, 1], [-ITEM_HEIGHT, 0, ITEM_HEIGHT]);
-      const right = interpolate(
-        value,
-        [-1, -0.2, 1],
-        [RIGHT_OFFSET / 2, RIGHT_OFFSET, RIGHT_OFFSET / 3]
-      );
+      const right = interpolate(value, [1, 2, 3], [RIGHT_OFFSET, RIGHT_OFFSET * 2, RIGHT_OFFSET]);
+      const opacity = interpolate(value, [1, 2, 3], [0.35, 1, 0.35], Extrapolation.CLAMP);
+
       return {
         transform: [{ translateY }],
         right,
+        opacity,
       };
     },
     [RIGHT_OFFSET]
   );
 
   return (
-    <View id="carousel-component" dataSet={{ kind: "custom-animations", name: "flow" }}>
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "flow" }}
+      style={{ width: PAGE_WIDTH, height: PAGE_HEIGHT, justifyContent: "center" }}
+    >
       <Carousel
         loop
         vertical
         style={{
-          justifyContent: "center",
           width: PAGE_WIDTH,
           height: PAGE_HEIGHT,
         }}
-        width={ITEM_WIDTH}
         pagingEnabled={false}
-        height={ITEM_HEIGHT}
-        data={[...new Array(10).keys()]}
-        renderItem={({ index }) => {
+        data={[...new Array(10).keys()].map((v) => faker.animal.dog())}
+        renderItem={({ index, item }) => {
           return (
-            <View key={index} style={{ flex: 1, padding: 10 }}>
+            <View
+              key={index}
+              style={{ flex: 1, padding: 10, width: ITEM_WIDTH, height: ITEM_HEIGHT }}
+            >
               <View
                 style={{
                   alignItems: "flex-start",
@@ -86,7 +89,7 @@ function Index() {
                       color: "white",
                     }}
                   >
-                    {faker.animal.dog()}
+                    {item}
                   </Text>
                 </View>
                 <View

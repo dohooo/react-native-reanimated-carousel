@@ -45,11 +45,15 @@ function Index() {
             justifyContent: "center",
             alignItems: "center",
           }}
-          width={PAGE_WIDTH}
-          height={PAGE_HEIGHT}
           data={[...new Array(6).keys()]}
           renderItem={({ index }) => {
-            return <SBItem key={index} index={index} />;
+            return (
+              <SBItem
+                key={index}
+                index={index}
+                style={{ width: PAGE_WIDTH, height: PAGE_HEIGHT }}
+              />
+            );
           }}
           autoPlay={AutoPLay.status}
           customAnimation={animationStyle}

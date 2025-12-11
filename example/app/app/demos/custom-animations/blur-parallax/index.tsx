@@ -24,33 +24,47 @@ function Index() {
   return (
     <View style={{ flex: 1 }}>
       <CaptureWrapper>
-        <Carousel
-          loop={true}
-          autoPlay={isAutoPlay}
+        <View
           style={{
             width: window.width,
             height: 240,
             justifyContent: "center",
             alignItems: "center",
+            alignSelf: "center",
           }}
-          width={PAGE_WIDTH}
-          data={[...fruitItems, ...fruitItems]}
-          renderItem={({ item, index, animationValue }) => {
-            return <CustomItem key={index} index={index} animationValue={animationValue} />;
-          }}
-          customAnimation={parallaxLayout(
-            {
-              size: PAGE_WIDTH,
-              vertical: false,
-            },
-            {
-              parallaxScrollingScale: 1,
-              parallaxAdjacentItemScale: 0.5,
-              parallaxScrollingOffset: 40,
-            }
-          )}
-          scrollAnimationDuration={1200}
-        />
+        >
+          <Carousel
+            loop={true}
+            autoPlay={isAutoPlay}
+            style={{
+              width: window.width,
+              height: 240,
+              justifyContent: "center",
+              alignItems: "center",
+              overflow: "visible",
+            }}
+            contentContainerStyle={{
+              width: PAGE_WIDTH,
+              overflow: "visible",
+            }}
+            data={[...fruitItems, ...fruitItems]}
+            renderItem={({ item, index, animationValue }) => {
+              return <CustomItem key={index} index={index} animationValue={animationValue} />;
+            }}
+            customAnimation={parallaxLayout(
+              {
+                size: PAGE_WIDTH,
+                vertical: false,
+              },
+              {
+                parallaxScrollingScale: 1,
+                parallaxAdjacentItemScale: 0.5,
+                parallaxScrollingOffset: 40,
+              }
+            )}
+            scrollAnimationDuration={1200}
+          />
+        </View>
       </CaptureWrapper>
       <SButton
         onPress={() => {

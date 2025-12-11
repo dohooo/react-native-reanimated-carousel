@@ -76,12 +76,14 @@ function Index() {
     <View style={{ flex: 1 }}>
       <CaptureWrapper>
         <Carousel
-          width={itemSize}
-          height={PAGE_WIDTH / 2}
           style={{
             width: PAGE_WIDTH,
             height: PAGE_WIDTH / 2,
             backgroundColor: "black",
+          }}
+          contentContainerStyle={{
+            width: PAGE_WIDTH,
+            height: PAGE_WIDTH / 2,
           }}
           loop
           windowSize={Math.round(dataLength / 2)}
@@ -135,7 +137,7 @@ const Item: React.FC<{
           alignItems: "center",
         }}
       >
-        <View style={{ width: "100%", height: "100%" }}>
+        <View style={{ width: "101%", height: "100%" }}>
           <SlideItem index={index} />
         </View>
       </View>

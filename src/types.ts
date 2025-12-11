@@ -1,4 +1,4 @@
-import type { StyleProp, ViewStyle } from "react-native";
+import type { LayoutChangeEvent, StyleProp, ViewStyle } from "react-native";
 import type { PanGesture } from "react-native-gesture-handler";
 import type { SharedValue, WithSpringConfig, WithTimingConfig } from "react-native-reanimated";
 
@@ -113,13 +113,38 @@ export type TCarouselProps<T = any> = {
    */
   scrollAnimationDuration?: number;
   /**
-   * Carousel content style
+   * Carousel container style.
    */
   style?: StyleProp<ViewStyle>;
   /**
-   * Carousel container style
+   * Carousel content container style.
    */
-  containerStyle?: StyleProp<ViewStyle>;
+  contentContainerStyle?: StyleProp<ViewStyle>;
+  /**
+   * Horizontal page size used for snapping and animations.
+   * Useful when you want multiple items visible in a single viewport.
+   * Defaults to the carousel container width when not provided.
+   */
+  itemWidth?: number;
+  /**
+   * Vertical page size used for snapping and animations.
+   * Useful when you want multiple rows visible at once in vertical mode.
+   * Defaults to the carousel container height when not provided.
+   */
+  itemHeight?: number;
+
+  // Other props...
+
+  /**
+   * @deprecated Previously controlled the outer container width (v4 behaviour).
+   *               Move this value into `style`, e.g. `style={{ width: 300 }}`.
+   */
+  width?: number;
+  /**
+   * @deprecated Previously controlled the outer container height (v4 behaviour).
+   *               Move this value into `style`, e.g. `style={{ height: 200 }}`.
+   */
+  height?: number;
   /**
    * PanGesture config
    * @test_coverage ✅ tested in Carousel.test.tsx > should call the onConfigurePanGesture callback
@@ -217,9 +242,8 @@ export type TCarouselProps<T = any> = {
    *
    * If you want to update a shared value automatically, you can use the shared value as a parameter directly.
    */
-  onProgressChange?:
-    | ((offsetProgress: number, absoluteProgress: number) => void)
-    | SharedValue<number>;
+  onProgressChange?: (offsetProgress: number, absoluteProgress: number) => void;
+  onLayout?: (event: LayoutChangeEvent) => void;
 
   // ============================== deprecated props ==============================
   /**

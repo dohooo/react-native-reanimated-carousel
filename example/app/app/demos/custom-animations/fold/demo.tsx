@@ -69,16 +69,22 @@ function Index() {
   );
 
   return (
-    <View id="carousel-component" dataSet={{ kind: "custom-animations", name: "fold" }}>
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "fold" }}
+      style={{ width: PAGE_WIDTH, height: PAGE_WIDTH / 2, backgroundColor: "black" }}
+    >
       <Carousel
-        width={itemSize}
-        height={PAGE_WIDTH / 2}
+        loop
         style={{
           width: PAGE_WIDTH,
           height: PAGE_WIDTH / 2,
           backgroundColor: "black",
         }}
-        loop
+        contentContainerStyle={{
+          width: PAGE_WIDTH,
+          height: PAGE_WIDTH / 2,
+        }}
         windowSize={Math.round(dataLength / 2)}
         scrollAnimationDuration={1500}
         autoPlayInterval={1200}
@@ -113,7 +119,7 @@ const Item: React.FC<{
           alignItems: "center",
         }}
       >
-        <View style={{ width: "100%", height: "100%" }}>
+        <View style={{ width: "101%", height: "100%" }}>
           <SlideItem index={index} />
         </View>
       </View>

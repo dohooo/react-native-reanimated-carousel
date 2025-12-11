@@ -22,7 +22,7 @@ function Index() {
   const directionAnimVal = useSharedValue(0);
 
   const animationStyle: TAnimationStyle = React.useCallback(
-    (value: number) => {
+    (value: number, index: number) => {
       "worklet";
       const translateY = interpolate(value, [0, 1], [0, -18]);
 
@@ -32,12 +32,7 @@ function Index() {
       const rotateZ =
         interpolate(value, [-1, 0], [15, 0], Extrapolation.CLAMP) * directionAnimVal.value;
 
-      const zIndex = interpolate(
-        value,
-        [0, 1, 2, 3, 4],
-        [0, 1, 2, 3, 4].map((v) => (data.length - v) * 10),
-        Extrapolation.CLAMP
-      );
+      const zIndex = -10 * index;
 
       const scale = interpolate(value, [0, 1], [1, 0.95]);
 
@@ -53,19 +48,24 @@ function Index() {
   );
 
   return (
-    <View id="carousel-component" dataSet={{ kind: "custom-animations", name: "tinder" }}>
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "tinder" }}
+      style={{
+        width: PAGE_WIDTH,
+        height: PAGE_HEIGHT,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <Carousel
         loop={false}
         style={{
           width: PAGE_WIDTH,
           height: PAGE_HEIGHT,
-          justifyContent: "center",
-          alignItems: "center",
         }}
         defaultIndex={0}
         vertical={false}
-        width={PAGE_WIDTH}
-        height={PAGE_HEIGHT}
         data={data}
         onConfigurePanGesture={(g) => {
           g.onChange((e) => {

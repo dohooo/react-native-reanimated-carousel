@@ -27,13 +27,11 @@ function Index() {
 
   return (
     <View
-      style={{ paddingVertical: 100 }}
+      style={{ paddingVertical: 100, alignItems: "center" }}
       id="carousel-component"
       dataSet={{ kind: "custom-animations", name: "anim-tab-bar" }}
     >
-      <Carousel
-        ref={r}
-        loop
+      <View
         style={{
           width: window.width,
           height: PAGE_HEIGHT,
@@ -42,25 +40,32 @@ function Index() {
           borderBottomWidth: 1,
           borderBottomColor: "#002a57",
         }}
-        width={PAGE_WIDTH}
-        height={PAGE_HEIGHT}
-        data={DATA}
-        renderItem={({ item, animationValue }) => {
-          return (
-            <Item
-              animationValue={animationValue}
-              label={item}
-              onPress={() =>
-                r.current?.scrollTo({
-                  count: animationValue.value,
-                  animated: true,
-                })
-              }
-            />
-          );
-        }}
-        autoPlay={AutoPLay.status}
-      />
+      >
+        <Carousel
+          ref={r}
+          loop
+          style={{
+            width: PAGE_WIDTH,
+            height: PAGE_HEIGHT,
+          }}
+          data={DATA}
+          renderItem={({ item, animationValue }) => {
+            return (
+              <Item
+                animationValue={animationValue}
+                label={item}
+                onPress={() =>
+                  r.current?.scrollTo({
+                    count: animationValue.value,
+                    animated: true,
+                  })
+                }
+              />
+            );
+          }}
+          autoPlay={AutoPLay.status}
+        />
+      </View>
     </View>
   );
 }

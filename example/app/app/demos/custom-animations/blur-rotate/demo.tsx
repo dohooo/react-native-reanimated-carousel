@@ -10,33 +10,37 @@ import { parallaxLayout } from "@/features/custom-animations/blur-rotate/paralla
 
 import { SlideItem } from "@/components/SlideItem";
 import { PURPLE_IMAGES } from "@/constants/purple-images";
-import { HEADER_HEIGHT, window } from "@/constants/sizes";
+import { window } from "@/constants/sizes";
 
 const BlurView = Animated.createAnimatedComponent(_BlurView);
 
 function Index() {
   const PAGE_WIDTH = window.width;
-  const PAGE_HEIGHT = window.height - HEADER_HEIGHT;
   const ITEM_WIDTH = PAGE_WIDTH * 0.8;
 
   return (
-    <View id="carousel-component" dataSet={{ kind: "custom-animations", name: "blur-rotate" }}>
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "blur-rotate" }}
+      style={{ width: PAGE_WIDTH, height: ITEM_WIDTH, alignItems: "center" }}
+    >
       <Carousel
         vertical
         loop={false}
         style={{
           width: PAGE_WIDTH,
-          height: PAGE_HEIGHT,
-          alignItems: "center",
+          height: ITEM_WIDTH,
         }}
-        width={ITEM_WIDTH}
-        height={ITEM_WIDTH}
+        contentContainerStyle={{
+          width: PAGE_WIDTH,
+          height: ITEM_WIDTH,
+        }}
         pagingEnabled={false}
         snapEnabled={false}
         data={PURPLE_IMAGES}
-        renderItem={({ item, index, animationValue }) => {
-          return <CustomItem key={index} index={index} animationValue={animationValue} />;
-        }}
+        renderItem={({ index, animationValue }) => (
+          <CustomItem key={index} index={index} animationValue={animationValue} />
+        )}
         customAnimation={parallaxLayout({
           size: ITEM_WIDTH,
         })}
