@@ -19,8 +19,6 @@ function Index() {
 
   const baseOptions = {
     vertical: false,
-    width: PAGE_WIDTH,
-    height: PAGE_HEIGHT,
   } as const;
 
   return (
@@ -28,6 +26,10 @@ function Index() {
       <Carousel
         {...baseOptions}
         loop
+        style={{
+          width: PAGE_WIDTH,
+          height: PAGE_HEIGHT,
+        }}
         autoPlay={isAutoPlay}
         withAnimation={{
           type: "spring",

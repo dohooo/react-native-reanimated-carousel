@@ -34,7 +34,6 @@ function Index() {
       <Carousel
         loop={true}
         style={{ width: PAGE_WIDTH, height: 240 }}
-        width={PAGE_WIDTH}
         data={PURPLE_IMAGES}
         onScrollStart={() => {
           pressAnim.value = withTiming(1);

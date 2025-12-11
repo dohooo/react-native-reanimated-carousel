@@ -6,7 +6,8 @@ import { CaptureWrapper } from "@/store/CaptureProvider";
 import { renderItem } from "@/utils/render-item";
 import * as React from "react";
 import { View } from "react-native";
-import type { ICarouselInstance } from "react-native-reanimated-carousel";
+import type { StyleProp, ViewStyle } from "react-native";
+import type { ICarouselInstance, TCarouselProps } from "react-native-reanimated-carousel";
 import Carousel from "react-native-reanimated-carousel";
 
 function Index() {
@@ -18,23 +19,31 @@ function Index() {
       autoPlayInterval: 2000,
       autoPlayReverse: false,
       data: defaultDataWith6Colors,
-      height: 258,
       loop: true,
       pagingEnabled: true,
       snapEnabled: true,
       vertical: false,
-      width: window.width,
     },
   });
+
+  const {
+    width: _ignoredWidth,
+    height: _ignoredHeight,
+    ...restSettings
+  } = advancedSettings as TCarouselProps;
 
   return (
     <View style={{ flex: 1 }}>
       <CaptureWrapper>
         <Carousel
-          {...advancedSettings}
+          {...restSettings}
           ref={ref}
-          style={{ width: "100%" }}
-          width={constants.PAGE_WIDTH * 0.75}
+          style={{ width: window.width, height: 258 }}
+          contentContainerStyle={{
+            width: window.width / 2,
+            height: 258,
+            overflow: "visible",
+          }}
           onSnapToItem={(index) => console.log("current index:", index)}
           renderItem={renderItem({ rounded: true, style: { marginRight: 8 } })}
         />

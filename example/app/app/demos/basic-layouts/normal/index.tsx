@@ -5,8 +5,9 @@ import { useAdvancedSettings } from "@/hooks/useSettings";
 import { CaptureWrapper } from "@/store/CaptureProvider";
 import { renderItem } from "@/utils/render-item";
 import * as React from "react";
+import type { StyleProp, ViewStyle } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
-import type { ICarouselInstance } from "react-native-reanimated-carousel";
+import type { ICarouselInstance, TCarouselProps } from "react-native-reanimated-carousel";
 import Carousel from "react-native-reanimated-carousel";
 import { Stack } from "tamagui";
 
@@ -20,12 +21,10 @@ function Index() {
       autoPlayInterval: 2000,
       autoPlayReverse: false,
       data: defaultDataWith6Colors,
-      height: 258,
       loop: true,
       pagingEnabled: true,
       snapEnabled: true,
       vertical: false,
-      width: window.width,
     },
   });
 
@@ -37,7 +36,10 @@ function Index() {
           ref={ref}
           defaultScrollOffsetValue={scrollOffsetValue}
           testID={"xxx"}
-          style={{ width: "100%" }}
+          style={{
+            height: 258,
+            width: window.width,
+          }}
           onScrollStart={() => {
             console.log("Scroll start");
           }}

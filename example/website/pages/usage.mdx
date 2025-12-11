@@ -60,8 +60,7 @@ function App() {
     <View style={{ flex: 1 }}>
       <Carousel
         ref={ref}
-        width={width}
-        height={width / 2}
+        style={{ width, height: width / 2 }}
         data={data}
         onProgressChange={progress}
         renderItem={({ index }) => (

@@ -16,8 +16,7 @@ import { ScrollViewGesture } from "./ScrollViewGesture";
 export type TAnimationStyle = (value: number) => ViewStyle;
 
 export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) => {
-  const { props, layout, common } = useGlobalState();
-  const { itemDimensions } = layout;
+  const { props, common } = useGlobalState();
 
   const {
     testID,
@@ -31,9 +30,7 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
     rawDataLength,
     mode,
     style,
-    containerStyle,
-    width,
-    height,
+    contentContainerStyle,
     vertical,
     autoPlay,
     windowSize,
@@ -155,27 +152,38 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
 
   const scrollViewGestureOnTouchEnd = React.useCallback(startAutoPlay, [startAutoPlay]);
 
+  const { opacity, transform, ...restContentContainerStyle } =
+    StyleSheet.flatten(contentContainerStyle) || {};
+  const flattenedStyle = StyleSheet.flatten(style) || {};
+
   const layoutStyle = useAnimatedStyle(() => {
+    const { width, height } = flattenedStyle;
+    const measuredSize = resolvedSize.value ?? 0;
+
+    const computedWidth = width ?? (vertical ? "100%" : measuredSize || "100%");
+    const computedHeight = height ?? (vertical ? measuredSize || "100%" : "100%");
+
     return {
-      width: width || "100%", // [width is deprecated]
-      height: height || "100%", // [height is deprecated]
+      width: computedWidth,
+      height: computedHeight,
       opacity: isSizeReady.value ? 1 : 0,
     };
-  }, [width, height, itemDimensions, isSizeReady]);
+  }, [flattenedStyle, isSizeReady, vertical, resolvedSize]);
 
   return (
-    <GestureHandlerRootView style={[styles.layoutContainer, containerStyle]}>
+    <GestureHandlerRootView testID={testID} style={[styles.layoutContainer, style]}>
       <ScrollViewGesture
         size={size}
         key={mode}
         translation={handlerOffset}
         style={[
-          styles.contentContainer, // [deprecated]
+          styles.contentContainer,
           layoutStyle,
-          style,
+          restContentContainerStyle,
           vertical ? styles.itemsVertical : styles.itemsHorizontal,
         ]}
-        testID={testID}
+        testID="carousel-content-container"
+        onLayout={props.onLayout}
         onScrollStart={scrollViewGestureOnScrollStart}
         onScrollEnd={scrollViewGestureOnScrollEnd}
         onTouchBegin={scrollViewGestureOnTouchBegin}
@@ -203,6 +211,7 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
 const styles = StyleSheet.create({
   layoutContainer: {
     display: "flex",
+    overflow: "hidden",
   },
   contentContainer: {
     overflow: "hidden",

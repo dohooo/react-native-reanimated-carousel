@@ -1,6 +1,6 @@
 import * as React from "react";
 import { View } from "react-native";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { Pressable } from "react-native-gesture-handler";
 import { interpolate } from "react-native-reanimated";
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
 
@@ -43,24 +43,25 @@ function Index() {
   );
 
   return (
-    <View id="carousel-component" dataSet={{ kind: "custom-animations", name: "circular" }}>
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "custom-animations", name: "circular" }}
+      style={{ width: PAGE_WIDTH, height: PAGE_WIDTH / 2 }}
+    >
       <Carousel
-        width={itemSize}
-        height={itemSize}
+        loop
         style={{
           width: PAGE_WIDTH,
           height: PAGE_WIDTH / 2,
         }}
-        loop
         data={getImages(12)}
         renderItem={({ index }) => (
-          <TouchableWithoutFeedback
+          <Pressable
             key={index}
             onPress={() => {
               console.log(index);
             }}
-            containerStyle={{ flex: 1 }}
-            style={{ flex: 1 }}
+            style={{ width: itemSize, height: itemSize }}
           >
             <View
               style={{
@@ -76,7 +77,7 @@ function Index() {
                 <SlideItem index={index} />
               </View>
             </View>
-          </TouchableWithoutFeedback>
+          </Pressable>
         )}
         customAnimation={animationStyle}
       />

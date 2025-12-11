@@ -23,12 +23,10 @@ function Index() {
       autoPlayInterval: 2000,
       autoPlayReverse: false,
       data: defaultDataWith6Colors,
-      height: 258,
       loop: true,
       pagingEnabled: true,
       snapEnabled: true,
       vertical: false,
-      width: PAGE_WIDTH,
     },
   });
 
@@ -40,13 +38,16 @@ function Index() {
           {...advancedSettings}
           style={{
             width: PAGE_WIDTH,
+            height: 258,
           }}
           mode="parallax"
           modeConfig={{
             parallaxScrollingScale: 0.9,
             parallaxScrollingOffset: 50,
           }}
-          onProgressChange={progress}
+          onProgressChange={(offsetProgress, absoluteProgress) => {
+            progress.value = absoluteProgress;
+          }}
           renderItem={renderItem({ rounded: true })}
         />
       </CaptureWrapper>

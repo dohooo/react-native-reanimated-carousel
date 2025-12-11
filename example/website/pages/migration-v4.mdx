@@ -118,13 +118,13 @@ All gesture callbacks now run as worklets by default:
 
 ## New Features
 
-### 1. Container Styling
+### 1. Content Container Styling
 
-A dedicated `containerStyle` prop has been added for styling the carousel container:
+Use the `contentContainerStyle` prop to style the scrollable content area:
 
 ```tsx
 <Carousel
-  containerStyle={{
+  contentContainerStyle={{
     backgroundColor: 'white',
     borderRadius: 8,
   }}
@@ -256,7 +256,7 @@ The `defaultIndex` prop behavior has changed:
    - Test all custom animations with the new API
 
 5. **Optional Enhancements**
-   - Consider using the new `containerStyle` prop for better styling control
+   - Consider using the `contentContainerStyle` prop for better styling control
    - Implement `minScrollDistancePerSwipe` if needed
    - Evaluate if `fixedDirection` would improve your carousel behavior
 
@@ -293,8 +293,7 @@ Here's a complete example showing the migration of a typical carousel implementa
 // After (v4.x)
 <Carousel
   loop
-  width={width}
-  height={height}
+  style={{ width, height }}
   data={data}
   onScrollStart={() => console.log('scroll started')}
   onConfigurePanGesture={(gesture) => {
@@ -305,7 +304,7 @@ Here's a complete example showing the migration of a typical carousel implementa
   customAnimation={(value, index) => ({
     opacity: value
   })}
-  containerStyle={{
+  contentContainerStyle={{
     borderRadius: 8
   }}
 />

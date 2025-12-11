@@ -73,6 +73,8 @@ Layout items vertically instead of horizontally
 
 ### `width`
 
+> @deprecated Use `style` prop instead. e.g. `style={{ width: 300 }}`
+
 Specified carousel item width
 
 | type   | default | required |
@@ -80,6 +82,8 @@ Specified carousel item width
 | number \| undefined | '100%'     | ❌      |
 
 ### `height`
+
+> @deprecated Use `style` prop instead. e.g. `style={{ height: 200 }}`
 
 Specified carousel item height
 
@@ -105,7 +109,31 @@ Different modes correspond to different configurations. For details, see below\[
 
 ### `style`
 
-Carousel container style
+Style of the carousel container. This is the only place to define the component's size (`width`, `height`).
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| ViewStyle | \{\}     | ❌      |
+
+### `itemWidth`
+
+Horizontal page size used for snapping and animations. Set this when you want multiple items visible within a single viewport.
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| number \| undefined | container width | ❌ |
+
+### `itemHeight`
+
+Vertical page size used for snapping and animations. Set this when you want multiple rows visible at once in vertical mode.
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| number \| undefined | container height | ❌ |
+
+### `contentContainerStyle`
+
+Style of the carousel content container.
 
 | type   | default | required |
 | ------ | ------- | -------- |
@@ -470,7 +498,7 @@ const Example = () => {
       <Carousel
         ref={ref}
         data={data}
-        width={300} // 4. Add the required "width" prop
+        style={{ width: 300, height: 200 }} // 4. Provide size via the style prop
         renderItem={({ item }) => (
           <View>
             <Text>{item.title}</Text>

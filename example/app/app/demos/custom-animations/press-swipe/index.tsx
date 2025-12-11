@@ -39,7 +39,6 @@ function Index() {
           loop={true}
           autoPlay={isAutoPlay}
           style={{ width: PAGE_WIDTH, height: 240 }}
-          width={PAGE_WIDTH}
           data={PURPLE_IMAGES}
           onScrollStart={() => {
             pressAnim.value = withTiming(1);

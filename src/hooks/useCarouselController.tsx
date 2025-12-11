@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { StyleSheet } from "react-native";
 import { SharedValue, useAnimatedReaction, useSharedValue } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 
@@ -59,7 +60,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
   const globalState = useGlobalState();
 
   const {
-    props: { overscrollEnabled, vertical, width, height },
+    props: { overscrollEnabled, vertical, style, width, height },
     layout: { containerSize },
     common: { sizePhase, resolvedSize },
   } = globalState;
@@ -172,13 +173,21 @@ export function useCarouselController(options: IOpts): ICarouselController {
     [duration, withAnimation, onScrollEnd]
   );
 
+  const flattenedStyle = StyleSheet.flatten(style) || {};
+
   const next = React.useCallback(
     (opts: TCarouselActionOptions = {}) => {
       "worklet";
       const { count = 1, animated = true, onFinished } = opts;
       if (!canSliding()) return;
 
-      if (!loop && index.value >= dataInfo.length - 1) return;
+      if (!loop) {
+        const newIndex = index.value + count;
+        const isOutOfBounds = newIndex > dataInfo.length - 1;
+        if (isOutOfBounds) {
+          return;
+        }
+      }
 
       /* 
       [Overscroll Protection Logic]
@@ -211,10 +220,25 @@ export function useCarouselController(options: IOpts): ICarouselController {
       maintaining a clean UX without partial item visibility at the edges.
       */
       // For overscroll calculation, use the intended item size, not the measured container size
-      // In the new dynamic size system, `size` might be the container size from layout measurement,
-      // but for overscroll we need the actual item size from the width/height props
-      const itemSize = vertical ? height || size : width || size;
-      const visibleContentWidth = (dataInfo.length - index.value) * itemSize;
+      // In the new dynamic size system, the measured `size` could reflect the container rather than
+      // each item, so prefer explicit width/height props and fall back to style-based dimensions.
+      const styleWidth =
+        typeof flattenedStyle.width === "number" ? flattenedStyle.width : undefined;
+      const styleHeight =
+        typeof flattenedStyle.height === "number" ? flattenedStyle.height : undefined;
+      const propWidth = typeof width === "number" ? width : undefined;
+      const propHeight = typeof height === "number" ? height : undefined;
+
+      // Use the page size (derived from itemWidth/itemHeight) for overscroll calculations.
+      // Fallback to container/style dimensions only if page size is unavailable.
+      const pageSize =
+        size > 0
+          ? size
+          : vertical
+            ? (propHeight ?? styleHeight ?? 0)
+            : (propWidth ?? styleWidth ?? 0);
+
+      const visibleContentWidth = (dataInfo.length - index.value) * pageSize;
 
       // Get effective container width, with fallback for cases where containerSize
       // hasn't been updated yet (e.g., in tests or during initialization)
@@ -224,16 +248,26 @@ export function useCarouselController(options: IOpts): ICarouselController {
           return containerSize.value.width;
         }
 
-        // 2. Fallback to props width/height when no measurement available
-        if (!vertical && width && width > 0) {
-          return width;
+        // 2. Fallback to style width/height when no measurement available
+        if (!vertical) {
+          if (propWidth && propWidth > 0) {
+            return propWidth;
+          }
+          if (styleWidth && styleWidth > 0) {
+            return styleWidth;
+          }
         }
-        if (vertical && height && height > 0) {
-          return height;
+        if (vertical) {
+          if (propHeight && propHeight > 0) {
+            return propHeight;
+          }
+          if (styleHeight && styleHeight > 0) {
+            return styleHeight;
+          }
         }
 
         // 3. Final fallback - assume multiple items are visible
-        return itemSize * 3; // Assume 3 items per view as reasonable default
+        return pageSize * 3; // Assume 3 items per view as reasonable default
       };
 
       const effectiveContainerWidth = getEffectiveContainerWidth();
@@ -269,6 +303,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
       overscrollEnabled,
       containerSize,
       vertical,
+      flattenedStyle,
       width,
       height,
     ]

@@ -1,55 +1,58 @@
 import * as React from "react";
 import { View } from "react-native";
-import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
+import Carousel from "react-native-reanimated-carousel";
 
-import { CarouselAdvancedSettingsPanel } from "@/components/CarouselAdvancedSettingsPanel";
-import { defaultDataWith6Colors } from "@/components/CarouselBasicSettingsPanel";
 import { SBItem } from "@/components/SBItem";
-import { window } from "@/constants/sizes";
-import { useAdvancedSettings } from "@/hooks/useSettings";
+import SButton from "@/components/SButton";
+import { ElementsText, window } from "@/constants/sizes";
 import { CaptureWrapper } from "@/store/CaptureProvider";
 
 const PAGE_WIDTH = window.width;
 
-const COUNT = 4;
-
 function Index() {
-  const ref = React.useRef<ICarouselInstance>(null);
-  const { advancedSettings, onAdvancedSettingsChange } = useAdvancedSettings({
-    // These values will be passed in the Carousel Component as default props
-    defaultSettings: {
-      autoPlay: false,
-      autoPlayInterval: 2000,
-      autoPlayReverse: false,
-      data: defaultDataWith6Colors,
-      height: 258,
-      loop: true,
-      pagingEnabled: true,
-      snapEnabled: true,
-      vertical: false,
-      width: PAGE_WIDTH / COUNT,
-    },
-  });
+  const [isFast, setIsFast] = React.useState(false);
+  const [isAutoPlay, setIsAutoPlay] = React.useState(false);
 
   return (
     <View style={{ flex: 1 }}>
       <CaptureWrapper>
         <Carousel
-          ref={ref}
-          {...advancedSettings}
-          loop={false}
-          overscrollEnabled={false}
-          style={{ width: PAGE_WIDTH }}
-          data={[...new Array(6).keys()]}
-          renderItem={({ index }) => <SBItem key={index} index={index} />}
+          loop
+          style={{
+            width: PAGE_WIDTH,
+            height: PAGE_WIDTH / 2,
+          }}
+          itemWidth={PAGE_WIDTH / 6}
+          itemHeight={PAGE_WIDTH / 2}
+          autoPlay={isAutoPlay}
+          autoPlayInterval={isFast ? 100 : 2000}
+          data={[...new Array(12).keys()]}
+          renderItem={({ index }) => (
+            <View
+              style={{
+                width: PAGE_WIDTH / 6,
+                height: PAGE_WIDTH / 2,
+              }}
+            >
+              <SBItem key={index} index={index} />
+            </View>
+          )}
         />
       </CaptureWrapper>
-
-      <CarouselAdvancedSettingsPanel
-        carouselRef={ref}
-        advancedSettings={advancedSettings}
-        onAdvancedSettingsChange={onAdvancedSettingsChange}
-      />
+      <SButton
+        onPress={() => {
+          setIsFast(!isFast);
+        }}
+      >
+        {isFast ? "NORMAL" : "FAST"}
+      </SButton>
+      <SButton
+        onPress={() => {
+          setIsAutoPlay(!isAutoPlay);
+        }}
+      >
+        {ElementsText.AUTOPLAY}:{`${isAutoPlay}`}
+      </SButton>
     </View>
   );
 }

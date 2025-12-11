@@ -31,10 +31,14 @@ export function useInitProps<T>(props: TCarouselProps<T>): TInitializeCarouselPr
     snapEnabled = props.enableSnap ?? true,
     width: _width,
     height: _height,
+    itemWidth: _itemWidth,
+    itemHeight: _itemHeight,
   } = props;
 
   const width = typeof _width === "number" ? Math.round(_width) : undefined;
   const height = typeof _height === "number" ? Math.round(_height) : undefined;
+  const itemWidth = typeof _itemWidth === "number" && _itemWidth > 0 ? _itemWidth : undefined;
+  const itemHeight = typeof _itemHeight === "number" && _itemHeight > 0 ? _itemHeight : undefined;
   const autoPlayInterval = Math.max(_autoPlayInterval, 0);
 
   const data = React.useMemo<T[]>(() => {
@@ -77,5 +81,7 @@ export function useInitProps<T>(props: TCarouselProps<T>): TInitializeCarouselPr
     overscrollEnabled,
     width,
     height,
+    itemWidth,
+    itemHeight,
   };
 }
