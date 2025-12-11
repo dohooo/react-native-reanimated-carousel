@@ -229,10 +229,16 @@ export function useCarouselController(options: IOpts): ICarouselController {
       const propWidth = typeof width === "number" ? width : undefined;
       const propHeight = typeof height === "number" ? height : undefined;
 
-      const itemSize = vertical
-        ? (propHeight ?? styleHeight ?? size)
-        : (propWidth ?? styleWidth ?? size);
-      const visibleContentWidth = (dataInfo.length - index.value) * itemSize;
+      // Use the page size (derived from itemWidth/itemHeight) for overscroll calculations.
+      // Fallback to container/style dimensions only if page size is unavailable.
+      const pageSize =
+        size > 0
+          ? size
+          : vertical
+            ? (propHeight ?? styleHeight ?? 0)
+            : (propWidth ?? styleWidth ?? 0);
+
+      const visibleContentWidth = (dataInfo.length - index.value) * pageSize;
 
       // Get effective container width, with fallback for cases where containerSize
       // hasn't been updated yet (e.g., in tests or during initialization)
@@ -261,7 +267,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
         }
 
         // 3. Final fallback - assume multiple items are visible
-        return itemSize * 3; // Assume 3 items per view as reasonable default
+        return pageSize * 3; // Assume 3 items per view as reasonable default
       };
 
       const effectiveContainerWidth = getEffectiveContainerWidth();

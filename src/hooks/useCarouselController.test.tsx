@@ -85,6 +85,7 @@ const mockGlobalState: IContext = {
   },
   common: {
     size: 300,
+    sizeExplicit: true,
     validLength: 5,
     handlerOffset: useSharedValue(0),
     resolvedSize: useSharedValue<number | null>(300),
@@ -280,6 +281,44 @@ describe("useCarouselController", () => {
     });
 
     expect(mockHandlerOffset.value).toBe(-600); // size * 2
+  });
+
+  it("should prevent overscroll when page size is smaller than container and overscroll is disabled", () => {
+    // Configure multi-item layout: page size 100, container width 300 (3 items per view)
+    mockGlobalState.props.overscrollEnabled = false;
+    mockGlobalState.props.loop = false;
+    mockGlobalState.common.size = 100;
+    mockGlobalState.common.resolvedSize.value = 100;
+    mockGlobalState.layout.containerSize.value = { width: 300, height: 300 };
+
+    // Simulate currently at index 3 (handlerOffset = -pageSize * 3)
+    mockHandlerOffset.value = -300;
+
+    const { result } = renderHook(
+      () =>
+        useCarouselController({
+          ...defaultProps,
+          loop: false,
+          size: 100,
+          dataLength: 5,
+          handlerOffset: mockHandlerOffset,
+        }),
+      { wrapper }
+    );
+
+    act(() => {
+      result.current.next();
+    });
+
+    // Should block advancing because remaining width (2 * 100) is less than container width (300)
+    expect(mockHandlerOffset.value).toBe(-300);
+
+    // Reset shared global values for other tests
+    mockGlobalState.props.overscrollEnabled = true;
+    mockGlobalState.props.loop = true;
+    mockGlobalState.common.size = 300;
+    mockGlobalState.common.resolvedSize.value = 300;
+    mockGlobalState.layout.containerSize.value = { width: 300, height: 300 };
   });
 
   // it("should maintain correct index with autoFillData", () => {
