@@ -806,4 +806,87 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     TICK();
     pushExpect(1);
   });
+
+  it("should keep correct page after left overscroll at first page when calling next() or scrollTo()", async () => {
+    const handlerOffset = { current: 0 };
+    let nextSlide: ((opts?: { animated?: boolean }) => void) | undefined;
+    let scrollToIndex: ((opts?: { index: number; animated?: boolean }) => void) | undefined;
+
+    const Wrapper: FC<Partial<TCarouselProps<string>>> = React.forwardRef((customProps, ref) => {
+      const progressAnimVal = useSharedValue(0);
+      const mockHandlerOffset = useSharedValue(handlerOffset.current);
+      const defaultRenderItem = ({
+        item,
+        index,
+      }: {
+        item: string;
+        index: number;
+      }) => (
+        <Animated.View
+          testID={`carousel-item-${index}`}
+          style={{ width: slideWidth, height: slideHeight }}
+        >
+          {item}
+        </Animated.View>
+      );
+      const { renderItem = defaultRenderItem, ...defaultProps } = createDefaultProps(
+        progressAnimVal,
+        customProps
+      );
+
+      useDerivedValue(() => {
+        handlerOffset.current = mockHandlerOffset.value;
+      }, [mockHandlerOffset]);
+
+      return (
+        <Carousel
+          {...defaultProps}
+          defaultScrollOffsetValue={mockHandlerOffset}
+          renderItem={renderItem}
+          ref={ref}
+        />
+      );
+    });
+
+    const { getByTestId } = render(
+      <Wrapper
+        ref={(ref) => {
+          if (ref) {
+            nextSlide = ref.next;
+            scrollToIndex = ref.scrollTo;
+          }
+        }}
+        loop={false}
+        overscrollEnabled
+        style={{ width: slideWidth, height: slideHeight }}
+      />
+    );
+    await verifyInitialRender(getByTestId);
+
+    // Simulate left overscroll at first page
+    fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
+      { state: State.BEGAN, translationX: 0, velocityX: 0 },
+      { state: State.ACTIVE, translationX: slideWidth / 4, velocityX: slideWidth },
+      { state: State.ACTIVE, translationX: 0.00003996, velocityX: slideWidth },
+      { state: State.END, translationX: 0.00003996, velocityX: slideWidth },
+    ]);
+
+    nextSlide?.({ animated: false });
+    await waitFor(() => {
+      expect(handlerOffset.current).toBe(-slideWidth);
+    });
+
+    // Overscroll again, then call scrollTo()
+    fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
+      { state: State.BEGAN, translationX: 0, velocityX: -slideWidth },
+      { state: State.ACTIVE, translationX: slideWidth, velocityX: slideWidth },
+      { state: State.ACTIVE, translationX: slideWidth + 0.00003996, velocityX: slideWidth },
+      { state: State.END, translationX: slideWidth + 0.00003996, velocityX: slideWidth },
+    ]);
+
+    scrollToIndex?.({ index: 1, animated: false });
+    await waitFor(() => {
+      expect(handlerOffset.current).toBe(-slideWidth);
+    });
+  });
 });
