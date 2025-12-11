@@ -83,10 +83,13 @@ export function useCarouselController(options: IOpts): ICarouselController {
     if (size <= 0) return 0;
     if (loop) return -Math.round(handlerOffset.value / size);
 
-    const fixed = (handlerOffset.value / size) % dataInfo.length;
-    return Math.round(
-      handlerOffset.value <= 0 ? Math.abs(fixed) : Math.abs(fixed > 0 ? dataInfo.length - fixed : 0)
-    );
+    // In non-loop mode, treat the offset as negative when moving forward.
+    // Clamp within valid range to avoid wrapping when a tiny positive offset
+    // appears after overscroll at index 0.
+    const rawPage = -handlerOffset.value / size;
+    const rounded = Math.round(rawPage);
+    const clamped = Math.max(0, Math.min(dataInfo.length - 1, rounded));
+    return clamped;
   }, [handlerOffset, dataInfo, size, loop]);
 
   function setSharedIndex(newSharedIndex: number) {
@@ -350,7 +353,15 @@ export function useCarouselController(options: IOpts): ICarouselController {
 
       onScrollStart?.();
       // direction -> 1 | -1
-      const direction = handlerOffsetDirection(handlerOffset, fixedDirection);
+      let direction: -1 | 1;
+      if (fixedDirection === "positive") direction = 1;
+      else if (fixedDirection === "negative") direction = -1;
+      else if (!loop) {
+        const currentPage = currentFixedPage();
+        direction = i >= currentPage ? -1 : 1;
+      } else {
+        direction = handlerOffsetDirection(handlerOffset);
+      }
 
       // target offset
       const offset = i * size * direction;
