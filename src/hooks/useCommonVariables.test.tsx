@@ -229,8 +229,28 @@ describe("useCommonVariables", () => {
       expect(result.current.size).toBe(350);
     });
 
-    it("falls back to deprecated width prop when itemWidth not provided", () => {
+    it("prefers style.width over deprecated width prop when itemWidth not provided", () => {
       const props = createBaseProps({
+        width: 500,
+      });
+      const { result } = renderHook(() => useCommonVariables(props));
+
+      expect(result.current.size).toBe(700);
+    });
+
+    it("prefers style.height over deprecated height prop when itemHeight not provided in vertical mode", () => {
+      const props = createBaseProps({
+        vertical: true,
+        height: 400,
+      });
+      const { result } = renderHook(() => useCommonVariables(props));
+
+      expect(result.current.size).toBe(350);
+    });
+
+    it("falls back to deprecated width prop when style.width is not provided", () => {
+      const props = createBaseProps({
+        style: {},
         width: 500,
       });
       const { result } = renderHook(() => useCommonVariables(props));
@@ -238,9 +258,10 @@ describe("useCommonVariables", () => {
       expect(result.current.size).toBe(500);
     });
 
-    it("falls back to deprecated height prop when itemHeight not provided in vertical mode", () => {
+    it("falls back to deprecated height prop when style.height is not provided (vertical mode)", () => {
       const props = createBaseProps({
         vertical: true,
+        style: {},
         height: 400,
       });
       const { result } = renderHook(() => useCommonVariables(props));

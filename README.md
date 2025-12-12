@@ -16,6 +16,12 @@
 -   [Getting Started](https://rn-carousel.dev)
 -   [Examples](https://rn-carousel.dev/Examples/summary)
 
+## v5 beta notes
+
+- **Sizing**: `style` controls the **container size**; `itemWidth`/`itemHeight` control the **page size** (snap distance & animation progress).
+- **Scroll offset shared value**: use `scrollOffsetValue` (recommended). `defaultScrollOffsetValue` is deprecated but still supported.
+- **Progress**: `onProgressChange` supports both a callback and `SharedValue<number>`.
+
 ## 📊 Version Compatibility
 
 | Carousel Version | Expo SDK | React Native | Reanimated | Gesture Handler | Worklets   |

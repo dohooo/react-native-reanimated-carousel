@@ -186,8 +186,10 @@ Input Props → Default Value Filling → Size Standardization → Data Processi
 
 **Core SharedValues**:
 ```typescript
-const handlerOffset = useSharedValue(defaultScrollOffsetValue || 0);
-const size = vertical ? height : width;
+const handlerOffset = scrollOffsetValue ?? defaultScrollOffsetValue ?? useSharedValue(0);
+// `size` is the "page size" used for snapping & animations:
+// itemWidth/itemHeight (preferred) -> style axis size -> deprecated width/height -> measurement
+const size = /* resolved page size */;
 const validLength = dataLength - 1;
 ```
 

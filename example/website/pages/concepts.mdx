@@ -50,7 +50,9 @@ This is how it works in code.
 > I don't think I have explained this logic clearly, but this is a version that has been revised many times, it is a complicated process, if any partners have their own understanding, welcome to submit PR, we will make this explanation more clear.  
 > In my opinion, this part is undoubtedly very important for the initial stage of project development, but it is no longer so "important" at present, because the underlying content of this part will no longer change significantly. If you are interested in it, you can understand it, otherwise I don't think it is necessary to understand it.  
 
-1. First we need a unit `size` to help us calculate the scroll distance. When horizontal, `size` is equal to the `width` prop setting, when vertical, `size` is equal to the `height` prop setting.
+1. First we need a unit `size` to help us calculate the scroll distance. This `size` is the **page size**:
+   - If `itemWidth` / `itemHeight` is provided, `size` uses that.
+   - Otherwise, `size` falls back to the **container axis size** (prefer `style.width` / `style.height`, or legacy `width` / `height`, or layout measurement).
 
 2. Then we need a value `handlerOffset`, which is the current scroll distance, and it's a total value, if we scroll two, `handlerOffset` is equal to `size` * 2, if we scroll ten, `handlerOffset` is equal to `size` * 10.
 

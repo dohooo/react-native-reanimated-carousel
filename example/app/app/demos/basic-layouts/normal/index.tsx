@@ -34,7 +34,7 @@ function Index() {
         <Carousel
           {...advancedSettings}
           ref={ref}
-          defaultScrollOffsetValue={scrollOffsetValue}
+          scrollOffsetValue={scrollOffsetValue}
           testID={"xxx"}
           style={{
             height: 258,

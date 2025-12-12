@@ -48,7 +48,7 @@ function Index() {
           loop={false}
           enabled // Default is true, just for demo
           ref={ref}
-          defaultScrollOffsetValue={scrollOffsetValue}
+          scrollOffsetValue={scrollOffsetValue}
           testID={"xxx"}
           contentContainerStyle={{ width: "100%" }}
           style={{ width: window.width, height: window.width / 2 }}

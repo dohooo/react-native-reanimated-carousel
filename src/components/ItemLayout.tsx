@@ -1,5 +1,6 @@
 import React from "react";
 import type { LayoutChangeEvent, ViewStyle } from "react-native";
+import { StyleSheet } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 import Animated, {
   useAnimatedStyle,
@@ -8,12 +9,12 @@ import Animated, {
 } from "react-native-reanimated";
 import { scheduleOnUI } from "react-native-worklets";
 
-import { TCarouselProps } from "src/types";
 import type { IOpts } from "../hooks/useOffsetX";
 import { useOffsetX } from "../hooks/useOffsetX";
 import type { IVisibleRanges } from "../hooks/useVisibleRanges";
 import type { ILayoutConfig } from "../layouts/stack";
 import { useGlobalState } from "../store";
+import type { TCarouselProps } from "../types";
 
 export type TAnimationStyle = NonNullable<TCarouselProps["customAnimation"]>;
 
@@ -29,7 +30,7 @@ export const ItemLayout: React.FC<{
   const { handlerOffset, index, children, visibleRanges, animationStyle } = props;
 
   const {
-    props: { loop, dataLength, width, height, vertical, customConfig, mode, modeConfig },
+    props: { loop, dataLength, width, height, vertical, customConfig, mode, modeConfig, style },
     common,
     layout: { updateItemDimensions },
   } = useGlobalState();
@@ -40,9 +41,11 @@ export const ItemLayout: React.FC<{
   });
 
   const fallbackSize = common.size;
-  // NOTE: `width`/`height` props are deprecated from v5 onwards. We still read them here so
-  // existing apps keep their layout until the props are fully removed.
-  const explicitAxisSize = vertical ? height : width;
+  // Prefer size from `style` (v5), then fallback to deprecated `width`/`height` for v4 compatibility.
+  const { width: styleWidth, height: styleHeight } = StyleSheet.flatten(style) || {};
+  const styleWidthNumber = typeof styleWidth === "number" ? styleWidth : undefined;
+  const styleHeightNumber = typeof styleHeight === "number" ? styleHeight : undefined;
+  const explicitAxisSize = vertical ? (styleHeightNumber ?? height) : (styleWidthNumber ?? width);
   const size = (explicitAxisSize ?? fallbackSize) || 0;
   const effectivePageSize = size > 0 ? size : undefined;
 
