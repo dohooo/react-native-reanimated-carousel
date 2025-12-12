@@ -10,6 +10,7 @@
     "fix-nonloop-overscroll",
     "fix-pagination-accessibility",
     "honest-baboons-sip",
-    "odd-news-carry"
+    "odd-news-carry",
+    "style-based-sizing"
   ]
 }
