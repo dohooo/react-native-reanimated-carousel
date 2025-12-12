@@ -1,5 +1,53 @@
 # react-native-reanimated-carousel
 
+## 5.0.0-beta.2
+
+### Minor Changes
+
+- [#873](https://github.com/dohooo/react-native-reanimated-carousel/pull/873) [`ffb59aa`](https://github.com/dohooo/react-native-reanimated-carousel/commit/ffb59aac4154350d67ccfea55cb86e8be24c6b08) Thanks [@dohooo](https://github.com/dohooo)! - # Deprecate width/height props in favor of style-based sizing
+
+  ## Changes
+
+  ### Deprecated Props
+
+  - `width` and `height` props are now deprecated. Use `style={{ width: ..., height: ... }}` instead
+  - `defaultScrollOffsetValue` is deprecated in favor of `scrollOffsetValue`
+
+  ### New Behavior
+
+  - Carousel now prioritizes dimensions from `style` prop over legacy `width`/`height` props
+  - When both `style` and legacy props are provided, `style` takes precedence
+
+  ### Migration
+
+  **Before (v4 style):**
+
+  ```tsx
+  <Carousel width={300} height={200} />
+  ```
+
+  **After (v5 style):**
+
+  ```tsx
+  <Carousel style={{ width: 300, height: 200 }} />
+  ```
+
+  **Scroll offset:**
+
+  ```tsx
+  // Before
+  <Carousel defaultScrollOffsetValue={sharedValue} />
+
+  // After
+  <Carousel scrollOffsetValue={sharedValue} />
+  ```
+
+  ### Notes
+
+  - Legacy props remain functional for backwards compatibility
+  - Console warnings will guide migration in development mode
+  - Full removal planned for next major version
+
 ## 5.0.0-beta.1
 
 ### Minor Changes
