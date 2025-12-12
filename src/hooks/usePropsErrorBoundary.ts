@@ -14,7 +14,8 @@ export function usePropsErrorBoundary(props: TCarouselProps & { dataLength: numb
     }
 
     if (__DEV__) {
-      const { style, vertical, width, height, contentContainerStyle } = props;
+      const { style, vertical, width, height, itemWidth, itemHeight, contentContainerStyle } =
+        props;
       const { width: styleWidth, height: styleHeight } = StyleSheet.flatten(style) || {};
 
       // Deprecation warnings for width/height props
@@ -41,17 +42,46 @@ export function usePropsErrorBoundary(props: TCarouselProps & { dataLength: numb
       }
 
       // Updated missing size warnings
-      if (!vertical && !width && !styleWidth && !warnedRefs.horizontal) {
+      const hasHorizontalContainerSize =
+        typeof styleWidth === "number" || typeof width === "number";
+      const hasVerticalContainerSize =
+        typeof styleHeight === "number" || typeof height === "number";
+
+      if (!vertical && !hasHorizontalContainerSize && !warnedRefs.horizontal) {
         console.warn(
           "[react-native-reanimated-carousel] Horizontal mode did not specify `width` in `style`, will fall back to automatic measurement mode."
         );
         warnedRefs.horizontal = true;
       }
-      if (vertical && !height && !styleHeight && !warnedRefs.vertical) {
+      if (vertical && !hasVerticalContainerSize && !warnedRefs.vertical) {
         console.warn(
           "[react-native-reanimated-carousel] Vertical mode did not specify `height` in `style`, will fall back to automatic measurement mode."
         );
         warnedRefs.vertical = true;
+      }
+
+      // Page-size guidance (common pitfall): setting itemWidth/itemHeight without container size.
+      if (
+        !vertical &&
+        typeof itemWidth === "number" &&
+        !hasHorizontalContainerSize &&
+        !warnedRefs.itemWidth
+      ) {
+        console.warn(
+          "[react-native-reanimated-carousel] `itemWidth` sets the snapping page size, not the container width. Consider setting container width via `style` (e.g. `style={{ width: '100%' }}` or `flex: 1`)."
+        );
+        warnedRefs.itemWidth = true;
+      }
+      if (
+        vertical &&
+        typeof itemHeight === "number" &&
+        !hasVerticalContainerSize &&
+        !warnedRefs.itemHeight
+      ) {
+        console.warn(
+          "[react-native-reanimated-carousel] `itemHeight` sets the snapping page size, not the container height. Consider setting container height via `style` (e.g. `style={{ height: '100%' }}` or `flex: 1`)."
+        );
+        warnedRefs.itemHeight = true;
       }
     }
   }, [props]);
@@ -63,4 +93,6 @@ const warnedRefs: { [key: string]: boolean } = {
   width: false,
   height: false,
   conflict: false,
+  itemWidth: false,
+  itemHeight: false,
 };

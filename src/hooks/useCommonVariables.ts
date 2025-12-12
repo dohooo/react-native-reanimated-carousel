@@ -41,16 +41,20 @@ export function useCommonVariables(props: TInitializeCarouselProps<any>): ICommo
       return explicitPageSize;
     }
 
+    const { width, height } = StyleSheet.flatten(style) || {};
+    const candidate = vertical ? height : width;
+    if (typeof candidate === "number" && candidate > 0) {
+      return candidate;
+    }
+
     // NOTE: `width`/`height` props are deprecated in v5. They are still respected here to
-    // maintain backwards compatibility with v4-style usage. Remove once the props are dropped.
+    // maintain backwards compatibility with v4-style usage. Prefer using `style` when both exist.
     const explicitCandidate = vertical ? explicitHeight : explicitWidth;
     if (typeof explicitCandidate === "number" && explicitCandidate > 0) {
       return explicitCandidate;
     }
 
-    const { width, height } = StyleSheet.flatten(style) || {};
-    const candidate = vertical ? height : width;
-    return typeof candidate === "number" && candidate > 0 ? candidate : null;
+    return null;
   }, [vertical, style, explicitWidth, explicitHeight, explicitItemHeight, explicitItemWidth]);
 
   const resolvedSize = useSharedValue<number | null>(manualSize);
@@ -58,7 +62,8 @@ export function useCommonVariables(props: TInitializeCarouselProps<any>): ICommo
 
   const defaultHandlerOffsetValue = manualSize ? -Math.abs(defaultIndex * manualSize) : 0;
   const _handlerOffset = useSharedValue<number>(defaultHandlerOffsetValue);
-  const handlerOffset = defaultScrollOffsetValue ?? _handlerOffset;
+  // Prefer the newer `scrollOffsetValue` name, but keep the legacy prop for compatibility.
+  const handlerOffset = props.scrollOffsetValue ?? defaultScrollOffsetValue ?? _handlerOffset;
   const prevDataLength = useSharedValue(dataLength);
   const prevSize = useSharedValue(manualSize ?? 0);
   const sizeExplicit = React.useMemo(() => {

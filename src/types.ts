@@ -15,10 +15,12 @@ export type IComputedDirectionTypes<T, VP = {}, HP = {}> =
         vertical: true;
         /**
          * Specified carousel container width.
+         * @deprecated Use `style={{ width: ... }}` instead.
          */
         width?: number;
         /**
          * Specified carousel container height.
+         * @deprecated Use `style={{ height: ... }}` instead.
          */
         height?: number;
       })
@@ -30,10 +32,12 @@ export type IComputedDirectionTypes<T, VP = {}, HP = {}> =
         vertical?: false;
         /**
          * Specified carousel container width.
+         * @deprecated Use `style={{ width: ... }}` instead.
          */
         width?: number;
         /**
          * Specified carousel container height.
+         * @deprecated Use `style={{ height: ... }}` instead.
          */
         height?: number;
       });
@@ -55,16 +59,36 @@ export interface WithTimingAnimation {
 
 export type WithAnimation = WithSpringAnimation | WithTimingAnimation;
 
+export type TOnProgressChange =
+  | ((offsetProgress: number, absoluteProgress: number) => void)
+  /**
+   * When a SharedValue is provided, the carousel will write `absoluteProgress` into it.
+   */
+  | SharedValue<number>;
+
 export type TCarouselProps<T = any> = {
   /**
    * @test_coverage ✅ tested in Carousel.test.tsx > should handle the ref props
    */
   ref?: React.Ref<ICarouselInstance>;
   /**
-   * The default animated value of the carousel.
+   * A shared value used internally as the carousel's translation (scroll offset) state.
+   *
+   * Prefer using `scrollOffsetValue` (same behavior, clearer name). This prop remains
+   * for backwards compatibility.
    * @test_coverage ✅ tested in Carousel.test.tsx > should render the correct progress value with the defaultScrollOffsetValue props
    */
+  /**
+   * @deprecated Use `scrollOffsetValue` instead.
+   */
   defaultScrollOffsetValue?: SharedValue<number>;
+  /**
+   * A shared value used internally as the carousel's translation (scroll offset) state.
+   *
+   * - If provided, the carousel will **mutate** it during gestures/animations.
+   * - This is useful when you want to observe the scroll offset outside the carousel.
+   */
+  scrollOffsetValue?: SharedValue<number>;
   /**
    * Carousel loop playback.
    * @default true
@@ -121,15 +145,21 @@ export type TCarouselProps<T = any> = {
    */
   contentContainerStyle?: StyleProp<ViewStyle>;
   /**
-   * Horizontal page size used for snapping and animations.
-   * Useful when you want multiple items visible in a single viewport.
-   * Defaults to the carousel container width when not provided.
+   * Horizontal **page size** used for snapping and animations.
+   *
+   * This is NOT the same as the container width:
+   * - **Container size** comes from `style` (recommended) / deprecated `width` / layout measurement.
+   * - **Page size** controls snap distance & animation progress per page.
+   *
+   * Use this when you want multiple items visible in a single viewport (page size < container width).
+   * If not provided, the page size falls back to the carousel container width.
    */
   itemWidth?: number;
   /**
-   * Vertical page size used for snapping and animations.
-   * Useful when you want multiple rows visible at once in vertical mode.
-   * Defaults to the carousel container height when not provided.
+   * Vertical **page size** used for snapping and animations.
+   *
+   * See `itemWidth` for the container-size vs page-size distinction.
+   * If not provided, the page size falls back to the carousel container height.
    */
   itemHeight?: number;
 
@@ -182,6 +212,8 @@ export type TCarouselProps<T = any> = {
   enabled?: boolean;
   /**
    * Specifies the scrolling animation effect.
+   *
+   * If provided, it takes precedence over `scrollAnimationDuration`.
    */
   withAnimation?: WithAnimation;
   /**
@@ -207,7 +239,7 @@ export type TCarouselProps<T = any> = {
   /**
    * Custom carousel config.
    */
-  customConfig?: () => CustomConfig;
+  customConfig?: CustomConfig | (() => CustomConfig);
   /**
    * Custom animations.
    * Must use `worklet`, Details: https://docs.swmansion.com/react-native-reanimated/docs/2.2.0/worklets/
@@ -242,7 +274,7 @@ export type TCarouselProps<T = any> = {
    *
    * If you want to update a shared value automatically, you can use the shared value as a parameter directly.
    */
-  onProgressChange?: (offsetProgress: number, absoluteProgress: number) => void;
+  onProgressChange?: TOnProgressChange;
   onLayout?: (event: LayoutChangeEvent) => void;
 
   // ============================== deprecated props ==============================

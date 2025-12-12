@@ -86,3 +86,12 @@ The most requested feature! Carousel now automatically measures container dimens
   renderItem={renderItem}
 />
 ```
+
+#### Notes on sizing vs page size
+
+- `style.width` / `style.height` describe the **container size** (recommended).
+- `itemWidth` / `itemHeight` describe the **page size** (snap distance & animation progress per page). They are not the same as container size.
+
+#### New naming (v5 beta)
+
+`defaultScrollOffsetValue` is deprecated in favor of `scrollOffsetValue` (same behavior, clearer name).
