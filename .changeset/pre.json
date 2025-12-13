@@ -6,9 +6,11 @@
   },
   "changesets": [
     "blue-news-stare",
+    "fix-flex-gesture-blocking",
     "fix-nonloop-overdrag-visible-ranges",
     "fix-nonloop-overscroll",
     "fix-pagination-accessibility",
+    "fix-web-worklets-error",
     "honest-baboons-sip",
     "odd-news-carry",
     "style-based-sizing"
