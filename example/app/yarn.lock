@@ -6438,7 +6438,7 @@ __metadata:
     react-native-svg-transformer: "npm:^1.5.0"
     react-native-view-shot: "npm:~4.0.3"
     react-native-web: "npm:^0.21.0"
-    react-native-worklets: "npm:0.5.1"
+    react-native-worklets: "npm:0.5.2"
     react-test-renderer: "npm:19.1.0"
     tamagui: "npm:1.133.1"
     typescript: "npm:~5.9.2"
@@ -12533,9 +12533,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-worklets@npm:0.5.1":
-  version: 0.5.1
-  resolution: "react-native-worklets@npm:0.5.1"
+"react-native-worklets@npm:0.5.2":
+  version: 0.5.2
+  resolution: "react-native-worklets@npm:0.5.2"
   dependencies:
     "@babel/plugin-transform-arrow-functions": "npm:^7.0.0-0"
     "@babel/plugin-transform-class-properties": "npm:^7.0.0-0"
@@ -12552,7 +12552,7 @@ __metadata:
     "@babel/core": ^7.0.0-0
     react: "*"
     react-native: "*"
-  checksum: 39e70b64560cc4b031ac329bfbd0686b744b6940bbe1d1768a227bb9e142a0e2bad5ef16752003e83374db49d8d6396c72236b9c279e1465a7177f887ae12d48
+  checksum: 97fefdf31e84428bf90cb425aaf814b1b6e450f309a3bc6f85c2bc7107d86e82da9729d21a5fd274632854beed4dcf708d12d88da384d37277901dde7c19f688
   languageName: node
   linkType: hard
 
