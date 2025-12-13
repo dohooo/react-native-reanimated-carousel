@@ -1,5 +1,36 @@
 # react-native-reanimated-carousel
 
+## 5.0.0-beta.3
+
+### Patch Changes
+
+- [#878](https://github.com/dohooo/react-native-reanimated-carousel/pull/878) [`79ae0e6`](https://github.com/dohooo/react-native-reanimated-carousel/commit/79ae0e615edf78fd455a72a726024b6d08ca10c8) Thanks [@dohooo](https://github.com/dohooo)! - # Fix gesture blocking when using flex-based sizing
+
+  ## Bug Fixes
+
+  ### Gesture Blocking with `flex: 1`
+
+  Fixed an issue where gestures were blocked or delayed when using `style={{ flex: 1 }}` instead of explicit `width`/`height` props.
+
+  **Root Cause:** Race condition between `sizeReady` (SharedValue, updates immediately on UI thread) and `size` (React state, updates asynchronously). When `sizeReady` became `true`, the React state `size` was still `0`, causing gesture handlers to incorrectly block input.
+
+  **Solution:** All worklet functions now use `resolvedSize.value` (SharedValue) instead of React state `size` to ensure consistent synchronization on the UI thread.
+
+  ### itemWidth/itemHeight Not Working
+
+  Fixed an issue where `itemWidth`/`itemHeight` props were being ignored - items rendered at container width instead of the specified item dimensions.
+
+  **Root Cause:** `ItemLayout.tsx` was prioritizing `style.width` over `itemWidth` prop.
+
+  **Solution:** Now correctly prioritizes explicit `itemWidth`/`itemHeight` props for item sizing.
+
+  ## Affected Files
+
+  - `src/components/ScrollViewGesture.tsx` - Fixed race condition in gesture handlers
+  - `src/components/ItemLayout.tsx` - Fixed itemWidth/itemHeight priority
+
+- [#875](https://github.com/dohooo/react-native-reanimated-carousel/pull/875) [`13861ac`](https://github.com/dohooo/react-native-reanimated-carousel/commit/13861acb21925709569e9f5e39a188e1d03df858) Thanks [@dohooo](https://github.com/dohooo)! - Fix web documentation examples crash by upgrading react-native-worklets from 0.5.1 to 0.5.2. This resolves the "createSerializableObject should never be called in JSWorklets" error that occurred on web platform.
+
 ## 5.0.0-beta.2
 
 ### Minor Changes
