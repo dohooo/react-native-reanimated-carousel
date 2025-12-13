@@ -481,7 +481,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
         height: measuredHeight,
       });
     },
-    [updateContainerSize, resolvedSize, sizePhase, vertical]
+    [updateContainerSize, resolvedSize, sizePhase, vertical, sizeExplicit]
   );
 
   return (

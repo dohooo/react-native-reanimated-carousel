@@ -24,6 +24,14 @@ export function useVisibleRanges(options: {
   const cachedRanges = useRef<VisibleRanges | null>(null);
 
   const ranges = useDerivedValue(() => {
+    // Prevent division by zero when viewSize is not yet measured
+    if (viewSize <= 0) {
+      return {
+        negativeRange: [0, 0] as Range,
+        positiveRange: [0, Math.min(total - 1, windowSize - 1)] as Range,
+      };
+    }
+
     const positiveCount = Math.round(windowSize / 2);
     const negativeCount = windowSize - positiveCount;
 

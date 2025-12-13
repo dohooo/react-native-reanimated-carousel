@@ -197,4 +197,83 @@ describe("useVisibleRanges", () => {
       positiveRange: [0, 2],
     });
   });
+
+  describe("viewSize boundary conditions", () => {
+    it("should return safe defaults when viewSize is 0", () => {
+      const hook = renderHook(() => {
+        const translation = useSharedValue(0);
+        const range = useVisibleRanges({
+          total: 10,
+          translation,
+          viewSize: 0,
+          windowSize: 4,
+          loop: false,
+        });
+        return range;
+      });
+
+      // Should not crash and return sensible defaults
+      expect(hook.result.current.value).toEqual({
+        negativeRange: [0, 0],
+        positiveRange: [0, 3], // Math.min(10-1, 4-1) = 3
+      });
+    });
+
+    it("should return safe defaults when viewSize is negative", () => {
+      const hook = renderHook(() => {
+        const translation = useSharedValue(0);
+        const range = useVisibleRanges({
+          total: 5,
+          translation,
+          viewSize: -100,
+          windowSize: 3,
+          loop: true,
+        });
+        return range;
+      });
+
+      expect(hook.result.current.value).toEqual({
+        negativeRange: [0, 0],
+        positiveRange: [0, 2], // Math.min(5-1, 3-1) = 2
+      });
+    });
+
+    it("should handle small total with viewSize 0", () => {
+      const hook = renderHook(() => {
+        const translation = useSharedValue(0);
+        const range = useVisibleRanges({
+          total: 2,
+          translation,
+          viewSize: 0,
+          windowSize: 5,
+          loop: false,
+        });
+        return range;
+      });
+
+      expect(hook.result.current.value).toEqual({
+        negativeRange: [0, 0],
+        positiveRange: [0, 1], // Math.min(2-1, 5-1) = 1
+      });
+    });
+
+    it("should handle loop mode with viewSize 0", () => {
+      const hook = renderHook(() => {
+        const translation = useSharedValue(0);
+        const range = useVisibleRanges({
+          total: 6,
+          translation,
+          viewSize: 0,
+          windowSize: 4,
+          loop: true,
+        });
+        return range;
+      });
+
+      expect(hook.result.current.value).toEqual({
+        negativeRange: [0, 0],
+        positiveRange: [0, 3], // Math.min(6-1, 4-1) = 3
+      });
+    });
+  });
 });

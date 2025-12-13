@@ -168,7 +168,7 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
       height: computedHeight,
       opacity: isSizeReady.value ? 1 : 0,
     };
-  }, [flattenedStyle, isSizeReady, vertical, resolvedSize]);
+  }, [flattenedStyle, isSizeReady, vertical, resolvedSize, sizePhase]);
 
   return (
     <GestureHandlerRootView testID={testID} style={[styles.layoutContainer, style]}>

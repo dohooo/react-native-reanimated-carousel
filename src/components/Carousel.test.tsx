@@ -889,4 +889,60 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
       expect(handlerOffset.current).toBe(-slideWidth);
     });
   });
+
+  describe("Carousel sizing and measurement", () => {
+    it("should render items even before onLayout provides size (flex-based sizing)", async () => {
+      const progress = { current: 0 };
+      const Wrapper = createCarousel(progress);
+
+      // Render with flex: 1 (no explicit width/height values)
+      const { queryByTestId } = render(<Wrapper style={{ flex: 1, height: 200 }} />);
+
+      // Items should render immediately with initial visible ranges
+      // even if size measurement hasn't completed yet
+      await waitFor(
+        () => {
+          const item = queryByTestId("carousel-item-0");
+          expect(item).toBeTruthy();
+        },
+        { timeout: 1000 * 3 }
+      );
+    });
+
+    it("should render items with explicit style dimensions", async () => {
+      const progress = { current: 0 };
+      const Wrapper = createCarousel(progress);
+
+      const { queryByTestId } = render(<Wrapper style={{ width: 400, height: 250 }} />);
+
+      // Items should render with explicit dimensions
+      await waitFor(
+        () => {
+          const item = queryByTestId("carousel-item-0");
+          expect(item).toBeTruthy();
+        },
+        { timeout: 1000 * 3 }
+      );
+    });
+
+    it("should render items with itemWidth for custom snap distance", async () => {
+      const progress = { current: 0 };
+      const Wrapper = createCarousel(progress);
+      const containerWidth = 600;
+      const itemWidth = 200; // 3 items visible
+
+      const { queryByTestId } = render(
+        <Wrapper style={{ width: containerWidth, height: 200 }} itemWidth={itemWidth} />
+      );
+
+      // Items should render with itemWidth configuration
+      await waitFor(
+        () => {
+          const item = queryByTestId("carousel-item-0");
+          expect(item).toBeTruthy();
+        },
+        { timeout: 1000 * 3 }
+      );
+    });
+  });
 });
