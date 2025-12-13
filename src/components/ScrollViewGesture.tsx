@@ -133,7 +133,10 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       onFinished?: () => void
     ) => {
       "worklet";
-      if (size <= 0) {
+      // Use resolvedSize.value (SharedValue) instead of size (React state)
+      // to avoid race condition where sizeReady is true but size is still 0
+      const currentSize = resolvedSize.value ?? 0;
+      if (currentSize <= 0) {
         return;
       }
       const origin = translation.value;
@@ -153,13 +156,13 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
          * If direction is vertical, the page size is the height of the item.
          * If direction is horizontal, the page size is the width of the item.
          *
-         * `page size` equals to `size` variable.
+         * `page size` equals to `currentSize` variable.
          * */
 
         // calculate target "nextPage" based on the final pan position and the velocity of
         // the pan gesture at termination; this allows for a quick "flick" to indicate a far
         // off page change.
-        const nextPage = -Math.round((origin + velocity * 2) / size);
+        const nextPage = -Math.round((origin + velocity * 2) / currentSize);
 
         if (pagingEnabled) {
           // we'll never go further than a single page away from the current page when paging
@@ -168,25 +171,34 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
           // distance with direction
           const offset = -(scrollEndTranslationValue >= 0 ? 1 : -1); // 1 or -1
           const computed = offset < 0 ? Math.ceil : Math.floor;
-          const page = computed(-origin / size);
+          const page = computed(-origin / currentSize);
 
           const velocityDirection = -Math.sign(velocity);
           if (page === nextPage || velocityDirection !== offset) {
             // not going anywhere! Velocity was insufficient to overcome the distance to get to a
             // further page. Let's reset gently to the current page.
-            finalTranslation = withSpring(withProcessTranslation(-page * size), onFinished);
+            finalTranslation = withSpring(withProcessTranslation(-page * currentSize), onFinished);
           } else if (loop) {
             const finalPage = page + offset;
-            finalTranslation = withSpring(withProcessTranslation(-finalPage * size), onFinished);
+            finalTranslation = withSpring(
+              withProcessTranslation(-finalPage * currentSize),
+              onFinished
+            );
           } else {
             const finalPage = Math.min(maxPage - 1, Math.max(0, page + offset));
-            finalTranslation = withSpring(withProcessTranslation(-finalPage * size), onFinished);
+            finalTranslation = withSpring(
+              withProcessTranslation(-finalPage * currentSize),
+              onFinished
+            );
           }
         }
 
         if (!pagingEnabled && snapEnabled) {
           // scroll to the nearest item
-          finalTranslation = withSpring(withProcessTranslation(-nextPage * size), onFinished);
+          finalTranslation = withSpring(
+            withProcessTranslation(-nextPage * currentSize),
+            onFinished
+          );
         }
       }
 
@@ -204,7 +216,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
     },
     [
       withSpring,
-      size,
+      resolvedSize,
       maxPage,
       loop,
       snapEnabled,
@@ -236,7 +248,10 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
 
   const resetBoundary = React.useCallback(() => {
     "worklet";
-    if (size <= 0) return;
+    // Use resolvedSize.value (SharedValue) instead of size (React state)
+    // to avoid race condition where sizeReady is true but size is still 0
+    const currentSize = resolvedSize.value ?? 0;
+    if (currentSize <= 0) return;
     if (touching.value) return;
 
     if (translation.value > 0) {
@@ -250,14 +265,23 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       }
     }
 
-    if (translation.value < -((maxPage - 1) * size)) {
+    if (translation.value < -((maxPage - 1) * currentSize)) {
       if (scrollEndTranslation.value > 0) {
         activeDecay();
         return;
       }
-      if (!loop) translation.value = withSpring(-((maxPage - 1) * size));
+      if (!loop) translation.value = withSpring(-((maxPage - 1) * currentSize));
     }
-  }, [touching, translation, maxPage, size, scrollEndTranslation, loop, activeDecay, withSpring]);
+  }, [
+    touching,
+    translation,
+    maxPage,
+    resolvedSize,
+    scrollEndTranslation,
+    loop,
+    activeDecay,
+    withSpring,
+  ]);
 
   useAnimatedReaction(
     () => translation.value,
@@ -282,21 +306,23 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
   const onGestureStart = useCallback(
     (_: PanGestureHandlerEventPayload) => {
       "worklet";
-      if (!sizeReady.value || size <= 0) {
+      // Use resolvedSize.value (SharedValue) instead of size (React state)
+      // to avoid race condition where sizeReady is true but size is still 0
+      const currentSize = resolvedSize.value ?? 0;
+      if (!sizeReady.value || currentSize <= 0) {
         return;
       }
       touching.value = true;
       validStart.value = true;
       onScrollStart && scheduleOnRN(onScrollStart);
 
-      max.value = (maxPage - 1) * size;
+      max.value = (maxPage - 1) * currentSize;
       if (!loop && !overscrollEnabled) max.value = getLimit();
 
       panOffset.value = translation.value;
     },
     [
       max,
-      size,
       maxPage,
       loop,
       touching,
@@ -307,13 +333,15 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       getLimit,
       onScrollStart,
       sizeReady,
+      resolvedSize,
     ]
   );
 
   const onGestureUpdate = useCallback(
     (e: PanGestureHandlerEventPayload) => {
       "worklet";
-      if (!sizeReady.value || size <= 0) {
+      const currentSize = resolvedSize.value ?? 0;
+      if (!sizeReady.value || currentSize <= 0) {
         return;
       }
       if (panOffset.value === undefined) {
@@ -366,14 +394,17 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       validStart,
       touching,
       sizeReady,
+      resolvedSize,
     ]
   );
 
   const onGestureEnd = useCallback(
     (e: GestureStateChangeEvent<PanGestureHandlerEventPayload>, _success: boolean) => {
       "worklet";
-
-      if (!sizeReady.value || size <= 0) {
+      // Use resolvedSize.value (SharedValue) instead of size (React state)
+      // to avoid race condition where sizeReady is true but size is still 0
+      const currentSize = resolvedSize.value ?? 0;
+      if (!sizeReady.value || currentSize <= 0) {
         panOffset.value = undefined;
         return;
       }
@@ -406,8 +437,9 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       ) {
         const nextPage =
           Math.round(
-            (panOffset.value + maxScrollDistancePerSwipe * Math.sign(totalTranslation)) / size
-          ) * size;
+            (panOffset.value + maxScrollDistancePerSwipe * Math.sign(totalTranslation)) /
+              currentSize
+          ) * currentSize;
         translation.value = withSpring(withProcessTranslation(nextPage), onScrollEnd);
       } else if (
         /**
@@ -419,8 +451,9 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       ) {
         const nextPage =
           Math.round(
-            (panOffset.value + minScrollDistancePerSwipe * Math.sign(totalTranslation)) / size
-          ) * size;
+            (panOffset.value + minScrollDistancePerSwipe * Math.sign(totalTranslation)) /
+              currentSize
+          ) * currentSize;
         translation.value = withSpring(withProcessTranslation(nextPage), onScrollEnd);
       } else {
         endWithSpring(panTranslation, scrollEndVelocityValue, onScrollEnd);
@@ -431,7 +464,6 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       panOffset.value = undefined;
     },
     [
-      size,
       loop,
       touching,
       panOffset,
@@ -442,12 +474,13 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       fixedDirection,
       maxScrollDistancePerSwipeIsSet,
       maxScrollDistancePerSwipe,
-      maxScrollDistancePerSwipeIsSet,
+      minScrollDistancePerSwipeIsSet,
       minScrollDistancePerSwipe,
       endWithSpring,
       withSpring,
       onScrollEnd,
       sizeReady,
+      resolvedSize,
     ]
   );
 
@@ -481,7 +514,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
         height: measuredHeight,
       });
     },
-    [updateContainerSize, resolvedSize, sizePhase, vertical]
+    [updateContainerSize, resolvedSize, sizePhase, vertical, sizeExplicit]
   );
 
   return (

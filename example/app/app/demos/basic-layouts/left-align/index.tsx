@@ -38,12 +38,8 @@ function Index() {
         <Carousel
           {...restSettings}
           ref={ref}
-          style={{ width: window.width, height: 258 }}
-          contentContainerStyle={{
-            width: window.width / 2,
-            height: 258,
-            overflow: "visible",
-          }}
+          style={{ width: window.width, height: 258, overflow: "visible" }}
+          itemWidth={window.width / 2}
           onSnapToItem={(index) => console.log("current index:", index)}
           renderItem={renderItem({ rounded: true, style: { marginRight: 8 } })}
         />

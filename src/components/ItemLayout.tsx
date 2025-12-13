@@ -30,7 +30,19 @@ export const ItemLayout: React.FC<{
   const { handlerOffset, index, children, visibleRanges, animationStyle } = props;
 
   const {
-    props: { loop, dataLength, width, height, vertical, customConfig, mode, modeConfig, style },
+    props: {
+      loop,
+      dataLength,
+      width,
+      height,
+      vertical,
+      customConfig,
+      mode,
+      modeConfig,
+      style,
+      itemWidth,
+      itemHeight,
+    },
     common,
     layout: { updateItemDimensions },
   } = useGlobalState();
@@ -45,13 +57,18 @@ export const ItemLayout: React.FC<{
   const { width: styleWidth, height: styleHeight } = StyleSheet.flatten(style) || {};
   const styleWidthNumber = typeof styleWidth === "number" ? styleWidth : undefined;
   const styleHeightNumber = typeof styleHeight === "number" ? styleHeight : undefined;
+
+  // When itemWidth/itemHeight is provided, use it for item dimensions (not container style)
+  const explicitItemSize = vertical ? itemHeight : itemWidth;
   const explicitAxisSize = vertical ? (styleHeightNumber ?? height) : (styleWidthNumber ?? width);
-  const size = (explicitAxisSize ?? fallbackSize) || 0;
+  // Use itemWidth/itemHeight if provided, otherwise fall back to container size
+  const size = (explicitItemSize ?? explicitAxisSize ?? fallbackSize) || 0;
   const effectivePageSize = size > 0 ? size : undefined;
 
   const dimensionsStyle = useAnimatedStyle<ViewStyle>(() => {
-    const widthCandidate = vertical ? width : explicitAxisSize;
-    const heightCandidate = vertical ? explicitAxisSize : height;
+    // When itemWidth/itemHeight is provided, use it for item width/height
+    const widthCandidate = vertical ? width : (explicitItemSize ?? explicitAxisSize);
+    const heightCandidate = vertical ? (explicitItemSize ?? explicitAxisSize) : height;
 
     const computedWidth =
       typeof widthCandidate === "number"
@@ -67,7 +84,7 @@ export const ItemLayout: React.FC<{
       width: computedWidth,
       height: computedHeight,
     };
-  }, [vertical, width, height, explicitAxisSize, effectivePageSize]);
+  }, [vertical, width, height, explicitAxisSize, explicitItemSize, effectivePageSize]);
 
   let offsetXConfig: IOpts = {
     handlerOffset,

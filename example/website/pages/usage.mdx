@@ -89,3 +89,91 @@ function App() {
 
 export default App;
 ```
+
+## Sizing Your Carousel
+
+The Carousel component supports multiple ways to define its size. Understanding these options helps you achieve the layout you need.
+
+### 1. Explicit Dimensions (Recommended)
+
+The most straightforward approach is setting explicit `width` and `height` via the `style` prop:
+
+```tsx
+<Carousel
+  style={{ width: 300, height: 200 }}
+  data={data}
+  renderItem={renderItem}
+/>
+```
+
+This gives you full control over the carousel's dimensions and is the most predictable approach.
+
+### 2. Flex-based Sizing
+
+You can use flex layout to have the carousel fill its parent container:
+
+```tsx
+<View style={{ flex: 1 }}>
+  <Carousel
+    style={{ flex: 1 }}
+    data={data}
+    renderItem={renderItem}
+  />
+</View>
+```
+
+The carousel will measure its container and adapt automatically. This is useful when you want the carousel to respond to its parent's layout.
+
+### 3. Custom Snap Distance with `itemWidth` / `itemHeight`
+
+When you want items smaller than the container with custom snapping behavior, use `itemWidth` (horizontal) or `itemHeight` (vertical):
+
+```tsx
+// Container is 400px wide, but snaps every 200px (showing ~2 items)
+<Carousel
+  style={{ width: 400, height: 200 }}
+  itemWidth={200}
+  data={data}
+  renderItem={renderItem}
+/>
+```
+
+This is particularly useful for:
+- Showing multiple items at once
+- Implementing "peek" effects where adjacent items are partially visible
+- Custom snap intervals independent of container size
+
+### 4. Legacy Props (Deprecated)
+
+The `width` and `height` props are deprecated but still supported for backward compatibility:
+
+```tsx
+// Deprecated - use style={{ width, height }} instead
+<Carousel
+  width={300}
+  height={200}
+  data={data}
+  renderItem={renderItem}
+/>
+```
+
+We recommend migrating to the `style` prop for new code.
+
+### Sizing Summary
+
+| Scenario | Props to Use | Example |
+|----------|-------------|---------|
+| Fixed size | `style={{ width, height }}` | `style={{ width: 300, height: 200 }}` |
+| Fill parent | `style={{ flex: 1 }}` | Parent must have defined size |
+| Custom snap | `style` + `itemWidth`/`itemHeight` | `style={{ width: 400 }} itemWidth={200}` |
+| Vertical | `style` + `vertical` | `style={{ height: 400 }} vertical` |
+
+### Important Notes
+
+1. **At least one dimension is required**: The carousel needs to know its size either through explicit dimensions, flex layout, or legacy props.
+
+2. **For horizontal carousels**: Width is the primary dimension that controls snapping.
+
+3. **For vertical carousels**: Height is the primary dimension that controls snapping.
+
+4. **Performance**: The carousel waits for layout measurement before rendering items. With `style={{ flex: 1 }}`, there may be a brief moment before items appear as the component measures its container.

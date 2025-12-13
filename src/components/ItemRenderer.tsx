@@ -52,15 +52,22 @@ export const ItemRenderer: FC<Props> = (props) => {
     loop,
   });
 
-  const [displayedItems, setDisplayedItems] = React.useState<VisibleRanges>(null!);
+  // Initialize with a sensible default to avoid blank render on first frame
+  const initialRanges: VisibleRanges = React.useMemo(
+    () => ({
+      negativeRange: [0, 0],
+      positiveRange: [0, Math.min(dataLength - 1, (windowSize ?? dataLength) - 1)],
+    }),
+    [dataLength, windowSize]
+  );
+
+  const [displayedItems, setDisplayedItems] = React.useState<VisibleRanges>(initialRanges);
 
   useAnimatedReaction(
     () => visibleRanges.value,
     (ranges) => scheduleOnRN(setDisplayedItems, ranges),
     [visibleRanges]
   );
-
-  if (!displayedItems) return null;
 
   return (
     <>
