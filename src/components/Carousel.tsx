@@ -1,4 +1,4 @@
-import React from "react";
+import React, { JSX } from "react";
 import { useCommonVariables } from "../hooks/useCommonVariables";
 import { useInitProps } from "../hooks/useInitProps";
 import { usePropsErrorBoundary } from "../hooks/usePropsErrorBoundary";
