@@ -832,6 +832,73 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     pushExpect(1);
   });
 
+  it("`overscrollEnabled` false should clamp right overdrag at the first page in non-loop mode", async () => {
+    const handlerOffset = { current: 0 };
+    const maxObservedPositiveOffset = { current: 0 };
+
+    const Wrapper: FC<Partial<TCarouselProps<string>>> = React.forwardRef((customProps, ref) => {
+      const progressAnimVal = useSharedValue(0);
+      const mockHandlerOffset = useSharedValue(handlerOffset.current);
+      const defaultRenderItem = ({
+        item,
+        index,
+      }: {
+        item: string;
+        index: number;
+      }) => (
+        <Animated.View
+          testID={`carousel-item-${index}`}
+          style={{ width: slideWidth, height: slideHeight }}
+        >
+          {item}
+        </Animated.View>
+      );
+      const { renderItem = defaultRenderItem, ...defaultProps } = createDefaultProps(
+        progressAnimVal,
+        customProps
+      );
+
+      useDerivedValue(() => {
+        handlerOffset.current = mockHandlerOffset.value;
+        maxObservedPositiveOffset.current = Math.max(
+          maxObservedPositiveOffset.current,
+          mockHandlerOffset.value
+        );
+      }, [mockHandlerOffset]);
+
+      return (
+        <Carousel
+          {...defaultProps}
+          defaultScrollOffsetValue={mockHandlerOffset}
+          renderItem={renderItem}
+          ref={ref}
+        />
+      );
+    });
+
+    const { getByTestId } = render(
+      <Wrapper
+        loop={false}
+        overscrollEnabled={false}
+        pagingEnabled={false}
+        style={{ width: slideWidth, height: slideHeight }}
+      />
+    );
+    await verifyInitialRender(getByTestId);
+
+    fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
+      { state: State.BEGAN, translationX: 0, velocityX: slideWidth },
+    ]);
+
+    fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
+      { state: State.ACTIVE, translationX: slideWidth * 0.6, velocityX: slideWidth },
+    ]);
+
+    await waitFor(() => {
+      expect(maxObservedPositiveOffset.current).toBe(0);
+    });
+  });
+
   it("should keep correct page after left overscroll at first page when calling next() or scrollTo()", async () => {
     const handlerOffset = { current: 0 };
     let nextSlide: ((opts?: { animated?: boolean }) => void) | undefined;

@@ -199,6 +199,26 @@ describe("useVisibleRanges", () => {
   });
 
   describe("viewSize boundary conditions", () => {
+    it("should return safe defaults when viewSize is NaN", () => {
+      const hook = renderHook(() => {
+        const translation = useSharedValue(0);
+        const range = useVisibleRanges({
+          total: 6,
+          translation,
+          // Invalid runtime value should not break range calculation
+          viewSize: Number.NaN,
+          windowSize: 4,
+          loop: false,
+        });
+        return range;
+      });
+
+      expect(hook.result.current.value).toEqual({
+        negativeRange: [0, 0],
+        positiveRange: [0, 3],
+      });
+    });
+
     it("should return safe defaults when viewSize is 0", () => {
       const hook = renderHook(() => {
         const translation = useSharedValue(0);

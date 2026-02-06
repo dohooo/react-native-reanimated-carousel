@@ -15,6 +15,7 @@ import type { IVisibleRanges } from "../hooks/useVisibleRanges";
 import type { ILayoutConfig } from "../layouts/stack";
 import { useGlobalState } from "../store";
 import type { TCarouselProps } from "../types";
+import { sanitizeAnimationStyle } from "../utils/sanitize-animation-style";
 
 export type TAnimationStyle = NonNullable<TCarouselProps["customAnimation"]>;
 
@@ -116,7 +117,7 @@ export const ItemLayout: React.FC<{
   }, [x, size]);
   const animatedStyle = useAnimatedStyle<ViewStyle>(() => {
     const safeSize = size || 1;
-    return animationStyle(x.value / safeSize, index);
+    return sanitizeAnimationStyle(animationStyle(x.value / safeSize, index));
   }, [animationStyle, index, x, size]);
 
   // TODO: For dynamic dimension in the future
