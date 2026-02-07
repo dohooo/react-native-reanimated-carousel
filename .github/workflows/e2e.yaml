@@ -56,6 +56,7 @@ jobs:
           sys.exit(1)
           ")
           xcrun simctl boot "$DEVICE_UDID"
+          echo "SIMULATOR_UDID=$DEVICE_UDID" >> "$GITHUB_ENV"
 
       - name: Prebuild iOS
         working-directory: example/app
@@ -73,6 +74,7 @@ jobs:
             -scheme app \
             -configuration Debug \
             -sdk iphonesimulator \
+            -destination "id=${SIMULATOR_UDID}" \
             -derivedDataPath build \
             build | tee xcodebuild.log
 
