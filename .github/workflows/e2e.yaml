@@ -85,27 +85,31 @@ jobs:
           xcrun simctl install booted \
             example/app/ios/build/Build/Products/Debug-iphonesimulator/app.app
 
-      - name: Start Metro bundler
+      - name: Run E2E tests
         working-directory: example/app
         run: |
-          npx expo start --port 8081 &
-          # Wait for Metro to be ready
-          for i in $(seq 1 30); do
+          set -euxo pipefail
+          npx expo start --port 8081 > /tmp/metro.log 2>&1 &
+          METRO_PID=$!
+          trap 'kill "$METRO_PID" || true; echo "::group::Metro logs"; tail -n 200 /tmp/metro.log || true; echo "::endgroup::"' EXIT
+
+          # Wait for Metro to be ready before launching the app
+          for i in $(seq 1 60); do
             if curl -s http://localhost:8081/status 2>/dev/null | grep -q "packager-status:running"; then
               echo "Metro is ready"
               break
             fi
-            echo "Waiting for Metro... ($i/30)"
+            if [ "$i" -eq 60 ]; then
+              echo "Metro failed to start in time"
+              exit 1
+            fi
+            echo "Waiting for Metro... ($i/60)"
             sleep 2
           done
 
-      - name: Launch app
-        run: |
           xcrun simctl launch booted com.react-native-reanimated-carousel.example
           sleep 10
-
-      - name: Run E2E tests
-        run: maestro test example/app/app/demos/
+          maestro test app/demos/
 
       - name: Upload test artifacts
         if: always()
