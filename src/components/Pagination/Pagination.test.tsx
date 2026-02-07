@@ -1,13 +1,22 @@
-import { fireEvent, render } from "@testing-library/react-native";
+import { act, fireEvent, render } from "@testing-library/react-native";
 import { View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
-import { act } from "react-test-renderer";
 
 import { Pagination } from ".";
 
 jest.mock("react-native-worklets", () => ({
   scheduleOnRN: (fn: (...args: unknown[]) => void, ...args: unknown[]) => fn(...args),
 }));
+
+// Use fake timers so the reanimated mapper's mockedRequestAnimationFrame
+// (a setTimeout-based RAF) doesn't fire outside of act().
+beforeEach(() => {
+  jest.useFakeTimers();
+});
+
+afterEach(() => {
+  jest.useRealTimers();
+});
 
 describe("Pagination.Basic", () => {
   it("throws when size/dot width/height are non-number", () => {
@@ -41,7 +50,9 @@ describe("Pagination.Basic", () => {
     };
 
     const { UNSAFE_root } = render(<Test />);
-    await act(async () => {});
+    await act(async () => {
+      jest.advanceTimersByTime(100);
+    });
 
     const buttons = UNSAFE_root.findAll(
       (node) =>
@@ -58,6 +69,7 @@ describe("Pagination.Basic", () => {
 
     await act(async () => {
       fireEvent.press(uniqueByLabel[1]);
+      jest.advanceTimersByTime(100);
     });
     expect(handlePress).toHaveBeenCalledWith(1);
   });
@@ -69,7 +81,9 @@ describe("Pagination.Basic", () => {
     };
 
     const { UNSAFE_root } = render(<Test />);
-    await act(async () => {});
+    await act(async () => {
+      jest.advanceTimersByTime(100);
+    });
 
     const buttons = UNSAFE_root.findAll(
       (node) =>
@@ -119,7 +133,9 @@ describe("Pagination.Custom", () => {
     };
 
     const { UNSAFE_root } = render(<Test />);
-    await act(async () => {});
+    await act(async () => {
+      jest.advanceTimersByTime(100);
+    });
 
     // @ts-expect-error
     const container = UNSAFE_root.findByType(View);
@@ -148,7 +164,9 @@ describe("Pagination.Custom", () => {
     };
 
     const { UNSAFE_root } = render(<Test />);
-    await act(async () => {});
+    await act(async () => {
+      jest.advanceTimersByTime(100);
+    });
 
     const item = UNSAFE_root.find(
       (node) =>

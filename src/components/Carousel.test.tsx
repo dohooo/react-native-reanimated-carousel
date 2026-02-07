@@ -13,6 +13,25 @@ import Carousel from "./Carousel";
 
 import type { TCarouselProps } from "../types";
 
+// Suppress the "measure() cannot be used with Jest" warning from Reanimated.
+// The measure export is non-configurable so it cannot be spied on or mocked
+// at the module level. The code in ScrollViewGesture already handles the null
+// return gracefully (measurement?.width || 0).  We filter at the Reanimated
+// logger level which is more reliable than intercepting console.warn.
+{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const cfg = (global as any).__reanimatedLoggerConfig as
+    | { logFunction: (data: { level: number; message: string }) => void }
+    | undefined;
+  if (cfg) {
+    const _origLog = cfg.logFunction;
+    cfg.logFunction = (data) => {
+      if (data.message.includes("measure() cannot be used with Jest")) return;
+      _origLog(data);
+    };
+  }
+}
+
 jest.setTimeout(1000 * 12);
 
 const mockPan = jest.fn();
