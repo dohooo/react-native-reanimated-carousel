@@ -18,7 +18,7 @@ name: Normal Carousel - Swipe Navigation
 # Dismiss Expo developer menu onboarding modal if it appears.
 - extendedWaitUntil:
     visible: "Continue"
-    timeout: 30000
+    timeout: 180000
     optional: true
 
 - tapOn:
