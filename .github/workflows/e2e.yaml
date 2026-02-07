@@ -28,8 +28,25 @@ jobs:
 
       - name: Install dependencies
         run: |
-          yarn install --frozen-lockfile
-          cd example/app && yarn install --frozen-lockfile
+          set -euxo pipefail
+          retry() {
+            local max_retries="$1"
+            shift
+            local attempt=1
+            until "$@"; do
+              if [ "$attempt" -ge "$max_retries" ]; then
+                echo "Command failed after ${attempt} attempts: $*"
+                return 1
+              fi
+              attempt=$((attempt + 1))
+              echo "Retrying (${attempt}/${max_retries}): $*"
+              sleep 10
+            done
+          }
+
+          retry 3 yarn install --frozen-lockfile
+          cd example/app
+          retry 3 yarn install --frozen-lockfile
 
       - name: Setup Java (required by Maestro)
         uses: actions/setup-java@v4
