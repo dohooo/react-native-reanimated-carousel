@@ -107,6 +107,21 @@ jobs:
             sleep 2
           done
 
+          # Prewarm Expo Router bundle to avoid first-launch redbox in CI.
+          BUNDLE_URL='http://127.0.0.1:8081/node_modules/expo-router/entry.bundle?platform=ios&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=app&unstable_transformProfile=hermes-stable'
+          for i in $(seq 1 60); do
+            if curl -sf "$BUNDLE_URL" -o /dev/null; then
+              echo "iOS bundle is ready"
+              break
+            fi
+            if [ "$i" -eq 60 ]; then
+              echo "Timed out waiting for iOS bundle"
+              exit 1
+            fi
+            echo "Waiting for iOS bundle... ($i/60)"
+            sleep 2
+          done
+
           xcrun simctl launch booted com.react-native-reanimated-carousel.example
           sleep 10
           maestro test app/demos/
