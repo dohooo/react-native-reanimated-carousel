@@ -15,7 +15,12 @@ name: Normal Carousel - Swipe Navigation
     text: "http://localhost:8081"
     optional: true
 
-# Dismiss Expo developer menu onboarding modal if it appears on first launch.
+# Dismiss Expo developer menu onboarding modal if it appears.
+- extendedWaitUntil:
+    visible: "Continue"
+    timeout: 30000
+    optional: true
+
 - tapOn:
     text: "Continue"
     optional: true
