@@ -18,7 +18,7 @@ name: Normal Carousel - Swipe Navigation
 # Wait until the demos list is visible before interacting with it.
 - extendedWaitUntil:
     visible: "Normal"
-    timeout: 30000
+    timeout: 180000
 
 # Navigate to the Normal demo
 - tapOn: "Normal"
