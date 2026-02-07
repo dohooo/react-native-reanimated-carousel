@@ -1,0 +1,99 @@
+name: E2E Tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  e2e-ios:
+    runs-on: macos-14
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Install dependencies
+        run: |
+          yarn install --frozen-lockfile
+          cd example/app && yarn install --frozen-lockfile
+
+      - name: Setup Java (required by Maestro)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install Maestro
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Boot iOS Simulator
+        run: |
+          DEVICE_UDID=$(xcrun simctl list devices available -j | python3 -c "
+          import json, sys
+          data = json.load(sys.stdin)
+          for runtime, devices in data['devices'].items():
+              if 'iOS' in runtime:
+                  for d in devices:
+                      if 'iPhone 16' in d['name'] and d['isAvailable']:
+                          print(d['udid'])
+                          sys.exit(0)
+          sys.exit(1)
+          ")
+          xcrun simctl boot "$DEVICE_UDID"
+
+      - name: Prebuild iOS
+        working-directory: example/app
+        run: npx expo prebuild --platform ios --clean
+
+      - name: Build for iOS Simulator
+        working-directory: example/app/ios
+        run: |
+          xcodebuild \
+            -workspace app.xcworkspace \
+            -scheme app \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -derivedDataPath build \
+            build | tail -20
+
+      - name: Install app on Simulator
+        run: |
+          xcrun simctl install booted \
+            example/app/ios/build/Build/Products/Debug-iphonesimulator/app.app
+
+      - name: Start Metro bundler
+        working-directory: example/app
+        run: |
+          npx expo start --port 8081 &
+          # Wait for Metro to be ready
+          for i in $(seq 1 30); do
+            if curl -s http://localhost:8081/status 2>/dev/null | grep -q "packager-status:running"; then
+              echo "Metro is ready"
+              break
+            fi
+            echo "Waiting for Metro... ($i/30)"
+            sleep 2
+          done
+
+      - name: Launch app
+        run: |
+          xcrun simctl launch booted com.react-native-reanimated-carousel.example
+          sleep 10
+
+      - name: Run E2E tests
+        run: maestro test example/app/app/demos/
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-results
+          path: ~/.maestro/tests/

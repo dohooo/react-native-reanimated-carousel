@@ -47,7 +47,7 @@ export const SlideItem: React.FC<Props> = (props) => {
       {colorFill && <View style={[styles.colorFill, rounded && { borderRadius: 15 }]} />}
       <View style={styles.overlay}>
         <View style={styles.overlayTextContainer}>
-          <Text style={styles.overlayText}>{index}</Text>
+          <Text testID={`slide-index-${index}`} style={styles.overlayText}>{`Slide ${index}`}</Text>
         </View>
       </View>
     </Animated.View>

@@ -1,0 +1,64 @@
+appId: com.react-native-reanimated-carousel.example
+name: Normal Carousel - Swipe Navigation
+---
+
+# Launch app without clearing state (preserves Expo Dev Client connection)
+- launchApp:
+    clearState: false
+
+# Wait for the home screen to fully load
+- waitForAnimationToEnd:
+    timeout: 5000
+
+# Navigate to the Normal demo
+- tapOn: "Normal"
+
+# Wait for carousel to render
+- waitForAnimationToEnd:
+    timeout: 5000
+
+# Assert initial state - slide 0 is visible
+- assertVisible:
+    text: "Slide 0"
+
+# Swipe LEFT on the carousel to go to slide 1
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+
+# Wait for snap animation to complete
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# Assert slide 1 is now visible
+- assertVisible:
+    text: "Slide 1"
+
+# Swipe LEFT again to go to slide 2
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+
+# Wait for snap animation to complete
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# Assert slide 2 is now visible
+- assertVisible:
+    text: "Slide 2"
+
+# Swipe RIGHT to go back to slide 1
+- swipe:
+    start: "20%, 30%"
+    end: "80%, 30%"
+    duration: 400
+
+# Wait for snap animation to complete
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# Assert slide 1 is visible again
+- assertVisible:
+    text: "Slide 1"
