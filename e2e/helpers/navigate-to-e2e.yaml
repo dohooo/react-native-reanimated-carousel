@@ -16,12 +16,12 @@ appId: com.react-native-reanimated-carousel.example
     text: "http://localhost:8081"
     optional: true
 
-# Dismiss Expo developer menu onboarding modal if it appears.
-- extendedWaitUntil:
-    visible: "Continue"
-    timeout: 180000
-    optional: true
+# Wait for the app to settle after Metro connection (avoids kAXErrorInvalidUIElement
+# during the UI transition when the dev client connects to the bundler).
+- waitForAnimationToEnd:
+    timeout: 8000
 
+# Dismiss Expo developer menu onboarding modal if it appears.
 - tapOn:
     text: "Continue"
     optional: true
