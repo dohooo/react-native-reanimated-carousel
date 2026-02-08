@@ -197,5 +197,27 @@ if [ -d "$CONDUCTOR_ROOT_PATH/.conductor" ]; then
     copy_dir ".conductor"
 fi
 
+# =============================================================================
+# Copy iOS native dependencies (CocoaPods Pods) to avoid re-installation
+# =============================================================================
+
 echo ""
-echo "Conductor workspace setup complete!"
+echo "Copying iOS native dependencies (CocoaPods Pods)..."
+
+# Copy example/app iOS Pods directory if it exists
+if [ -d "$CONDUCTOR_ROOT_PATH/example/app/ios/Pods" ]; then
+    echo "  Found Pods directory in root, copying to workspace..."
+    copy_dir "example/app/ios/Pods"
+    
+    # Also copy Podfile.lock if it exists (ensures version consistency)
+    if [ -f "$CONDUCTOR_ROOT_PATH/example/app/ios/Podfile.lock" ]; then
+        copy_env_file "example/app/ios/Podfile.lock"
+    fi
+    
+    echo "  iOS Pods copied successfully! This will skip CocoaPods installation."
+else
+    echo "  No Pods directory found in root, CocoaPods will install on first run."
+fi
+
+echo ""
+echo "🎉 Conductor workspace setup complete!"
