@@ -1,7 +1,9 @@
 appId: com.react-native-reanimated-carousel.example
 ---
 
-# Launch app without clearing state (preserves Expo Dev Client connection)
+# Ensure a clean restart so the app always opens on the home screen,
+# even if a previous test left it on the E2E page.
+- stopApp
 - launchApp:
     clearState: false
 
