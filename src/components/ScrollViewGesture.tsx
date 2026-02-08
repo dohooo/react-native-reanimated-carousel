@@ -22,6 +22,7 @@ import { Easing } from "../constants";
 import { usePanGestureProxy } from "../hooks/usePanGestureProxy";
 import { useGlobalState } from "../store";
 import type { WithTimingAnimation } from "../types";
+import { computeGestureTranslation } from "../utils/compute-gesture-translation";
 import { dealWithAnimation } from "../utils/deal-with-animation";
 
 interface Props {
@@ -207,8 +208,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       function withProcessTranslation(translation: number) {
         if (!loop && !overscrollEnabled) {
           const limit = getLimit();
-          const sign = Math.sign(translation);
-          return sign * Math.max(0, Math.min(limit, Math.abs(translation)));
+          return Math.min(0, Math.max(-limit, translation));
         }
 
         return translation;
@@ -296,8 +296,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
 
     if (!loop && !overscrollEnabled) {
       const limit = getLimit();
-      const sign = Math.sign(translation);
-      return sign * Math.max(0, Math.min(limit, Math.abs(translation)));
+      return Math.min(0, Math.max(-limit, translation));
     }
 
     return translation;
@@ -370,18 +369,14 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       if (fixedDirection === "negative") panTranslation = -Math.abs(panTranslation);
       else if (fixedDirection === "positive") panTranslation = +Math.abs(panTranslation);
 
-      if (!loop) {
-        if (translation.value > 0 || translation.value < -max.value) {
-          const boundary = translation.value > 0 ? 0 : -max.value;
-          const fixed = boundary - panOffset.value;
-          const dynamic = panTranslation - fixed;
-          translation.value = boundary + dynamic * 0.5;
-          return;
-        }
-      }
-
-      const translationValue = panOffset.value + panTranslation;
-      translation.value = translationValue;
+      translation.value = computeGestureTranslation({
+        loop,
+        overscrollEnabled: overscrollEnabled ?? true,
+        currentTranslation: translation.value,
+        panOffset: panOffset.value,
+        panTranslation,
+        max: max.value,
+      });
     },
     [
       isHorizontal,

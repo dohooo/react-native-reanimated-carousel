@@ -21,6 +21,8 @@
 - **Sizing**: `style` controls the **container size**; `itemWidth`/`itemHeight` control the **page size** (snap distance & animation progress).
 - **Scroll offset shared value**: use `scrollOffsetValue` (recommended). `defaultScrollOffsetValue` is deprecated but still supported.
 - **Progress**: `onProgressChange` supports both a callback and `SharedValue<number>`.
+- **Pagination accessibility**: `Pagination.Basic` and `Pagination.Custom` support `paginationItemAccessibility` for per-item a11y overrides.
+- **Custom animation safety**: `customAnimation` styles are sanitized and `zIndex` is normalized to finite integers.
 
 ## 📊 Version Compatibility
 

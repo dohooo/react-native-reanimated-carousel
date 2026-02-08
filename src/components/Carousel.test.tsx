@@ -13,6 +13,25 @@ import Carousel from "./Carousel";
 
 import type { TCarouselProps } from "../types";
 
+// Suppress the "measure() cannot be used with Jest" warning from Reanimated.
+// The measure export is non-configurable so it cannot be spied on or mocked
+// at the module level. The code in ScrollViewGesture already handles the null
+// return gracefully (measurement?.width || 0).  We filter at the Reanimated
+// logger level which is more reliable than intercepting console.warn.
+{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const cfg = (global as any).__reanimatedLoggerConfig as
+    | { logFunction: (data: { level: number; message: string }) => void }
+    | undefined;
+  if (cfg) {
+    const _origLog = cfg.logFunction;
+    cfg.logFunction = (data) => {
+      if (data.message.includes("measure() cannot be used with Jest")) return;
+      _origLog(data);
+    };
+  }
+}
+
 jest.setTimeout(1000 * 12);
 
 const mockPan = jest.fn();
@@ -830,6 +849,73 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     nextSlide?.();
     TICK();
     pushExpect(1);
+  });
+
+  it("`overscrollEnabled` false should clamp right overdrag at the first page in non-loop mode", async () => {
+    const handlerOffset = { current: 0 };
+    const maxObservedPositiveOffset = { current: 0 };
+
+    const Wrapper: FC<Partial<TCarouselProps<string>>> = React.forwardRef((customProps, ref) => {
+      const progressAnimVal = useSharedValue(0);
+      const mockHandlerOffset = useSharedValue(handlerOffset.current);
+      const defaultRenderItem = ({
+        item,
+        index,
+      }: {
+        item: string;
+        index: number;
+      }) => (
+        <Animated.View
+          testID={`carousel-item-${index}`}
+          style={{ width: slideWidth, height: slideHeight }}
+        >
+          {item}
+        </Animated.View>
+      );
+      const { renderItem = defaultRenderItem, ...defaultProps } = createDefaultProps(
+        progressAnimVal,
+        customProps
+      );
+
+      useDerivedValue(() => {
+        handlerOffset.current = mockHandlerOffset.value;
+        maxObservedPositiveOffset.current = Math.max(
+          maxObservedPositiveOffset.current,
+          mockHandlerOffset.value
+        );
+      }, [mockHandlerOffset]);
+
+      return (
+        <Carousel
+          {...defaultProps}
+          defaultScrollOffsetValue={mockHandlerOffset}
+          renderItem={renderItem}
+          ref={ref}
+        />
+      );
+    });
+
+    const { getByTestId } = render(
+      <Wrapper
+        loop={false}
+        overscrollEnabled={false}
+        pagingEnabled={false}
+        style={{ width: slideWidth, height: slideHeight }}
+      />
+    );
+    await verifyInitialRender(getByTestId);
+
+    fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
+      { state: State.BEGAN, translationX: 0, velocityX: slideWidth },
+    ]);
+
+    fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
+      { state: State.ACTIVE, translationX: slideWidth * 0.6, velocityX: slideWidth },
+    ]);
+
+    await waitFor(() => {
+      expect(maxObservedPositiveOffset.current).toBe(0);
+    });
   });
 
   it("should keep correct page after left overscroll at first page when calling next() or scrollTo()", async () => {

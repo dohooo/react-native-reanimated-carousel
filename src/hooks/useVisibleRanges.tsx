@@ -20,12 +20,22 @@ export function useVisibleRanges(options: {
 }): IVisibleRanges {
   const { total = 0, viewSize, translation, windowSize: _windowSize, loop } = options;
 
-  const windowSize = _windowSize ?? total;
+  const windowSize =
+    typeof _windowSize === "number" && Number.isFinite(_windowSize) && _windowSize > 0
+      ? _windowSize
+      : total;
   const cachedRanges = useRef<VisibleRanges | null>(null);
 
   const ranges = useDerivedValue(() => {
+    if (total <= 0) {
+      return {
+        negativeRange: [0, 0] as Range,
+        positiveRange: [0, -1] as Range,
+      };
+    }
+
     // Prevent division by zero when viewSize is not yet measured
-    if (viewSize <= 0) {
+    if (!Number.isFinite(viewSize) || viewSize <= 0) {
       return {
         negativeRange: [0, 0] as Range,
         positiveRange: [0, Math.min(total - 1, windowSize - 1)] as Range,
@@ -36,6 +46,7 @@ export function useVisibleRanges(options: {
     const negativeCount = windowSize - positiveCount;
 
     let currentIndex = Math.round(-translation.value / viewSize);
+    if (!Number.isFinite(currentIndex)) currentIndex = 0;
 
     let newRanges: VisibleRanges;
 
@@ -86,7 +97,7 @@ export function useVisibleRanges(options: {
 
     cachedRanges.current = newRanges;
     return newRanges;
-  }, [loop, total, windowSize, translation]);
+  }, [loop, total, windowSize, translation, viewSize]);
 
   return ranges;
 }

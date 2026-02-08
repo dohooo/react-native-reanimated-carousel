@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
 import React, { useState } from "react";
-import type { ViewStyle } from "react-native";
+import type { AccessibilityRole, AccessibilityState, ViewStyle } from "react-native";
 import { Pressable, View } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 import Animated, {
@@ -16,6 +16,13 @@ export type DotStyle = Omit<ViewStyle, "width" | "height"> & {
   height?: number;
 };
 
+export type PaginationItemAccessibilityOverrides = {
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
+  accessibilityRole?: AccessibilityRole;
+  accessibilityState?: AccessibilityState;
+};
+
 export const PaginationItem: React.FC<
   PropsWithChildren<{
     index: number;
@@ -27,6 +34,9 @@ export const PaginationItem: React.FC<
     activeDotStyle?: DotStyle;
     onPress: () => void;
     accessibilityLabel?: string;
+    accessibilityHint?: string;
+    accessibilityRole?: AccessibilityRole;
+    accessibilityState?: AccessibilityState;
   }>
 > = (props) => {
   const {
@@ -40,6 +50,9 @@ export const PaginationItem: React.FC<
     children,
     onPress,
     accessibilityLabel,
+    accessibilityHint,
+    accessibilityRole,
+    accessibilityState,
   } = props;
 
   const defaultDotSize = 10;
@@ -62,6 +75,11 @@ export const PaginationItem: React.FC<
   const height = sizes.height;
 
   const [isSelected, setIsSelected] = useState(false);
+  const resolvedAccessibilityLabel = accessibilityLabel ?? `Slide ${index + 1} of ${count}`;
+  const resolvedAccessibilityHint =
+    accessibilityHint ?? (isSelected ? "" : `Go to ${resolvedAccessibilityLabel}`);
+  const resolvedAccessibilityRole = accessibilityRole ?? "button";
+  const resolvedAccessibilityState = accessibilityState ?? { selected: isSelected };
 
   useAnimatedReaction(
     () => animValue.value,
@@ -93,10 +111,10 @@ export const PaginationItem: React.FC<
   return (
     <Pressable
       onPress={onPress}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole="button"
-      accessibilityHint={isSelected ? "" : `Go to ${accessibilityLabel}`}
-      accessibilityState={{ selected: isSelected }}
+      accessibilityLabel={resolvedAccessibilityLabel}
+      accessibilityRole={resolvedAccessibilityRole}
+      accessibilityHint={resolvedAccessibilityHint}
+      accessibilityState={resolvedAccessibilityState}
     >
       <View
         style={[
