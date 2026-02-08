@@ -16,12 +16,14 @@ const ListItem = ({
   name,
   onPress,
   color,
+  testID,
 }: {
   name: string;
   onPress: () => void;
   color: string;
+  testID?: string;
 }) => (
-  <TouchableOpacity onPress={onPress}>
+  <TouchableOpacity onPress={onPress} testID={testID}>
     <Stack style={styles.listItem}>
       <Text style={[styles.text, { color }]}>{name.split("-").join(" ")}</Text>
     </Stack>
@@ -75,6 +77,7 @@ export default function Home() {
         name={item.title}
         onPress={() => router.push(`/demos/${kind}/${item.name}` as any)}
         color={colors.text}
+        testID={`demo-item-${item.name}`}
       />
     )),
   ];

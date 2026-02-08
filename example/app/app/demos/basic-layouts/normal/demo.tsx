@@ -14,7 +14,7 @@ function Index() {
   return (
     <View id="carousel-component" dataSet={{ kind: "basic-layouts", name: "normal" }}>
       <Carousel
-        testID={"xxx"}
+        testID={"normal-carousel-demo"}
         loop={true}
         snapEnabled={true}
         pagingEnabled={true}
@@ -27,10 +27,6 @@ function Index() {
         }}
         onScrollEnd={() => {
           console.log("Scroll end");
-        }}
-        onConfigurePanGesture={(g: { enabled: (arg0: boolean) => any }) => {
-          "worklet";
-          g.enabled(false);
         }}
         onSnapToItem={(index: number) => console.log("current index:", index)}
         renderItem={renderItem({ rounded: true })}
