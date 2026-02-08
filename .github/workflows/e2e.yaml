@@ -208,7 +208,7 @@ jobs:
 
           xcrun simctl launch booted com.react-native-reanimated-carousel.example
           sleep 10
-          maestro test app/demos/ | tee /tmp/maestro.log
+          maestro test "$GITHUB_WORKSPACE/e2e/" | tee /tmp/maestro.log
 
       - name: Collect CI debug artifacts
         if: always()
