@@ -19,7 +19,12 @@ jobs:
           xcode-version: "latest-stable"
 
       - name: Show Xcode version
-        run: xcodebuild -version
+        id: xcode-version
+        run: |
+          set -euxo pipefail
+          xcodebuild -version
+          XCODE_VERSION=$(xcodebuild -version | tr '\n' ' ' | sed 's/  */-/g; s/[^A-Za-z0-9._-]/-/g')
+          echo "version=${XCODE_VERSION}" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-node@v4
         with:
@@ -77,14 +82,43 @@ jobs:
           echo "SIMULATOR_UDID=$DEVICE_UDID" >> "$GITHUB_ENV"
           echo "SIMULATOR_NAME=$DEVICE_NAME" >> "$GITHUB_ENV"
 
+      - name: Restore CocoaPods download cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Caches/CocoaPods
+            ~/.cocoapods/repos
+          key: ${{ runner.os }}-${{ steps.xcode-version.outputs.version }}-cocoapods-${{ hashFiles('example/app/yarn.lock', 'example/app/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ steps.xcode-version.outputs.version }}-cocoapods-
+
       - name: Prebuild iOS
         working-directory: example/app
-        run: npx expo prebuild --platform ios --clean
+        run: npx expo prebuild --platform ios --non-interactive
 
       - name: Verify generated iOS workspace
         run: test -d example/app/ios/app.xcworkspace
 
+      - name: Restore iOS app build cache
+        id: cache-ios-app
+        uses: actions/cache@v4
+        with:
+          path: example/app/ios/build
+          key: ${{ runner.os }}-${{ steps.xcode-version.outputs.version }}-ios-build-${{ hashFiles('yarn.lock', 'example/app/yarn.lock', 'example/app/package.json', 'example/app/app.json', 'example/app/ios/Podfile.lock', 'example/app/ios/**/*.pbxproj') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ steps.xcode-version.outputs.version }}-ios-build-
+
+      - name: Check cached app bundle
+        id: cached-app
+        run: |
+          if [ -d example/app/ios/build/Build/Products/Debug-iphonesimulator/app.app ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build for iOS Simulator
+        if: steps.cached-app.outputs.exists != 'true'
         working-directory: example/app/ios
         run: |
           set -o pipefail
@@ -96,6 +130,12 @@ jobs:
             -destination "platform=iOS Simulator,name=${SIMULATOR_NAME}" \
             -derivedDataPath build \
             build | tee xcodebuild.log
+
+      - name: Reuse cached iOS app build
+        if: steps.cached-app.outputs.exists == 'true'
+        run: |
+          echo "Using cached app bundle, skipping xcodebuild."
+          ls -lah example/app/ios/build/Build/Products/Debug-iphonesimulator/app.app
 
       - name: Install app on Simulator
         run: |
@@ -141,11 +181,26 @@ jobs:
 
           xcrun simctl launch booted com.react-native-reanimated-carousel.example
           sleep 10
-          maestro test app/demos/
+          maestro test app/demos/ | tee /tmp/maestro.log
+
+      - name: Collect CI debug artifacts
+        if: always()
+        run: |
+          set -euxo pipefail
+          mkdir -p /tmp/e2e-debug
+          cp -f /tmp/metro.log /tmp/e2e-debug/metro.log || true
+          cp -f /tmp/maestro.log /tmp/e2e-debug/maestro.log || true
+          cp -f example/app/ios/xcodebuild.log /tmp/e2e-debug/xcodebuild.log || true
+          xcrun simctl list devices > /tmp/e2e-debug/simctl-devices.txt || true
+          xcrun simctl io booted screenshot /tmp/e2e-debug/final-simulator-screen.png || true
 
       - name: Upload test artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: e2e-results
-          path: ~/.maestro/tests/
+          if-no-files-found: warn
+          retention-days: 7
+          path: |
+            ~/.maestro/tests/
+            /tmp/e2e-debug/
