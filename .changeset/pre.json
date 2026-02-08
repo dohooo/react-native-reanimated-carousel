@@ -10,6 +10,7 @@
     "fix-nonloop-overdrag-visible-ranges",
     "fix-nonloop-overscroll",
     "fix-pagination-accessibility",
+    "fix-second-tier-tdd-issues",
     "fix-web-worklets-error",
     "honest-baboons-sip",
     "odd-news-carry",
