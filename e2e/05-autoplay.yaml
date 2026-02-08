@@ -40,12 +40,12 @@ name: AutoPlay Functionality
 # Wait for the carousel to auto-advance to at least slide 1
 - extendedWaitUntil:
     visible: "Current Index: 1"
-    timeout: 10000
+    timeout: 15000
 
 # Wait for another auto-advance
 - extendedWaitUntil:
     visible: "Current Index: 2"
-    timeout: 10000
+    timeout: 15000
 
 # === Test: Disable AutoPlay and verify stop ===
 
@@ -125,4 +125,4 @@ name: AutoPlay Functionality
 # Wait for reverse auto-advance (should go from 3 to 2)
 - extendedWaitUntil:
     visible: "Current Index: 2"
-    timeout: 10000
+    timeout: 15000

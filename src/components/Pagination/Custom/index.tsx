@@ -3,7 +3,7 @@ import type { ImageStyle, StyleProp, TextStyle, ViewStyle } from "react-native";
 import { View } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 
-import type { DotStyle } from "./PaginationItem";
+import type { DotStyle, PaginationItemAccessibilityOverrides } from "./PaginationItem";
 import { PaginationItem } from "./PaginationItem";
 
 export interface ShapeProps<T extends {}> {
@@ -18,6 +18,14 @@ export interface ShapeProps<T extends {}> {
   onPress?: (index: number) => void;
   customReanimatedStyle?: (progress: number, index: number, length: number) => AnimatedDefaultStyle;
   carouselName?: string;
+  /**
+   * Optional accessibility overrides for each pagination item.
+   * Use this to fully control screen reader announcements per dot.
+   */
+  paginationItemAccessibility?: (
+    index: number,
+    length: number
+  ) => PaginationItemAccessibilityOverrides;
 }
 
 type AnimatedDefaultStyle = ViewStyle | ImageStyle | TextStyle;
@@ -35,6 +43,7 @@ export const Custom = <T extends {}>(props: ShapeProps<T>) => {
     onPress,
     customReanimatedStyle,
     carouselName,
+    paginationItemAccessibility,
   } = props;
 
   if (
@@ -69,6 +78,11 @@ export const Custom = <T extends {}>(props: ShapeProps<T>) => {
       ]}
     >
       {data.map((item, index) => {
+        const defaultAccessibilityLabel = carouselName
+          ? `Slide ${index + 1} of ${data.length} - ${carouselName}`
+          : `Slide ${index + 1} of ${data.length}`;
+        const accessibilityOverrides = paginationItemAccessibility?.(index, data.length) ?? {};
+
         return (
           <PaginationItem
             key={index}
@@ -81,7 +95,12 @@ export const Custom = <T extends {}>(props: ShapeProps<T>) => {
             activeDotStyle={activeDotStyle}
             customReanimatedStyle={customReanimatedStyle}
             onPress={() => onPress?.(index)}
-            accessibilityLabel={`Slide ${index + 1} of ${data.length} - ${carouselName}`}
+            accessibilityLabel={
+              accessibilityOverrides.accessibilityLabel ?? defaultAccessibilityLabel
+            }
+            accessibilityHint={accessibilityOverrides.accessibilityHint}
+            accessibilityRole={accessibilityOverrides.accessibilityRole}
+            accessibilityState={accessibilityOverrides.accessibilityState}
           >
             {renderItem?.(item, index)}
           </PaginationItem>

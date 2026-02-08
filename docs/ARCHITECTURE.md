@@ -961,8 +961,8 @@ function withProcessTranslation(translation: number): number {
   
   if (!loop && !overscrollEnabled) {
     const limit = getLimit();
-    const sign = Math.sign(translation);
-    return sign * Math.max(0, Math.min(limit, Math.abs(translation)));
+    // Keep translation in [-limit, 0] when non-loop overscroll is disabled.
+    return Math.min(0, Math.max(-limit, translation));
   }
   
   return translation;
@@ -1099,6 +1099,8 @@ export const Basic = <T extends {}>(props: BasicProps<T>) => {
     containerStyle,
     renderItem,
     onPress,
+    carouselName,
+    paginationItemAccessibility,
   } = props;
 
   return (
@@ -1107,21 +1109,34 @@ export const Basic = <T extends {}>(props: BasicProps<T>) => {
       justifyContent: "space-between",
       alignSelf: "center"
     }]}>
-      {data.map((item, index) => (
-        <PaginationItem
-          key={index}
-          index={index}
-          size={size}
-          count={data.length}
-          dotStyle={dotStyle}
-          animValue={progress}
-          horizontal={!horizontal}
-          activeDotStyle={activeDotStyle}
-          onPress={() => onPress?.(index)}
-        >
-          {renderItem?.(item, index)}
-        </PaginationItem>
-      ))}
+      {data.map((item, index) => {
+        const defaultAccessibilityLabel = carouselName
+          ? `Slide ${index + 1} of ${data.length} - ${carouselName}`
+          : `Slide ${index + 1} of ${data.length}`;
+        const accessibilityOverrides = paginationItemAccessibility?.(index, data.length) ?? {};
+
+        return (
+          <PaginationItem
+            key={index}
+            index={index}
+            size={size}
+            count={data.length}
+            dotStyle={dotStyle}
+            animValue={progress}
+            horizontal={!horizontal}
+            activeDotStyle={activeDotStyle}
+            onPress={() => onPress?.(index)}
+            accessibilityLabel={
+              accessibilityOverrides.accessibilityLabel ?? defaultAccessibilityLabel
+            }
+            accessibilityHint={accessibilityOverrides.accessibilityHint}
+            accessibilityRole={accessibilityOverrides.accessibilityRole}
+            accessibilityState={accessibilityOverrides.accessibilityState}
+          >
+            {renderItem?.(item, index)}
+          </PaginationItem>
+        );
+      })}
     </View>
   );
 };
@@ -1141,6 +1156,15 @@ export const Basic = <T extends {}>(props: BasicProps<T>) => {
 ```typescript
 export interface ShapeProps<T extends {}> extends BasicProps<T> {
   customReanimatedStyle?: (progress: number, index: number, length: number) => DefaultStyle;
+  paginationItemAccessibility?: (
+    index: number,
+    length: number
+  ) => {
+    accessibilityLabel?: string;
+    accessibilityHint?: string;
+    accessibilityRole?: AccessibilityRole;
+    accessibilityState?: AccessibilityState;
+  };
 }
 ```
 
@@ -1161,7 +1185,22 @@ const containerStyle = {
 **Animation Calculation**:
 ```typescript
 const PaginationItem: React.FC<Props> = (props) => {
-  const { animValue, index, count, customReanimatedStyle } = props;
+  const {
+    animValue,
+    index,
+    count,
+    customReanimatedStyle,
+    accessibilityLabel,
+    accessibilityHint,
+    accessibilityRole,
+    accessibilityState,
+  } = props;
+  const [isSelected, setIsSelected] = useState(false);
+  const resolvedAccessibilityLabel = accessibilityLabel ?? `Slide ${index + 1} of ${count}`;
+  const resolvedAccessibilityHint =
+    accessibilityHint ?? (isSelected ? "" : `Go to ${resolvedAccessibilityLabel}`);
+  const resolvedAccessibilityRole = accessibilityRole ?? "button";
+  const resolvedAccessibilityState = accessibilityState ?? { selected: isSelected };
   
   const animatedStyle = useAnimatedStyle(() => {
     const progress = animValue.value;
@@ -1179,9 +1218,16 @@ const PaginationItem: React.FC<Props> = (props) => {
   }, [animValue, index, count, customReanimatedStyle]);
   
   return (
-    <Animated.View style={[baseStyle, animatedStyle]}>
-      {/* Pagination item content */}
-    </Animated.View>
+    <Pressable
+      accessibilityLabel={resolvedAccessibilityLabel}
+      accessibilityHint={resolvedAccessibilityHint}
+      accessibilityRole={resolvedAccessibilityRole}
+      accessibilityState={resolvedAccessibilityState}
+    >
+      <Animated.View style={[baseStyle, animatedStyle]}>
+        {/* Pagination item content */}
+      </Animated.View>
+    </Pressable>
   );
 };
 ```
@@ -1422,6 +1468,12 @@ handlerOffset.value = newValue;
 // useVisibleRanges core algorithm
 const getVisibleRanges = useCallback((offset: number): IVisibleRanges => {
   "worklet";
+  if (!Number.isFinite(viewSize) || viewSize <= 0) {
+    return {
+      negativeRange: [0, 0],
+      positiveRange: [0, Math.min(total - 1, windowSize - 1)],
+    };
+  }
   
   const startIndex = Math.floor(offset / viewSize);
   const endIndex = Math.ceil((offset + viewSize) / viewSize);
@@ -1778,8 +1830,10 @@ export type TAnimationStyle = (value: number, index?: number) => ViewStyle;
 // Ensure animation functions support Worklet
 const customAnimation: TAnimationStyle = (value: number) => {
   "worklet";
+  const zIndex = Math.round(interpolate(value, [-1, 0, 1], [10, 20, 10]));
   return {
     transform: [{ scale: interpolate(value, [-1, 0, 1], [0.8, 1, 0.8]) }],
+    zIndex, // Keep zIndex as finite integer to avoid native crashes.
   };
 };
 ```

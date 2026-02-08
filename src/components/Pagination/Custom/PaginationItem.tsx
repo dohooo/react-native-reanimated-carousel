@@ -1,5 +1,6 @@
 import type { PropsWithChildren } from "react";
 import React, { useState } from "react";
+import type { AccessibilityRole, AccessibilityState } from "react-native";
 import { Pressable } from "react-native";
 import type { ImageStyle, TextStyle, ViewStyle } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
@@ -15,6 +16,13 @@ import Animated, {
 import { scheduleOnRN } from "react-native-worklets";
 
 type AnimatedDefaultStyle = ViewStyle | ImageStyle | TextStyle;
+
+export type PaginationItemAccessibilityOverrides = {
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
+  accessibilityRole?: AccessibilityRole;
+  accessibilityState?: AccessibilityState;
+};
 
 export type DotStyle = Omit<ViewStyle, "width" | "height" | "backgroundColor" | "borderRadius"> & {
   width?: number;
@@ -39,6 +47,9 @@ export const PaginationItem: React.FC<
       length: number
     ) => AnimatedDefaultStyle;
     accessibilityLabel?: string;
+    accessibilityHint?: string;
+    accessibilityRole?: AccessibilityRole;
+    accessibilityState?: AccessibilityState;
   }>
 > = (props) => {
   const defaultDotSize = 10;
@@ -54,6 +65,9 @@ export const PaginationItem: React.FC<
     customReanimatedStyle,
     onPress,
     accessibilityLabel,
+    accessibilityHint,
+    accessibilityRole,
+    accessibilityState,
   } = props;
   const customReanimatedStyleRef = useSharedValue<AnimatedDefaultStyle>({});
   const handleCustomAnimation = (progress: number) => {
@@ -61,6 +75,11 @@ export const PaginationItem: React.FC<
   };
 
   const [isSelected, setIsSelected] = useState(false);
+  const resolvedAccessibilityLabel = accessibilityLabel ?? `Slide ${index + 1} of ${count}`;
+  const resolvedAccessibilityHint =
+    accessibilityHint ?? (isSelected ? "" : `Go to ${resolvedAccessibilityLabel}`);
+  const resolvedAccessibilityRole = accessibilityRole ?? "button";
+  const resolvedAccessibilityState = accessibilityState ?? { selected: isSelected };
 
   useDerivedValue(() => {
     scheduleOnRN(handleCustomAnimation, animValue?.value);
@@ -121,10 +140,10 @@ export const PaginationItem: React.FC<
   return (
     <Pressable
       onPress={onPress}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole="button"
-      accessibilityHint={isSelected ? "" : `Go to ${accessibilityLabel}`}
-      accessibilityState={{ selected: isSelected }}
+      accessibilityLabel={resolvedAccessibilityLabel}
+      accessibilityRole={resolvedAccessibilityRole}
+      accessibilityHint={resolvedAccessibilityHint}
+      accessibilityState={resolvedAccessibilityState}
     >
       <Animated.View
         style={[
