@@ -8,7 +8,7 @@ on:
 jobs:
   e2e-ios:
     runs-on: macos-15
-    timeout-minutes: 60
+    timeout-minutes: 90
 
     steps:
       - uses: actions/checkout@v4
