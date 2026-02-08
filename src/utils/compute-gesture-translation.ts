@@ -6,6 +6,7 @@ export function computeGestureTranslation(options: {
   panTranslation: number;
   max: number;
 }): number {
+  "worklet";
   const { loop, overscrollEnabled, currentTranslation, panOffset, panTranslation, max } = options;
   const raw = panOffset + panTranslation;
 
