@@ -1,0 +1,197 @@
+appId: com.react-native-reanimated-carousel.example
+name: Layout Mode Switching
+---
+
+# Navigate to E2E test page
+- runFlow: helpers/navigate-to-e2e.yaml
+
+# === Test: Default Normal mode works ===
+
+- assertVisible: "Mode: normal"
+- assertVisible: "Slide 0"
+
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 1"
+
+# Go back to 0 for next test
+- tapOn:
+    id: "btn-goto-0"
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# === Test: Switch to Parallax mode ===
+
+# Mode buttons should be visible without much scrolling
+- scrollUntilVisible:
+    element: "Parallax"
+    direction: DOWN
+    timeout: 5000
+
+- tapOn:
+    id: "btn-mode-parallax"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# Scroll back to top to verify
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- assertVisible: "Mode: parallax"
+- assertVisible: "Current Index: 0"
+
+# Swipe in parallax mode
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 1"
+
+# Swipe back
+- swipe:
+    start: "20%, 30%"
+    end: "80%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 0"
+
+# === Test: Switch to Horizontal Stack mode ===
+
+- scrollUntilVisible:
+    element: "HStack"
+    direction: DOWN
+    timeout: 5000
+
+- tapOn:
+    id: "btn-mode-horizontal-stack"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- assertVisible: "Mode: horizontal-stack"
+- assertVisible: "Current Index: 0"
+
+# Swipe in stack mode (narrower container, adjust swipe range)
+- swipe:
+    start: "65%, 30%"
+    end: "35%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 1"
+
+# === Test: Switch to Vertical Stack mode ===
+
+- scrollUntilVisible:
+    element: "VStack"
+    direction: DOWN
+    timeout: 5000
+
+- tapOn:
+    id: "btn-mode-vertical-stack"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- assertVisible: "Mode: vertical-stack"
+- assertVisible: "Current Index: 0"
+
+# Use button navigation for vertical-stack (vertical swipes conflict with ScrollView)
+- tapOn:
+    id: "btn-next"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- scrollUntilVisible:
+    element: "Index: 1"
+    direction: DOWN
+    timeout: 5000
+
+# === Test: Switch back to Normal mode ===
+
+- scrollUntilVisible:
+    element: "Normal"
+    direction: DOWN
+    timeout: 5000
+
+- tapOn:
+    id: "btn-mode-normal"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- assertVisible: "Mode: normal"
+- assertVisible: "Current Index: 0"
+
+# Verify swipe works after switching back
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 1"

@@ -30,6 +30,16 @@ export const routes = [
     ],
   },
   {
+    kind: "e2e-testing",
+    hidden: true,
+    demos: [
+      {
+        name: "comprehensive",
+        title: "Comprehensive E2E",
+      },
+    ],
+  },
+  {
     kind: "custom-animations",
     demos: [
       {

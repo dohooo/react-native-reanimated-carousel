@@ -1,0 +1,84 @@
+appId: com.react-native-reanimated-carousel.example
+name: Basic Swipe Navigation
+---
+
+# Navigate to E2E test page
+- runFlow: helpers/navigate-to-e2e.yaml
+
+# === Test: Swipe LEFT to go to next slide ===
+
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Slide 1"
+- assertVisible: "Current Index: 1"
+
+# === Test: Swipe LEFT again to go to slide 2 ===
+
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Slide 2"
+- assertVisible: "Current Index: 2"
+
+# === Test: Swipe LEFT to go to slide 3 ===
+
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Slide 3"
+- assertVisible: "Current Index: 3"
+
+# === Test: Swipe RIGHT to go back to slide 2 ===
+
+- swipe:
+    start: "20%, 30%"
+    end: "80%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Slide 2"
+- assertVisible: "Current Index: 2"
+
+# === Test: Swipe RIGHT again to go back to slide 1 ===
+
+- swipe:
+    start: "20%, 30%"
+    end: "80%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Slide 1"
+- assertVisible: "Current Index: 1"
+
+# === Test: Swipe RIGHT to go back to slide 0 ===
+
+- swipe:
+    start: "20%, 30%"
+    end: "80%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Slide 0"
+- assertVisible: "Current Index: 0"

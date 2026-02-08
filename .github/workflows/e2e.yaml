@@ -1,0 +1,233 @@
+name: E2E Tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  e2e-ios:
+    runs-on: macos-15
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "latest-stable"
+
+      - name: Show Xcode version
+        id: xcode-version
+        run: |
+          set -euxo pipefail
+          xcodebuild -version
+          XCODE_VERSION=$(xcodebuild -version | tr '\n' ' ' | sed 's/  */-/g; s/[^A-Za-z0-9._-]/-/g')
+          echo "version=${XCODE_VERSION}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Install dependencies
+        run: |
+          set -euxo pipefail
+          retry() {
+            local max_retries="$1"
+            shift
+            local attempt=1
+            until "$@"; do
+              if [ "$attempt" -ge "$max_retries" ]; then
+                echo "Command failed after ${attempt} attempts: $*"
+                return 1
+              fi
+              attempt=$((attempt + 1))
+              echo "Retrying (${attempt}/${max_retries}): $*"
+              sleep 10
+            done
+          }
+
+          retry 3 yarn install --frozen-lockfile
+          cd example/app
+          retry 3 yarn install --frozen-lockfile
+
+      - name: Setup Java (required by Maestro)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install Maestro
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Boot iOS Simulator
+        run: |
+          DEVICE_NAME="iPhone 16"
+          DEVICE_UDID=$(xcrun simctl list devices available -j | python3 -c "
+          import json, sys
+          data = json.load(sys.stdin)
+          for runtime, devices in data['devices'].items():
+              if 'iOS' in runtime:
+                  for d in devices:
+                      if '${DEVICE_NAME}' in d['name'] and d['isAvailable']:
+                          print(d['udid'])
+                          sys.exit(0)
+          sys.exit(1)
+          ")
+          xcrun simctl boot "$DEVICE_UDID"
+          echo "SIMULATOR_UDID=$DEVICE_UDID" >> "$GITHUB_ENV"
+          echo "SIMULATOR_NAME=$DEVICE_NAME" >> "$GITHUB_ENV"
+
+      - name: Restore CocoaPods download cache
+        id: cocoapods-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/Library/Caches/CocoaPods
+            ~/.cocoapods/repos
+          key: ${{ runner.os }}-${{ steps.xcode-version.outputs.version }}-cocoapods-${{ hashFiles('example/app/yarn.lock', 'example/app/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ steps.xcode-version.outputs.version }}-cocoapods-
+
+      - name: Prebuild iOS
+        working-directory: example/app
+        run: npx expo prebuild --platform ios --non-interactive
+
+      - name: Save CocoaPods download cache
+        if: always() && steps.cocoapods-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/Library/Caches/CocoaPods
+            ~/.cocoapods/repos
+          key: ${{ runner.os }}-${{ steps.xcode-version.outputs.version }}-cocoapods-${{ hashFiles('example/app/yarn.lock', 'example/app/package.json') }}
+
+      - name: Verify generated iOS workspace
+        run: test -d example/app/ios/app.xcworkspace
+
+      - name: Restore iOS app build cache
+        id: restore-ios-build-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: example/app/ios/build
+          key: ${{ runner.os }}-${{ steps.xcode-version.outputs.version }}-ios-build-${{ hashFiles('yarn.lock', 'example/app/yarn.lock', 'example/app/package.json', 'example/app/app.json', 'example/app/ios/Podfile.lock', 'example/app/ios/**/*.pbxproj') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ steps.xcode-version.outputs.version }}-ios-build-
+
+      - name: Check cached app bundle
+        id: cached-app
+        run: |
+          if [ -d example/app/ios/build/Build/Products/Debug-iphonesimulator/app.app ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build for iOS Simulator
+        if: steps.cached-app.outputs.exists != 'true'
+        working-directory: example/app/ios
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -workspace app.xcworkspace \
+            -scheme app \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination "platform=iOS Simulator,name=${SIMULATOR_NAME}" \
+            -derivedDataPath build \
+            build | tee xcodebuild.log
+
+      - name: Check built app bundle after build step
+        if: always()
+        id: built-app-after-build
+        run: |
+          if [ -d example/app/ios/build/Build/Products/Debug-iphonesimulator/app.app ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Save iOS app build cache
+        if: always() && steps.restore-ios-build-cache.outputs.cache-hit != 'true' && steps.built-app-after-build.outputs.exists == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: example/app/ios/build
+          key: ${{ runner.os }}-${{ steps.xcode-version.outputs.version }}-ios-build-${{ hashFiles('yarn.lock', 'example/app/yarn.lock', 'example/app/package.json', 'example/app/app.json', 'example/app/ios/Podfile.lock', 'example/app/ios/**/*.pbxproj') }}
+
+      - name: Reuse cached iOS app build
+        if: steps.cached-app.outputs.exists == 'true'
+        run: |
+          echo "Using cached app bundle, skipping xcodebuild."
+          ls -lah example/app/ios/build/Build/Products/Debug-iphonesimulator/app.app
+
+      - name: Install app on Simulator
+        run: |
+          xcrun simctl install booted \
+            example/app/ios/build/Build/Products/Debug-iphonesimulator/app.app
+
+      - name: Run E2E tests
+        working-directory: example/app
+        run: |
+          set -euxo pipefail
+          npx expo start --port 8081 > /tmp/metro.log 2>&1 &
+          METRO_PID=$!
+          trap 'kill "$METRO_PID" || true; echo "::group::Metro logs"; tail -n 200 /tmp/metro.log || true; echo "::endgroup::"' EXIT
+
+          # Wait for Metro to be ready before launching the app
+          for i in $(seq 1 60); do
+            if curl -s http://localhost:8081/status 2>/dev/null | grep -q "packager-status:running"; then
+              echo "Metro is ready"
+              break
+            fi
+            if [ "$i" -eq 60 ]; then
+              echo "Metro failed to start in time"
+              exit 1
+            fi
+            echo "Waiting for Metro... ($i/60)"
+            sleep 2
+          done
+
+          # Prewarm Expo Router bundle to avoid first-launch redbox in CI.
+          BUNDLE_URL='http://127.0.0.1:8081/node_modules/expo-router/entry.bundle?platform=ios&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=app&unstable_transformProfile=hermes-stable'
+          for i in $(seq 1 60); do
+            if curl -sf "$BUNDLE_URL" -o /dev/null; then
+              echo "iOS bundle is ready"
+              break
+            fi
+            if [ "$i" -eq 60 ]; then
+              echo "Timed out waiting for iOS bundle"
+              exit 1
+            fi
+            echo "Waiting for iOS bundle... ($i/60)"
+            sleep 2
+          done
+
+          xcrun simctl launch booted com.react-native-reanimated-carousel.example
+          sleep 10
+          maestro test app/demos/ | tee /tmp/maestro.log
+
+      - name: Collect CI debug artifacts
+        if: always()
+        run: |
+          set -euxo pipefail
+          mkdir -p /tmp/e2e-debug
+          cp -f /tmp/metro.log /tmp/e2e-debug/metro.log || true
+          cp -f /tmp/maestro.log /tmp/e2e-debug/maestro.log || true
+          cp -f example/app/ios/xcodebuild.log /tmp/e2e-debug/xcodebuild.log || true
+          xcrun simctl list devices > /tmp/e2e-debug/simctl-devices.txt || true
+          xcrun simctl io booted screenshot /tmp/e2e-debug/final-simulator-screen.png || true
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-results
+          if-no-files-found: warn
+          retention-days: 7
+          path: |
+            ~/.maestro/tests/
+            /tmp/e2e-debug/

@@ -1,0 +1,164 @@
+appId: com.react-native-reanimated-carousel.example
+name: Vertical Mode Navigation
+---
+
+# Navigate to E2E test page
+- runFlow: helpers/navigate-to-e2e.yaml
+
+# === Setup: Enable vertical mode ===
+
+- scrollUntilVisible:
+    element: "Vert: OFF"
+    direction: DOWN
+    timeout: 5000
+
+- tapOn:
+    id: "btn-vertical"
+
+- assertVisible: "Vert: ON"
+
+# Wait for carousel re-mount
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# Use the bottom status bar to verify index (visible without scrolling to top)
+# The bottom status shows "Index: N" format
+- scrollUntilVisible:
+    element: "Index: 0"
+    direction: DOWN
+    timeout: 5000
+
+- assertVisible: "Index: 0"
+
+# === Test: Next/Prev buttons work in vertical mode ===
+
+# Next button should be visible (in Navigation section above Settings)
+- scrollUntilVisible:
+    element: "Next"
+    direction: UP
+    timeout: 5000
+
+- tapOn:
+    id: "btn-next"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- scrollUntilVisible:
+    element: "Index: 1"
+    direction: DOWN
+    timeout: 5000
+
+# === Test: Next again ===
+
+- scrollUntilVisible:
+    element: "Next"
+    direction: UP
+    timeout: 5000
+
+- tapOn:
+    id: "btn-next"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- scrollUntilVisible:
+    element: "Index: 2"
+    direction: DOWN
+    timeout: 5000
+
+# === Test: Prev button ===
+
+- scrollUntilVisible:
+    element: "Prev"
+    direction: UP
+    timeout: 5000
+
+- tapOn:
+    id: "btn-prev"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- scrollUntilVisible:
+    element: "Index: 1"
+    direction: DOWN
+    timeout: 5000
+
+# === Test: Prev back to 0 ===
+
+- scrollUntilVisible:
+    element: "Prev"
+    direction: UP
+    timeout: 5000
+
+- tapOn:
+    id: "btn-prev"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- scrollUntilVisible:
+    element: "Index: 0"
+    direction: DOWN
+    timeout: 5000
+
+# === Test: GoTo works in vertical mode ===
+
+- tapOn:
+    id: "btn-goto-4"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- scrollUntilVisible:
+    element: "Index: 4"
+    direction: DOWN
+    timeout: 5000
+
+- tapOn:
+    id: "btn-goto-0"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- scrollUntilVisible:
+    element: "Index: 0"
+    direction: DOWN
+    timeout: 5000
+
+# === Test: Vertical loop wrapping via buttons ===
+
+# Prev from 0 should wrap to 5
+- scrollUntilVisible:
+    element: "Prev"
+    direction: UP
+    timeout: 5000
+
+- tapOn:
+    id: "btn-prev"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- scrollUntilVisible:
+    element: "Index: 5"
+    direction: DOWN
+    timeout: 5000
+
+# Next from 5 should wrap to 0
+- scrollUntilVisible:
+    element: "Next"
+    direction: UP
+    timeout: 5000
+
+- tapOn:
+    id: "btn-next"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- scrollUntilVisible:
+    element: "Index: 0"
+    direction: DOWN
+    timeout: 5000

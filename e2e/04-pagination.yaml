@@ -1,0 +1,78 @@
+appId: com.react-native-reanimated-carousel.example
+name: Pagination Dot Navigation
+---
+
+# Navigate to E2E test page
+- runFlow: helpers/navigate-to-e2e.yaml
+
+# === Test: Tap pagination dot 3 to navigate to slide 3 ===
+
+- tapOn:
+    id: "pagination-dot-3"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Slide 3"
+- assertVisible: "Current Index: 3"
+
+# === Test: Tap pagination dot 0 to go back to start ===
+
+- tapOn:
+    id: "pagination-dot-0"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Slide 0"
+- assertVisible: "Current Index: 0"
+
+# === Test: Tap pagination dot 5 to go to last slide ===
+
+- tapOn:
+    id: "pagination-dot-5"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Slide 5"
+- assertVisible: "Current Index: 5"
+
+# === Test: Tap pagination dot 2 to go to middle ===
+
+- tapOn:
+    id: "pagination-dot-2"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Slide 2"
+- assertVisible: "Current Index: 2"
+
+# === Test: Sequential dot navigation ===
+
+- tapOn:
+    id: "pagination-dot-1"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 1"
+
+- tapOn:
+    id: "pagination-dot-4"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 4"
+
+# === Test: Tap current dot (should stay in place) ===
+
+- tapOn:
+    id: "pagination-dot-4"
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- assertVisible: "Current Index: 4"
