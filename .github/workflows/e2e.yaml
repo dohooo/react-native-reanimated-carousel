@@ -64,22 +64,29 @@ jobs:
           curl -Ls "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
-      - name: Boot iOS Simulator
+      - name: Boot iOS Simulators
         run: |
           DEVICE_NAME="iPhone 16"
-          DEVICE_UDID=$(xcrun simctl list devices available -j | python3 -c "
+          # Find the iOS runtime identifier
+          RUNTIME=$(xcrun simctl list runtimes available -j | python3 -c "
           import json, sys
           data = json.load(sys.stdin)
-          for runtime, devices in data['devices'].items():
-              if 'iOS' in runtime:
-                  for d in devices:
-                      if '${DEVICE_NAME}' in d['name'] and d['isAvailable']:
-                          print(d['udid'])
-                          sys.exit(0)
+          for r in data['runtimes']:
+              if 'iOS' in r.get('name', ''):
+                  print(r['identifier'])
+                  sys.exit(0)
           sys.exit(1)
           ")
-          xcrun simctl boot "$DEVICE_UDID"
-          echo "SIMULATOR_UDID=$DEVICE_UDID" >> "$GITHUB_ENV"
+          echo "Using runtime: $RUNTIME"
+
+          # Create and boot 2 simulators for sharded test execution
+          SIM1_UDID=$(xcrun simctl create "E2E-1" "$DEVICE_NAME" "$RUNTIME")
+          SIM2_UDID=$(xcrun simctl create "E2E-2" "$DEVICE_NAME" "$RUNTIME")
+          xcrun simctl boot "$SIM1_UDID"
+          xcrun simctl boot "$SIM2_UDID"
+
+          echo "SIMULATOR_UDID=$SIM1_UDID" >> "$GITHUB_ENV"
+          echo "SIMULATOR_UDID_2=$SIM2_UDID" >> "$GITHUB_ENV"
           echo "SIMULATOR_NAME=$DEVICE_NAME" >> "$GITHUB_ENV"
 
       - name: Restore CocoaPods download cache
@@ -121,7 +128,7 @@ jobs:
       - name: Check cached app bundle
         id: cached-app
         run: |
-          if [ -d example/app/ios/build/Build/Products/Debug-iphonesimulator/app.app ]; then
+          if [ -d example/app/ios/build/Build/Products/Release-iphonesimulator/app.app ]; then
             echo "exists=true" >> "$GITHUB_OUTPUT"
           else
             echo "exists=false" >> "$GITHUB_OUTPUT"
@@ -135,9 +142,9 @@ jobs:
           xcodebuild \
             -workspace app.xcworkspace \
             -scheme app \
-            -configuration Debug \
+            -configuration Release \
             -sdk iphonesimulator \
-            -destination "platform=iOS Simulator,name=${SIMULATOR_NAME}" \
+            -destination "platform=iOS Simulator,id=${SIMULATOR_UDID}" \
             -derivedDataPath build \
             build | tee xcodebuild.log
 
@@ -145,7 +152,7 @@ jobs:
         if: always()
         id: built-app-after-build
         run: |
-          if [ -d example/app/ios/build/Build/Products/Debug-iphonesimulator/app.app ]; then
+          if [ -d example/app/ios/build/Build/Products/Release-iphonesimulator/app.app ]; then
             echo "exists=true" >> "$GITHUB_OUTPUT"
           else
             echo "exists=false" >> "$GITHUB_OUTPUT"
@@ -162,64 +169,32 @@ jobs:
         if: steps.cached-app.outputs.exists == 'true'
         run: |
           echo "Using cached app bundle, skipping xcodebuild."
-          ls -lah example/app/ios/build/Build/Products/Debug-iphonesimulator/app.app
+          ls -lah example/app/ios/build/Build/Products/Release-iphonesimulator/app.app
 
-      - name: Install app on Simulator
+      - name: Install app on Simulators
         run: |
-          xcrun simctl install booted \
-            example/app/ios/build/Build/Products/Debug-iphonesimulator/app.app
+          APP_PATH=example/app/ios/build/Build/Products/Release-iphonesimulator/app.app
+          xcrun simctl install "$SIMULATOR_UDID" "$APP_PATH"
+          xcrun simctl install "$SIMULATOR_UDID_2" "$APP_PATH"
 
-      - name: Run E2E tests
-        working-directory: example/app
+      - name: Run E2E tests (sharded across 2 simulators)
         run: |
           set -euxo pipefail
-          npx expo start --port 8081 > /tmp/metro.log 2>&1 &
-          METRO_PID=$!
-          trap 'kill "$METRO_PID" || true; echo "::group::Metro logs"; tail -n 200 /tmp/metro.log || true; echo "::endgroup::"' EXIT
-
-          # Wait for Metro to be ready before launching the app
-          for i in $(seq 1 60); do
-            if curl -s http://localhost:8081/status 2>/dev/null | grep -q "packager-status:running"; then
-              echo "Metro is ready"
-              break
-            fi
-            if [ "$i" -eq 60 ]; then
-              echo "Metro failed to start in time"
-              exit 1
-            fi
-            echo "Waiting for Metro... ($i/60)"
-            sleep 2
-          done
-
-          # Prewarm Expo Router bundle to avoid first-launch redbox in CI.
-          BUNDLE_URL='http://127.0.0.1:8081/node_modules/expo-router/entry.bundle?platform=ios&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=app&unstable_transformProfile=hermes-stable'
-          for i in $(seq 1 60); do
-            if curl -sf "$BUNDLE_URL" -o /dev/null; then
-              echo "iOS bundle is ready"
-              break
-            fi
-            if [ "$i" -eq 60 ]; then
-              echo "Timed out waiting for iOS bundle"
-              exit 1
-            fi
-            echo "Waiting for iOS bundle... ($i/60)"
-            sleep 2
-          done
-
-          xcrun simctl launch booted com.react-native-reanimated-carousel.example
-          sleep 10
-          maestro test "$GITHUB_WORKSPACE/e2e/" | tee /tmp/maestro.log
+          xcrun simctl launch "$SIMULATOR_UDID" com.react-native-reanimated-carousel.example
+          xcrun simctl launch "$SIMULATOR_UDID_2" com.react-native-reanimated-carousel.example
+          sleep 5
+          maestro --shard-split 2 test "$GITHUB_WORKSPACE/e2e/" | tee /tmp/maestro.log
 
       - name: Collect CI debug artifacts
         if: always()
         run: |
           set -euxo pipefail
           mkdir -p /tmp/e2e-debug
-          cp -f /tmp/metro.log /tmp/e2e-debug/metro.log || true
           cp -f /tmp/maestro.log /tmp/e2e-debug/maestro.log || true
           cp -f example/app/ios/xcodebuild.log /tmp/e2e-debug/xcodebuild.log || true
           xcrun simctl list devices > /tmp/e2e-debug/simctl-devices.txt || true
-          xcrun simctl io booted screenshot /tmp/e2e-debug/final-simulator-screen.png || true
+          xcrun simctl io "$SIMULATOR_UDID" screenshot /tmp/e2e-debug/final-sim1-screen.png || true
+          xcrun simctl io "$SIMULATOR_UDID_2" screenshot /tmp/e2e-debug/final-sim2-screen.png || true
 
       - name: Upload test artifacts
         if: always()

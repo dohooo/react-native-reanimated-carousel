@@ -1,60 +1,15 @@
 appId: com.react-native-reanimated-carousel.example
 ---
 
-# Ensure a clean restart so the app always opens on the home screen,
-# even if a previous test left it on the E2E page.
-- stopApp
-- launchApp:
-    clearState: false
-
-# Wait for the app to fully load
-- waitForAnimationToEnd:
-    timeout: 5000
-
-# In CI, Expo Dev Client may open on the "Development Servers" screen first.
-- tapOn:
-    text: "http://localhost:8081"
-    optional: true
-
-# Wait for the app UI to fully stabilize after launch / Metro connection.
-# A generous delay here avoids kAXErrorInvalidUIElement that Maestro's
-# XCTest driver throws when querying the view hierarchy during transitions.
-- waitForAnimationToEnd:
-    timeout: 10000
-
-# Expo shows a developer-menu onboarding modal on first launch.
-# Use extendedWaitUntil so Maestro keeps polling until the modal appears
-# (or the timeout expires if it was already dismissed in a prior run).
-- extendedWaitUntil:
-    visible: "Continue"
-    timeout: 30000
-    optional: true
-
-- tapOn:
-    text: "Continue"
-    optional: true
-
-- tapOn:
-    text: "Close"
-    optional: true
-
-# Wait until the home screen demos list is loaded
-- extendedWaitUntil:
-    visible: "Normal"
-    timeout: 180000
-
-# Navigate to E2E test page via hidden testID trigger (not visible in demo list)
-- scrollUntilVisible:
-    element: "Multiple"
-    direction: DOWN
-    timeout: 10000
-
-- tapOn:
-    id: "navigate-e2e-comprehensive"
+# Navigate directly to the E2E test page via deep link.
+# This avoids the stopApp/launchApp cycle and manual scrolling through the
+# home screen, saving ~20-30s per test.
+- openLink: "rnrc-example-app://demos/e2e-testing/comprehensive"
 
 # Wait for the E2E test page to fully load
-- waitForAnimationToEnd:
-    timeout: 5000
+- extendedWaitUntil:
+    visible: "Slide 0"
+    timeout: 30000
 
 # Reset all settings to default (in case previous test left modified state)
 - scrollUntilVisible:
