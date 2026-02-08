@@ -16,12 +16,20 @@ appId: com.react-native-reanimated-carousel.example
     text: "http://localhost:8081"
     optional: true
 
-# Wait for the app to settle after Metro connection (avoids kAXErrorInvalidUIElement
-# during the UI transition when the dev client connects to the bundler).
+# Wait for the app UI to fully stabilize after launch / Metro connection.
+# A generous delay here avoids kAXErrorInvalidUIElement that Maestro's
+# XCTest driver throws when querying the view hierarchy during transitions.
 - waitForAnimationToEnd:
-    timeout: 8000
+    timeout: 10000
 
-# Dismiss Expo developer menu onboarding modal if it appears.
+# Expo shows a developer-menu onboarding modal on first launch.
+# Use extendedWaitUntil so Maestro keeps polling until the modal appears
+# (or the timeout expires if it was already dismissed in a prior run).
+- extendedWaitUntil:
+    visible: "Continue"
+    timeout: 30000
+    optional: true
+
 - tapOn:
     text: "Continue"
     optional: true
