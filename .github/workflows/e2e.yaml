@@ -83,7 +83,8 @@ jobs:
           echo "SIMULATOR_NAME=$DEVICE_NAME" >> "$GITHUB_ENV"
 
       - name: Restore CocoaPods download cache
-        uses: actions/cache@v4
+        id: cocoapods-cache
+        uses: actions/cache/restore@v4
         with:
           path: |
             ~/Library/Caches/CocoaPods
@@ -96,12 +97,21 @@ jobs:
         working-directory: example/app
         run: npx expo prebuild --platform ios --non-interactive
 
+      - name: Save CocoaPods download cache
+        if: always() && steps.cocoapods-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/Library/Caches/CocoaPods
+            ~/.cocoapods/repos
+          key: ${{ runner.os }}-${{ steps.xcode-version.outputs.version }}-cocoapods-${{ hashFiles('example/app/yarn.lock', 'example/app/package.json') }}
+
       - name: Verify generated iOS workspace
         run: test -d example/app/ios/app.xcworkspace
 
       - name: Restore iOS app build cache
-        id: cache-ios-app
-        uses: actions/cache@v4
+        id: restore-ios-build-cache
+        uses: actions/cache/restore@v4
         with:
           path: example/app/ios/build
           key: ${{ runner.os }}-${{ steps.xcode-version.outputs.version }}-ios-build-${{ hashFiles('yarn.lock', 'example/app/yarn.lock', 'example/app/package.json', 'example/app/app.json', 'example/app/ios/Podfile.lock', 'example/app/ios/**/*.pbxproj') }}
@@ -130,6 +140,23 @@ jobs:
             -destination "platform=iOS Simulator,name=${SIMULATOR_NAME}" \
             -derivedDataPath build \
             build | tee xcodebuild.log
+
+      - name: Check built app bundle after build step
+        if: always()
+        id: built-app-after-build
+        run: |
+          if [ -d example/app/ios/build/Build/Products/Debug-iphonesimulator/app.app ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Save iOS app build cache
+        if: always() && steps.restore-ios-build-cache.outputs.cache-hit != 'true' && steps.built-app-after-build.outputs.exists == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: example/app/ios/build
+          key: ${{ runner.os }}-${{ steps.xcode-version.outputs.version }}-ios-build-${{ hashFiles('yarn.lock', 'example/app/yarn.lock', 'example/app/package.json', 'example/app/app.json', 'example/app/ios/Podfile.lock', 'example/app/ios/**/*.pbxproj') }}
 
       - name: Reuse cached iOS app build
         if: steps.cached-app.outputs.exists == 'true'
