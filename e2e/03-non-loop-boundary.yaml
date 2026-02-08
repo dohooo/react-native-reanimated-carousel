@@ -1,0 +1,122 @@
+appId: com.react-native-reanimated-carousel.example
+name: Non-Loop Mode - Boundary Behavior
+---
+
+# Navigate to E2E test page
+- runFlow: helpers/navigate-to-e2e.yaml
+
+# === Setup: Turn off loop mode ===
+
+- scrollUntilVisible:
+    element: "Loop: ON"
+    direction: DOWN
+    timeout: 5000
+
+- tapOn:
+    id: "btn-loop"
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- assertVisible: "Loop: OFF"
+
+# Scroll back to top
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+# === Test: Swipe RIGHT at slide 0 should NOT wrap (stays at 0) ===
+
+- assertVisible: "Current Index: 0"
+
+- swipe:
+    start: "20%, 30%"
+    end: "80%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# Should still be at slide 0
+- assertVisible: "Current Index: 0"
+
+# === Test: Swipe RIGHT again - still stays at 0 ===
+
+- swipe:
+    start: "20%, 30%"
+    end: "80%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 0"
+
+# === Test: Navigate to last slide ===
+
+- tapOn:
+    id: "btn-goto-5"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 5"
+
+# === Test: Swipe LEFT at last slide should NOT wrap ===
+
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# Should still be at slide 5
+- assertVisible: "Current Index: 5"
+
+# === Test: Can still navigate backward from last slide ===
+
+- swipe:
+    start: "20%, 30%"
+    end: "80%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 4"
+
+# === Test: Navigate back to first slide ===
+
+- tapOn:
+    id: "btn-goto-0"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 0"
+
+# === Test: Can still navigate forward from first slide ===
+
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 1"

@@ -1,0 +1,110 @@
+appId: com.react-native-reanimated-carousel.example
+name: Loop Mode - Wrapping Navigation
+---
+
+# Navigate to E2E test page
+- runFlow: helpers/navigate-to-e2e.yaml
+
+# Verify loop is ON by default
+- assertVisible: "Loop: ON"
+
+# === Test: Swipe RIGHT from slide 0 should wrap to last slide ===
+
+- swipe:
+    start: "20%, 30%"
+    end: "80%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# With 6 items and loop ON, swiping right from 0 wraps to slide 5
+- assertVisible: "Slide 5"
+- assertVisible: "Current Index: 5"
+
+# === Test: Swipe LEFT to go back to slide 0 (wrapping forward) ===
+
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Slide 0"
+- assertVisible: "Current Index: 0"
+
+# === Test: Navigate to last slide and wrap forward ===
+
+# Go to slide 5 via button
+- tapOn:
+    id: "btn-goto-5"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 5"
+
+# Swipe LEFT from slide 5 should wrap to slide 0
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Slide 0"
+- assertVisible: "Current Index: 0"
+
+# === Test: Continuous loop - swipe through all slides ===
+
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Current Index: 1"
+
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Current Index: 2"
+
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Current Index: 3"
+
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Current Index: 4"
+
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Current Index: 5"
+
+# One more swipe wraps back to 0
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Current Index: 0"

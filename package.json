@@ -43,7 +43,8 @@
 		"clean": "del-cli lib",
 		"version": "changeset version",
 		"precommit": "yarn lint:fix && yarn format:fix",
-		"e2e": "maestro test example/app/app/demos/"
+		"e2e": "maestro test example/app/app/demos/",
+		"e2e:comprehensive": "maestro test e2e/"
 	},
 	"resolutions": {
 		"@babel/plugin-transform-block-scoping": "7.28.4"

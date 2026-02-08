@@ -1,0 +1,128 @@
+appId: com.react-native-reanimated-carousel.example
+name: AutoPlay Functionality
+---
+
+# Navigate to E2E test page
+- runFlow: helpers/navigate-to-e2e.yaml
+
+# === Test: Enable AutoPlay ===
+
+# Scroll down to find Auto toggle
+- scrollUntilVisible:
+    element: "Auto: OFF"
+    direction: DOWN
+    timeout: 5000
+
+- tapOn:
+    id: "btn-autoplay"
+
+- assertVisible: "Auto: ON"
+
+# Scroll back to top to observe carousel
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+# === Test: Wait for auto-advance (interval is 2000ms) ===
+
+# Wait for the carousel to auto-advance to at least slide 1
+- extendedWaitUntil:
+    visible: "Current Index: 1"
+    timeout: 10000
+
+# Wait for another auto-advance
+- extendedWaitUntil:
+    visible: "Current Index: 2"
+    timeout: 10000
+
+# === Test: Disable AutoPlay and verify stop ===
+
+# Scroll down to toggle
+- scrollUntilVisible:
+    element: "Auto: ON"
+    direction: DOWN
+    timeout: 5000
+
+- tapOn:
+    id: "btn-autoplay"
+
+- assertVisible: "Auto: OFF"
+
+# Scroll back to top
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+
+- waitForAnimationToEnd:
+    timeout: 4000
+
+# === Test: AutoPlay with reverse direction ===
+
+# Go to slide 3 for testing reverse (also verifies carousel is still functional)
+- tapOn:
+    id: "btn-goto-3"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 3"
+
+# Scroll down to enable AutoPlay Reverse
+- scrollUntilVisible:
+    element: "AutoRev: OFF"
+    direction: DOWN
+    timeout: 5000
+
+- tapOn:
+    id: "btn-autoplay-reverse"
+
+- assertVisible: "AutoRev: ON"
+
+# Enable AutoPlay
+- tapOn:
+    id: "btn-autoplay"
+
+- assertVisible: "Auto: ON"
+
+# Scroll back to top
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+# Wait for reverse auto-advance (should go from 3 to 2)
+- extendedWaitUntil:
+    visible: "Current Index: 2"
+    timeout: 10000

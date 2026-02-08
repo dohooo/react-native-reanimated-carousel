@@ -1,0 +1,139 @@
+appId: com.react-native-reanimated-carousel.example
+name: Imperative Controls (Prev/Next/GoTo)
+---
+
+# Navigate to E2E test page
+- runFlow: helpers/navigate-to-e2e.yaml
+
+# The carousel, pagination, and navigation buttons should all be visible
+# without scrolling on the initial load
+
+# === Test: Next button advances to next slide ===
+
+- tapOn:
+    id: "btn-next"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 1"
+
+# === Test: Next button again ===
+
+- tapOn:
+    id: "btn-next"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 2"
+
+# === Test: Next button third time ===
+
+- tapOn:
+    id: "btn-next"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 3"
+
+# === Test: Prev button goes back ===
+
+- tapOn:
+    id: "btn-prev"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 2"
+
+# === Test: Prev button again ===
+
+- tapOn:
+    id: "btn-prev"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 1"
+
+# === Test: Prev back to 0 ===
+
+- tapOn:
+    id: "btn-prev"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 0"
+
+# === Test: GoTo 4 ===
+
+- tapOn:
+    id: "btn-goto-4"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 4"
+
+# === Test: GoTo 0 ===
+
+- tapOn:
+    id: "btn-goto-0"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 0"
+
+# === Test: GoTo 5 (last slide) ===
+
+- tapOn:
+    id: "btn-goto-5"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 5"
+
+# === Test: GoTo 2 ===
+
+- tapOn:
+    id: "btn-goto-2"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 2"
+
+# === Test: Next wraps around (loop ON by default) ===
+
+- tapOn:
+    id: "btn-goto-5"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 5"
+
+# Next from slide 5 should wrap to slide 0
+- tapOn:
+    id: "btn-next"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 0"
+
+# === Test: Prev wraps around (loop ON) ===
+
+# Prev from slide 0 should wrap to slide 5
+- tapOn:
+    id: "btn-prev"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 5"

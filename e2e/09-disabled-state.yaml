@@ -1,0 +1,118 @@
+appId: com.react-native-reanimated-carousel.example
+name: Disabled Carousel State
+---
+
+# Navigate to E2E test page
+- runFlow: helpers/navigate-to-e2e.yaml
+
+# Verify initial state
+- assertVisible: "Slide 0"
+- assertVisible: "Current Index: 0"
+
+# === Setup: Disable the carousel ===
+
+# Scroll down to find the Enabled toggle in Settings section
+- scrollUntilVisible:
+    element: "Enabled: ON"
+    direction: DOWN
+    timeout: 5000
+
+- tapOn:
+    id: "btn-enabled"
+
+- assertVisible: "Enabled: OFF"
+
+# Scroll back to top to interact with carousel
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+# === Test: Swiping should NOT work when disabled ===
+
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# Should still be at slide 0
+- assertVisible: "Current Index: 0"
+
+# === Test: Swipe in other direction also doesn't work ===
+
+- swipe:
+    start: "20%, 30%"
+    end: "80%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 0"
+
+# === Test: Re-enable the carousel ===
+
+- scrollUntilVisible:
+    element: "Enabled: OFF"
+    direction: DOWN
+    timeout: 5000
+
+- tapOn:
+    id: "btn-enabled"
+
+- assertVisible: "Enabled: ON"
+
+# Scroll back to top
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+# === Test: Swiping works after re-enabling ===
+
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 1"
+
+# === Test: Swipe back also works ===
+
+- swipe:
+    start: "20%, 30%"
+    end: "80%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 0"

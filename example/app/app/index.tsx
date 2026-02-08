@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 
 import { useRouter } from "expo-router";
@@ -82,18 +82,23 @@ export default function Home() {
     )),
   ];
 
+  const visibleRoutes = useMemo(
+    () => routes.filter((route) => !("hidden" in route && route.hidden)),
+    [routes]
+  );
+
   const stickyHeaderIndices = useMemo(
     () =>
-      routes.reduce((acc, _, index) => {
+      visibleRoutes.reduce((acc, _, index) => {
         return [
           // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
           ...acc,
           typeof acc[index - 1] === "undefined"
             ? 0
-            : acc[index - 1] + 1 + routes[index - 1].demos.length,
+            : acc[index - 1] + 1 + visibleRoutes[index - 1].demos.length,
         ];
       }, [] as number[]),
-    [routes]
+    [visibleRoutes]
   );
 
   return (
@@ -102,10 +107,17 @@ export default function Home() {
       contentContainerStyle={{ paddingBottom: 64 }}
       stickyHeaderIndices={stickyHeaderIndices}
     >
-      {routes.map((route) => {
+      {visibleRoutes.map((route) => {
         const formattedKindName = upcaseLetter(route.kind);
         return renderSection(formattedKindName, route.kind, route.demos);
       })}
+      {/* E2E navigation trigger - visually hidden, accessible via testID by Maestro */}
+      <Pressable
+        testID="navigate-e2e-comprehensive"
+        onPress={() => router.push("/demos/e2e-testing/comprehensive" as any)}
+        accessibilityLabel="navigate-e2e-comprehensive"
+        style={{ height: 1 }}
+      />
     </ScrollView>
   );
 }

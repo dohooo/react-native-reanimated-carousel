@@ -1,0 +1,204 @@
+appId: com.react-native-reanimated-carousel.example
+name: Dynamic Data Count Changes
+---
+
+# Navigate to E2E test page
+- runFlow: helpers/navigate-to-e2e.yaml
+
+# Verify default state (6 items)
+- assertVisible: "Slide 0"
+
+# === Test: Change to 3 items ===
+
+- scrollUntilVisible:
+    element: "3 items"
+    direction: DOWN
+    timeout: 5000
+
+- tapOn:
+    id: "btn-data-3"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# Scroll back to top
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- assertVisible: "Current Index: 0"
+
+# Swipe through all 3 slides
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Current Index: 1"
+
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Current Index: 2"
+
+# With loop ON, swipe again wraps to 0
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Current Index: 0"
+
+# === Test: Change to 10 items ===
+
+- scrollUntilVisible:
+    element: "10 items"
+    direction: DOWN
+    timeout: 5000
+
+- tapOn:
+    id: "btn-data-10"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# Scroll back to top
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- assertVisible: "Current Index: 0"
+
+# Navigate to higher slides using GoTo buttons
+- tapOn:
+    id: "btn-goto-8"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 8"
+
+# Navigate to last slide
+- tapOn:
+    id: "btn-goto-9"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 9"
+
+# === Test: Change to 2 items (tests autoFillData) ===
+
+- scrollUntilVisible:
+    element: "2 items"
+    direction: DOWN
+    timeout: 5000
+
+- tapOn:
+    id: "btn-data-2"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# Scroll back to top
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- assertVisible: "Current Index: 0"
+
+# Swipe to slide 1
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Current Index: 1"
+
+# Swipe wraps back to 0 (only 2 items)
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Current Index: 0"
+
+# === Test: Change back to 6 items ===
+
+- scrollUntilVisible:
+    element: "6 items"
+    direction: DOWN
+    timeout: 5000
+
+- tapOn:
+    id: "btn-data-6"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# Scroll back to top
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- assertVisible: "Current Index: 0"
+
+# Verify carousel works after data change
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Current Index: 1"
