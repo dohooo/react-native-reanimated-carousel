@@ -8,4 +8,4 @@ We have a quick list of common questions to get you started engaging with this p
 [our documentation](https://github.com/changesets/changesets/blob/main/docs/common-questions.md)
 
 Project convention for concise release notes:
-- [`STYLE.md`](./STYLE.md)
+- [`docs/changeset-style.md`](../docs/changeset-style.md)

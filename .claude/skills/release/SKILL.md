@@ -17,7 +17,7 @@ Use this skill to generate release-ready changeset entries in the repository sty
 
 ## Required style
 
-Follow `.changeset/STYLE.md` strictly:
+Follow `docs/changeset-style.md` strictly:
 
 1. Bullet-only summary lines (`- ...`).
 2. 1-6 bullets, each concise and user-facing.
@@ -43,7 +43,7 @@ Replace `patch` with `minor` or `major` when justified.
 - Review commit titles with `git log --oneline --no-merges origin/main..HEAD` (or fallback).
 
 2. Detect existing pending changesets.
-- List `.changeset/*.md` excluding `README.md`, `STYLE.md`, `config.json`, `pre.json`.
+- List `.changeset/*.md` excluding `README.md`, `config.json`, `pre.json`.
 - If a suitable pending changeset exists, prefer updating it instead of creating duplicates.
 
 3. Infer bump recommendation from diff.

@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 const CHANGESET_DIR = path.join(process.cwd(), ".changeset");
-const IGNORED_FILES = new Set(["README.md", "STYLE.md", "config.json", "pre.json"]);
+const IGNORED_FILES = new Set(["README.md", "config.json", "pre.json"]);
 
 const MAX_LINES = 6;
 const MAX_LINE_LENGTH = 160;
