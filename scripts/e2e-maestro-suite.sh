@@ -22,11 +22,6 @@ if [ "${#FLOWS[@]}" -eq 0 ]; then
   exit 1
 fi
 
-maestro_common_args=()
-if [ -n "${MAESTRO_DEVICE:-}" ]; then
-  maestro_common_args+=(--device "$MAESTRO_DEVICE")
-fi
-
 skip_reinstall_driver=0
 failed_flows=()
 
@@ -41,7 +36,10 @@ for flow in "${FLOWS[@]}"; do
   for attempt in $(seq 1 "$FLOW_MAX_ATTEMPTS"); do
     echo "Running flow: ${flow_name} (${attempt}/${FLOW_MAX_ATTEMPTS})"
 
-    cmd=(maestro test "${maestro_common_args[@]}")
+    cmd=(maestro test)
+    if [ -n "${MAESTRO_DEVICE:-}" ]; then
+      cmd+=(--device "$MAESTRO_DEVICE")
+    fi
     if [ "$skip_reinstall_driver" -eq 1 ]; then
       cmd+=(--no-reinstall-driver)
     fi
