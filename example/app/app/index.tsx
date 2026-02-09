@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 
 import { useRouter } from "expo-router";
@@ -107,13 +107,14 @@ export default function Home() {
       contentContainerStyle={{ paddingBottom: 64 }}
       stickyHeaderIndices={stickyHeaderIndices}
     >
-      {/* E2E navigation trigger - visually hidden, accessible via testID by Maestro */}
-      <Pressable
-        testID="navigate-e2e-comprehensive"
-        onPress={() => router.push("/demos/e2e-testing/comprehensive" as any)}
-        accessibilityLabel="navigate-e2e-comprehensive"
-        style={{ height: 1, opacity: 0 }}
-      />
+      {IS_DEV && !IS_WEB ? (
+        <ListItem
+          name="e2e comprehensive"
+          onPress={() => router.push("/demos/e2e-testing/comprehensive" as any)}
+          color={colors.text}
+          testID="navigate-e2e-comprehensive"
+        />
+      ) : null}
       {visibleRoutes.map((route) => {
         const formattedKindName = upcaseLetter(route.kind);
         return renderSection(formattedKindName, route.kind, route.demos);

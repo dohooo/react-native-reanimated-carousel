@@ -45,10 +45,25 @@ ensure_adb_device() {
   return 1
 }
 
-retry 2 python3 "$GITHUB_WORKSPACE/scripts/run_with_timeout.py" \
-  --timeout-seconds 600 \
-  -- \
-  npx expo run:android --variant debug --no-install --no-bundler
+build_android_apk() {
+  pushd android >/dev/null
+  chmod +x ./gradlew
+  ./gradlew --stop || true
+  rm -rf app/.cxx
+
+  python3 "$GITHUB_WORKSPACE/scripts/run_with_timeout.py" \
+    --timeout-seconds 900 \
+    -- \
+    ./gradlew app:assembleDebug \
+      -PreactNativeArchitectures=x86_64 \
+      --no-daemon
+  popd >/dev/null
+}
+
+retry 2 build_android_apk
+
+ensure_adb_device
+retry 3 adb install -r android/app/build/outputs/apk/debug/app-debug.apk
 
 npx expo start --port 8081 > /tmp/metro.log 2>&1 &
 METRO_PID=$!
@@ -83,7 +98,13 @@ done
 ensure_adb_device
 adb reverse tcp:8081 tcp:8081 || true
 adb shell am force-stop "$E2E_APP_ID" || true
-MAESTRO_DEVICE=emulator-5554 \
+MAESTRO_DEVICE_ID="$(adb devices | awk 'NR>1 && $2 == "device" && $1 ~ /emulator-/ { print $1; exit }')"
+if [ -z "$MAESTRO_DEVICE_ID" ]; then
+  echo "No online emulator device found for Maestro"
+  exit 1
+fi
+
+MAESTRO_DEVICE="$MAESTRO_DEVICE_ID" \
 MAESTRO_FLOW_TIMEOUT_SECONDS=360 \
 MAESTRO_FLOW_MAX_ATTEMPTS=2 \
 MAESTRO_FAIL_FAST=1 \

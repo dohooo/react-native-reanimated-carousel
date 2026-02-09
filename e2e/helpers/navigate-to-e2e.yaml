@@ -5,7 +5,7 @@ appId: ${APP_ID}
 # even if a previous test left it on the E2E page.
 - stopApp
 - launchApp:
-    clearState: false
+    clearState: true
 
 # Wait for the app to fully load
 - waitForAnimationToEnd:
@@ -38,25 +38,17 @@ appId: ${APP_ID}
     text: "Close"
     optional: true
 
-# Wait until the home screen demos list is loaded (if app opened on home).
-# Some runs relaunch directly into the E2E screen from previous state.
+# Wait until the home screen demos list is loaded.
 - extendedWaitUntil:
     visible: "Normal"
     timeout: 30000
-    optional: true
 
-# Navigate to E2E test page via hidden testID trigger.
-# Trigger twice to tolerate initial transition/rerender races.
+# Navigate to E2E test page via deterministic top-of-list entry.
 - tapOn:
     id: "navigate-e2e-comprehensive"
-    optional: true
 
 - waitForAnimationToEnd:
-    timeout: 3000
-
-- tapOn:
-    id: "navigate-e2e-comprehensive"
-    optional: true
+    timeout: 2000
 
 # Wait for the E2E test page to fully load
 - extendedWaitUntil:
