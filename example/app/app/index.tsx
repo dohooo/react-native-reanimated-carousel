@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 
 import { useRouter } from "expo-router";
@@ -108,12 +108,14 @@ export default function Home() {
       stickyHeaderIndices={stickyHeaderIndices}
     >
       {IS_DEV && !IS_WEB ? (
-        <ListItem
-          name="e2e comprehensive"
-          onPress={() => router.push("/demos/e2e-testing/comprehensive" as any)}
-          color={colors.text}
+        <Pressable
+          accessibilityLabel="navigate-e2e-comprehensive"
+          style={styles.e2eTrigger}
           testID="navigate-e2e-comprehensive"
-        />
+          onPress={() => router.push("/demos/e2e-testing/comprehensive" as any)}
+        >
+          <Text style={styles.e2eTriggerText}>E2E</Text>
+        </Pressable>
       ) : null}
       {visibleRoutes.map((route) => {
         const formattedKindName = upcaseLetter(route.kind);
@@ -129,6 +131,22 @@ const styles = StyleSheet.create({
     borderColor: "#e8ecf0",
     borderBottomWidth: 0.5,
     padding: 16,
+  },
+  e2eTrigger: {
+    position: "absolute",
+    right: 12,
+    top: 12,
+    zIndex: 1000,
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    backgroundColor: "rgba(0, 0, 0, 0.65)",
+  },
+  e2eTriggerText: {
+    color: "#fff",
+    fontSize: 10,
+    fontWeight: "700",
+    letterSpacing: 0.4,
   },
   text: {
     fontSize: 16,

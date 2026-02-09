@@ -51,19 +51,24 @@ build_android_apk() {
   ./gradlew --stop || true
   rm -rf app/.cxx
 
-  python3 "$GITHUB_WORKSPACE/scripts/run_with_timeout.py" \
-    --timeout-seconds 900 \
-    -- \
-    ./gradlew app:assembleDebug \
-      -PreactNativeArchitectures=x86_64 \
-      --no-daemon
+  ./gradlew app:assembleDebug \
+    -PreactNativeArchitectures=x86_64 \
+    -x lint \
+    -x test \
+    --no-daemon
   popd >/dev/null
 }
 
-retry 2 build_android_apk
+build_android_apk
+
+APK_PATH="android/app/build/outputs/apk/debug/app-debug.apk"
+if [ ! -f "$APK_PATH" ]; then
+  echo "APK not found after Gradle build: $APK_PATH"
+  exit 1
+fi
 
 ensure_adb_device
-retry 3 adb install -r android/app/build/outputs/apk/debug/app-debug.apk
+retry 3 adb install -r "$APK_PATH"
 
 npx expo start --port 8081 > /tmp/metro.log 2>&1 &
 METRO_PID=$!

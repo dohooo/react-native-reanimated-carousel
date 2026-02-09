@@ -1,5 +1,5 @@
 appId: ${APP_ID}
-name: Imperative Controls (Prev/Next/GoTo)
+name: Imperative Controls (Prev Next GoTo)
 ---
 
 # Navigate to E2E test page
