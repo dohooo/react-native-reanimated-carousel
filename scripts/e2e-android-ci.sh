@@ -86,7 +86,7 @@ for i in $(seq 1 60); do
   sleep 2
 done
 
-BUNDLE_URL='http://127.0.0.1:8081/node_modules/expo-router/entry.bundle?platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=app&unstable_transformProfile=hermes-stable'
+BUNDLE_URL='http://127.0.0.1:8081/index.bundle?platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=app&unstable_transformProfile=hermes-stable'
 for i in $(seq 1 60); do
   if curl -sf "$BUNDLE_URL" -o /dev/null; then
     echo "Android bundle is ready"

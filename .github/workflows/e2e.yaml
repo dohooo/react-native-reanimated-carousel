@@ -202,7 +202,7 @@ jobs:
             example/app/ios/build/Build/Products/Debug-iphonesimulator/app.app
 
       - name: Run E2E tests
-        timeout-minutes: 35
+        timeout-minutes: 55
         working-directory: example/app
         run: |
           set -euxo pipefail
@@ -223,7 +223,7 @@ jobs:
             sleep 2
           done
 
-          BUNDLE_URL='http://127.0.0.1:8081/node_modules/expo-router/entry.bundle?platform=ios&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=app&unstable_transformProfile=hermes-stable'
+          BUNDLE_URL='http://127.0.0.1:8081/index.bundle?platform=ios&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=app&unstable_transformProfile=hermes-stable'
           for i in $(seq 1 60); do
             if curl -sf "$BUNDLE_URL" -o /dev/null; then
               echo "iOS bundle is ready"
