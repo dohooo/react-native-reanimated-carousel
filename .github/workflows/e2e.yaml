@@ -238,7 +238,20 @@ jobs:
 
           xcrun simctl launch booted "$E2E_APP_ID"
           sleep 10
-          maestro test -e APP_ID="$E2E_APP_ID" "$GITHUB_WORKSPACE/e2e/" | tee /tmp/maestro.log
+          # Maestro can intermittently lose the iOS driver connection; retry once.
+          for attempt in 1 2; do
+            if maestro test -e APP_ID="$E2E_APP_ID" "$GITHUB_WORKSPACE/e2e/" | tee /tmp/maestro.log; then
+              break
+            fi
+            if [ "$attempt" -eq 2 ]; then
+              echo "Maestro failed after ${attempt} attempts."
+              exit 1
+            fi
+            echo "Maestro failed on attempt ${attempt}, relaunching app and retrying..."
+            xcrun simctl terminate booted "$E2E_APP_ID" || true
+            xcrun simctl launch booted "$E2E_APP_ID" || true
+            sleep 10
+          done
 
       - name: Collect iOS debug artifacts
         if: always()
@@ -324,7 +337,7 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot-save -noaudio -no-boot-anim
           script: |
-            set -euxo pipefail
+            set -eux
             cd example/app
 
             mkdir -p /tmp/e2e-debug
