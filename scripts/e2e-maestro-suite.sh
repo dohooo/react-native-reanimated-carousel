@@ -13,7 +13,10 @@ fi
 
 mkdir -p "$FLOW_LOG_DIR"
 
-mapfile -t FLOWS < <(find "$FLOW_DIR" -maxdepth 1 -type f -name '[0-9]*.yaml' | sort)
+FLOWS=()
+while IFS= read -r flow; do
+  FLOWS+=("$flow")
+done < <(find "$FLOW_DIR" -maxdepth 1 -type f -name '[0-9]*.yaml' | sort)
 if [ "${#FLOWS[@]}" -eq 0 ]; then
   echo "No flow files found in $FLOW_DIR"
   exit 1
