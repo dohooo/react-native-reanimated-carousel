@@ -29,7 +29,10 @@ retry() {
   done
 }
 
-retry 2 npx expo run:android --variant debug --no-install --no-bundler
+retry 2 python3 "$GITHUB_WORKSPACE/scripts/run_with_timeout.py" \
+  --timeout-seconds 1200 \
+  -- \
+  npx expo run:android --variant debug --no-install --no-bundler
 
 npx expo start --port 8081 > /tmp/metro.log 2>&1 &
 METRO_PID=$!
@@ -62,4 +65,8 @@ for i in $(seq 1 60); do
 done
 
 adb shell am force-stop "$E2E_APP_ID" || true
-maestro test -e APP_ID="$E2E_APP_ID" "$GITHUB_WORKSPACE/e2e/" | tee /tmp/maestro.log
+python3 "$GITHUB_WORKSPACE/scripts/run_with_timeout.py" \
+  --timeout-seconds 1200 \
+  --log-file /tmp/maestro.log \
+  -- \
+  maestro test -e "APP_ID=$E2E_APP_ID" "$GITHUB_WORKSPACE/e2e/"
