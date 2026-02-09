@@ -13,7 +13,23 @@ cleanup() {
 }
 trap cleanup EXIT
 
-npx react-native run-android --mode debug --no-packager --active-arch-only
+retry() {
+  local max_retries="$1"
+  shift
+  local attempt=1
+  until "$@"; do
+    if [ "$attempt" -ge "$max_retries" ]; then
+      echo "Command failed after ${attempt} attempts: $*"
+      return 1
+    fi
+    attempt=$((attempt + 1))
+    echo "Retrying (${attempt}/${max_retries}): $*"
+    adb start-server || true
+    sleep 5
+  done
+}
+
+retry 2 npx expo run:android --variant debug --no-install --no-bundler
 
 npx expo start --port 8081 > /tmp/metro.log 2>&1 &
 METRO_PID=$!
