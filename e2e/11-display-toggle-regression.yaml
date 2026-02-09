@@ -1,0 +1,45 @@
+appId: ${APP_ID}
+name: Display Toggle Gesture Regression
+---
+
+# Navigate to E2E test page and reset defaults
+- runFlow: helpers/navigate-to-e2e.yaml
+
+# Baseline swipe: ensure gestures work before toggling display
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 1"
+
+# Reproduce issue #885: hide carousel with display none then show it again
+- tapOn:
+    id: "btn-toggle-display"
+
+- waitForAnimationToEnd:
+    timeout: 1000
+
+- assertVisible: "Display: none"
+
+- tapOn:
+    id: "btn-toggle-display"
+
+- waitForAnimationToEnd:
+    timeout: 1000
+
+- assertVisible: "Display: flex"
+
+# If issue exists, this swipe won't change index anymore
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 400
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 2"

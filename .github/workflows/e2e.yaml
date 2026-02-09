@@ -9,6 +9,8 @@ jobs:
   e2e-ios:
     runs-on: macos-15
     timeout-minutes: 90
+    env:
+      E2E_APP_ID: com.react-native-reanimated-carousel.example
 
     steps:
       - uses: actions/checkout@v4
@@ -62,7 +64,7 @@ jobs:
       - name: Install Maestro
         run: |
           curl -Ls "https://get.maestro.mobile.dev" | bash
-          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
 
       - name: Boot iOS Simulator
         run: |
@@ -177,7 +179,6 @@ jobs:
           METRO_PID=$!
           trap 'kill "$METRO_PID" || true; echo "::group::Metro logs"; tail -n 200 /tmp/metro.log || true; echo "::endgroup::"' EXIT
 
-          # Wait for Metro to be ready before launching the app
           for i in $(seq 1 60); do
             if curl -s http://localhost:8081/status 2>/dev/null | grep -q "packager-status:running"; then
               echo "Metro is ready"
@@ -191,7 +192,6 @@ jobs:
             sleep 2
           done
 
-          # Prewarm Expo Router bundle to avoid first-launch redbox in CI.
           BUNDLE_URL='http://127.0.0.1:8081/node_modules/expo-router/entry.bundle?platform=ios&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=app&unstable_transformProfile=hermes-stable'
           for i in $(seq 1 60); do
             if curl -sf "$BUNDLE_URL" -o /dev/null; then
@@ -206,11 +206,11 @@ jobs:
             sleep 2
           done
 
-          xcrun simctl launch booted com.react-native-reanimated-carousel.example
+          xcrun simctl launch booted "$E2E_APP_ID"
           sleep 10
-          maestro test "$GITHUB_WORKSPACE/e2e/" | tee /tmp/maestro.log
+          maestro test -e APP_ID="$E2E_APP_ID" "$GITHUB_WORKSPACE/e2e/" | tee /tmp/maestro.log
 
-      - name: Collect CI debug artifacts
+      - name: Collect iOS debug artifacts
         if: always()
         run: |
           set -euxo pipefail
@@ -221,11 +221,132 @@ jobs:
           xcrun simctl list devices > /tmp/e2e-debug/simctl-devices.txt || true
           xcrun simctl io booted screenshot /tmp/e2e-debug/final-simulator-screen.png || true
 
-      - name: Upload test artifacts
+      - name: Upload iOS test artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-results
+          name: e2e-results-ios
+          if-no-files-found: warn
+          retention-days: 7
+          path: |
+            ~/.maestro/tests/
+            /tmp/e2e-debug/
+
+  e2e-android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      E2E_APP_ID: com.reactnativereanimatedcarousel.example
+      MAESTRO_DRIVER_STARTUP_TIMEOUT: "180000"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Install dependencies
+        run: |
+          set -euxo pipefail
+          retry() {
+            local max_retries="$1"
+            shift
+            local attempt=1
+            until "$@"; do
+              if [ "$attempt" -ge "$max_retries" ]; then
+                echo "Command failed after ${attempt} attempts: $*"
+                return 1
+              fi
+              attempt=$((attempt + 1))
+              echo "Retrying (${attempt}/${max_retries}): $*"
+              sleep 10
+            done
+          }
+
+          retry 3 yarn install --frozen-lockfile
+          cd example/app
+          retry 3 yarn install --frozen-lockfile
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+
+      - name: Install Maestro
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+
+      - name: Prebuild Android
+        working-directory: example/app
+        run: npx expo prebuild --platform android --non-interactive
+
+      - name: Run Android E2E on emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: pixel_7
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot-save -noaudio -no-boot-anim
+          script: |
+            set -euxo pipefail
+            cd example/app
+
+            mkdir -p /tmp/e2e-debug
+            cleanup() {
+              kill "${METRO_PID:-}" >/dev/null 2>&1 || true
+              cp -f /tmp/metro.log /tmp/e2e-debug/metro.log || true
+              cp -f /tmp/maestro.log /tmp/e2e-debug/maestro.log || true
+              adb logcat -d > /tmp/e2e-debug/android-logcat.txt || true
+              adb exec-out screencap -p > /tmp/e2e-debug/final-emulator-screen.png || true
+            }
+            trap cleanup EXIT
+
+            npx react-native run-android --mode debug --no-packager --active-arch-only
+
+            npx expo start --port 8081 > /tmp/metro.log 2>&1 &
+            METRO_PID=$!
+
+            for i in $(seq 1 60); do
+              if curl -s http://localhost:8081/status 2>/dev/null | grep -q "packager-status:running"; then
+                echo "Metro is ready"
+                break
+              fi
+              if [ "$i" -eq 60 ]; then
+                echo "Metro failed to start in time"
+                exit 1
+              fi
+              echo "Waiting for Metro... ($i/60)"
+              sleep 2
+            done
+
+            BUNDLE_URL='http://127.0.0.1:8081/node_modules/expo-router/entry.bundle?platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=app&unstable_transformProfile=hermes-stable'
+            for i in $(seq 1 60); do
+              if curl -sf "$BUNDLE_URL" -o /dev/null; then
+                echo "Android bundle is ready"
+                break
+              fi
+              if [ "$i" -eq 60 ]; then
+                echo "Timed out waiting for Android bundle"
+                exit 1
+              fi
+              echo "Waiting for Android bundle... ($i/60)"
+              sleep 2
+            done
+
+            adb shell am force-stop "$E2E_APP_ID" || true
+            maestro test -e APP_ID="$E2E_APP_ID" "$GITHUB_WORKSPACE/e2e/" | tee /tmp/maestro.log
+
+      - name: Upload Android test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-results-android
           if-no-files-found: warn
           retention-days: 7
           path: |

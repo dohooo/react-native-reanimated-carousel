@@ -17,6 +17,7 @@
       "bundleIdentifier": "com.react-native-reanimated-carousel.example"
     },
     "android": {
+      "package": "com.reactnativereanimatedcarousel.example",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"

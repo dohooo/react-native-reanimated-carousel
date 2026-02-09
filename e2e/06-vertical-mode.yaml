@@ -1,4 +1,4 @@
-appId: com.react-native-reanimated-carousel.example
+appId: ${APP_ID}
 name: Vertical Mode Navigation
 ---
 
