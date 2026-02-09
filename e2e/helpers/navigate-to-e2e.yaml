@@ -55,15 +55,19 @@ appId: ${APP_ID}
     optional: true
 
 # Wait until the home screen is loaded. On slower Android emulators this can
-# take noticeably longer than iOS.
+# take noticeably longer than iOS. Prefer a text anchor because Android
+# sometimes fails to expose the Pressable testID to Maestro.
 - extendedWaitUntil:
-    visible:
-      id: "navigate-e2e-comprehensive"
+    visible: "E2E"
     timeout: 90000
 
-# Navigate to E2E test page via deterministic top-of-list entry.
+# Navigate to E2E test page.
 - tapOn:
     id: "navigate-e2e-comprehensive"
+    optional: true
+
+- tapOn:
+    text: "E2E"
 
 - waitForAnimationToEnd:
     timeout: 2000
