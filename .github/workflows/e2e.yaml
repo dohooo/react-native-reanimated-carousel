@@ -6,7 +6,37 @@ on:
     branches: [main]
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      run_e2e: ${{ steps.filter.outputs.e2e }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            e2e:
+              - "src/**"
+              - "e2e/**"
+              - "example/app/**"
+              - "package.json"
+              - "yarn.lock"
+              - ".yarnrc.yml"
+              - ".yarn/**"
+              - "babel.config.js"
+              - "tsconfig.json"
+              - ".github/workflows/e2e.yaml"
+
+      - name: Show E2E decision
+        run: echo "run_e2e=${{ steps.filter.outputs.e2e }}"
+
   e2e-ios:
+    needs: changes
+    if: needs.changes.outputs.run_e2e == 'true'
     runs-on: macos-15
     timeout-minutes: 90
 
