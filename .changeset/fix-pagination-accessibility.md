@@ -2,4 +2,5 @@
 "react-native-reanimated-carousel": patch
 ---
 
-Fix pagination accessibility state by syncing selection with scheduleOnRN instead of reading reanimated values during render, and add coverage to avoid test warnings.
+- Fix pagination selected-state syncing via `scheduleOnRN` instead of render-time reads from reanimated values (PR #866).
+- Add tests to prevent accessibility regressions and warning noise (PR #866).
