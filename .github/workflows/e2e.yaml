@@ -238,24 +238,9 @@ jobs:
 
           xcrun simctl launch booted "$E2E_APP_ID"
           sleep 10
-          # Maestro can intermittently lose the iOS driver connection; retry once.
-          for attempt in 1 2; do
-            if python3 "$GITHUB_WORKSPACE/scripts/run_with_timeout.py" \
-              --timeout-seconds 1200 \
-              --log-file /tmp/maestro.log \
-              -- \
-              maestro test -e "APP_ID=$E2E_APP_ID" "$GITHUB_WORKSPACE/e2e/"; then
-              break
-            fi
-            if [ "$attempt" -eq 2 ]; then
-              echo "Maestro failed after ${attempt} attempts."
-              exit 1
-            fi
-            echo "Maestro failed on attempt ${attempt}, relaunching app and retrying..."
-            xcrun simctl terminate booted "$E2E_APP_ID" || true
-            xcrun simctl launch booted "$E2E_APP_ID" || true
-            sleep 10
-          done
+          MAESTRO_FLOW_TIMEOUT_SECONDS=900 \
+          MAESTRO_FLOW_MAX_ATTEMPTS=2 \
+          bash "$GITHUB_WORKSPACE/scripts/e2e-maestro-suite.sh" "$GITHUB_WORKSPACE/e2e"
 
       - name: Collect iOS debug artifacts
         if: always()
@@ -264,6 +249,7 @@ jobs:
           mkdir -p /tmp/e2e-debug
           cp -f /tmp/metro.log /tmp/e2e-debug/metro.log || true
           cp -f /tmp/maestro.log /tmp/e2e-debug/maestro.log || true
+          cp -R /tmp/maestro-flow-logs /tmp/e2e-debug/maestro-flow-logs || true
           cp -f example/app/ios/xcodebuild.log /tmp/e2e-debug/xcodebuild.log || true
           xcrun simctl list devices > /tmp/e2e-debug/simctl-devices.txt || true
           xcrun simctl io booted screenshot /tmp/e2e-debug/final-simulator-screen.png || true
@@ -338,8 +324,9 @@ jobs:
           api-level: 30
           arch: x86_64
           profile: pixel_7
-          disable-animations: false
-          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot-save -noaudio -no-boot-anim
+          disable-animations: true
+          disable-linux-hw-accel: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-snapshot-save -wipe-data -noaudio -no-boot-anim
           script: ./scripts/e2e-android-ci.sh
 
       - name: Upload Android test artifacts

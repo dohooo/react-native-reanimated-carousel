@@ -6,7 +6,7 @@ from __future__ import annotations
 import argparse
 import subprocess
 import sys
-import time
+import threading
 from pathlib import Path
 
 
@@ -39,26 +39,32 @@ def main() -> int:
         )
 
         assert proc.stdout is not None
-        start = time.monotonic()
-        timed_out = False
 
-        while True:
-            line = proc.stdout.readline()
-            if line:
+        def stream_output() -> None:
+            assert proc.stdout is not None
+            for line in iter(proc.stdout.readline, ""):
                 print(line, end="")
                 if log_handle is not None:
                     log_handle.write(line)
-            elif proc.poll() is not None:
-                break
-            elif time.monotonic() - start > args.timeout_seconds:
-                timed_out = True
-                proc.terminate()
-                try:
-                    proc.wait(timeout=10)
-                except subprocess.TimeoutExpired:
-                    proc.kill()
-                    proc.wait(timeout=10)
-                break
+            proc.stdout.close()
+
+        output_thread = threading.Thread(target=stream_output, daemon=True)
+        output_thread.start()
+
+        timed_out = False
+        try:
+            return_code = proc.wait(timeout=args.timeout_seconds)
+        except subprocess.TimeoutExpired:
+            timed_out = True
+            proc.terminate()
+            try:
+                proc.wait(timeout=10)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                proc.wait(timeout=10)
+            return_code = 124
+        finally:
+            output_thread.join(timeout=5)
 
         if timed_out:
             message = f"Command timed out after {args.timeout_seconds} seconds: {' '.join(command)}"
@@ -67,7 +73,7 @@ def main() -> int:
                 log_handle.write(f"{message}\n")
             return 124
 
-        return proc.returncode if proc.returncode is not None else 1
+        return return_code
     finally:
         if log_handle is not None:
             log_handle.close()

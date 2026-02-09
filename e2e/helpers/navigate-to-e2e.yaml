@@ -38,23 +38,28 @@ appId: ${APP_ID}
     text: "Close"
     optional: true
 
-# Wait until the home screen demos list is loaded
+# Wait until the home screen demos list is loaded (if app opened on home).
+# Some runs relaunch directly into the E2E screen from previous state.
 - extendedWaitUntil:
     visible: "Normal"
-    timeout: 180000
+    timeout: 30000
+    optional: true
 
-# Navigate to E2E test page via hidden testID trigger (not visible in demo list)
+# Navigate to E2E test page via hidden testID trigger (if currently on home list)
 - scrollUntilVisible:
     element: "Multiple"
     direction: DOWN
     timeout: 10000
+    optional: true
 
 - tapOn:
     id: "navigate-e2e-comprehensive"
+    optional: true
 
 # Wait for the E2E test page to fully load
-- waitForAnimationToEnd:
-    timeout: 5000
+- extendedWaitUntil:
+    visible: "Reset All"
+    timeout: 60000
 
 # Reset all settings to default (in case previous test left modified state)
 - scrollUntilVisible:
