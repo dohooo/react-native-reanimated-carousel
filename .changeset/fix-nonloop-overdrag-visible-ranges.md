@@ -2,4 +2,5 @@
 "react-native-reanimated-carousel": patch
 ---
 
-Clamp visible ranges for non-loop overdrag and add test to ensure the first item stays visible when dragging right on the first page. Credits to PR #869 reporter.
+- Clamp visible ranges during non-loop overdrag so the first item stays visible when dragging right at page start (PR #872).
+- Add regression test coverage for non-loop overdrag boundary behavior (PR #872).
