@@ -86,3 +86,7 @@ coverage/
 # Claude
 CLAUDE.md
 .claude
+!.claude/
+!.claude/skills/
+!.claude/skills/release/
+!.claude/skills/release/**

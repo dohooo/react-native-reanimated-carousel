@@ -60,6 +60,9 @@ jobs:
       - name: Type check
         run: yarn types
 
+      - name: Check changeset style
+        run: yarn changeset:check
+
   build-and-test:
     name: Build & Test
     needs: setup

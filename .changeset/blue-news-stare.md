@@ -2,5 +2,5 @@
 "react-native-reanimated-carousel": minor
 ---
 
-- add `itemWidth`/`itemHeight` props so horizontal and vertical carousels can define their snapping step explicitly (e.g. to show multiple cards per page)
-- default behaviour still falls back to the carousel container size or legacy `width`/`height` props
+- Add `itemWidth`/`itemHeight` to define snap step explicitly (for example, multi-card pages) (PR #853).
+- Keep backward compatibility by falling back to container size or legacy `width`/`height` (PR #853).
