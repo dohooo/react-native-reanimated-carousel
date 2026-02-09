@@ -5,6 +5,7 @@ FLOW_DIR="${1:-${GITHUB_WORKSPACE}/e2e}"
 FLOW_TIMEOUT_SECONDS="${MAESTRO_FLOW_TIMEOUT_SECONDS:-900}"
 FLOW_MAX_ATTEMPTS="${MAESTRO_FLOW_MAX_ATTEMPTS:-2}"
 FLOW_LOG_DIR="${MAESTRO_FLOW_LOG_DIR:-/tmp/maestro-flow-logs}"
+FLOW_FAIL_FAST="${MAESTRO_FAIL_FAST:-0}"
 
 if [ -z "${E2E_APP_ID:-}" ]; then
   echo "E2E_APP_ID is required"
@@ -63,6 +64,10 @@ for flow in "${FLOWS[@]}"; do
 
   if [ "$flow_passed" -ne 1 ]; then
     failed_flows+=("$flow_name")
+    if [ "$FLOW_FAIL_FAST" = "1" ]; then
+      echo "Fail-fast is enabled. Stopping after first failed flow: ${flow_name}"
+      break
+    fi
   fi
 done
 

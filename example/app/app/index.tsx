@@ -107,17 +107,17 @@ export default function Home() {
       contentContainerStyle={{ paddingBottom: 64 }}
       stickyHeaderIndices={stickyHeaderIndices}
     >
-      {visibleRoutes.map((route) => {
-        const formattedKindName = upcaseLetter(route.kind);
-        return renderSection(formattedKindName, route.kind, route.demos);
-      })}
       {/* E2E navigation trigger - visually hidden, accessible via testID by Maestro */}
       <Pressable
         testID="navigate-e2e-comprehensive"
         onPress={() => router.push("/demos/e2e-testing/comprehensive" as any)}
         accessibilityLabel="navigate-e2e-comprehensive"
-        style={{ height: 1 }}
+        style={{ height: 1, opacity: 0 }}
       />
+      {visibleRoutes.map((route) => {
+        const formattedKindName = upcaseLetter(route.kind);
+        return renderSection(formattedKindName, route.kind, route.demos);
+      })}
     </ScrollView>
   );
 }

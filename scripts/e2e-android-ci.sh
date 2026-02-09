@@ -46,7 +46,7 @@ ensure_adb_device() {
 }
 
 retry 2 python3 "$GITHUB_WORKSPACE/scripts/run_with_timeout.py" \
-  --timeout-seconds 1200 \
+  --timeout-seconds 600 \
   -- \
   npx expo run:android --variant debug --no-install --no-bundler
 
@@ -84,6 +84,7 @@ ensure_adb_device
 adb reverse tcp:8081 tcp:8081 || true
 adb shell am force-stop "$E2E_APP_ID" || true
 MAESTRO_DEVICE=emulator-5554 \
-MAESTRO_FLOW_TIMEOUT_SECONDS=900 \
+MAESTRO_FLOW_TIMEOUT_SECONDS=360 \
 MAESTRO_FLOW_MAX_ATTEMPTS=2 \
+MAESTRO_FAIL_FAST=1 \
 bash "$GITHUB_WORKSPACE/scripts/e2e-maestro-suite.sh" "$GITHUB_WORKSPACE/e2e"
