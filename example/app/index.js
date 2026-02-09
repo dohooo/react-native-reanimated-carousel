@@ -1,5 +1,3 @@
-"use strict";
-
 // Android dev-client can evaluate route modules before Reanimated's logger
 // config is initialized, which causes a hard crash ("level" of undefined).
 // Seed a safe default early, then hand off to expo-router entry.
