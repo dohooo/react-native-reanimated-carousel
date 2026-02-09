@@ -323,7 +323,7 @@ jobs:
         run: npx expo prebuild --platform android --non-interactive
 
       - name: Run Android E2E on emulator
-        timeout-minutes: 45
+        timeout-minutes: 60
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 30
