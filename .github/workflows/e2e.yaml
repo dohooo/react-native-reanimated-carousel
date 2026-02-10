@@ -239,7 +239,6 @@ jobs:
 
           xcrun simctl launch booted "$E2E_APP_ID"
           sleep 10
-          NAVIGATE_TO_E2E_FLOW=helpers/navigate-to-e2e.yaml \
           MAESTRO_FLOW_TIMEOUT_SECONDS=360 \
           MAESTRO_FLOW_MAX_ATTEMPTS=2 \
           MAESTRO_FAIL_FAST=1 \

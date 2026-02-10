@@ -109,9 +109,12 @@ if [ -z "$MAESTRO_DEVICE_ID" ]; then
   exit 1
 fi
 
+E2E_FLOW_DIR="$(mktemp -d)"
+cp -R "$GITHUB_WORKSPACE/e2e/." "$E2E_FLOW_DIR/"
+cp "$E2E_FLOW_DIR/helpers/navigate-to-e2e.android.yaml" "$E2E_FLOW_DIR/helpers/navigate-to-e2e.yaml"
+
 MAESTRO_DEVICE="$MAESTRO_DEVICE_ID" \
-NAVIGATE_TO_E2E_FLOW="${NAVIGATE_TO_E2E_FLOW:-helpers/navigate-to-e2e.android.yaml}" \
 MAESTRO_FLOW_TIMEOUT_SECONDS="${MAESTRO_FLOW_TIMEOUT_SECONDS:-300}" \
 MAESTRO_FLOW_MAX_ATTEMPTS="${MAESTRO_FLOW_MAX_ATTEMPTS:-3}" \
 MAESTRO_FAIL_FAST=1 \
-bash "$GITHUB_WORKSPACE/scripts/e2e-maestro-suite.sh" "$GITHUB_WORKSPACE/e2e"
+bash "$GITHUB_WORKSPACE/scripts/e2e-maestro-suite.sh" "$E2E_FLOW_DIR"
