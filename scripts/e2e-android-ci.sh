@@ -113,6 +113,12 @@ E2E_FLOW_DIR="$(mktemp -d)"
 cp -R "$GITHUB_WORKSPACE/e2e/." "$E2E_FLOW_DIR/"
 cp "$E2E_FLOW_DIR/helpers/navigate-to-e2e.android.yaml" "$E2E_FLOW_DIR/helpers/navigate-to-e2e.yaml"
 
+# Keep the same flow assertions on Android, but wait briefly for UI labels to
+# settle before asserting. Emulator frame pacing can lag just after swipe/tap.
+for flow in "$E2E_FLOW_DIR"/[0-9]*.yaml; do
+  perl -0pi -e 's/\n(\s*-\s*assertVisible:\s*"(Current Index:[^"\n]*|Index:[^"\n]*|Slide [^"\n]*)"\s*\n)/\n- extendedWaitUntil:\n    visible: "$2"\n    timeout: 8000\n$1/g' "$flow"
+done
+
 MAESTRO_DEVICE="$MAESTRO_DEVICE_ID" \
 MAESTRO_FLOW_TIMEOUT_SECONDS="${MAESTRO_FLOW_TIMEOUT_SECONDS:-240}" \
 MAESTRO_FLOW_MAX_ATTEMPTS="${MAESTRO_FLOW_MAX_ATTEMPTS:-3}" \

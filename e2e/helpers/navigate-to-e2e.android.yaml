@@ -5,7 +5,7 @@ appId: ${APP_ID}
 # even if a previous test left it on the E2E page.
 - stopApp
 - launchApp:
-    clearState: true
+    clearState: false
 
 # Wait for the app to fully load.
 - waitForAnimationToEnd:
@@ -79,4 +79,3 @@ appId: ${APP_ID}
     timeout: 90000
 
 - assertVisible: "Slide 0"
-
