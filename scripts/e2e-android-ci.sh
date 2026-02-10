@@ -150,7 +150,7 @@ name: Loop Mode - Wrapping Navigation
 - waitForAnimationToEnd:
     timeout: 3000
 - extendedWaitUntil:
-    visible: "Current Index: 5"
+    visible: "Slide 5"
     timeout: 8000
 
 # Loop forward from last slide back to first.
@@ -161,7 +161,7 @@ name: Loop Mode - Wrapping Navigation
 - waitForAnimationToEnd:
     timeout: 3000
 - extendedWaitUntil:
-    visible: "Current Index: 0"
+    visible: "Slide 0"
     timeout: 8000
 
 # Continuous loop navigation with swipes.
@@ -172,7 +172,7 @@ name: Loop Mode - Wrapping Navigation
 - waitForAnimationToEnd:
     timeout: 3000
 - extendedWaitUntil:
-    visible: "Current Index: 1"
+    visible: "Slide 1"
     timeout: 8000
 
 - swipe:
@@ -182,7 +182,7 @@ name: Loop Mode - Wrapping Navigation
 - waitForAnimationToEnd:
     timeout: 3000
 - extendedWaitUntil:
-    visible: "Current Index: 2"
+    visible: "Slide 2"
     timeout: 8000
 
 - swipe:
@@ -192,7 +192,7 @@ name: Loop Mode - Wrapping Navigation
 - waitForAnimationToEnd:
     timeout: 3000
 - extendedWaitUntil:
-    visible: "Current Index: 3"
+    visible: "Slide 3"
     timeout: 8000
 
 - swipe:
@@ -202,7 +202,7 @@ name: Loop Mode - Wrapping Navigation
 - waitForAnimationToEnd:
     timeout: 3000
 - extendedWaitUntil:
-    visible: "Current Index: 4"
+    visible: "Slide 4"
     timeout: 8000
 
 - swipe:
@@ -212,7 +212,7 @@ name: Loop Mode - Wrapping Navigation
 - waitForAnimationToEnd:
     timeout: 3000
 - extendedWaitUntil:
-    visible: "Current Index: 5"
+    visible: "Slide 5"
     timeout: 8000
 
 - swipe:
@@ -222,7 +222,7 @@ name: Loop Mode - Wrapping Navigation
 - waitForAnimationToEnd:
     timeout: 3000
 - extendedWaitUntil:
-    visible: "Current Index: 0"
+    visible: "Slide 0"
     timeout: 8000
 EOF
 fi
