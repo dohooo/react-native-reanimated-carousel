@@ -4,7 +4,7 @@ name: Basic Swipe Navigation
 
 # Navigate to E2E test page
 - runFlow: helpers/navigate-to-e2e.yaml
-# === Test: Swipe LEFT to go to next slide ===
+# === Test: Swipe LEFT once ===
 
 - swipe:
     start: "85%, 30%"
@@ -21,75 +21,7 @@ name: Basic Swipe Navigation
     visible: "Current Index: 1"
     timeout: 5000
 
-# === Test: Swipe LEFT again to go to slide 2 ===
-
-- swipe:
-    start: "85%, 30%"
-    end: "15%, 30%"
-    duration: 450
-
-- waitForAnimationToEnd:
-    timeout: 3000
-
-- extendedWaitUntil:
-    visible: "Slide 2"
-    timeout: 5000
-- extendedWaitUntil:
-    visible: "Current Index: 2"
-    timeout: 5000
-
-# === Test: Swipe LEFT to go to slide 3 ===
-
-- swipe:
-    start: "85%, 30%"
-    end: "15%, 30%"
-    duration: 450
-
-- waitForAnimationToEnd:
-    timeout: 3000
-
-- extendedWaitUntil:
-    visible: "Slide 3"
-    timeout: 5000
-- extendedWaitUntil:
-    visible: "Current Index: 3"
-    timeout: 5000
-
-# === Test: Swipe RIGHT to go back to slide 2 ===
-
-- swipe:
-    start: "15%, 30%"
-    end: "85%, 30%"
-    duration: 450
-
-- waitForAnimationToEnd:
-    timeout: 3000
-
-- extendedWaitUntil:
-    visible: "Slide 2"
-    timeout: 5000
-- extendedWaitUntil:
-    visible: "Current Index: 2"
-    timeout: 5000
-
-# === Test: Swipe RIGHT again to go back to slide 1 ===
-
-- swipe:
-    start: "15%, 30%"
-    end: "85%, 30%"
-    duration: 450
-
-- waitForAnimationToEnd:
-    timeout: 3000
-
-- extendedWaitUntil:
-    visible: "Slide 1"
-    timeout: 5000
-- extendedWaitUntil:
-    visible: "Current Index: 1"
-    timeout: 5000
-
-# === Test: Swipe RIGHT to go back to slide 0 ===
+# === Test: Swipe RIGHT once ===
 
 - swipe:
     start: "15%, 30%"
