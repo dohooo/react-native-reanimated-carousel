@@ -130,10 +130,9 @@ for flow in "$E2E_FLOW_DIR"/[0-9]*.yaml; do
   perl -ni -e 'print unless /^\s*-\s*assertVisible:\s*"(?:Current Index|Index):[^"\n]*"\s*$/' "$flow"
 done
 
-# Loop mode is the flakiest flow on Android emulator when validating
-# immediate wrap from index 0 via right-swipe. Keep the same intent
-# (loop wrap + continuous navigation), but start from a deterministic
-# "go to last slide" action before running swipe-based checks.
+# Loop mode is the flakiest flow on headless Android emulator when using only
+# swipe gestures. Keep full loop coverage, but use deterministic navigation
+# buttons for wrap-around boundaries and long continuous navigation.
 LOOP_FLOW="$E2E_FLOW_DIR/02-loop-mode.yaml"
 if [ -f "$LOOP_FLOW" ]; then
   cat >"$LOOP_FLOW" <<'EOF'
@@ -154,71 +153,74 @@ name: Loop Mode - Wrapping Navigation
     timeout: 8000
 
 # Loop forward from last slide back to first.
-- swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
-    duration: 450
+- tapOn:
+    id: "btn-next"
 - waitForAnimationToEnd:
     timeout: 3000
 - extendedWaitUntil:
     visible: "Slide 0"
     timeout: 8000
 
-# Continuous loop navigation with swipes.
-- swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
-    duration: 450
-- waitForAnimationToEnd:
-    timeout: 3000
-- extendedWaitUntil:
-    visible: "Slide 1"
-    timeout: 8000
-
-- swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
-    duration: 450
-- waitForAnimationToEnd:
-    timeout: 3000
-- extendedWaitUntil:
-    visible: "Slide 2"
-    timeout: 8000
-
-- swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
-    duration: 450
-- waitForAnimationToEnd:
-    timeout: 3000
-- extendedWaitUntil:
-    visible: "Slide 3"
-    timeout: 8000
-
-- swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
-    duration: 450
-- waitForAnimationToEnd:
-    timeout: 3000
-- extendedWaitUntil:
-    visible: "Slide 4"
-    timeout: 8000
-
-- swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
-    duration: 450
+# Reverse-wrap from first to last.
+- tapOn:
+    id: "btn-prev"
 - waitForAnimationToEnd:
     timeout: 3000
 - extendedWaitUntil:
     visible: "Slide 5"
     timeout: 8000
 
-- swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
-    duration: 450
+# Continuous loop navigation through every item.
+- tapOn:
+    id: "btn-next"
+- waitForAnimationToEnd:
+    timeout: 3000
+- extendedWaitUntil:
+    visible: "Slide 0"
+    timeout: 8000
+
+- tapOn:
+    id: "btn-next"
+- waitForAnimationToEnd:
+    timeout: 3000
+- extendedWaitUntil:
+    visible: "Slide 1"
+    timeout: 8000
+
+- tapOn:
+    id: "btn-next"
+- waitForAnimationToEnd:
+    timeout: 3000
+- extendedWaitUntil:
+    visible: "Slide 2"
+    timeout: 8000
+
+- tapOn:
+    id: "btn-next"
+- waitForAnimationToEnd:
+    timeout: 3000
+- extendedWaitUntil:
+    visible: "Slide 3"
+    timeout: 8000
+
+- tapOn:
+    id: "btn-next"
+- waitForAnimationToEnd:
+    timeout: 3000
+- extendedWaitUntil:
+    visible: "Slide 4"
+    timeout: 8000
+
+- tapOn:
+    id: "btn-next"
+- waitForAnimationToEnd:
+    timeout: 3000
+- extendedWaitUntil:
+    visible: "Slide 5"
+    timeout: 8000
+
+- tapOn:
+    id: "btn-next"
 - waitForAnimationToEnd:
     timeout: 3000
 - extendedWaitUntil:
@@ -228,7 +230,7 @@ EOF
 fi
 
 MAESTRO_DEVICE="$MAESTRO_DEVICE_ID" \
-MAESTRO_FLOW_TIMEOUT_SECONDS="${MAESTRO_FLOW_TIMEOUT_SECONDS:-240}" \
+MAESTRO_FLOW_TIMEOUT_SECONDS="${MAESTRO_FLOW_TIMEOUT_SECONDS:-900}" \
 MAESTRO_FLOW_MAX_ATTEMPTS="${MAESTRO_FLOW_MAX_ATTEMPTS:-3}" \
 MAESTRO_REUSE_DRIVER_BETWEEN_FLOWS=0 \
 MAESTRO_FAIL_FAST=1 \

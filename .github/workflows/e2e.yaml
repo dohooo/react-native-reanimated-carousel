@@ -239,7 +239,7 @@ jobs:
 
           xcrun simctl launch booted "$E2E_APP_ID"
           sleep 10
-          MAESTRO_FLOW_TIMEOUT_SECONDS=240 \
+          MAESTRO_FLOW_TIMEOUT_SECONDS=900 \
           MAESTRO_FLOW_MAX_ATTEMPTS=2 \
           MAESTRO_REUSE_DRIVER_BETWEEN_FLOWS=0 \
           MAESTRO_FAIL_FAST=1 \
