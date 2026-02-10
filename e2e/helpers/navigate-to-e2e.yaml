@@ -79,14 +79,13 @@ appId: ${APP_ID}
     timeout: 180000
 
 # Navigate to E2E test page.
-# iOS is stable with testID; Android can be flaky with id lookup in some runs,
-# so we try id first and then fall back to text.
+# Android can hang on id-based taps in rare runs; prefer text first, then id.
 - tapOn:
-    id: "navigate-e2e-comprehensive"
+    text: "E2E"
     optional: true
 
 - tapOn:
-    text: "E2E"
+    id: "navigate-e2e-comprehensive"
     optional: true
 
 # Wait for the E2E test page to fully load
