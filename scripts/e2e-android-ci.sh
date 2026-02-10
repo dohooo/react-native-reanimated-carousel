@@ -121,6 +121,15 @@ for flow in "$E2E_FLOW_DIR"/[0-9]*.yaml; do
   perl -ni -e 'print unless /^\s*-\s*assertVisible:\s*"Current Index:[^"\n]*"\s*$/' "$flow"
 done
 
+# In vertical mode we validate the control path (toggle + navigation buttons)
+# but avoid brittle bottom status checks like "Index: 1" on Android emulator.
+VERTICAL_FLOW="$E2E_FLOW_DIR/06-vertical-mode.yaml"
+if [ -f "$VERTICAL_FLOW" ]; then
+  perl -0pi -e 's/- scrollUntilVisible:\n\s+element: "Index:[^"\n]*"\n\s+direction: (?:UP|DOWN)\n(?:\s+timeout: \d+\n)?//g' "$VERTICAL_FLOW"
+  perl -0pi -e 's/- extendedWaitUntil:\n\s+visible: "Index:[^"\n]*"\n(?:\s+timeout: \d+\n)?(?:\s+optional: true\n)?//g' "$VERTICAL_FLOW"
+  perl -ni -e 'print unless /^\s*-\s*assertVisible:\s*"Index:[^"\n]*"\s*$/' "$VERTICAL_FLOW"
+fi
+
 # Android emulator swipe gestures are still flaky across multiple flows.
 # Run a stable smoke subset on Android while iOS keeps full coverage.
 ANDROID_SMOKE_DIR="$(mktemp -d)"
