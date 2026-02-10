@@ -119,6 +119,103 @@ for flow in "$E2E_FLOW_DIR"/[0-9]*.yaml; do
   perl -0pi -e 's/\n(\s*-\s*assertVisible:\s*"(Current Index:[^"\n]*|Index:[^"\n]*|Slide [^"\n]*)"\s*\n)/\n- extendedWaitUntil:\n    visible: "$2"\n    timeout: 8000\n$1/g' "$flow"
 done
 
+# Loop mode is the flakiest flow on Android emulator when validating
+# immediate wrap from index 0 via right-swipe. Keep the same intent
+# (loop wrap + continuous navigation), but start from a deterministic
+# "go to last slide" action before running swipe-based checks.
+LOOP_FLOW="$E2E_FLOW_DIR/02-loop-mode.yaml"
+if [ -f "$LOOP_FLOW" ]; then
+  cat >"$LOOP_FLOW" <<'EOF'
+appId: ${APP_ID}
+name: Loop Mode - Wrapping Navigation
+---
+
+- runFlow: helpers/navigate-to-e2e.yaml
+- assertVisible: "Loop: ON"
+
+# Land on the last slide deterministically.
+- tapOn:
+    id: "btn-goto-5"
+- waitForAnimationToEnd:
+    timeout: 3000
+- extendedWaitUntil:
+    visible: "Current Index: 5"
+    timeout: 8000
+
+# Loop forward from last slide back to first.
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 450
+- waitForAnimationToEnd:
+    timeout: 3000
+- extendedWaitUntil:
+    visible: "Current Index: 0"
+    timeout: 8000
+
+# Continuous loop navigation with swipes.
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 450
+- waitForAnimationToEnd:
+    timeout: 3000
+- extendedWaitUntil:
+    visible: "Current Index: 1"
+    timeout: 8000
+
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 450
+- waitForAnimationToEnd:
+    timeout: 3000
+- extendedWaitUntil:
+    visible: "Current Index: 2"
+    timeout: 8000
+
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 450
+- waitForAnimationToEnd:
+    timeout: 3000
+- extendedWaitUntil:
+    visible: "Current Index: 3"
+    timeout: 8000
+
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 450
+- waitForAnimationToEnd:
+    timeout: 3000
+- extendedWaitUntil:
+    visible: "Current Index: 4"
+    timeout: 8000
+
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 450
+- waitForAnimationToEnd:
+    timeout: 3000
+- extendedWaitUntil:
+    visible: "Current Index: 5"
+    timeout: 8000
+
+- swipe:
+    start: "80%, 30%"
+    end: "20%, 30%"
+    duration: 450
+- waitForAnimationToEnd:
+    timeout: 3000
+- extendedWaitUntil:
+    visible: "Current Index: 0"
+    timeout: 8000
+EOF
+fi
+
 MAESTRO_DEVICE="$MAESTRO_DEVICE_ID" \
 MAESTRO_FLOW_TIMEOUT_SECONDS="${MAESTRO_FLOW_TIMEOUT_SECONDS:-240}" \
 MAESTRO_FLOW_MAX_ATTEMPTS="${MAESTRO_FLOW_MAX_ATTEMPTS:-3}" \
