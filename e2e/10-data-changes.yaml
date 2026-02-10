@@ -1,10 +1,9 @@
-appId: com.react-native-reanimated-carousel.example
+appId: ${APP_ID}
 name: Dynamic Data Count Changes
 ---
 
 # Navigate to E2E test page
 - runFlow: helpers/navigate-to-e2e.yaml
-
 # Verify default state (6 items)
 - assertVisible: "Slide 0"
 

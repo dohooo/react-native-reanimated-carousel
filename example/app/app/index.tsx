@@ -107,17 +107,20 @@ export default function Home() {
       contentContainerStyle={{ paddingBottom: 64 }}
       stickyHeaderIndices={stickyHeaderIndices}
     >
+      {IS_DEV && !IS_WEB ? (
+        <Pressable
+          accessibilityLabel="navigate-e2e-comprehensive"
+          style={styles.e2eTrigger}
+          testID="navigate-e2e-comprehensive"
+          onPress={() => router.push("/demos/e2e-testing/comprehensive" as any)}
+        >
+          <Text style={styles.e2eTriggerText}>E2E</Text>
+        </Pressable>
+      ) : null}
       {visibleRoutes.map((route) => {
         const formattedKindName = upcaseLetter(route.kind);
         return renderSection(formattedKindName, route.kind, route.demos);
       })}
-      {/* E2E navigation trigger - visually hidden, accessible via testID by Maestro */}
-      <Pressable
-        testID="navigate-e2e-comprehensive"
-        onPress={() => router.push("/demos/e2e-testing/comprehensive" as any)}
-        accessibilityLabel="navigate-e2e-comprehensive"
-        style={{ height: 1 }}
-      />
     </ScrollView>
   );
 }
@@ -128,6 +131,22 @@ const styles = StyleSheet.create({
     borderColor: "#e8ecf0",
     borderBottomWidth: 0.5,
     padding: 16,
+  },
+  e2eTrigger: {
+    position: "absolute",
+    right: 12,
+    top: 12,
+    zIndex: 1000,
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    backgroundColor: "rgba(0, 0, 0, 0.65)",
+  },
+  e2eTriggerText: {
+    color: "#fff",
+    fontSize: 10,
+    fontWeight: "700",
+    letterSpacing: 0.4,
   },
   text: {
     fontSize: 16,

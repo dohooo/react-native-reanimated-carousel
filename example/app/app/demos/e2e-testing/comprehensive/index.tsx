@@ -55,6 +55,7 @@ export default function ComprehensiveE2E() {
   const [enabled, setEnabled] = useState(true);
   const [pagingEnabled, setPagingEnabled] = useState(true);
   const [snapEnabled, setSnapEnabled] = useState(true);
+  const [carouselVisible, setCarouselVisible] = useState(true);
   const [dataCount, setDataCount] = useState(6);
 
   const data = useMemo(
@@ -115,6 +116,7 @@ export default function ComprehensiveE2E() {
     setEnabled(true);
     setPagingEnabled(true);
     setSnapEnabled(true);
+    setCarouselVisible(true);
     setDataCount(6);
     setCurrentIndex(0);
   }, []);
@@ -129,40 +131,45 @@ export default function ComprehensiveE2E() {
         <Text testID="e2e-current-mode" style={styles.statusText}>
           {`Mode: ${mode}`}
         </Text>
+        <Text testID="e2e-display-state" style={styles.statusText}>
+          {`Display: ${carouselVisible ? "flex" : "none"}`}
+        </Text>
       </View>
 
       {/* Carousel */}
       <View style={styles.carouselContainer}>
-        <Carousel
-          key={`${mode}-${vertical}-${dataCount}`}
-          ref={carouselRef}
-          testID="e2e-carousel"
-          data={data}
-          renderItem={carouselRenderItem}
-          style={carouselStyle}
-          mode={mode === "normal" ? undefined : mode}
-          modeConfig={modeConfig}
-          loop={loop}
-          autoPlay={autoPlay}
-          autoPlayReverse={autoPlayReverse}
-          autoPlayInterval={2000}
-          vertical={vertical}
-          enabled={enabled}
-          pagingEnabled={pagingEnabled}
-          snapEnabled={snapEnabled}
-          onSnapToItem={setCurrentIndex}
-          onProgressChange={(_, absoluteProgress) => {
-            progress.value = absoluteProgress;
-          }}
-          {...(isStackMode
-            ? {
-                customConfig: () => ({
-                  type: "positive" as const,
-                  viewCount: 5,
-                }),
-              }
-            : {})}
-        />
+        <View testID="e2e-display-wrapper" style={{ display: carouselVisible ? "flex" : "none" }}>
+          <Carousel
+            key={`${mode}-${vertical}-${dataCount}`}
+            ref={carouselRef}
+            testID="e2e-carousel"
+            data={data}
+            renderItem={carouselRenderItem}
+            style={carouselStyle}
+            mode={mode === "normal" ? undefined : mode}
+            modeConfig={modeConfig}
+            loop={loop}
+            autoPlay={autoPlay}
+            autoPlayReverse={autoPlayReverse}
+            autoPlayInterval={2000}
+            vertical={vertical}
+            enabled={enabled}
+            pagingEnabled={pagingEnabled}
+            snapEnabled={snapEnabled}
+            onSnapToItem={setCurrentIndex}
+            onProgressChange={(_, absoluteProgress) => {
+              progress.value = absoluteProgress;
+            }}
+            {...(isStackMode
+              ? {
+                  customConfig: () => ({
+                    type: "positive" as const,
+                    viewCount: 5,
+                  }),
+                }
+              : {})}
+          />
+        </View>
       </View>
 
       {/* Pagination Dots */}
@@ -205,6 +212,13 @@ export default function ComprehensiveE2E() {
             onPress={handleReset}
           >
             <Text style={styles.navButtonText}>Reset All</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            testID="btn-toggle-display"
+            style={[styles.button, { backgroundColor: "#9C88FF" }]}
+            onPress={() => setCarouselVisible((prev) => !prev)}
+          >
+            <Text style={styles.navButtonText}>{carouselVisible ? "Hide" : "Show"}</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.row}>

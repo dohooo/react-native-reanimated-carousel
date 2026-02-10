@@ -5,26 +5,34 @@ appId: ${APP_ID}
 # even if a previous test left it on the E2E page.
 - stopApp
 - launchApp:
-    clearState: true
+    clearState: false
 
-# Wait for the app to fully load
+# Wait for the app to fully load.
 - waitForAnimationToEnd:
     timeout: 5000
 
-# In CI, Expo Dev Client may open on the "Development Servers" screen first.
+# Android emulators can show a transient ANR dialog.
+- tapOn:
+    text: "Wait"
+    optional: true
+
+# Expo Dev Client may open on Development Servers first.
 - tapOn:
     text: "http://localhost:8081"
     optional: true
 
-# Wait for the app UI to fully stabilize after launch / Metro connection.
-# A generous delay here avoids kAXErrorInvalidUIElement that Maestro's
-# XCTest driver throws when querying the view hierarchy during transitions.
-- waitForAnimationToEnd:
-    timeout: 10000
+- tapOn:
+    text: "http://10.0.2.2:8081"
+    optional: true
 
-# Expo shows a developer-menu onboarding modal on first launch.
-# Use extendedWaitUntil so Maestro keeps polling until the modal appears
-# (or the timeout expires if it was already dismissed in a prior run).
+- waitForAnimationToEnd:
+    timeout: 15000
+
+- tapOn:
+    text: "Wait"
+    optional: true
+
+# Expo onboarding modal on first launch.
 - extendedWaitUntil:
     visible: "Continue"
     timeout: 30000
@@ -38,26 +46,39 @@ appId: ${APP_ID}
     text: "Close"
     optional: true
 
-# Wait until the app home is loaded.
+# Retry pass for slow transitions / launcher races.
+- tapOn:
+    text: "http://localhost:8081"
+    optional: true
+
+- tapOn:
+    text: "http://10.0.2.2:8081"
+    optional: true
+
+- tapOn:
+    text: "Continue"
+    optional: true
+
+- tapOn:
+    text: "Close"
+    optional: true
+
+# Wait until app home is visible.
 - extendedWaitUntil:
     visible: "Basic Layouts"
     timeout: 180000
 
-# Navigate to E2E test page.
+# Android selector path: text is more stable than id for this entry.
 - tapOn:
     text: "E2E"
     optional: true
 
-- tapOn:
-    id: "navigate-e2e-comprehensive"
-    optional: true
-
-# Wait for the E2E test page to fully load
+# Wait until the E2E page is ready for interactions.
 - extendedWaitUntil:
-    visible: "Reset All"
-    timeout: 60000
+    visible: "Current Index: 0"
+    timeout: 90000
 
-# Reset all settings to default (in case previous test left modified state)
+# Reset all settings to default (in case previous flow left modified state).
 - scrollUntilVisible:
     element: "Reset All"
     direction: DOWN
@@ -69,7 +90,7 @@ appId: ${APP_ID}
 - waitForAnimationToEnd:
     timeout: 3000
 
-# Scroll back to top to verify initial state
+# Scroll back to top to ensure carousel is in viewport.
 - swipe:
     start: "50%, 30%"
     end: "50%, 90%"
@@ -86,6 +107,5 @@ appId: ${APP_ID}
 - waitForAnimationToEnd:
     timeout: 2000
 
-# Verify initial state
-- assertVisible: "Slide 0"
 - assertVisible: "Current Index: 0"
+- assertVisible: "Slide 0"

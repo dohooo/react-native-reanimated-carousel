@@ -15,6 +15,11 @@ name: Normal Carousel - Swipe Navigation
     text: "http://localhost:8081"
     optional: true
 
+# Android Dev Launcher usually shows emulator loopback instead of localhost.
+- tapOn:
+    text: "http://10.0.2.2:8081"
+    optional: true
+
 # Dismiss Expo developer menu onboarding modal if it appears.
 - extendedWaitUntil:
     visible: "Continue"

@@ -1,10 +1,9 @@
-appId: com.react-native-reanimated-carousel.example
+appId: ${APP_ID}
 name: Loop Mode - Wrapping Navigation
 ---
 
 # Navigate to E2E test page
 - runFlow: helpers/navigate-to-e2e.yaml
-
 # Verify loop is ON by default
 - assertVisible: "Loop: ON"
 

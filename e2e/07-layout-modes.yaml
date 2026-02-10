@@ -1,10 +1,9 @@
-appId: com.react-native-reanimated-carousel.example
+appId: ${APP_ID}
 name: Layout Mode Switching
 ---
 
 # Navigate to E2E test page
 - runFlow: helpers/navigate-to-e2e.yaml
-
 # === Test: Default Normal mode works ===
 
 - assertVisible: "Mode: normal"

@@ -1,10 +1,9 @@
-appId: com.react-native-reanimated-carousel.example
-name: Imperative Controls (Prev/Next/GoTo)
+appId: ${APP_ID}
+name: Imperative Controls (Prev Next GoTo)
 ---
 
 # Navigate to E2E test page
 - runFlow: helpers/navigate-to-e2e.yaml
-
 # The carousel, pagination, and navigation buttons should all be visible
 # without scrolling on the initial load
 

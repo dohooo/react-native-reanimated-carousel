@@ -43,8 +43,8 @@
 		"clean": "del-cli lib",
 		"version": "changeset version",
 		"precommit": "yarn lint:fix && yarn format:fix",
-		"e2e": "maestro test example/app/app/demos/",
-		"e2e:comprehensive": "maestro test e2e/",
+		"e2e": "APP_ID=${APP_ID:-com.react-native-reanimated-carousel.example} maestro test example/app/app/demos/",
+		"e2e:comprehensive": "APP_ID=${APP_ID:-com.react-native-reanimated-carousel.example} maestro test e2e/",
 		"changeset:check": "node scripts/check-changeset-style.mjs"
 	},
 	"resolutions": {
