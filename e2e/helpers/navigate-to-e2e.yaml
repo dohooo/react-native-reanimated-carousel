@@ -54,6 +54,24 @@ appId: ${APP_ID}
     text: "Close"
     optional: true
 
+# One more retry pass for Dev Launcher / onboarding elements.
+# This helps when Android transitions are slow and the first optional taps race.
+- tapOn:
+    text: "http://localhost:8081"
+    optional: true
+
+- tapOn:
+    text: "http://10.0.2.2:8081"
+    optional: true
+
+- tapOn:
+    text: "Continue"
+    optional: true
+
+- tapOn:
+    text: "Close"
+    optional: true
+
 # Wait until the app home is loaded. On Android emulator / dev-client startup
 # this can occasionally take much longer and briefly show a blank screen.
 - extendedWaitUntil:
@@ -61,11 +79,15 @@ appId: ${APP_ID}
     timeout: 180000
 
 # Navigate to E2E test page.
+# iOS is stable with testID; Android can be flaky with id lookup in some runs,
+# so we try id first and then fall back to text.
+- tapOn:
+    id: "navigate-e2e-comprehensive"
+    optional: true
+
 - tapOn:
     text: "E2E"
-
-- waitForAnimationToEnd:
-    timeout: 2000
+    optional: true
 
 # Wait for the E2E test page to fully load
 - extendedWaitUntil:
