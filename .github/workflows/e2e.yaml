@@ -202,7 +202,7 @@ jobs:
             example/app/ios/build/Build/Products/Debug-iphonesimulator/app.app
 
       - name: Run E2E tests
-        timeout-minutes: 55
+        timeout-minutes: 80
         working-directory: example/app
         run: |
           set -euxo pipefail
@@ -239,12 +239,9 @@ jobs:
 
           xcrun simctl launch booted "$E2E_APP_ID"
           sleep 10
-          # Keep iOS CI in a stable smoke profile that still covers
-          # navigation, pagination, vertical mode, disabled state, and
-          # the display-toggle regression path.
-          MAESTRO_FLOW_FILES="01-basic-swipe,04-pagination,06-vertical-mode,09-disabled-state,11-display-toggle-regression" \
-          MAESTRO_FLOW_TIMEOUT_SECONDS=360 \
+          MAESTRO_FLOW_TIMEOUT_SECONDS=240 \
           MAESTRO_FLOW_MAX_ATTEMPTS=2 \
+          MAESTRO_REUSE_DRIVER_BETWEEN_FLOWS=0 \
           MAESTRO_FAIL_FAST=1 \
           bash "$GITHUB_WORKSPACE/scripts/e2e-maestro-suite.sh" "$GITHUB_WORKSPACE/e2e"
 
@@ -333,7 +330,7 @@ jobs:
           sudo udevadm trigger --name-match=kvm
 
       - name: Run Android E2E on emulator
-        timeout-minutes: 60
+        timeout-minutes: 80
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 30

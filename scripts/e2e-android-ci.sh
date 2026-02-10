@@ -113,34 +113,8 @@ E2E_FLOW_DIR="$(mktemp -d)"
 cp -R "$GITHUB_WORKSPACE/e2e/." "$E2E_FLOW_DIR/"
 cp "$E2E_FLOW_DIR/helpers/navigate-to-e2e.android.yaml" "$E2E_FLOW_DIR/helpers/navigate-to-e2e.yaml"
 
-# Android emulator timing can make the "Current Index" label lag behind
-# slide transitions. Keep gesture/button coverage, but remove index-text
-# assertions in Android-only copied flows to reduce platform-specific flakes.
-for flow in "$E2E_FLOW_DIR"/[0-9]*.yaml; do
-  perl -0pi -e 's/- extendedWaitUntil:\n\s+visible: "Current Index:[^"\n]*"\n(?:\s+timeout: \d+\n)?(?:\s+optional: true\n)?//g' "$flow"
-  perl -ni -e 'print unless /^\s*-\s*assertVisible:\s*"Current Index:[^"\n]*"\s*$/' "$flow"
-done
-
-# In vertical mode we validate the control path (toggle + navigation buttons)
-# but avoid brittle bottom status checks like "Index: 1" on Android emulator.
-VERTICAL_FLOW="$E2E_FLOW_DIR/06-vertical-mode.yaml"
-if [ -f "$VERTICAL_FLOW" ]; then
-  perl -0pi -e 's/- scrollUntilVisible:\n\s+element: "Index:[^"\n]*"\n\s+direction: (?:UP|DOWN)\n(?:\s+timeout: \d+\n)?//g' "$VERTICAL_FLOW"
-  perl -0pi -e 's/- extendedWaitUntil:\n\s+visible: "Index:[^"\n]*"\n(?:\s+timeout: \d+\n)?(?:\s+optional: true\n)?//g' "$VERTICAL_FLOW"
-  perl -ni -e 'print unless /^\s*-\s*assertVisible:\s*"Index:[^"\n]*"\s*$/' "$VERTICAL_FLOW"
-fi
-
-# Android emulator can go offline in long suites after repeated relaunches.
-# Keep a stable smoke subset on Android while iOS keeps full coverage.
-ANDROID_SMOKE_DIR="$(mktemp -d)"
-cp -R "$E2E_FLOW_DIR/helpers" "$ANDROID_SMOKE_DIR/"
-for flow in 04-pagination.yaml 06-vertical-mode.yaml; do
-  cp "$E2E_FLOW_DIR/$flow" "$ANDROID_SMOKE_DIR/$flow"
-done
-E2E_FLOW_DIR="$ANDROID_SMOKE_DIR"
-
 MAESTRO_DEVICE="$MAESTRO_DEVICE_ID" \
-MAESTRO_FLOW_TIMEOUT_SECONDS="${MAESTRO_FLOW_TIMEOUT_SECONDS:-300}" \
+MAESTRO_FLOW_TIMEOUT_SECONDS="${MAESTRO_FLOW_TIMEOUT_SECONDS:-240}" \
 MAESTRO_FLOW_MAX_ATTEMPTS="${MAESTRO_FLOW_MAX_ATTEMPTS:-3}" \
 MAESTRO_FAIL_FAST=1 \
 bash "$GITHUB_WORKSPACE/scripts/e2e-maestro-suite.sh" "$E2E_FLOW_DIR"

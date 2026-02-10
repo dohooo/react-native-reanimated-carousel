@@ -11,32 +11,16 @@ appId: ${APP_ID}
 - waitForAnimationToEnd:
     timeout: 5000
 
-# Android emulators can show a transient ANR dialog ("Process system isn't responding").
-# If present, dismiss it and continue the run.
-- tapOn:
-    text: "Wait"
-    optional: true
-
 # In CI, Expo Dev Client may open on the "Development Servers" screen first.
 - tapOn:
     text: "http://localhost:8081"
-    optional: true
-
-# Android Dev Launcher usually shows emulator loopback instead of localhost.
-- tapOn:
-    text: "http://10.0.2.2:8081"
     optional: true
 
 # Wait for the app UI to fully stabilize after launch / Metro connection.
 # A generous delay here avoids kAXErrorInvalidUIElement that Maestro's
 # XCTest driver throws when querying the view hierarchy during transitions.
 - waitForAnimationToEnd:
-    timeout: 15000
-
-# One more ANR dismissal pass after Dev Launcher taps.
-- tapOn:
-    text: "Wait"
-    optional: true
+    timeout: 10000
 
 # Expo shows a developer-menu onboarding modal on first launch.
 # Use extendedWaitUntil so Maestro keeps polling until the modal appears
@@ -54,32 +38,12 @@ appId: ${APP_ID}
     text: "Close"
     optional: true
 
-# One more retry pass for Dev Launcher / onboarding elements.
-# This helps when Android transitions are slow and the first optional taps race.
-- tapOn:
-    text: "http://localhost:8081"
-    optional: true
-
-- tapOn:
-    text: "http://10.0.2.2:8081"
-    optional: true
-
-- tapOn:
-    text: "Continue"
-    optional: true
-
-- tapOn:
-    text: "Close"
-    optional: true
-
-# Wait until the app home is loaded. On Android emulator / dev-client startup
-# this can occasionally take much longer and briefly show a blank screen.
+# Wait until the app home is loaded.
 - extendedWaitUntil:
     visible: "Basic Layouts"
     timeout: 180000
 
 # Navigate to E2E test page.
-# Android can hang on id-based taps in rare runs; prefer text first, then id.
 - tapOn:
     text: "E2E"
     optional: true

@@ -7,6 +7,7 @@ FLOW_MAX_ATTEMPTS="${MAESTRO_FLOW_MAX_ATTEMPTS:-2}"
 FLOW_LOG_DIR="${MAESTRO_FLOW_LOG_DIR:-/tmp/maestro-flow-logs}"
 FLOW_FAIL_FAST="${MAESTRO_FAIL_FAST:-0}"
 FLOW_FILES="${MAESTRO_FLOW_FILES:-}"
+FLOW_REUSE_DRIVER_BETWEEN_FLOWS="${MAESTRO_REUSE_DRIVER_BETWEEN_FLOWS:-1}"
 
 if [ -z "${E2E_APP_ID:-}" ]; then
   echo "E2E_APP_ID is required"
@@ -62,7 +63,7 @@ for flow in "${FLOWS[@]}"; do
     if [ -n "${MAESTRO_DEVICE:-}" ]; then
       cmd+=(--device "$MAESTRO_DEVICE")
     fi
-    if [ "$skip_reinstall_driver" -eq 1 ]; then
+    if [ "$FLOW_REUSE_DRIVER_BETWEEN_FLOWS" = "1" ] && [ "$skip_reinstall_driver" -eq 1 ]; then
       cmd+=(--no-reinstall-driver)
     fi
     cmd+=(-e "APP_ID=${E2E_APP_ID}" "$flow")
@@ -74,11 +75,15 @@ for flow in "${FLOWS[@]}"; do
       -- \
       "${cmd[@]}"; then
       flow_passed=1
-      skip_reinstall_driver=1
+      if [ "$FLOW_REUSE_DRIVER_BETWEEN_FLOWS" = "1" ]; then
+        skip_reinstall_driver=1
+      fi
       break
     fi
 
-    skip_reinstall_driver=1
+    if [ "$FLOW_REUSE_DRIVER_BETWEEN_FLOWS" = "1" ]; then
+      skip_reinstall_driver=1
+    fi
     echo "Flow failed: ${flow_name} (attempt ${attempt}/${FLOW_MAX_ATTEMPTS})"
     sleep 3
   done
