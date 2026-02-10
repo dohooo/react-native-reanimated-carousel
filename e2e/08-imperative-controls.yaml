@@ -3,8 +3,7 @@ name: Imperative Controls (Prev Next GoTo)
 ---
 
 # Navigate to E2E test page
-- runFlow: helpers/navigate-to-e2e.yaml
-
+- runFlow: ${NAVIGATE_TO_E2E_FLOW}
 # The carousel, pagination, and navigation buttons should all be visible
 # without scrolling on the initial load
 

@@ -3,8 +3,7 @@ name: Basic Swipe Navigation
 ---
 
 # Navigate to E2E test page
-- runFlow: helpers/navigate-to-e2e.yaml
-
+- runFlow: ${NAVIGATE_TO_E2E_FLOW}
 # === Test: Swipe LEFT to go to next slide ===
 
 - swipe:

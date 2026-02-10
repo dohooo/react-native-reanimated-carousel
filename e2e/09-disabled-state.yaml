@@ -3,8 +3,7 @@ name: Disabled Carousel State
 ---
 
 # Navigate to E2E test page
-- runFlow: helpers/navigate-to-e2e.yaml
-
+- runFlow: ${NAVIGATE_TO_E2E_FLOW}
 # Verify initial state
 - assertVisible: "Slide 0"
 - assertVisible: "Current Index: 0"

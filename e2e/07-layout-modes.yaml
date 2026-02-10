@@ -3,8 +3,7 @@ name: Layout Mode Switching
 ---
 
 # Navigate to E2E test page
-- runFlow: helpers/navigate-to-e2e.yaml
-
+- runFlow: ${NAVIGATE_TO_E2E_FLOW}
 # === Test: Default Normal mode works ===
 
 - assertVisible: "Mode: normal"

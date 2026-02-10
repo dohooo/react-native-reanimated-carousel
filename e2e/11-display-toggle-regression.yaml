@@ -3,8 +3,7 @@ name: Display Toggle Gesture Regression
 ---
 
 # Navigate to E2E test page and reset defaults
-- runFlow: helpers/navigate-to-e2e.yaml
-
+- runFlow: ${NAVIGATE_TO_E2E_FLOW}
 # Baseline swipe: ensure gestures work before toggling display
 - swipe:
     start: "80%, 30%"

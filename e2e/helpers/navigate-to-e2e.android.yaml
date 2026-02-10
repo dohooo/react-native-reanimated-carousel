@@ -1,0 +1,82 @@
+appId: ${APP_ID}
+---
+
+# Ensure a clean restart so the app always opens on the home screen,
+# even if a previous test left it on the E2E page.
+- stopApp
+- launchApp:
+    clearState: true
+
+# Wait for the app to fully load.
+- waitForAnimationToEnd:
+    timeout: 5000
+
+# Android emulators can show a transient ANR dialog.
+- tapOn:
+    text: "Wait"
+    optional: true
+
+# Expo Dev Client may open on Development Servers first.
+- tapOn:
+    text: "http://localhost:8081"
+    optional: true
+
+- tapOn:
+    text: "http://10.0.2.2:8081"
+    optional: true
+
+- waitForAnimationToEnd:
+    timeout: 15000
+
+- tapOn:
+    text: "Wait"
+    optional: true
+
+# Expo onboarding modal on first launch.
+- extendedWaitUntil:
+    visible: "Continue"
+    timeout: 30000
+    optional: true
+
+- tapOn:
+    text: "Continue"
+    optional: true
+
+- tapOn:
+    text: "Close"
+    optional: true
+
+# Retry pass for slow transitions / launcher races.
+- tapOn:
+    text: "http://localhost:8081"
+    optional: true
+
+- tapOn:
+    text: "http://10.0.2.2:8081"
+    optional: true
+
+- tapOn:
+    text: "Continue"
+    optional: true
+
+- tapOn:
+    text: "Close"
+    optional: true
+
+# Wait until app home is visible.
+- extendedWaitUntil:
+    visible: "Basic Layouts"
+    timeout: 180000
+
+# Android selector path: text is more stable than id for this entry.
+- tapOn:
+    text: "E2E"
+    optional: true
+
+# Wait until the E2E page is ready for interactions.
+- extendedWaitUntil:
+    visible: "Current Index: 0"
+    timeout: 90000
+
+- assertVisible: "Slide 0"
+

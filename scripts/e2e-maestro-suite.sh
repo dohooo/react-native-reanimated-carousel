@@ -6,6 +6,7 @@ FLOW_TIMEOUT_SECONDS="${MAESTRO_FLOW_TIMEOUT_SECONDS:-900}"
 FLOW_MAX_ATTEMPTS="${MAESTRO_FLOW_MAX_ATTEMPTS:-2}"
 FLOW_LOG_DIR="${MAESTRO_FLOW_LOG_DIR:-/tmp/maestro-flow-logs}"
 FLOW_FAIL_FAST="${MAESTRO_FAIL_FAST:-0}"
+NAVIGATE_TO_E2E_FLOW="${NAVIGATE_TO_E2E_FLOW:-helpers/navigate-to-e2e.yaml}"
 
 if [ -z "${E2E_APP_ID:-}" ]; then
   echo "E2E_APP_ID is required"
@@ -13,6 +14,7 @@ if [ -z "${E2E_APP_ID:-}" ]; then
 fi
 
 mkdir -p "$FLOW_LOG_DIR"
+export NAVIGATE_TO_E2E_FLOW
 
 FLOWS=()
 while IFS= read -r flow; do

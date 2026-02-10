@@ -3,8 +3,7 @@ name: Pagination Dot Navigation
 ---
 
 # Navigate to E2E test page
-- runFlow: helpers/navigate-to-e2e.yaml
-
+- runFlow: ${NAVIGATE_TO_E2E_FLOW}
 # === Test: Tap pagination dot 3 to navigate to slide 3 ===
 
 - tapOn:

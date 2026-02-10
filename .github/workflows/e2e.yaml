@@ -239,6 +239,7 @@ jobs:
 
           xcrun simctl launch booted "$E2E_APP_ID"
           sleep 10
+          NAVIGATE_TO_E2E_FLOW=helpers/navigate-to-e2e.yaml \
           MAESTRO_FLOW_TIMEOUT_SECONDS=360 \
           MAESTRO_FLOW_MAX_ATTEMPTS=2 \
           MAESTRO_FAIL_FAST=1 \
@@ -322,6 +323,12 @@ jobs:
         working-directory: example/app
         run: npx expo prebuild --platform android --non-interactive
 
+      - name: Enable KVM for Android emulator
+        run: |
+          echo 'KERNEL=="kvm",GROUP="kvm",MODE="0666",OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
       - name: Run Android E2E on emulator
         timeout-minutes: 60
         uses: reactivecircus/android-emulator-runner@v2
@@ -330,7 +337,7 @@ jobs:
           arch: x86_64
           profile: pixel_7
           disable-animations: true
-          disable-linux-hw-accel: true
+          disable-linux-hw-accel: false
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-snapshot-save -wipe-data -noaudio -no-boot-anim
           script: ./scripts/e2e-android-ci.sh
 
