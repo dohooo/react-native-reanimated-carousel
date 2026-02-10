@@ -78,4 +78,34 @@ appId: ${APP_ID}
     visible: "Current Index: 0"
     timeout: 90000
 
+# Reset all settings to default (in case previous flow left modified state).
+- scrollUntilVisible:
+    element: "Reset All"
+    direction: DOWN
+    timeout: 5000
+
+- tapOn:
+    id: "btn-reset"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# Scroll back to top to ensure carousel is in viewport.
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- assertVisible: "Current Index: 0"
 - assertVisible: "Slide 0"
