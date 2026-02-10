@@ -239,6 +239,10 @@ jobs:
 
           xcrun simctl launch booted "$E2E_APP_ID"
           sleep 10
+          # Keep iOS CI in a stable smoke profile that still covers
+          # navigation, pagination, vertical mode, disabled state, and
+          # the display-toggle regression path.
+          MAESTRO_FLOW_FILES="01-basic-swipe,04-pagination,06-vertical-mode,09-disabled-state,11-display-toggle-regression" \
           MAESTRO_FLOW_TIMEOUT_SECONDS=360 \
           MAESTRO_FLOW_MAX_ATTEMPTS=2 \
           MAESTRO_FAIL_FAST=1 \

@@ -6,6 +6,7 @@ FLOW_TIMEOUT_SECONDS="${MAESTRO_FLOW_TIMEOUT_SECONDS:-900}"
 FLOW_MAX_ATTEMPTS="${MAESTRO_FLOW_MAX_ATTEMPTS:-2}"
 FLOW_LOG_DIR="${MAESTRO_FLOW_LOG_DIR:-/tmp/maestro-flow-logs}"
 FLOW_FAIL_FAST="${MAESTRO_FAIL_FAST:-0}"
+FLOW_FILES="${MAESTRO_FLOW_FILES:-}"
 
 if [ -z "${E2E_APP_ID:-}" ]; then
   echo "E2E_APP_ID is required"
@@ -15,9 +16,29 @@ fi
 mkdir -p "$FLOW_LOG_DIR"
 
 FLOWS=()
-while IFS= read -r flow; do
-  FLOWS+=("$flow")
-done < <(find "$FLOW_DIR" -maxdepth 1 -type f -name '[0-9]*.yaml' | sort)
+if [ -n "$FLOW_FILES" ]; then
+  IFS=',' read -r -a requested_flows <<< "$FLOW_FILES"
+  for flow in "${requested_flows[@]}"; do
+    flow="${flow#"${flow%%[![:space:]]*}"}"
+    flow="${flow%"${flow##*[![:space:]]}"}"
+    [ -n "$flow" ] || continue
+
+    if [[ "$flow" != *.yaml ]]; then
+      flow="${flow}.yaml"
+    fi
+    flow_path="${FLOW_DIR}/${flow}"
+    if [ ! -f "$flow_path" ]; then
+      echo "Configured flow not found: $flow_path"
+      exit 1
+    fi
+    FLOWS+=("$flow_path")
+  done
+else
+  while IFS= read -r flow; do
+    FLOWS+=("$flow")
+  done < <(find "$FLOW_DIR" -maxdepth 1 -type f -name '[0-9]*.yaml' | sort)
+fi
+
 if [ "${#FLOWS[@]}" -eq 0 ]; then
   echo "No flow files found in $FLOW_DIR"
   exit 1
