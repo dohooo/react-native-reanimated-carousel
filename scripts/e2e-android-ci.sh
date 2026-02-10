@@ -116,6 +116,10 @@ cp "$E2E_FLOW_DIR/helpers/navigate-to-e2e.android.yaml" "$E2E_FLOW_DIR/helpers/n
 # Keep the same flow assertions on Android, but wait briefly for UI labels to
 # settle before asserting. Emulator frame pacing can lag just after swipe/tap.
 for flow in "$E2E_FLOW_DIR"/[0-9]*.yaml; do
+  # On CI emulators, y=30% can land on headers/top bars and miss carousel
+  # gestures. Move those swipe anchors slightly downward for consistency.
+  perl -0pi -e 's/"([0-9]{1,3}%), 30%"/"$1%, 45%"/g' "$flow"
+
   perl -0pi -e 's/\n(\s*-\s*assertVisible:\s*"(Current Index:[^"\n]*|Index:[^"\n]*|Slide [^"\n]*)"\s*\n)/\n- extendedWaitUntil:\n    visible: "$2"\n    timeout: 8000\n$1/g' "$flow"
 done
 
