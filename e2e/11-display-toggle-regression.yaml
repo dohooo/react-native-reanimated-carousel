@@ -9,7 +9,7 @@ name: Display Toggle Gesture Regression
     from:
       id: "e2e-carousel"
     direction: LEFT
-    duration: 400
+    duration: 200
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -38,7 +38,7 @@ name: Display Toggle Gesture Regression
     from:
       id: "e2e-carousel"
     direction: LEFT
-    duration: 400
+    duration: 200
 
 - waitForAnimationToEnd:
     timeout: 3000

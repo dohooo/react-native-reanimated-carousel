@@ -44,7 +44,7 @@ name: Dynamic Data Count Changes
     from:
       id: "e2e-carousel"
     direction: LEFT
-    duration: 400
+    duration: 200
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 1"
@@ -53,7 +53,7 @@ name: Dynamic Data Count Changes
     from:
       id: "e2e-carousel"
     direction: LEFT
-    duration: 400
+    duration: 200
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 2"
@@ -63,7 +63,7 @@ name: Dynamic Data Count Changes
     from:
       id: "e2e-carousel"
     direction: LEFT
-    duration: 400
+    duration: 200
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 0"
@@ -155,7 +155,7 @@ name: Dynamic Data Count Changes
     from:
       id: "e2e-carousel"
     direction: LEFT
-    duration: 400
+    duration: 200
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 1"
@@ -165,7 +165,7 @@ name: Dynamic Data Count Changes
     from:
       id: "e2e-carousel"
     direction: LEFT
-    duration: 400
+    duration: 200
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 0"
@@ -203,7 +203,7 @@ name: Dynamic Data Count Changes
     from:
       id: "e2e-carousel"
     direction: LEFT
-    duration: 400
+    duration: 200
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 1"

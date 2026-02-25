@@ -44,7 +44,7 @@ name: Non-Loop Mode - Boundary Behavior
     from:
       id: "e2e-carousel"
     direction: RIGHT
-    duration: 400
+    duration: 200
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -58,7 +58,7 @@ name: Non-Loop Mode - Boundary Behavior
     from:
       id: "e2e-carousel"
     direction: RIGHT
-    duration: 400
+    duration: 200
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -81,7 +81,7 @@ name: Non-Loop Mode - Boundary Behavior
     from:
       id: "e2e-carousel"
     direction: LEFT
-    duration: 400
+    duration: 200
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -95,7 +95,7 @@ name: Non-Loop Mode - Boundary Behavior
     from:
       id: "e2e-carousel"
     direction: RIGHT
-    duration: 400
+    duration: 200
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -118,7 +118,7 @@ name: Non-Loop Mode - Boundary Behavior
     from:
       id: "e2e-carousel"
     direction: LEFT
-    duration: 400
+    duration: 200
 
 - waitForAnimationToEnd:
     timeout: 3000

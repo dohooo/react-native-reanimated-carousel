@@ -44,7 +44,7 @@ name: Disabled Carousel State
     from:
       id: "e2e-carousel"
     direction: LEFT
-    duration: 400
+    duration: 200
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -58,7 +58,7 @@ name: Disabled Carousel State
     from:
       id: "e2e-carousel"
     direction: RIGHT
-    duration: 400
+    duration: 200
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -100,7 +100,7 @@ name: Disabled Carousel State
     from:
       id: "e2e-carousel"
     direction: LEFT
-    duration: 400
+    duration: 200
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -113,7 +113,7 @@ name: Disabled Carousel State
     from:
       id: "e2e-carousel"
     direction: RIGHT
-    duration: 400
+    duration: 200
 
 - waitForAnimationToEnd:
     timeout: 3000
