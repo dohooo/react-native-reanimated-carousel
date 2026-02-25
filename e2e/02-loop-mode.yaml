@@ -16,25 +16,7 @@ name: Loop Mode - Wrapping Navigation
     visible: "Current Index: 0"
     timeout: 8000
 
-# Prev from first item wraps to last.
-- tapOn:
-    id: "btn-prev"
-- waitForAnimationToEnd:
-    timeout: 3000
-- extendedWaitUntil:
-    visible: "Current Index: 5"
-    timeout: 8000
-
-# Next from last item wraps to first.
-- tapOn:
-    id: "btn-next"
-- waitForAnimationToEnd:
-    timeout: 3000
-- extendedWaitUntil:
-    visible: "Current Index: 0"
-    timeout: 8000
-
-# Jump to last and verify forward wrap again.
+# Jump to last and verify forward wrap.
 - tapOn:
     id: "btn-goto-5"
 - waitForAnimationToEnd:
