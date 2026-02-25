@@ -85,6 +85,14 @@ for flow in "${FLOWS[@]}"; do
       skip_reinstall_driver=1
     fi
     echo "Flow failed: ${flow_name} (attempt ${attempt}/${FLOW_MAX_ATTEMPTS})"
+    # Android-specific recovery: when Maestro/driver gets disconnected mid-run,
+    # reset device connectivity and app process before retrying the same flow.
+    if command -v adb >/dev/null 2>&1 && [ -n "${MAESTRO_DEVICE:-}" ]; then
+      adb -s "$MAESTRO_DEVICE" wait-for-device || true
+      adb -s "$MAESTRO_DEVICE" reverse tcp:8081 tcp:8081 || true
+      adb -s "$MAESTRO_DEVICE" shell input keyevent 3 >/dev/null 2>&1 || true
+      adb -s "$MAESTRO_DEVICE" shell am force-stop "$E2E_APP_ID" >/dev/null 2>&1 || true
+    fi
     sleep 3
   done
 
