@@ -7,8 +7,9 @@ name: Basic Swipe Navigation
 # === Test: Swipe LEFT to go to next slide ===
 
 - swipe:
-    start: "80%, 45%"
-    end: "20%, 45%"
+    from:
+      id: "e2e-carousel"
+    direction: LEFT
     duration: 400
 
 - waitForAnimationToEnd:
@@ -20,8 +21,9 @@ name: Basic Swipe Navigation
 # === Test: Swipe LEFT again to go to slide 2 ===
 
 - swipe:
-    start: "80%, 45%"
-    end: "20%, 45%"
+    from:
+      id: "e2e-carousel"
+    direction: LEFT
     duration: 400
 
 - waitForAnimationToEnd:
@@ -33,8 +35,9 @@ name: Basic Swipe Navigation
 # === Test: Swipe LEFT to go to slide 3 ===
 
 - swipe:
-    start: "80%, 45%"
-    end: "20%, 45%"
+    from:
+      id: "e2e-carousel"
+    direction: LEFT
     duration: 400
 
 - waitForAnimationToEnd:
@@ -46,8 +49,9 @@ name: Basic Swipe Navigation
 # === Test: Swipe RIGHT to go back to slide 2 ===
 
 - swipe:
-    start: "20%, 45%"
-    end: "80%, 45%"
+    from:
+      id: "e2e-carousel"
+    direction: RIGHT
     duration: 400
 
 - waitForAnimationToEnd:
@@ -59,8 +63,9 @@ name: Basic Swipe Navigation
 # === Test: Swipe RIGHT again to go back to slide 1 ===
 
 - swipe:
-    start: "20%, 45%"
-    end: "80%, 45%"
+    from:
+      id: "e2e-carousel"
+    direction: RIGHT
     duration: 400
 
 - waitForAnimationToEnd:
@@ -72,8 +77,9 @@ name: Basic Swipe Navigation
 # === Test: Swipe RIGHT to go back to slide 0 ===
 
 - swipe:
-    start: "20%, 45%"
-    end: "80%, 45%"
+    from:
+      id: "e2e-carousel"
+    direction: RIGHT
     duration: 400
 
 - waitForAnimationToEnd:

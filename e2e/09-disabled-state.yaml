@@ -41,8 +41,9 @@ name: Disabled Carousel State
 # === Test: Swiping should NOT work when disabled ===
 
 - swipe:
-    start: "80%, 45%"
-    end: "20%, 45%"
+    from:
+      id: "e2e-carousel"
+    direction: LEFT
     duration: 400
 
 - waitForAnimationToEnd:
@@ -54,8 +55,9 @@ name: Disabled Carousel State
 # === Test: Swipe in other direction also doesn't work ===
 
 - swipe:
-    start: "20%, 45%"
-    end: "80%, 45%"
+    from:
+      id: "e2e-carousel"
+    direction: RIGHT
     duration: 400
 
 - waitForAnimationToEnd:
@@ -95,8 +97,9 @@ name: Disabled Carousel State
 # === Test: Swiping works after re-enabling ===
 
 - swipe:
-    start: "80%, 45%"
-    end: "20%, 45%"
+    from:
+      id: "e2e-carousel"
+    direction: LEFT
     duration: 400
 
 - waitForAnimationToEnd:
@@ -107,8 +110,9 @@ name: Disabled Carousel State
 # === Test: Swipe back also works ===
 
 - swipe:
-    start: "20%, 45%"
-    end: "80%, 45%"
+    from:
+      id: "e2e-carousel"
+    direction: RIGHT
     duration: 400
 
 - waitForAnimationToEnd:
