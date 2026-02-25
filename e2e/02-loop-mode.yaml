@@ -10,10 +10,9 @@ name: Loop Mode - Wrapping Navigation
 # === Test: Swipe RIGHT from slide 0 should wrap to last slide ===
 
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: RIGHT
-    duration: 200
+    start: "15%, 30%"
+    end: "85%, 30%"
+    duration: 450
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -25,10 +24,9 @@ name: Loop Mode - Wrapping Navigation
 # === Test: Swipe LEFT to go back to slide 0 (wrapping forward) ===
 
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: LEFT
-    duration: 200
+    start: "85%, 30%"
+    end: "15%, 30%"
+    duration: 450
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -49,10 +47,9 @@ name: Loop Mode - Wrapping Navigation
 
 # Swipe LEFT from slide 5 should wrap to slide 0
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: LEFT
-    duration: 200
+    start: "85%, 30%"
+    end: "15%, 30%"
+    duration: 450
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -63,56 +60,50 @@ name: Loop Mode - Wrapping Navigation
 # === Test: Continuous loop - swipe through all slides ===
 
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: LEFT
-    duration: 200
+    start: "85%, 30%"
+    end: "15%, 30%"
+    duration: 450
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 1"
 
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: LEFT
-    duration: 200
+    start: "85%, 30%"
+    end: "15%, 30%"
+    duration: 450
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 2"
 
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: LEFT
-    duration: 200
+    start: "85%, 30%"
+    end: "15%, 30%"
+    duration: 450
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 3"
 
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: LEFT
-    duration: 200
+    start: "85%, 30%"
+    end: "15%, 30%"
+    duration: 450
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 4"
 
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: LEFT
-    duration: 200
+    start: "85%, 30%"
+    end: "15%, 30%"
+    duration: 450
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 5"
 
 # One more swipe wraps back to 0
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: LEFT
-    duration: 200
+    start: "85%, 30%"
+    end: "15%, 30%"
+    duration: 450
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 0"

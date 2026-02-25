@@ -12,8 +12,17 @@ appId: ${APP_ID}
     timeout: 5000
 
 # In CI, Expo Dev Client may open on the "Development Servers" screen first.
+- extendedWaitUntil:
+    visible: "http://localhost:8081"
+    timeout: 15000
+    optional: true
+
 - tapOn:
     text: "http://localhost:8081"
+    optional: true
+
+- tapOn:
+    text: "http://127.0.0.1:8081"
     optional: true
 
 # Wait for the app UI to fully stabilize after launch / Metro connection.
@@ -37,6 +46,26 @@ appId: ${APP_ID}
 - tapOn:
     text: "Close"
     optional: true
+
+# Retry pass for slow launch transitions where Dev Client appears late.
+- tapOn:
+    text: "http://localhost:8081"
+    optional: true
+
+- tapOn:
+    text: "http://127.0.0.1:8081"
+    optional: true
+
+- tapOn:
+    text: "Continue"
+    optional: true
+
+- tapOn:
+    text: "Close"
+    optional: true
+
+- waitForAnimationToEnd:
+    timeout: 8000
 
 # Wait until the app home is loaded.
 - extendedWaitUntil:

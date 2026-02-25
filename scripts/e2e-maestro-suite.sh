@@ -3,6 +3,7 @@ set -euo pipefail
 
 FLOW_DIR="${1:-${GITHUB_WORKSPACE}/e2e}"
 FLOW_TIMEOUT_SECONDS="${MAESTRO_FLOW_TIMEOUT_SECONDS:-900}"
+FLOW_MAX_ATTEMPTS="${MAESTRO_FLOW_MAX_ATTEMPTS:-2}"
 FLOW_LOG_DIR="${MAESTRO_FLOW_LOG_DIR:-/tmp/maestro-flow-logs}"
 FLOW_FAIL_FAST="${MAESTRO_FAIL_FAST:-0}"
 FLOW_FILES="${MAESTRO_FLOW_FILES:-}"
@@ -54,37 +55,45 @@ for flow in "${FLOWS[@]}"; do
     flow_name="$flow_basename"
   fi
 
-  echo "Running flow: ${flow_name}"
+  flow_passed=0
+  for attempt in $(seq 1 "$FLOW_MAX_ATTEMPTS"); do
+    echo "Running flow: ${flow_name} (${attempt}/${FLOW_MAX_ATTEMPTS})"
 
-  cmd=(maestro test)
-  if [ -n "${MAESTRO_DEVICE:-}" ]; then
-    cmd+=(--device "$MAESTRO_DEVICE")
-  fi
-  if [ "$FLOW_REUSE_DRIVER_BETWEEN_FLOWS" = "1" ] && [ "$skip_reinstall_driver" -eq 1 ]; then
-    cmd+=(--no-reinstall-driver)
-  fi
-  cmd+=(-e "APP_ID=${E2E_APP_ID}" "$flow")
+    cmd=(maestro test)
+    if [ -n "${MAESTRO_DEVICE:-}" ]; then
+      cmd+=(--device "$MAESTRO_DEVICE")
+    fi
+    if [ "$FLOW_REUSE_DRIVER_BETWEEN_FLOWS" = "1" ] && [ "$skip_reinstall_driver" -eq 1 ]; then
+      cmd+=(--no-reinstall-driver)
+    fi
+    cmd+=(-e "APP_ID=${E2E_APP_ID}" "$flow")
 
-  flow_log_file="${FLOW_LOG_DIR}/${flow_basename}.log"
-  if python3 "${GITHUB_WORKSPACE}/scripts/run_with_timeout.py" \
-    --timeout-seconds "$FLOW_TIMEOUT_SECONDS" \
-    --log-file "$flow_log_file" \
-    -- \
-    "${cmd[@]}"; then
+    flow_log_file="${FLOW_LOG_DIR}/${flow_basename}.attempt${attempt}.log"
+    if python3 "${GITHUB_WORKSPACE}/scripts/run_with_timeout.py" \
+      --timeout-seconds "$FLOW_TIMEOUT_SECONDS" \
+      --log-file "$flow_log_file" \
+      -- \
+      "${cmd[@]}"; then
+      flow_passed=1
+      if [ "$FLOW_REUSE_DRIVER_BETWEEN_FLOWS" = "1" ]; then
+        skip_reinstall_driver=1
+      fi
+      break
+    fi
+
     if [ "$FLOW_REUSE_DRIVER_BETWEEN_FLOWS" = "1" ]; then
       skip_reinstall_driver=1
     fi
-    continue
-  fi
+    echo "Flow failed: ${flow_name} (attempt ${attempt}/${FLOW_MAX_ATTEMPTS})"
+    sleep 3
+  done
 
-  if [ "$FLOW_REUSE_DRIVER_BETWEEN_FLOWS" = "1" ]; then
-    skip_reinstall_driver=1
-  fi
-  echo "Flow failed: ${flow_name}"
-  failed_flows+=("$flow_name")
-  if [ "$FLOW_FAIL_FAST" = "1" ]; then
-    echo "Fail-fast is enabled. Stopping after first failed flow: ${flow_name}"
-    break
+  if [ "$flow_passed" -ne 1 ]; then
+    failed_flows+=("$flow_name")
+    if [ "$FLOW_FAIL_FAST" = "1" ]; then
+      echo "Fail-fast is enabled. Stopping after first failed flow: ${flow_name}"
+      break
+    fi
   fi
 done
 

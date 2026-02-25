@@ -10,10 +10,9 @@ name: Layout Mode Switching
 - assertVisible: "Slide 0"
 
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: LEFT
-    duration: 200
+    start: "85%, 30%"
+    end: "15%, 30%"
+    duration: 450
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -58,10 +57,9 @@ name: Layout Mode Switching
 
 # Swipe in parallax mode
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: LEFT
-    duration: 200
+    start: "85%, 30%"
+    end: "15%, 30%"
+    duration: 450
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -70,10 +68,9 @@ name: Layout Mode Switching
 
 # Swipe back
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: RIGHT
-    duration: 200
+    start: "15%, 30%"
+    end: "85%, 30%"
+    duration: 450
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -110,10 +107,9 @@ name: Layout Mode Switching
 
 # Swipe in stack mode (narrower container, adjust swipe range)
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: LEFT
-    duration: 200
+    start: "65%, 30%"
+    end: "35%, 30%"
+    duration: 450
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -190,10 +186,9 @@ name: Layout Mode Switching
 
 # Verify swipe works after switching back
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: LEFT
-    duration: 200
+    start: "85%, 30%"
+    end: "15%, 30%"
+    duration: 450
 
 - waitForAnimationToEnd:
     timeout: 3000

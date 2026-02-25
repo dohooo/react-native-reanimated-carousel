@@ -41,29 +41,26 @@ name: Dynamic Data Count Changes
 
 # Swipe through all 3 slides
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: LEFT
-    duration: 200
+    start: "85%, 30%"
+    end: "15%, 30%"
+    duration: 450
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 1"
 
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: LEFT
-    duration: 200
+    start: "85%, 30%"
+    end: "15%, 30%"
+    duration: 450
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 2"
 
 # With loop ON, swipe again wraps to 0
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: LEFT
-    duration: 200
+    start: "85%, 30%"
+    end: "15%, 30%"
+    duration: 450
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 0"
@@ -152,20 +149,18 @@ name: Dynamic Data Count Changes
 
 # Swipe to slide 1
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: LEFT
-    duration: 200
+    start: "85%, 30%"
+    end: "15%, 30%"
+    duration: 450
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 1"
 
 # Swipe wraps back to 0 (only 2 items)
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: LEFT
-    duration: 200
+    start: "85%, 30%"
+    end: "15%, 30%"
+    duration: 450
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 0"
@@ -200,10 +195,9 @@ name: Dynamic Data Count Changes
 
 # Verify carousel works after data change
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: LEFT
-    duration: 200
+    start: "85%, 30%"
+    end: "15%, 30%"
+    duration: 450
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 1"
