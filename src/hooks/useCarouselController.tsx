@@ -352,33 +352,31 @@ export function useCarouselController(options: IOpts): ICarouselController {
       if (!canSliding()) return;
 
       onScrollStart?.();
-      // direction -> 1 | -1
-      let direction: -1 | 1;
-      if (fixedDirection === "positive") direction = 1;
-      else if (fixedDirection === "negative") direction = -1;
-      else if (!loop) {
-        const currentPage = currentFixedPage();
-        direction = i >= currentPage ? -1 : 1;
+      let finalOffset: number;
+
+      if (!loop) {
+        // Non-loop mode always uses direct page-to-offset mapping.
+        // This avoids sign flips when moving to lower indices.
+        finalOffset = -i * size;
       } else {
-        direction = handlerOffsetDirection(handlerOffset);
+        // direction -> 1 | -1
+        let direction: -1 | 1;
+        if (fixedDirection === "positive") direction = 1;
+        else if (fixedDirection === "negative") direction = -1;
+        else direction = handlerOffsetDirection(handlerOffset);
+
+        // target offset
+        const offset = i * size * direction;
+        // page width size * page count
+        const totalSize = dataInfo.length * size;
+        const isCloseToNextLoop = Math.abs(handlerOffset.value % totalSize) / totalSize >= 0.5;
+
+        finalOffset =
+          (Math.floor(Math.abs(handlerOffset.value / totalSize)) + (isCloseToNextLoop ? 1 : 0)) *
+            totalSize *
+            direction +
+          offset;
       }
-
-      // target offset
-      const offset = i * size * direction;
-      // page width size * page count
-      const totalSize = dataInfo.length * size;
-
-      let isCloseToNextLoop = false;
-
-      if (loop) {
-        isCloseToNextLoop = Math.abs(handlerOffset.value % totalSize) / totalSize >= 0.5;
-      }
-
-      const finalOffset =
-        (Math.floor(Math.abs(handlerOffset.value / totalSize)) + (isCloseToNextLoop ? 1 : 0)) *
-          totalSize *
-          direction +
-        offset;
 
       if (animated) {
         index.value = i;
