@@ -9,8 +9,22 @@ FLOW_FAIL_FAST="${MAESTRO_FAIL_FAST:-0}"
 FLOW_FILES="${MAESTRO_FLOW_FILES:-}"
 FLOW_REUSE_DRIVER_BETWEEN_FLOWS="${MAESTRO_REUSE_DRIVER_BETWEEN_FLOWS:-1}"
 
+MAESTRO_BIN="${MAESTRO_BIN:-}"
+if [ -z "$MAESTRO_BIN" ]; then
+  if command -v maestro >/dev/null 2>&1; then
+    MAESTRO_BIN="$(command -v maestro)"
+  elif [ -x "${HOME}/.maestro/bin/maestro" ]; then
+    MAESTRO_BIN="${HOME}/.maestro/bin/maestro"
+  fi
+fi
+
 if [ -z "${E2E_APP_ID:-}" ]; then
   echo "E2E_APP_ID is required"
+  exit 1
+fi
+
+if [ -z "$MAESTRO_BIN" ]; then
+  echo "Maestro binary not found. Set MAESTRO_BIN or ensure maestro is installed."
   exit 1
 fi
 
@@ -59,7 +73,7 @@ for flow in "${FLOWS[@]}"; do
   for attempt in $(seq 1 "$FLOW_MAX_ATTEMPTS"); do
     echo "Running flow: ${flow_name} (${attempt}/${FLOW_MAX_ATTEMPTS})"
 
-    cmd=(maestro test)
+    cmd=("$MAESTRO_BIN" test)
     if [ -n "${MAESTRO_DEVICE:-}" ]; then
       cmd+=(--device "$MAESTRO_DEVICE")
     fi

@@ -2,6 +2,12 @@
 set -euxo pipefail
 
 cd example/app
+export PATH="$HOME/.maestro/bin:$PATH"
+
+if ! command -v maestro >/dev/null 2>&1; then
+  echo "Maestro binary not found in PATH: $PATH"
+  exit 1
+fi
 
 mkdir -p /tmp/e2e-debug
 cleanup() {
