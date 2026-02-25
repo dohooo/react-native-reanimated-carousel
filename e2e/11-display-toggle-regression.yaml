@@ -6,8 +6,8 @@ name: Display Toggle Gesture Regression
 - runFlow: helpers/navigate-to-e2e.yaml
 # Baseline swipe: ensure gestures work before toggling display
 - swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
+    start: "80%, 45%"
+    end: "20%, 45%"
     duration: 400
 
 - waitForAnimationToEnd:
@@ -34,8 +34,8 @@ name: Display Toggle Gesture Regression
 
 # If issue exists, this swipe won't change index anymore
 - swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
+    start: "80%, 45%"
+    end: "20%, 45%"
     duration: 400
 
 - waitForAnimationToEnd:

@@ -10,8 +10,8 @@ name: Loop Mode - Wrapping Navigation
 # === Test: Swipe RIGHT from slide 0 should wrap to last slide ===
 
 - swipe:
-    start: "20%, 30%"
-    end: "80%, 30%"
+    start: "20%, 45%"
+    end: "80%, 45%"
     duration: 400
 
 - waitForAnimationToEnd:
@@ -24,8 +24,8 @@ name: Loop Mode - Wrapping Navigation
 # === Test: Swipe LEFT to go back to slide 0 (wrapping forward) ===
 
 - swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
+    start: "80%, 45%"
+    end: "20%, 45%"
     duration: 400
 
 - waitForAnimationToEnd:
@@ -47,8 +47,8 @@ name: Loop Mode - Wrapping Navigation
 
 # Swipe LEFT from slide 5 should wrap to slide 0
 - swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
+    start: "80%, 45%"
+    end: "20%, 45%"
     duration: 400
 
 - waitForAnimationToEnd:
@@ -60,40 +60,40 @@ name: Loop Mode - Wrapping Navigation
 # === Test: Continuous loop - swipe through all slides ===
 
 - swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
+    start: "80%, 45%"
+    end: "20%, 45%"
     duration: 400
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 1"
 
 - swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
+    start: "80%, 45%"
+    end: "20%, 45%"
     duration: 400
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 2"
 
 - swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
+    start: "80%, 45%"
+    end: "20%, 45%"
     duration: 400
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 3"
 
 - swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
+    start: "80%, 45%"
+    end: "20%, 45%"
     duration: 400
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 4"
 
 - swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
+    start: "80%, 45%"
+    end: "20%, 45%"
     duration: 400
 - waitForAnimationToEnd:
     timeout: 3000
@@ -101,8 +101,8 @@ name: Loop Mode - Wrapping Navigation
 
 # One more swipe wraps back to 0
 - swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
+    start: "80%, 45%"
+    end: "20%, 45%"
     duration: 400
 - waitForAnimationToEnd:
     timeout: 3000
