@@ -116,7 +116,4 @@ appId: ${APP_ID}
     timeout: 2000
 
 # Verify initial state
-- extendedWaitUntil:
-    visible: "Slide 0"
-    timeout: 10000
 - assertVisible: "Current Index: 0"

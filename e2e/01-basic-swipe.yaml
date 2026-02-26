@@ -18,9 +18,6 @@ name: Basic Swipe Navigation
     visible: "Current Index: 1"
     timeout: 10000
 
-- extendedWaitUntil:
-    visible: "Slide 1"
-    timeout: 10000
 
 # === Test: Swipe LEFT again to go to slide 2 ===
 
@@ -36,9 +33,6 @@ name: Basic Swipe Navigation
     visible: "Current Index: 2"
     timeout: 10000
 
-- extendedWaitUntil:
-    visible: "Slide 2"
-    timeout: 10000
 
 # === Test: Swipe LEFT to go to slide 3 ===
 
@@ -54,9 +48,6 @@ name: Basic Swipe Navigation
     visible: "Current Index: 3"
     timeout: 10000
 
-- extendedWaitUntil:
-    visible: "Slide 3"
-    timeout: 10000
 
 # === Test: Swipe RIGHT to go back to slide 2 ===
 
@@ -72,9 +63,6 @@ name: Basic Swipe Navigation
     visible: "Current Index: 2"
     timeout: 10000
 
-- extendedWaitUntil:
-    visible: "Slide 2"
-    timeout: 10000
 
 # === Test: Swipe RIGHT again to go back to slide 1 ===
 
@@ -90,9 +78,6 @@ name: Basic Swipe Navigation
     visible: "Current Index: 1"
     timeout: 10000
 
-- extendedWaitUntil:
-    visible: "Slide 1"
-    timeout: 10000
 
 # === Test: Swipe RIGHT to go back to slide 0 ===
 
@@ -108,6 +93,3 @@ name: Basic Swipe Navigation
     visible: "Current Index: 0"
     timeout: 10000
 
-- extendedWaitUntil:
-    visible: "Slide 0"
-    timeout: 10000

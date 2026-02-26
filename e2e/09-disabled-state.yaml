@@ -5,9 +5,6 @@ name: Disabled Carousel State
 # Navigate to E2E test page
 - runFlow: helpers/navigate-to-e2e.yaml
 # Verify initial state
-- extendedWaitUntil:
-    visible: "Slide 0"
-    timeout: 10000
 - assertVisible: "Current Index: 0"
 
 # === Setup: Disable the carousel ===

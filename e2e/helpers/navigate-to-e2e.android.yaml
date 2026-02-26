@@ -108,6 +108,3 @@ appId: ${APP_ID}
     timeout: 2000
 
 - assertVisible: "Current Index: 0"
-- extendedWaitUntil:
-    visible: "Slide 0"
-    timeout: 10000

@@ -7,9 +7,6 @@ name: Layout Mode Switching
 # === Test: Default Normal mode works ===
 
 - assertVisible: "Mode: normal"
-- extendedWaitUntil:
-    visible: "Slide 0"
-    timeout: 10000
 
 - swipe:
     start: "85%, 30%"

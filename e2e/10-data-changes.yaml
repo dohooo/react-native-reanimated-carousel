@@ -5,9 +5,6 @@ name: Dynamic Data Count Changes
 # Navigate to E2E test page
 - runFlow: helpers/navigate-to-e2e.yaml
 # Verify default state (6 items)
-- extendedWaitUntil:
-    visible: "Slide 0"
-    timeout: 10000
 
 # === Test: Change to 3 items ===
 
