@@ -7,9 +7,9 @@ name: Basic Swipe Navigation
 # === Test: Swipe LEFT to go to next slide ===
 
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: LEFT
+    start: "85%, 22%"
+    end: "15%, 22%"
+    duration: 500
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -22,9 +22,9 @@ name: Basic Swipe Navigation
 # === Test: Swipe LEFT again to go to slide 2 ===
 
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: LEFT
+    start: "85%, 22%"
+    end: "15%, 22%"
+    duration: 500
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -37,9 +37,9 @@ name: Basic Swipe Navigation
 # === Test: Swipe LEFT to go to slide 3 ===
 
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: LEFT
+    start: "85%, 22%"
+    end: "15%, 22%"
+    duration: 500
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -52,9 +52,9 @@ name: Basic Swipe Navigation
 # === Test: Swipe RIGHT to go back to slide 2 ===
 
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: RIGHT
+    start: "15%, 22%"
+    end: "85%, 22%"
+    duration: 500
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -67,9 +67,9 @@ name: Basic Swipe Navigation
 # === Test: Swipe RIGHT again to go back to slide 1 ===
 
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: RIGHT
+    start: "15%, 22%"
+    end: "85%, 22%"
+    duration: 500
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -82,9 +82,9 @@ name: Basic Swipe Navigation
 # === Test: Swipe RIGHT to go back to slide 0 ===
 
 - swipe:
-    from:
-      id: "e2e-carousel"
-    direction: RIGHT
+    start: "15%, 22%"
+    end: "85%, 22%"
+    duration: 500
 
 - waitForAnimationToEnd:
     timeout: 3000
