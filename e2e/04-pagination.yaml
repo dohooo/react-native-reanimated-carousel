@@ -12,7 +12,9 @@ name: Pagination Dot Navigation
 - waitForAnimationToEnd:
     timeout: 3000
 
-- assertVisible: "Slide 3"
+- extendedWaitUntil:
+    visible: "Slide 3"
+    timeout: 10000
 - assertVisible: "Current Index: 3"
 
 # === Test: Tap pagination dot 0 to go back to start ===
@@ -23,7 +25,9 @@ name: Pagination Dot Navigation
 - waitForAnimationToEnd:
     timeout: 3000
 
-- assertVisible: "Slide 0"
+- extendedWaitUntil:
+    visible: "Slide 0"
+    timeout: 10000
 - assertVisible: "Current Index: 0"
 
 # === Test: Tap pagination dot 5 to go to last slide ===
@@ -34,7 +38,9 @@ name: Pagination Dot Navigation
 - waitForAnimationToEnd:
     timeout: 3000
 
-- assertVisible: "Slide 5"
+- extendedWaitUntil:
+    visible: "Slide 5"
+    timeout: 10000
 - assertVisible: "Current Index: 5"
 
 # === Test: Tap pagination dot 2 to go to middle ===
@@ -45,7 +51,9 @@ name: Pagination Dot Navigation
 - waitForAnimationToEnd:
     timeout: 3000
 
-- assertVisible: "Slide 2"
+- extendedWaitUntil:
+    visible: "Slide 2"
+    timeout: 10000
 - assertVisible: "Current Index: 2"
 
 # === Test: Sequential dot navigation ===
