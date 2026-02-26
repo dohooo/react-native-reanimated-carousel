@@ -12,6 +12,13 @@ const COLORS = ["#B0604D", "#899F9C", "#B3C680", "#5C6265", "#F5D399", "#F1F1F1"
 
 type LayoutMode = "normal" | "parallax" | "horizontal-stack" | "vertical-stack";
 
+function normalizeIndex(absoluteProgress: number, length: number) {
+  if (length <= 0) return 0;
+  const rounded = Math.round(absoluteProgress);
+  const mod = rounded % length;
+  return mod < 0 ? mod + length : mod;
+}
+
 function ToggleButton({
   testID,
   label,
@@ -156,9 +163,10 @@ export default function ComprehensiveE2E() {
             enabled={enabled}
             pagingEnabled={pagingEnabled}
             snapEnabled={snapEnabled}
-            onSnapToItem={setCurrentIndex}
-            onProgressChange={(_, absoluteProgress) => {
+            onProgressChange={(_offsetProgress: number, absoluteProgress: number) => {
               progress.value = absoluteProgress;
+              const nextIndex = normalizeIndex(absoluteProgress, data.length);
+              setCurrentIndex((prev) => (prev === nextIndex ? prev : nextIndex));
             }}
             {...(isStackMode
               ? {
