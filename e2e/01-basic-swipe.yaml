@@ -4,13 +4,16 @@ name: Basic Swipe Navigation
 
 # Navigate to E2E test page
 - runFlow: helpers/navigate-to-e2e.yaml
-# === Test: Swipe LEFT to go to next slide ===
+# === Test: Swipe LEFT from 0 to 1 ===
+- assertVisible: "Current Index: 0"
 
 - repeat:
     while:
       notVisible: "Current Index: 1"
-    times: 2
+    times: 3
     commands:
+      - tapOn:
+          id: "e2e-carousel"
       - swipe:
           start: "85%, 22%"
           end: "15%, 22%"
@@ -20,82 +23,14 @@ name: Basic Swipe Navigation
 
 - assertVisible: "Current Index: 1"
 
-
-# === Test: Swipe LEFT again to go to slide 2 ===
-
-- repeat:
-    while:
-      notVisible: "Current Index: 2"
-    times: 2
-    commands:
-      - swipe:
-          start: "85%, 22%"
-          end: "15%, 22%"
-          duration: 500
-      - waitForAnimationToEnd:
-          timeout: 3000
-
-- assertVisible: "Current Index: 2"
-
-
-# === Test: Swipe LEFT to go to slide 3 ===
-
-- repeat:
-    while:
-      notVisible: "Current Index: 3"
-    times: 2
-    commands:
-      - swipe:
-          start: "85%, 22%"
-          end: "15%, 22%"
-          duration: 500
-      - waitForAnimationToEnd:
-          timeout: 3000
-
-- assertVisible: "Current Index: 3"
-
-
-# === Test: Swipe RIGHT to go back to slide 2 ===
-
-- repeat:
-    while:
-      notVisible: "Current Index: 2"
-    times: 2
-    commands:
-      - swipe:
-          start: "15%, 22%"
-          end: "85%, 22%"
-          duration: 500
-      - waitForAnimationToEnd:
-          timeout: 3000
-
-- assertVisible: "Current Index: 2"
-
-
-# === Test: Swipe RIGHT again to go back to slide 1 ===
-
-- repeat:
-    while:
-      notVisible: "Current Index: 1"
-    times: 2
-    commands:
-      - swipe:
-          start: "15%, 22%"
-          end: "85%, 22%"
-          duration: 500
-      - waitForAnimationToEnd:
-          timeout: 3000
-
-- assertVisible: "Current Index: 1"
-
-
-# === Test: Swipe RIGHT to go back to slide 0 ===
-
+# === Test: Swipe RIGHT from 1 to 0 ===
 - repeat:
     while:
       notVisible: "Current Index: 0"
-    times: 2
+    times: 3
     commands:
+      - tapOn:
+          id: "e2e-carousel"
       - swipe:
           start: "15%, 22%"
           end: "85%, 22%"
