@@ -41,9 +41,9 @@ name: Non-Loop Mode - Boundary Behavior
 - assertVisible: "Current Index: 0"
 
 - swipe:
-    start: "15%, 30%"
-    end: "85%, 30%"
-    duration: 450
+    from:
+      id: "e2e-carousel"
+    direction: RIGHT
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -54,9 +54,9 @@ name: Non-Loop Mode - Boundary Behavior
 # === Test: Swipe RIGHT again - still stays at 0 ===
 
 - swipe:
-    start: "15%, 30%"
-    end: "85%, 30%"
-    duration: 450
+    from:
+      id: "e2e-carousel"
+    direction: RIGHT
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -76,9 +76,9 @@ name: Non-Loop Mode - Boundary Behavior
 # === Test: Swipe LEFT at last slide should NOT wrap ===
 
 - swipe:
-    start: "85%, 30%"
-    end: "15%, 30%"
-    duration: 450
+    from:
+      id: "e2e-carousel"
+    direction: LEFT
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -89,9 +89,9 @@ name: Non-Loop Mode - Boundary Behavior
 # === Test: Can still navigate backward from last slide ===
 
 - swipe:
-    start: "15%, 30%"
-    end: "85%, 30%"
-    duration: 450
+    from:
+      id: "e2e-carousel"
+    direction: RIGHT
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -111,9 +111,9 @@ name: Non-Loop Mode - Boundary Behavior
 # === Test: Can still navigate forward from first slide ===
 
 - swipe:
-    start: "85%, 30%"
-    end: "15%, 30%"
-    duration: 450
+    from:
+      id: "e2e-carousel"
+    direction: LEFT
 
 - waitForAnimationToEnd:
     timeout: 3000

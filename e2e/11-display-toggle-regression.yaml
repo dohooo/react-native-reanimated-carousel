@@ -6,9 +6,9 @@ name: Display Toggle Gesture Regression
 - runFlow: helpers/navigate-to-e2e.yaml
 # Baseline swipe: ensure gestures work before toggling display
 - swipe:
-    start: "85%, 30%"
-    end: "15%, 30%"
-    duration: 450
+    from:
+      id: "e2e-carousel"
+    direction: LEFT
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -34,9 +34,9 @@ name: Display Toggle Gesture Regression
 
 # If issue exists, this swipe won't change index anymore
 - swipe:
-    start: "85%, 30%"
-    end: "15%, 30%"
-    duration: 450
+    from:
+      id: "e2e-carousel"
+    direction: LEFT
 
 - waitForAnimationToEnd:
     timeout: 3000
