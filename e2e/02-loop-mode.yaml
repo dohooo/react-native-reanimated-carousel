@@ -16,24 +16,7 @@ name: Loop Mode - Wrapping Navigation
     visible: "Current Index: 0"
     timeout: 8000
 
-# Jump to last and verify forward wrap.
-- tapOn:
-    id: "btn-goto-5"
-- waitForAnimationToEnd:
-    timeout: 3000
-- extendedWaitUntil:
-    visible: "Current Index: 5"
-    timeout: 8000
-
-- tapOn:
-    id: "btn-next"
-- waitForAnimationToEnd:
-    timeout: 3000
-- extendedWaitUntil:
-    visible: "Current Index: 0"
-    timeout: 8000
-
-# Continuous loop navigation through all slides.
+# Continuous loop navigation through all slides and wrap to start.
 - tapOn:
     id: "btn-next"
 - waitForAnimationToEnd:
