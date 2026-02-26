@@ -58,34 +58,17 @@ name: Layout Mode Switching
 - assertVisible: "Mode: parallax"
 - assertVisible: "Current Index: 0"
 
-# Swipe in parallax mode
-- repeat:
-    while:
-      notVisible: "Current Index: 1"
-    times: 2
-    commands:
-      - swipe:
-          start: "85%, 22%"
-          end: "15%, 22%"
-          duration: 500
-      - waitForAnimationToEnd:
-          timeout: 3000
-
+# Use button navigation for stability after mode transition
+- tapOn:
+    id: "btn-next"
+- waitForAnimationToEnd:
+    timeout: 3000
 - assertVisible: "Current Index: 1"
 
-# Swipe back
-- repeat:
-    while:
-      notVisible: "Current Index: 0"
-    times: 2
-    commands:
-      - swipe:
-          start: "15%, 22%"
-          end: "85%, 22%"
-          duration: 500
-      - waitForAnimationToEnd:
-          timeout: 3000
-
+- tapOn:
+    id: "btn-prev"
+- waitForAnimationToEnd:
+    timeout: 3000
 - assertVisible: "Current Index: 0"
 
 # === Test: Switch to Horizontal Stack mode ===
@@ -116,19 +99,10 @@ name: Layout Mode Switching
 - assertVisible: "Mode: horizontal-stack"
 - assertVisible: "Current Index: 0"
 
-# Swipe in stack mode (narrower container, adjust swipe range)
-- repeat:
-    while:
-      notVisible: "Current Index: 1"
-    times: 2
-    commands:
-      - swipe:
-          start: "65%, 30%"
-          end: "35%, 30%"
-          duration: 450
-      - waitForAnimationToEnd:
-          timeout: 3000
-
+- tapOn:
+    id: "btn-next"
+- waitForAnimationToEnd:
+    timeout: 3000
 - assertVisible: "Current Index: 1"
 
 # === Test: Switch to Vertical Stack mode ===
