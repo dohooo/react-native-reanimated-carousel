@@ -1,0 +1,66 @@
+appId: ${APP_ID}
+name: Gesture After Programmatic Navigation
+---
+
+# Navigate to E2E test page
+- runFlow: helpers/navigate-to-e2e.yaml
+
+# Start from a known programmatic navigation state
+- tapOn:
+    id: "btn-goto-4"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 4"
+
+# Swipe right after GoTo
+- repeat:
+    while:
+      notVisible: "Current Index: 3"
+    times: 3
+    commands:
+      - tapOn:
+          id: "e2e-carousel"
+      - swipe:
+          start: "15%, 22%"
+          end: "85%, 22%"
+          duration: 500
+      - waitForAnimationToEnd:
+          timeout: 3000
+
+- assertVisible: "Current Index: 3"
+
+# Jump with pagination, then swipe again
+- tapOn:
+    id: "pagination-dot-1"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 1"
+
+- repeat:
+    while:
+      notVisible: "Current Index: 2"
+    times: 3
+    commands:
+      - tapOn:
+          id: "e2e-carousel"
+      - swipe:
+          start: "85%, 22%"
+          end: "15%, 22%"
+          duration: 500
+      - waitForAnimationToEnd:
+          timeout: 3000
+
+- assertVisible: "Current Index: 2"
+
+# Mixed button navigation still works after gesture interactions
+- tapOn:
+    id: "btn-next"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 3"
