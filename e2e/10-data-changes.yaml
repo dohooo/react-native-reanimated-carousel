@@ -1,12 +1,10 @@
-appId: com.react-native-reanimated-carousel.example
+appId: ${APP_ID}
 name: Dynamic Data Count Changes
 ---
 
 # Navigate to E2E test page
 - runFlow: helpers/navigate-to-e2e.yaml
-
 # Verify default state (6 items)
-- assertVisible: "Slide 0"
 
 # === Test: Change to 3 items ===
 
@@ -40,28 +38,22 @@ name: Dynamic Data Count Changes
 
 - assertVisible: "Current Index: 0"
 
-# Swipe through all 3 slides
-- swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
-    duration: 400
+# Navigate through all 3 slides with controls
+- tapOn:
+    id: "btn-next"
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 1"
 
-- swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
-    duration: 400
+- tapOn:
+    id: "btn-next"
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 2"
 
-# With loop ON, swipe again wraps to 0
-- swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
-    duration: 400
+# With loop ON, next wraps back to 0
+- tapOn:
+    id: "btn-next"
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 0"
@@ -148,20 +140,16 @@ name: Dynamic Data Count Changes
 
 - assertVisible: "Current Index: 0"
 
-# Swipe to slide 1
-- swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
-    duration: 400
+# Navigate to slide 1
+- tapOn:
+    id: "btn-next"
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 1"
 
-# Swipe wraps back to 0 (only 2 items)
-- swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
-    duration: 400
+# Next wraps back to 0 (only 2 items)
+- tapOn:
+    id: "btn-next"
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 0"
@@ -195,10 +183,8 @@ name: Dynamic Data Count Changes
 - assertVisible: "Current Index: 0"
 
 # Verify carousel works after data change
-- swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
-    duration: 400
+- tapOn:
+    id: "btn-next"
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 1"

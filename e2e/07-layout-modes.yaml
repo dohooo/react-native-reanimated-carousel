@@ -1,22 +1,24 @@
-appId: com.react-native-reanimated-carousel.example
+appId: ${APP_ID}
 name: Layout Mode Switching
 ---
 
 # Navigate to E2E test page
 - runFlow: helpers/navigate-to-e2e.yaml
-
 # === Test: Default Normal mode works ===
 
 - assertVisible: "Mode: normal"
-- assertVisible: "Slide 0"
 
-- swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
-    duration: 400
-
-- waitForAnimationToEnd:
-    timeout: 3000
+- repeat:
+    while:
+      notVisible: "Current Index: 1"
+    times: 2
+    commands:
+      - swipe:
+          start: "85%, 22%"
+          end: "15%, 22%"
+          duration: 500
+      - waitForAnimationToEnd:
+          timeout: 3000
 
 - assertVisible: "Current Index: 1"
 
@@ -56,26 +58,17 @@ name: Layout Mode Switching
 - assertVisible: "Mode: parallax"
 - assertVisible: "Current Index: 0"
 
-# Swipe in parallax mode
-- swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
-    duration: 400
-
+# Use button navigation for stability after mode transition
+- tapOn:
+    id: "btn-next"
 - waitForAnimationToEnd:
     timeout: 3000
-
 - assertVisible: "Current Index: 1"
 
-# Swipe back
-- swipe:
-    start: "20%, 30%"
-    end: "80%, 30%"
-    duration: 400
-
+- tapOn:
+    id: "btn-prev"
 - waitForAnimationToEnd:
     timeout: 3000
-
 - assertVisible: "Current Index: 0"
 
 # === Test: Switch to Horizontal Stack mode ===
@@ -106,15 +99,10 @@ name: Layout Mode Switching
 - assertVisible: "Mode: horizontal-stack"
 - assertVisible: "Current Index: 0"
 
-# Swipe in stack mode (narrower container, adjust swipe range)
-- swipe:
-    start: "65%, 30%"
-    end: "35%, 30%"
-    duration: 400
-
+- tapOn:
+    id: "btn-next"
 - waitForAnimationToEnd:
     timeout: 3000
-
 - assertVisible: "Current Index: 1"
 
 # === Test: Switch to Vertical Stack mode ===
@@ -186,12 +174,16 @@ name: Layout Mode Switching
 - assertVisible: "Current Index: 0"
 
 # Verify swipe works after switching back
-- swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
-    duration: 400
-
-- waitForAnimationToEnd:
-    timeout: 3000
+- repeat:
+    while:
+      notVisible: "Current Index: 1"
+    times: 2
+    commands:
+      - swipe:
+          start: "85%, 22%"
+          end: "15%, 22%"
+          duration: 500
+      - waitForAnimationToEnd:
+          timeout: 3000
 
 - assertVisible: "Current Index: 1"

@@ -1,10 +1,9 @@
-appId: com.react-native-reanimated-carousel.example
+appId: ${APP_ID}
 name: Vertical Mode Navigation
 ---
 
 # Navigate to E2E test page
 - runFlow: helpers/navigate-to-e2e.yaml
-
 # === Setup: Enable vertical mode ===
 
 - scrollUntilVisible:
