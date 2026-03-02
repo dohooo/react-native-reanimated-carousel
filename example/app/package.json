@@ -9,11 +9,10 @@
 		"ios": "expo run:ios",
 		"web": "expo start --web -p 8002",
 		"build:web": "expo export --platform web",
-		"test": "jest --watchAll",
+		"test": "jest --config ./jest.config.cjs --watchAll",
+		"test:ci": "jest --config ./jest.config.cjs --watchAll=false --runInBand __tests__/issue-862.carousel-items.test.tsx",
+		"test:issue-862": "jest --config ./jest.config.cjs --watchAll=false --runInBand __tests__/issue-862.carousel-items.test.tsx",
 		"types": "tsc --noEmit"
-	},
-	"jest": {
-		"preset": "jest-expo"
 	},
 	"dependencies": {
 		"@expo/metro-runtime": "~6.1.2",
