@@ -254,6 +254,29 @@ describe("useCarouselController", () => {
     expect(mockHandlerOffset.value).toBe(-300);
   });
 
+  it("should keep negative offsets when animated backward scrollTo() runs in non-loop mode", () => {
+    const onFinished = jest.fn();
+    const { result } = renderHook(
+      () =>
+        useCarouselController({
+          ...defaultProps,
+          loop: false,
+        }),
+      { wrapper }
+    );
+
+    act(() => {
+      result.current.scrollTo({ index: 3, animated: true });
+    });
+    expect(mockHandlerOffset.value).toBe(-900);
+
+    act(() => {
+      result.current.scrollTo({ index: 2, animated: true, onFinished });
+    });
+    expect(mockHandlerOffset.value).toBe(-600);
+    expect(onFinished).toHaveBeenCalled();
+  });
+
   it("should map scrollTo({ index: 0 }) to zero offset from end in non-loop mode", () => {
     const { result } = renderHook(
       () =>
