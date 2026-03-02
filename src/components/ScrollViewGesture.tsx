@@ -3,6 +3,7 @@ import React, { useCallback } from "react";
 import type { LayoutChangeEvent, StyleProp, ViewStyle } from "react-native";
 import type {
   GestureStateChangeEvent,
+  PanGesture,
   PanGestureHandlerEventPayload,
 } from "react-native-gesture-handler";
 import { GestureDetector } from "react-native-gesture-handler";
@@ -70,6 +71,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
   } = props;
 
   const maxPage = dataLength;
+  const [gestureEpoch, bumpGestureEpoch] = React.useReducer((value: number) => value + 1, 0);
   const isHorizontal = useDerivedValue(() => !vertical, [vertical]);
   const max = useSharedValue(0);
   const panOffset = useSharedValue<number | undefined>(undefined); // set to undefined when not actively in a pan gesture
@@ -77,6 +79,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
   const validStart = useSharedValue(false);
   const scrollEndTranslation = useSharedValue(0);
   const scrollEndVelocity = useSharedValue(0);
+  const layoutWasHidden = useSharedValue(false);
   const containerRef = useAnimatedRef<Animated.View>();
   const maxScrollDistancePerSwipeIsSet = typeof maxScrollDistancePerSwipe === "number";
   const minScrollDistancePerSwipeIsSet = typeof minScrollDistancePerSwipe === "number";
@@ -479,8 +482,15 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
     ]
   );
 
+  const onConfigurePanGestureProxy = React.useCallback(
+    (gesture: PanGesture) => {
+      onConfigurePanGesture?.(gesture);
+    },
+    [onConfigurePanGesture, gestureEpoch]
+  );
+
   const gesture = usePanGestureProxy({
-    onConfigurePanGesture,
+    onConfigurePanGesture: onConfigurePanGestureProxy,
     onGestureStart,
     onGestureUpdate,
     onGestureEnd,
@@ -494,6 +504,13 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       const measuredWidth = e.nativeEvent.layout.width;
       const measuredHeight = e.nativeEvent.layout.height;
       const measuredSize = Math.round((vertical ? measuredHeight : measuredWidth) || 0);
+
+      if (measuredSize <= 0) {
+        layoutWasHidden.value = true;
+      } else if (layoutWasHidden.value) {
+        layoutWasHidden.value = false;
+        scheduleOnRN(bumpGestureEpoch);
+      }
 
       if (!sizeExplicit && measuredSize > 0) {
         const current = resolvedSize.value ?? 0;
@@ -509,7 +526,15 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
         height: measuredHeight,
       });
     },
-    [updateContainerSize, resolvedSize, sizePhase, vertical, sizeExplicit]
+    [
+      updateContainerSize,
+      resolvedSize,
+      sizePhase,
+      vertical,
+      sizeExplicit,
+      layoutWasHidden,
+      bumpGestureEpoch,
+    ]
   );
 
   return (
