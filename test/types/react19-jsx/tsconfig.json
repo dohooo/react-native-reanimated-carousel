@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "jsx": "react-jsx",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "esnext",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "lib": ["esnext"]
+  },
+  "include": ["./CarouselReact19.tsx"]
+}
