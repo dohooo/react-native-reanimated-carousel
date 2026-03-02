@@ -228,6 +228,76 @@ describe("useCarouselController", () => {
     expect(mockHandlerOffset.value).toBe(-900); // size * 3
   });
 
+  it("should keep negative offsets when scrollTo() moves backward in non-loop mode", () => {
+    const { result } = renderHook(
+      () =>
+        useCarouselController({
+          ...defaultProps,
+          loop: false,
+        }),
+      { wrapper }
+    );
+
+    act(() => {
+      result.current.scrollTo({ index: 3, animated: false });
+    });
+    expect(mockHandlerOffset.value).toBe(-900);
+
+    act(() => {
+      result.current.scrollTo({ index: 2, animated: false });
+    });
+    expect(mockHandlerOffset.value).toBe(-600);
+
+    act(() => {
+      result.current.scrollTo({ index: 1, animated: false });
+    });
+    expect(mockHandlerOffset.value).toBe(-300);
+  });
+
+  it("should keep negative offsets when animated backward scrollTo() runs in non-loop mode", () => {
+    const onFinished = jest.fn();
+    const { result } = renderHook(
+      () =>
+        useCarouselController({
+          ...defaultProps,
+          loop: false,
+        }),
+      { wrapper }
+    );
+
+    act(() => {
+      result.current.scrollTo({ index: 3, animated: true });
+    });
+    expect(mockHandlerOffset.value).toBe(-900);
+
+    act(() => {
+      result.current.scrollTo({ index: 2, animated: true, onFinished });
+    });
+    expect(mockHandlerOffset.value).toBe(-600);
+    expect(onFinished).toHaveBeenCalled();
+  });
+
+  it("should map scrollTo({ index: 0 }) to zero offset from end in non-loop mode", () => {
+    const { result } = renderHook(
+      () =>
+        useCarouselController({
+          ...defaultProps,
+          loop: false,
+        }),
+      { wrapper }
+    );
+
+    act(() => {
+      result.current.scrollTo({ index: 4, animated: false });
+    });
+    expect(mockHandlerOffset.value).toBe(-1200);
+
+    act(() => {
+      result.current.scrollTo({ index: 0, animated: false });
+    });
+    expect(Math.abs(mockHandlerOffset.value)).toBe(0);
+  });
+
   it("should handle animation callbacks", () => {
     const onFinished = jest.fn();
     const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
@@ -1004,13 +1074,31 @@ describe("useCarouselController edge cases and uncovered lines", () => {
     expect(typeof currentIndex).toBe("number");
   });
 
-  it("should handle fixed direction in scrollTo", () => {
+  it("should handle positive fixed direction in scrollTo", () => {
     const { result } = renderHook(
       () =>
         useCarouselController({
           ...defaultProps,
           loop: true,
-          fixedDirection: 1,
+          fixedDirection: "positive",
+        }),
+      { wrapper }
+    );
+
+    act(() => {
+      result.current.scrollTo({ index: 3, animated: false });
+    });
+
+    expect(mockHandlerOffset.value).toBe(900); // size * 3
+  });
+
+  it("should handle negative fixed direction in scrollTo", () => {
+    const { result } = renderHook(
+      () =>
+        useCarouselController({
+          ...defaultProps,
+          loop: true,
+          fixedDirection: "negative",
         }),
       { wrapper }
     );
@@ -1022,7 +1110,7 @@ describe("useCarouselController edge cases and uncovered lines", () => {
     expect(mockHandlerOffset.value).toBe(-900); // size * 3
   });
 
-  it("should handle complex loop calculations in scrollTo", () => {
+  it("should handle scrollTo when loop position is close to next cycle", () => {
     const { result } = renderHook(
       () =>
         useCarouselController({
@@ -1032,14 +1120,13 @@ describe("useCarouselController edge cases and uncovered lines", () => {
       { wrapper }
     );
 
-    // Set to a high offset to test loop boundary calculations
-    mockHandlerOffset.value = -1800; // 6 * size, beyond data length
+    mockHandlerOffset.value = -900; // 3 * size, more than half-way through current cycle
 
     act(() => {
       result.current.scrollTo({ index: 1, animated: false });
     });
 
-    expect(typeof mockHandlerOffset.value).toBe("number");
+    expect(mockHandlerOffset.value).toBe(-1800);
   });
 
   it("should get shared index correctly", () => {
