@@ -1,5 +1,12 @@
 # react-native-reanimated-carousel
 
+## 5.0.0-beta.5
+
+### Patch Changes
+
+- [#891](https://github.com/dohooo/react-native-reanimated-carousel/pull/891) [`73d066d`](https://github.com/dohooo/react-native-reanimated-carousel/commit/73d066dae6595b918c1bcf30c76bc40a7e27a6ad) Thanks [@notsuhas](https://github.com/notsuhas)! - - Fix non-loop `scrollTo()` so backward jumps keep the correct negative offset instead of briefly rendering a blank frame.
+  - Add regression tests for non-loop backward `scrollTo()` and returning to index `0`.
+
 ## 5.0.0-beta.4
 
 ### Patch Changes

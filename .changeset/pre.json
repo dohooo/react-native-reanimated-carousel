@@ -9,6 +9,7 @@
     "fix-flex-gesture-blocking",
     "fix-nonloop-overdrag-visible-ranges",
     "fix-nonloop-overscroll",
+    "fix-nonloop-scrollto-offset-regression",
     "fix-pagination-accessibility",
     "fix-second-tier-tdd-issues",
     "fix-web-worklets-error",
