@@ -1,10 +1,9 @@
-appId: com.react-native-reanimated-carousel.example
+appId: ${APP_ID}
 name: Non-Loop Mode - Boundary Behavior
 ---
 
 # Navigate to E2E test page
 - runFlow: helpers/navigate-to-e2e.yaml
-
 # === Setup: Turn off loop mode ===
 
 - scrollUntilVisible:
@@ -42,9 +41,9 @@ name: Non-Loop Mode - Boundary Behavior
 - assertVisible: "Current Index: 0"
 
 - swipe:
-    start: "20%, 30%"
-    end: "80%, 30%"
-    duration: 400
+    start: "15%, 22%"
+    end: "85%, 22%"
+    duration: 500
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -55,9 +54,9 @@ name: Non-Loop Mode - Boundary Behavior
 # === Test: Swipe RIGHT again - still stays at 0 ===
 
 - swipe:
-    start: "20%, 30%"
-    end: "80%, 30%"
-    duration: 400
+    start: "15%, 22%"
+    end: "85%, 22%"
+    duration: 500
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -77,9 +76,9 @@ name: Non-Loop Mode - Boundary Behavior
 # === Test: Swipe LEFT at last slide should NOT wrap ===
 
 - swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
-    duration: 400
+    start: "85%, 22%"
+    end: "15%, 22%"
+    duration: 500
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -90,9 +89,9 @@ name: Non-Loop Mode - Boundary Behavior
 # === Test: Can still navigate backward from last slide ===
 
 - swipe:
-    start: "20%, 30%"
-    end: "80%, 30%"
-    duration: 400
+    start: "15%, 22%"
+    end: "85%, 22%"
+    duration: 500
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -112,9 +111,9 @@ name: Non-Loop Mode - Boundary Behavior
 # === Test: Can still navigate forward from first slide ===
 
 - swipe:
-    start: "80%, 30%"
-    end: "20%, 30%"
-    duration: 400
+    start: "85%, 22%"
+    end: "15%, 22%"
+    duration: 500
 
 - waitForAnimationToEnd:
     timeout: 3000

@@ -1,0 +1,139 @@
+appId: ${APP_ID}
+name: Gesture After Data Reconfiguration
+---
+
+# Navigate to E2E test page
+- runFlow: helpers/navigate-to-e2e.yaml
+
+# === Test: Swipe still works after switching to 3 items ===
+- scrollUntilVisible:
+    element: "3 items"
+    direction: DOWN
+    timeout: 5000
+
+- tapOn:
+    id: "btn-data-3"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# Scroll back to top
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- assertVisible: "Current Index: 0"
+
+- repeat:
+    while:
+      notVisible: "Current Index: 1"
+    times: 3
+    commands:
+      - tapOn:
+          id: "e2e-carousel"
+      - swipe:
+          start: "85%, 22%"
+          end: "15%, 22%"
+          duration: 500
+      - waitForAnimationToEnd:
+          timeout: 3000
+
+- assertVisible: "Current Index: 1"
+
+- tapOn:
+    id: "btn-goto-0"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 0"
+
+# === Test: Swipe still works after switching back to 6 items ===
+- scrollUntilVisible:
+    element: "6 items"
+    direction: DOWN
+    timeout: 5000
+
+- tapOn:
+    id: "btn-data-6"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# Scroll back to top
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 90%"
+    duration: 200
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- assertVisible: "Current Index: 0"
+
+- repeat:
+    while:
+      notVisible: "Current Index: 1"
+    times: 3
+    commands:
+      - tapOn:
+          id: "e2e-carousel"
+      - swipe:
+          start: "85%, 22%"
+          end: "15%, 22%"
+          duration: 500
+      - waitForAnimationToEnd:
+          timeout: 3000
+
+- assertVisible: "Current Index: 1"
+
+# === Test: Swipe still works after reset ===
+- tapOn:
+    id: "btn-reset"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- tapOn:
+    id: "btn-goto-0"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Current Index: 0"
+
+- repeat:
+    while:
+      notVisible: "Current Index: 1"
+    times: 3
+    commands:
+      - tapOn:
+          id: "e2e-carousel"
+      - swipe:
+          start: "85%, 22%"
+          end: "15%, 22%"
+          duration: 500
+      - waitForAnimationToEnd:
+          timeout: 3000
+
+- assertVisible: "Current Index: 1"
