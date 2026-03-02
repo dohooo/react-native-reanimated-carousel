@@ -10,6 +10,7 @@ import { useOnProgressChange } from "../hooks/useOnProgressChange";
 import { useGlobalState } from "../store";
 import { ICarouselInstance } from "../types";
 import { computedRealIndexWithAutoFillData } from "../utils/computed-with-auto-fill-data";
+import { resolveLayoutSize } from "../utils/resolve-layout-size";
 import { ItemRenderer } from "./ItemRenderer";
 import { ScrollViewGesture } from "./ScrollViewGesture";
 
@@ -46,9 +47,11 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
     onProgressChange,
     customAnimation,
     defaultIndex,
+    width: legacyWidth,
+    height: legacyHeight,
   } = props;
 
-  const { size, handlerOffset, resolvedSize, sizePhase } = common;
+  const { size, handlerOffset, resolvedSize, sizePhase, sizeExplicit } = common;
   const layoutConfig = useLayoutConfig({ ...props, size });
 
   const isSizeReady = useDerivedValue(() => {
@@ -159,16 +162,22 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
   const layoutStyle = useAnimatedStyle(() => {
     const { width, height } = flattenedStyle;
     const measuredSize = resolvedSize.value ?? 0;
-
-    const computedWidth = width ?? (vertical ? "100%" : measuredSize || "100%");
-    const computedHeight = height ?? (vertical ? measuredSize || "100%" : "100%");
+    const { computedWidth, computedHeight } = resolveLayoutSize({
+      vertical,
+      styleWidth: width,
+      styleHeight: height,
+      resolvedSize: measuredSize,
+      sizeExplicit,
+      legacyWidth,
+      legacyHeight,
+    });
 
     return {
       width: computedWidth,
       height: computedHeight,
       opacity: isSizeReady.value ? 1 : 0,
     };
-  }, [flattenedStyle, isSizeReady, vertical, resolvedSize, sizePhase]);
+  }, [flattenedStyle, isSizeReady, vertical, resolvedSize, sizePhase, sizeExplicit]);
 
   return (
     <GestureHandlerRootView testID={testID} style={[styles.layoutContainer, style]}>
