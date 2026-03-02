@@ -373,6 +373,45 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     }
   });
 
+  it("display toggle regression #885: should keep swipe working after hide/show layout cycle", async () => {
+    const progress = { current: 0 };
+    const Wrapper = createCarousel(progress);
+    const { getByTestId } = render(<Wrapper style={{ width: slideWidth, height: slideHeight }} />);
+    await verifyInitialRender(getByTestId);
+
+    const initialPanCount = mockPan.mock.calls.length;
+    expect(initialPanCount).toBeGreaterThan(0);
+
+    swipeToLeftOnce();
+    await waitFor(() => expect(progress.current).toBe(1));
+
+    const contentContainer = getByTestId("carousel-content-container");
+    expect(typeof contentContainer.props.onLayout).toBe("function");
+
+    act(() => {
+      contentContainer.props.onLayout?.({
+        nativeEvent: { layout: { width: 0, height: 0 } },
+      } as any);
+    });
+
+    act(() => {
+      contentContainer.props.onLayout?.({
+        nativeEvent: { layout: { width: slideWidth, height: slideHeight } },
+      } as any);
+    });
+
+    act(() => {
+      jest.runOnlyPendingTimers();
+    });
+
+    await waitFor(() => {
+      expect(mockPan.mock.calls.length).toBeGreaterThan(initialPanCount);
+    });
+
+    swipeToLeftOnce();
+    await waitFor(() => expect(progress.current).toBe(2));
+  });
+
   it("`loop` prop: should swipe back to the first item when loop is true", async () => {
     const progress = { current: 0 };
     const Wrapper = createCarousel(progress);
