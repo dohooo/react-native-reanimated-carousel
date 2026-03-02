@@ -96,6 +96,20 @@ export function useCarouselController(options: IOpts): ICarouselController {
     sharedIndex.current = newSharedIndex;
   }
 
+  const syncSharedIndex = React.useCallback(
+    (nextRawIndex: number) => {
+      const nextSharedIndex = convertToSharedIndex({
+        loop,
+        rawDataLength: dataInfo.originalLength,
+        autoFillData: autoFillData!,
+        index: nextRawIndex,
+      });
+
+      setSharedIndex(nextSharedIndex);
+    },
+    [autoFillData, dataInfo, loop]
+  );
+
   useAnimatedReaction(
     () => {
       if (size <= 0) {
@@ -131,14 +145,14 @@ export function useCarouselController(options: IOpts): ICarouselController {
 
   const getCurrentIndex = React.useCallback(() => {
     const realIndex = computedRealIndexWithAutoFillData({
-      index: index.value,
+      index: sharedIndex.current,
       dataLength: dataInfo.originalLength,
       loop,
       autoFillData: autoFillData!,
     });
 
     return realIndex;
-  }, [index, autoFillData, dataInfo, loop]);
+  }, [autoFillData, dataInfo, loop]);
 
   const canSliding = React.useCallback(() => {
     const currentSize = resolvedSize.value ?? size;
@@ -285,6 +299,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
 
       const nextPage = currentFixedPage() + count;
       index.value = nextPage;
+      syncSharedIndex(nextPage);
 
       if (animated) {
         handlerOffset.value = scrollWithTiming(-nextPage * size, onFinished) as any;
@@ -309,6 +324,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
       flattenedStyle,
       width,
       height,
+      syncSharedIndex,
     ]
   );
 
@@ -323,6 +339,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
 
       const prevPage = currentFixedPage() - count;
       index.value = prevPage;
+      syncSharedIndex(prevPage);
 
       if (animated) {
         handlerOffset.value = scrollWithTiming(-prevPage * size, onFinished);
@@ -340,6 +357,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
       size,
       scrollWithTiming,
       currentFixedPage,
+      syncSharedIndex,
     ]
   );
 
@@ -380,10 +398,12 @@ export function useCarouselController(options: IOpts): ICarouselController {
 
       if (animated) {
         index.value = i;
+        syncSharedIndex(i);
         handlerOffset.value = scrollWithTiming(finalOffset, onFinished);
       } else {
         handlerOffset.value = finalOffset;
         index.value = i;
+        syncSharedIndex(i);
         onFinished?.();
       }
     },
@@ -397,6 +417,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
       canSliding,
       onScrollStart,
       scrollWithTiming,
+      syncSharedIndex,
     ]
   );
 
