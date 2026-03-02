@@ -1086,7 +1086,10 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
               style={{ height: slideHeight }}
               defaultScrollOffsetValue={scrollOffset}
               renderItem={({ item, index }) => (
-                <Animated.View testID={`runtime-resize-item-${index}`} style={{ flex: 1, height: 200 }}>
+                <Animated.View
+                  testID={`runtime-resize-item-${index}`}
+                  style={{ flex: 1, height: 200 }}
+                >
                   {item}
                 </Animated.View>
               )}
@@ -1095,7 +1098,9 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
         );
       };
 
-      const { getByTestId, rerender } = render(<ResizeAwareCarousel containerWidth={initialWidth} />);
+      const { getByTestId, rerender } = render(
+        <ResizeAwareCarousel containerWidth={initialWidth} />
+      );
 
       const contentContainer = getByTestId("carousel-content-container");
       expect(contentContainer.props.style[1].width).toBe("100%");

@@ -27,7 +27,8 @@ export function resolveLayoutSize(params: {
   const lockMainAxis = sizeExplicit || hasLegacyAxisSize;
 
   const computedWidth = styleWidth ?? (vertical ? "100%" : lockMainAxis ? resolvedAxis : "100%");
-  const computedHeight = styleHeight ?? (vertical ? (lockMainAxis ? resolvedAxis : "100%") : "100%");
+  const computedHeight =
+    styleHeight ?? (vertical ? (lockMainAxis ? resolvedAxis : "100%") : "100%");
 
   return { computedWidth, computedHeight };
 }
