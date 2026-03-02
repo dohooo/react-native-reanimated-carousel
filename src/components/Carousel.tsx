@@ -19,8 +19,6 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>((_prop
   );
 });
 
-type CarouselComponent = <T>(
-  props: React.PropsWithChildren<TCarouselProps<T>>
-) => React.ReactNode;
+type CarouselComponent = <T>(props: React.PropsWithChildren<TCarouselProps<T>>) => React.ReactNode;
 
 export default Carousel as CarouselComponent;
