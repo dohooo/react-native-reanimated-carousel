@@ -11,7 +11,7 @@ import { fireGestureHandler, getByGestureTestId } from "react-native-gesture-han
 
 import Carousel from "./Carousel";
 
-import type { TCarouselProps } from "../types";
+import type { ICarouselInstance, TCarouselProps } from "../types";
 
 // Suppress the "measure() cannot be used with Jest" warning from Reanimated.
 // The measure export is non-configurable so it cannot be spied on or mocked
@@ -37,6 +37,27 @@ jest.setTimeout(1000 * 12);
 const mockPan = jest.fn();
 const realPan = Gesture.Pan();
 const gestureTestId = "rnrc-gesture-handler";
+const REANIMATED_RENDER_READ_WARNING = "Reading from `value` during component render";
+
+const captureReanimatedRenderReadWarnings = (warnings: string[]) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const cfg = (global as any).__reanimatedLoggerConfig as
+    | { logFunction: (data: { level: number; message: string }) => void }
+    | undefined;
+  if (!cfg) return () => {};
+
+  const originalLog = cfg.logFunction;
+  cfg.logFunction = (data) => {
+    if (data.message.includes(REANIMATED_RENDER_READ_WARNING)) {
+      warnings.push(data.message);
+    }
+    originalLog(data);
+  };
+
+  return () => {
+    cfg.logFunction = originalLog;
+  };
+};
 
 jest.spyOn(Gesture, "Pan").mockImplementation(() => {
   mockPan();
@@ -1059,5 +1080,53 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
       expect(getByTestId("carousel-item-1")).toBeTruthy();
       expect(getByTestId("carousel-item-2")).toBeTruthy();
     });
+  });
+
+  it("should not emit render-time shared-value warning when reading current index during rerender", async () => {
+    const warnings: string[] = [];
+    const restoreLogger = captureReanimatedRenderReadWarnings(warnings);
+    const observedIndex = { current: -1 };
+
+    const RenderReadIndexProbe = () => {
+      const [tick, setTick] = React.useState(0);
+      const carouselRef = React.useRef<ICarouselInstance>(null);
+
+      if (tick > 0) {
+        observedIndex.current = carouselRef.current?.getCurrentIndex() ?? -1;
+      }
+
+      React.useEffect(() => {
+        setTick(1);
+      }, []);
+
+      return (
+        <Carousel
+          ref={carouselRef}
+          data={createMockData()}
+          style={{ width: slideWidth, height: slideHeight }}
+          renderItem={({ item, index }) => (
+            <Animated.View
+              testID={`carousel-item-${index}`}
+              style={{ width: slideWidth, height: slideHeight, flex: 1 }}
+            >
+              {item}
+            </Animated.View>
+          )}
+        />
+      );
+    };
+
+    try {
+      const { getByTestId } = render(<RenderReadIndexProbe />);
+      await verifyInitialRender(getByTestId);
+
+      await waitFor(() => {
+        expect(observedIndex.current).toBe(0);
+      });
+
+      expect(warnings).toEqual([]);
+    } finally {
+      restoreLogger();
+    }
   });
 });
