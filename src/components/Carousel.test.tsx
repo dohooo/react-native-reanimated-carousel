@@ -1059,5 +1059,88 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
       expect(getByTestId("carousel-item-1")).toBeTruthy();
       expect(getByTestId("carousel-item-2")).toBeTruthy();
     });
+
+    it("should keep auto-sized container responsive and preserve paging after runtime resize", async () => {
+      const initialWidth = 320;
+      const resizedWidth = 520;
+      const offsetTracker = { current: 0 };
+      let nextSlide: ((opts?: { count?: number; animated?: boolean }) => void) | undefined;
+
+      const ResizeAwareCarousel: FC<{ containerWidth: number }> = ({ containerWidth }) => {
+        const scrollOffset = useSharedValue(0);
+
+        useDerivedValue(() => {
+          offsetTracker.current = scrollOffset.value;
+        }, [scrollOffset]);
+
+        return (
+          <Animated.View style={{ width: containerWidth, height: slideHeight }}>
+            <Carousel
+              ref={(ref) => {
+                if (!ref) return;
+                nextSlide = ref.next;
+              }}
+              loop={false}
+              defaultIndex={1}
+              data={createMockData(6)}
+              style={{ height: slideHeight }}
+              defaultScrollOffsetValue={scrollOffset}
+              renderItem={({ item, index }) => (
+                <Animated.View
+                  testID={`runtime-resize-item-${index}`}
+                  style={{ flex: 1, height: 200 }}
+                >
+                  {item}
+                </Animated.View>
+              )}
+            />
+          </Animated.View>
+        );
+      };
+
+      const { getByTestId, rerender } = render(
+        <ResizeAwareCarousel containerWidth={initialWidth} />
+      );
+
+      const contentContainer = getByTestId("carousel-content-container");
+      expect(contentContainer.props.style[1].width).toBe("100%");
+
+      act(() => {
+        contentContainer.props.onLayout?.({
+          nativeEvent: { layout: { width: initialWidth, height: slideHeight } },
+        } as any);
+        jest.runOnlyPendingTimers();
+      });
+
+      await waitFor(() => {
+        expect(offsetTracker.current).toBe(-initialWidth);
+      });
+
+      expect(getByTestId("carousel-content-container").props.style[1].width).toBe("100%");
+
+      rerender(<ResizeAwareCarousel containerWidth={resizedWidth} />);
+
+      const resizedContentContainer = getByTestId("carousel-content-container");
+      expect(resizedContentContainer.props.style[1].width).toBe("100%");
+
+      act(() => {
+        resizedContentContainer.props.onLayout?.({
+          nativeEvent: { layout: { width: resizedWidth, height: slideHeight } },
+        } as any);
+        jest.runOnlyPendingTimers();
+      });
+
+      await waitFor(() => {
+        expect(offsetTracker.current).toBe(-resizedWidth);
+      });
+
+      act(() => {
+        nextSlide?.({ animated: false });
+      });
+
+      await waitFor(() => {
+        expect(offsetTracker.current).toBe(-(resizedWidth * 2));
+      });
+    });
   });
 });
