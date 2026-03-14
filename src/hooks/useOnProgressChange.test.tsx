@@ -1,4 +1,4 @@
-import { useSharedValue } from "react-native-reanimated";
+import { type SharedValue, useSharedValue } from "react-native-reanimated";
 
 import { renderHook } from "@testing-library/react-hooks";
 
@@ -168,5 +168,46 @@ describe("useOnProgressChange", () => {
 
     mockOffsetX.value = -300;
     expect(mockOnProgressChange).not.toHaveBeenCalled();
+  });
+
+  it("should include offsetX in the dependency array so the reaction re-registers when a new offsetX instance is passed, and should update callback appropriately", () => {
+    const { useAnimatedReaction } = jest.requireMock("react-native-reanimated");
+    const size = 300
+    const progressPct = 0.5
+    const offset = -size * progressPct
+    const mockOffsetX2 = useSharedValue(offset);
+
+    // is one of the values in this dependency array equal to our new mock offset?
+    const containsNewOffset = (deps: unknown[], contains: unknown) => {
+      return deps.reduce((accum: boolean, v: unknown) => {
+        if (v === contains) {
+          return true
+        }
+        return accum
+      }, false)
+    }
+
+
+    const { rerender } = renderHook(
+      ({ offsetX }) =>
+        useOnProgressChange({
+          size: size,
+          autoFillData: false,
+          loop: false,
+          offsetX: offsetX,
+          rawDataLength: 5,
+          onProgressChange: mockOnProgressChange,
+        }),
+      { initialProps: { offsetX: mockOffsetX } }
+    );
+
+    expect(containsNewOffset(useAnimatedReaction.mock.calls[0]?.[2], mockOffsetX2)).toBe(false);
+    expect(mockOnProgressChange).toHaveBeenCalledWith(0, 0);
+
+    // Re-render with a different offsetX instance
+    rerender({ offsetX: mockOffsetX2 });
+
+    expect(containsNewOffset(useAnimatedReaction.mock.calls[1]?.[2], mockOffsetX2)).toBe(true);
+    expect(mockOnProgressChange).toHaveBeenCalledWith(offset, progressPct);
   });
 });
