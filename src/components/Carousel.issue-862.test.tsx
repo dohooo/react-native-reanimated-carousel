@@ -39,9 +39,13 @@ describe("issue #862 carousel items render in tests", () => {
     expect(tree.root.findAllByProps({ testID: "issue-862-carousel" }).length).toBeGreaterThan(0);
 
     for (const [index, item] of data.entries()) {
-      expect(tree.root.findAllByProps({ testID: `issue-862-item-${item}` }).length).toBeGreaterThan(0);
+      expect(tree.root.findAllByProps({ testID: `issue-862-item-${item}` }).length).toBeGreaterThan(
+        0
+      );
       expect(
-        tree.root.findAllByType(Text).some((node) => node.props.children === `Slide ${index}: ${item}`)
+        tree.root
+          .findAllByType(Text)
+          .some((node) => node.props.children === `Slide ${index}: ${item}`)
       ).toBe(true);
     }
 
