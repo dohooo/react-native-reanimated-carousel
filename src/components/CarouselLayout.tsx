@@ -21,6 +21,8 @@ export function resolveCarouselLayoutStyle(params: {
   measuredSize: number;
   sizeExplicit: boolean;
 }) {
+  "worklet";
+
   const { flattenedStyle, vertical, measuredSize, sizeExplicit } = params;
   const { width, height } = flattenedStyle;
   const resolvedMainAxisSize = measuredSize || "100%";
