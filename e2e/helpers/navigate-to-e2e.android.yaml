@@ -25,6 +25,17 @@ appId: ${APP_ID}
     text: "http://10.0.2.2:8081"
     optional: true
 
+- runFlow:
+    when:
+      visible: "Connect"
+    commands:
+      - tapOn:
+          text: "http://localhost:8081"
+      - eraseText
+      - inputText: "http://10.0.2.2:8081"
+      - tapOn:
+          text: "Connect"
+
 - waitForAnimationToEnd:
     timeout: 15000
 
@@ -54,6 +65,17 @@ appId: ${APP_ID}
 - tapOn:
     text: "http://10.0.2.2:8081"
     optional: true
+
+- runFlow:
+    when:
+      visible: "Connect"
+    commands:
+      - tapOn:
+          text: "http://localhost:8081"
+      - eraseText
+      - inputText: "http://10.0.2.2:8081"
+      - tapOn:
+          text: "Connect"
 
 - tapOn:
     text: "Continue"

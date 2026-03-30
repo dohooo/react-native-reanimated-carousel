@@ -93,24 +93,35 @@ name: Disabled Carousel State
 
 # === Test: Swiping works after re-enabling ===
 
-- swipe:
-    start: "85%, 22%"
-    end: "15%, 22%"
-    duration: 500
-
-- waitForAnimationToEnd:
-    timeout: 3000
+- repeat:
+    while:
+      notVisible: "Current Index: 1"
+    times: 3
+    commands:
+      - tapOn:
+          id: "e2e-carousel"
+      - swipe:
+          start: "85%, 22%"
+          end: "15%, 22%"
+          duration: 500
+      - waitForAnimationToEnd:
+          timeout: 3000
 
 - assertVisible: "Current Index: 1"
 
-# === Test: Swipe back also works ===
+# === Test: Subsequent gestures also work after re-enabling ===
+- repeat:
+    while:
+      notVisible: "Current Index: 2"
+    times: 3
+    commands:
+      - tapOn:
+          id: "e2e-carousel"
+      - swipe:
+          start: "85%, 22%"
+          end: "15%, 22%"
+          duration: 500
+      - waitForAnimationToEnd:
+          timeout: 3000
 
-- swipe:
-    start: "15%, 22%"
-    end: "85%, 22%"
-    duration: 500
-
-- waitForAnimationToEnd:
-    timeout: 3000
-
-- assertVisible: "Current Index: 0"
+- assertVisible: "Current Index: 2"
