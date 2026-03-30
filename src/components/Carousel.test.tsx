@@ -10,8 +10,9 @@ import { act, render, waitFor } from "@testing-library/react-native";
 import { fireGestureHandler, getByGestureTestId } from "react-native-gesture-handler/jest-utils";
 
 import Carousel from "./Carousel";
+import { resolveCarouselLayoutStyle } from "./CarouselLayout";
 
-import type { TCarouselProps } from "../types";
+import type { ICarouselInstance, TCarouselProps } from "../types";
 
 // Suppress the "measure() cannot be used with Jest" warning from Reanimated.
 // The measure export is non-configurable so it cannot be spied on or mocked
@@ -1002,6 +1003,122 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
   });
 
   describe("Carousel sizing and measurement", () => {
+    it("issue #890: keeps the auto-sized main axis responsive after the first measurement", () => {
+      expect(
+        resolveCarouselLayoutStyle({
+          flattenedStyle: { height: slideHeight },
+          vertical: false,
+          measuredSize: 350,
+          sizeExplicit: false,
+        })
+      ).toEqual({
+        width: "100%",
+        height: slideHeight,
+      });
+    });
+
+    it("issue #890: still respects explicit page size on the main axis", () => {
+      expect(
+        resolveCarouselLayoutStyle({
+          flattenedStyle: { height: slideHeight },
+          vertical: false,
+          measuredSize: 350,
+          sizeExplicit: true,
+        })
+      ).toEqual({
+        width: 350,
+        height: slideHeight,
+      });
+    });
+
+    it("issue #890: rescales offset after repeated onLayout size changes", async () => {
+      const progress = { current: 0 };
+      const observedOffset = { current: 0 };
+      const slideDurationMs = 250;
+      let nextSlide: ICarouselInstance["next"] | undefined;
+
+      const Wrapper = React.forwardRef<ICarouselInstance, Partial<TCarouselProps<string>>>(
+        (customProps, ref) => {
+          const progressAnimVal = useSharedValue(progress.current);
+          const offsetAnimVal = useSharedValue(0);
+          const defaultRenderItem = ({
+            item,
+            index,
+          }: {
+            item: string;
+            index: number;
+          }) => (
+            <Animated.View
+              testID={`carousel-item-${index}`}
+              style={{ width: slideWidth, height: slideHeight, flex: 1 }}
+            >
+              {item}
+            </Animated.View>
+          );
+          const { renderItem = defaultRenderItem, ...defaultProps } = createDefaultProps(
+            progressAnimVal,
+            {
+              loop: false,
+              data: createMockData(6),
+              scrollAnimationDuration: slideDurationMs,
+              scrollOffsetValue: offsetAnimVal,
+              ...customProps,
+            }
+          );
+
+          useDerivedValue(() => {
+            progress.current = progressAnimVal.value;
+            observedOffset.current = offsetAnimVal.value;
+          }, [progressAnimVal, offsetAnimVal]);
+
+          return <Carousel {...defaultProps} renderItem={renderItem} ref={ref} />;
+        }
+      );
+
+      const { getByTestId } = render(
+        <Wrapper
+          ref={(ref) => {
+            if (ref) nextSlide = ref.next;
+          }}
+          style={{ height: slideHeight }}
+        />
+      );
+
+      const flush = (ms = slideDurationMs + 10) =>
+        act(() => {
+          jest.advanceTimersByTime(ms);
+        });
+
+      const contentContainer = getByTestId("carousel-content-container");
+
+      act(() => {
+        contentContainer.props.onLayout?.({
+          nativeEvent: { layout: { width: 350, height: slideHeight } },
+        } as any);
+      });
+      flush(1);
+
+      act(() => {
+        nextSlide?.({ animated: false });
+      });
+      await waitFor(() => {
+        expect(progress.current).toBe(1);
+        expect(observedOffset.current).toBe(-350);
+      });
+
+      act(() => {
+        contentContainer.props.onLayout?.({
+          nativeEvent: { layout: { width: 500, height: slideHeight } },
+        } as any);
+      });
+      flush(1);
+
+      await waitFor(() => {
+        expect(progress.current).toBe(1);
+        expect(observedOffset.current).toBe(-500);
+      });
+    });
+
     it("should render items even before onLayout provides size (flex-based sizing)", async () => {
       const progress = { current: 0 };
       const Wrapper = createCarousel(progress);
