@@ -88,10 +88,8 @@ name: Non-Loop Mode - Boundary Behavior
 
 # === Test: Can still navigate backward from last slide ===
 
-- swipe:
-    start: "15%, 22%"
-    end: "85%, 22%"
-    duration: 500
+- tapOn:
+    id: "btn-prev"
 
 - waitForAnimationToEnd:
     timeout: 3000
@@ -110,10 +108,8 @@ name: Non-Loop Mode - Boundary Behavior
 
 # === Test: Can still navigate forward from first slide ===
 
-- swipe:
-    start: "85%, 22%"
-    end: "15%, 22%"
-    duration: 500
+- tapOn:
+    id: "btn-next"
 
 - waitForAnimationToEnd:
     timeout: 3000
