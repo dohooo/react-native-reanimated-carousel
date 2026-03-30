@@ -9,7 +9,7 @@ import type { TAnimationStyle } from "./ItemLayout";
 import { ItemLayout } from "./ItemLayout";
 
 import type { VisibleRanges } from "../hooks/useVisibleRanges";
-import { useVisibleRanges } from "../hooks/useVisibleRanges";
+import { computeVisibleRanges, useVisibleRanges } from "../hooks/useVisibleRanges";
 import type { CarouselRenderItem } from "../types";
 import { computedRealIndexWithAutoFillData } from "../utils/computed-with-auto-fill-data";
 
@@ -20,6 +20,7 @@ interface Props {
   loop: boolean;
   size: number;
   windowSize?: number;
+  defaultIndex: number;
   autoFillData: boolean;
   offsetX: SharedValue<number>;
   handlerOffset: SharedValue<number>;
@@ -33,6 +34,7 @@ export const ItemRenderer: FC<Props> = (props) => {
     data,
     size,
     windowSize,
+    defaultIndex,
     handlerOffset,
     offsetX,
     dataLength,
@@ -54,11 +56,14 @@ export const ItemRenderer: FC<Props> = (props) => {
 
   // Initialize with a sensible default to avoid blank render on first frame
   const initialRanges: VisibleRanges = React.useMemo(
-    () => ({
-      negativeRange: [0, 0],
-      positiveRange: [0, Math.min(dataLength - 1, (windowSize ?? dataLength) - 1)],
-    }),
-    [dataLength, windowSize]
+    () =>
+      computeVisibleRanges({
+        total: dataLength,
+        windowSize,
+        currentIndex: defaultIndex,
+        loop,
+      }),
+    [dataLength, defaultIndex, loop, windowSize]
   );
 
   const [displayedItems, setDisplayedItems] = React.useState<VisibleRanges>(initialRanges);

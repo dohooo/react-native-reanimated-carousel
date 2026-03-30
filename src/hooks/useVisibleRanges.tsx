@@ -11,6 +11,72 @@ export interface VisibleRanges {
 
 export type IVisibleRanges = SharedValue<VisibleRanges>;
 
+function normalizeWindowSize(total: number, windowSize?: number) {
+  return typeof windowSize === "number" && Number.isFinite(windowSize) && windowSize > 0
+    ? windowSize
+    : total;
+}
+
+function normalizeLoopIndex(currentIndex: number, total: number) {
+  return currentIndex < 0 ? (currentIndex % total) + total : currentIndex;
+}
+
+export function computeVisibleRanges(params: {
+  total: number;
+  windowSize?: number;
+  currentIndex: number;
+  loop?: boolean;
+}): VisibleRanges {
+  "worklet";
+
+  const { total = 0, loop } = params;
+  const windowSize = normalizeWindowSize(total, params.windowSize);
+
+  if (total <= 0) {
+    return {
+      negativeRange: [0, 0],
+      positiveRange: [0, -1],
+    };
+  }
+
+  const positiveCount = Math.round(windowSize / 2);
+  const negativeCount = windowSize - positiveCount;
+
+  let currentIndex = params.currentIndex;
+  if (!Number.isFinite(currentIndex)) currentIndex = 0;
+
+  if (!loop) {
+    currentIndex = Math.max(0, Math.min(total - 1, currentIndex));
+    return {
+      negativeRange: [Math.max(0, currentIndex - (windowSize - 1)), currentIndex],
+      positiveRange: [currentIndex, Math.min(total - 1, currentIndex + (windowSize - 1))],
+    };
+  }
+
+  currentIndex = normalizeLoopIndex(currentIndex, total);
+
+  const negativeRange: Range = [
+    (currentIndex - negativeCount + total) % total,
+    (currentIndex - 1 + total) % total,
+  ];
+
+  const positiveRange: Range = [
+    (currentIndex + total) % total,
+    (currentIndex + positiveCount + total) % total,
+  ];
+
+  if (negativeRange[0] < total && negativeRange[0] > negativeRange[1]) {
+    negativeRange[1] = total - 1;
+    positiveRange[0] = 0;
+  }
+  if (positiveRange[0] > positiveRange[1]) {
+    negativeRange[1] = total - 1;
+    positiveRange[0] = 0;
+  }
+
+  return { negativeRange, positiveRange };
+}
+
 export function useVisibleRanges(options: {
   total: number;
   viewSize: number;
@@ -20,18 +86,12 @@ export function useVisibleRanges(options: {
 }): IVisibleRanges {
   const { total = 0, viewSize, translation, windowSize: _windowSize, loop } = options;
 
-  const windowSize =
-    typeof _windowSize === "number" && Number.isFinite(_windowSize) && _windowSize > 0
-      ? _windowSize
-      : total;
+  const windowSize = normalizeWindowSize(total, _windowSize);
   const cachedRanges = useRef<VisibleRanges | null>(null);
 
   const ranges = useDerivedValue(() => {
     if (total <= 0) {
-      return {
-        negativeRange: [0, 0] as Range,
-        positiveRange: [0, -1] as Range,
-      };
+      return computeVisibleRanges({ total, currentIndex: 0, windowSize, loop });
     }
 
     // Prevent division by zero when viewSize is not yet measured
@@ -42,50 +102,10 @@ export function useVisibleRanges(options: {
       };
     }
 
-    const positiveCount = Math.round(windowSize / 2);
-    const negativeCount = windowSize - positiveCount;
-
     let currentIndex = Math.round(-translation.value / viewSize);
     if (!Number.isFinite(currentIndex)) currentIndex = 0;
 
-    let newRanges: VisibleRanges;
-
-    if (!loop) {
-      // Clamp currentIndex to valid range [0, total-1] for non-loop mode
-      // When overdragging right, translation.value becomes positive, making currentIndex negative
-      currentIndex = Math.max(0, Math.min(total - 1, currentIndex));
-
-      // Adjusting negative range if the carousel is not loopable.
-      // So, It will be only displayed the positive items.
-      newRanges = {
-        negativeRange: [Math.max(0, currentIndex - (windowSize - 1)), currentIndex],
-        positiveRange: [currentIndex, Math.min(total - 1, currentIndex + (windowSize - 1))],
-      };
-    } else {
-      currentIndex = currentIndex < 0 ? (currentIndex % total) + total : currentIndex;
-
-      const negativeRange: Range = [
-        (currentIndex - negativeCount + total) % total,
-        (currentIndex - 1 + total) % total,
-      ];
-
-      const positiveRange: Range = [
-        (currentIndex + total) % total,
-        (currentIndex + positiveCount + total) % total,
-      ];
-
-      if (negativeRange[0] < total && negativeRange[0] > negativeRange[1]) {
-        negativeRange[1] = total - 1;
-        positiveRange[0] = 0;
-      }
-      if (positiveRange[0] > positiveRange[1]) {
-        negativeRange[1] = total - 1;
-        positiveRange[0] = 0;
-      }
-
-      // console.log({ negativeRange, positiveRange ,total,windowSize,a:total <= _windowSize})
-      newRanges = { negativeRange, positiveRange };
-    }
+    const newRanges = computeVisibleRanges({ total, windowSize, currentIndex, loop });
 
     if (
       cachedRanges.current &&
