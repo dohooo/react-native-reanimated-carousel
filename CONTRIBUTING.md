@@ -45,6 +45,8 @@ yarn typescript
 yarn lint
 ```
 
+The `yarn typescript` command runs both standard TypeScript type checking and React 19 JSX compatibility tests to ensure your changes work with React 19. You can also run `yarn types:react19` separately to check React 19 compatibility specifically.
+
 To fix formatting and linting errors, run the following:
 
 ```sh
@@ -93,7 +95,8 @@ yarn release
 The `package.json` file contains various scripts for common tasks:
 
 - `yarn bootstrap`: setup project by installing all dependencies and pods.
-- `yarn typescript`: type-check files with TypeScript.
+- `yarn typescript`: type-check files with TypeScript, including React 19 JSX compatibility.
+- `yarn types:react19`: run React 19 JSX compatibility type checking specifically.
 - `yarn lint`: check files with Biome.
 - `yarn lint:fix`: fix formatting and linting issues with Biome.
 - `yarn test`: run unit tests with Jest.
