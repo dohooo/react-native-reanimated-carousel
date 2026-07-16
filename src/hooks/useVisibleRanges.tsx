@@ -50,7 +50,12 @@ export function useVisibleRanges(options: {
 
     let newRanges: VisibleRanges;
 
-    if (!loop) {
+    if (loop && windowSize >= total) {
+      newRanges = {
+        negativeRange: [0, 0],
+        positiveRange: [0, total - 1],
+      };
+    } else if (!loop) {
       // Clamp currentIndex to valid range [0, total-1] for non-loop mode
       // When overdragging right, translation.value becomes positive, making currentIndex negative
       currentIndex = Math.max(0, Math.min(total - 1, currentIndex));
