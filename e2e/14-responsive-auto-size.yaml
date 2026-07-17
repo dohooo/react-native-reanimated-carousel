@@ -6,13 +6,28 @@ name: Responsive Auto Size
 - launchApp:
     clearState: false
 
+- waitForAnimationToEnd:
+    timeout: 5000
+
+- extendedWaitUntil:
+    visible: "http://localhost:8081"
+    timeout: 15000
+    optional: true
+
 - tapOn:
     text: "http://localhost:8081"
     optional: true
 
 - tapOn:
+    text: "http://127.0.0.1:8081"
+    optional: true
+
+- tapOn:
     text: "http://10.0.2.2:8081"
     optional: true
+
+- waitForAnimationToEnd:
+    timeout: 10000
 
 - extendedWaitUntil:
     visible: "Continue"
@@ -27,11 +42,47 @@ name: Responsive Auto Size
     text: "Close"
     optional: true
 
+# Retry once in case the development server appears during the onboarding wait.
+- tapOn:
+    text: "http://localhost:8081"
+    optional: true
+
+- tapOn:
+    text: "http://127.0.0.1:8081"
+    optional: true
+
+- tapOn:
+    text: "http://10.0.2.2:8081"
+    optional: true
+
+- tapOn:
+    text: "Continue"
+    optional: true
+
+- tapOn:
+    text: "Close"
+    optional: true
+
+- waitForAnimationToEnd:
+    timeout: 8000
+
 - extendedWaitUntil:
     visible: "Basic Layouts"
     timeout: 180000
 
 - openLink: "rnrc-example-app://demos/e2e-testing/web-release-smoke"
+
+- extendedWaitUntil:
+    visible: "Open"
+    timeout: 5000
+    optional: true
+
+- tapOn:
+    text: "Open"
+    optional: true
+
+- waitForAnimationToEnd:
+    timeout: 10000
 
 - extendedWaitUntil:
     visible: "Web Release Smoke"

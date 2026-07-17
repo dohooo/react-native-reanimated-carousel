@@ -24,7 +24,7 @@ export default defineConfig({
   webServer: {
     command: "yarn expo start --web --no-dev --minify --localhost --port 8002 --clear",
     cwd: "./example/app",
-    url: "http://127.0.0.1:8002",
+    url: "http://127.0.0.1:8002/demos/e2e-testing/web-release-smoke",
     reuseExistingServer: false,
     timeout: 180_000,
   },

@@ -45,7 +45,7 @@ jobs:
           java-version: 17
 
       - name: Install Expo Android NDK
-        run: sdkmanager "ndk;27.1.12297006"
+        run: '"$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --install "ndk;27.1.12297006"'
 
       - name: Install repository dependencies
         run: yarn install --frozen-lockfile

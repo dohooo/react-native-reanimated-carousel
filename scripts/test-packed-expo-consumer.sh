@@ -47,6 +47,7 @@ npx expo install \
 npm install --save "$TARBALL_PATH"
 cp "$REPOSITORY_ROOT/e2e/fixtures/packed-expo/App.tsx" App.tsx
 
+npx expo install --fix
 npx tsc --noEmit
 npx expo install --check
 npx --yes expo-doctor@1.20.1
