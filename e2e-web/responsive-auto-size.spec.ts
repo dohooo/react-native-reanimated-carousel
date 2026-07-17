@@ -72,7 +72,7 @@ function failOnBrowserErrors(page: Page) {
 
 test("horizontal auto-size follows its parent without losing the active item", async ({ page }) => {
   const assertNoBrowserErrors = failOnBrowserErrors(page);
-  await page.goto(ROUTE);
+  await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
   const parent = page.getByTestId("horizontal-parent");
   const carousel = page.getByTestId("horizontal-carousel");
@@ -113,7 +113,7 @@ test("horizontal auto-size follows its parent without losing the active item", a
 
 test("vertical auto-size follows its parent without losing the active item", async ({ page }) => {
   const assertNoBrowserErrors = failOnBrowserErrors(page);
-  await page.goto(ROUTE);
+  await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
   const parent = page.getByTestId("vertical-parent");
   const carousel = page.getByTestId("vertical-carousel");
