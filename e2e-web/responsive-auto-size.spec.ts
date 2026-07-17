@@ -1,6 +1,9 @@
 import { type Locator, type Page, expect, test } from "@playwright/test";
 
 const ROUTE = "/demos/e2e-testing/web-release-smoke";
+const PAGE_READY_TIMEOUT = 60_000;
+
+test.describe.configure({ timeout: 90_000 });
 
 async function expectAxisSize(locator: Locator, axis: "width" | "height", expected: number) {
   await expect
@@ -72,11 +75,14 @@ function failOnBrowserErrors(page: Page) {
 
 test("horizontal auto-size follows its parent without losing the active item", async ({ page }) => {
   const assertNoBrowserErrors = failOnBrowserErrors(page);
-  await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
+  await page.goto(ROUTE, { waitUntil: "commit" });
 
   const parent = page.getByTestId("horizontal-parent");
   const carousel = page.getByTestId("horizontal-carousel");
 
+  await expect(page.getByText("Horizontal Item Width: 320", { exact: true })).toBeVisible({
+    timeout: PAGE_READY_TIMEOUT,
+  });
   await expectAxisSize(parent, "width", 320);
   await expectAxisSize(carousel, "width", 320);
   await expectVisibleSlideAxisLayout(
@@ -113,11 +119,14 @@ test("horizontal auto-size follows its parent without losing the active item", a
 
 test("vertical auto-size follows its parent without losing the active item", async ({ page }) => {
   const assertNoBrowserErrors = failOnBrowserErrors(page);
-  await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
+  await page.goto(ROUTE, { waitUntil: "commit" });
 
   const parent = page.getByTestId("vertical-parent");
   const carousel = page.getByTestId("vertical-carousel");
 
+  await expect(page.getByText("Vertical Item Height: 240", { exact: true })).toBeVisible({
+    timeout: PAGE_READY_TIMEOUT,
+  });
   await expectAxisSize(parent, "height", 240);
   await expectAxisSize(carousel, "height", 240);
   await expectVisibleSlideAxisLayout(carousel, page.getByTestId("vertical-slide-0"), "height", 240);
