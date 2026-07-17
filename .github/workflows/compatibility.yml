@@ -1,0 +1,56 @@
+name: Packed Package Compatibility
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "src/**"
+      - "e2e/fixtures/packed-expo/**"
+      - "scripts/test-packed-expo-consumer.sh"
+      - "package.json"
+      - "yarn.lock"
+      - "tsconfig.build.json"
+      - ".github/workflows/compatibility.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  packed-expo-consumer:
+    name: Expo SDK ${{ matrix.expo-sdk }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        expo-sdk: [54, 55, 56, 57]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install Expo Android NDK
+        run: sdkmanager "ndk;27.1.12297006"
+
+      - name: Install repository dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Validate packed package in a clean Expo consumer
+        env:
+          PACKED_EXPO_WORK_ROOT: ${{ runner.temp }}/packed-expo-consumer
+        run: bash scripts/test-packed-expo-consumer.sh "${{ matrix.expo-sdk }}"

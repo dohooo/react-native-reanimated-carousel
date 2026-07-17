@@ -37,7 +37,7 @@ jobs:
           cache: yarn
 
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v6
         id: yarn-cache
         with:
           path: |
@@ -80,7 +80,7 @@ jobs:
           cache: yarn
 
       - name: Restore cache
-        uses: actions/cache@v3
+        uses: actions/cache@v6
         with:
           path: |
             **/node_modules

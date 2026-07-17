@@ -8,5 +8,6 @@
   "concepts": "How it works?",
   "compare": "Compare",
   "faq": "FAQ",
-  "migration-v4": "Migration to v4.x"
+  "migration-v5": "Migrate v4 → v5",
+  "migration-v4": "Migration to v4.x (legacy)"
 }
