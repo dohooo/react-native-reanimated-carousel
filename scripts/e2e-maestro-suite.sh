@@ -101,7 +101,12 @@ for flow in "${FLOWS[@]}"; do
     echo "Flow failed: ${flow_name} (attempt ${attempt}/${FLOW_MAX_ATTEMPTS})"
     # Android-specific recovery: when Maestro/driver gets disconnected mid-run,
     # reset device connectivity and app process before retrying the same flow.
-    if command -v adb >/dev/null 2>&1 && [ -n "${MAESTRO_DEVICE:-}" ]; then
+    if command -v adb >/dev/null 2>&1 &&
+      [ -n "${MAESTRO_DEVICE:-}" ] &&
+      adb devices | awk -v target="$MAESTRO_DEVICE" '
+        $1 == target && $2 == "device" { found = 1 }
+        END { exit(found ? 0 : 1) }
+      '; then
       adb -s "$MAESTRO_DEVICE" wait-for-device || true
       adb -s "$MAESTRO_DEVICE" reverse tcp:8081 tcp:8081 || true
       adb -s "$MAESTRO_DEVICE" shell input keyevent 3 >/dev/null 2>&1 || true
