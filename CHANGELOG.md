@@ -1,5 +1,19 @@
 # react-native-reanimated-carousel
 
+## 5.0.0-beta.6
+
+### Patch Changes
+
+- [#924](https://github.com/dohooo/react-native-reanimated-carousel/pull/924) [`e4fa56f`](https://github.com/dohooo/react-native-reanimated-carousel/commit/e4fa56f6160eb22cfb1f46bf314eadc29f0c74f3) Thanks [@dohooo](https://github.com/dohooo)! - - Keep every item rendered in loop mode when `windowSize` is equal to or greater than the data length (Issue #918).
+
+  - Add unit and Maestro regression coverage for small looped data sets.
+
+- [#924](https://github.com/dohooo/react-native-reanimated-carousel/pull/924) [`e4fa56f`](https://github.com/dohooo/react-native-reanimated-carousel/commit/e4fa56f6160eb22cfb1f46bf314eadc29f0c74f3) Thanks [@dohooo](https://github.com/dohooo)! - - Keep automatically measured carousels responsive when their window or parent container changes size (Issue #890).
+
+  - Preserve explicit style, item size, and legacy `width`/`height` sizing behavior.
+
+- [#924](https://github.com/dohooo/react-native-reanimated-carousel/pull/924) [`e4fa56f`](https://github.com/dohooo/react-native-reanimated-carousel/commit/e4fa56f6160eb22cfb1f46bf314eadc29f0c74f3) Thanks [@dohooo](https://github.com/dohooo)! - - Require React Native Reanimated 4.1 or newer to avoid incompatible Reanimated 4.0 and React Native Worklets 0.5 combinations.
+
 ## 5.0.0-beta.5
 
 ### Patch Changes

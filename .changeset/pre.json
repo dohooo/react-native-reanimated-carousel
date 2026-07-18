@@ -7,14 +7,17 @@
   "changesets": [
     "blue-news-stare",
     "fix-flex-gesture-blocking",
+    "fix-loop-window-visible-ranges",
     "fix-nonloop-overdrag-visible-ranges",
     "fix-nonloop-overscroll",
     "fix-nonloop-scrollto-offset-regression",
     "fix-pagination-accessibility",
+    "fix-responsive-auto-size",
     "fix-second-tier-tdd-issues",
     "fix-web-worklets-error",
     "honest-baboons-sip",
     "odd-news-carry",
+    "require-reanimated-4-1",
     "style-based-sizing"
   ]
 }
