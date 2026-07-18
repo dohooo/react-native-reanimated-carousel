@@ -1,8 +1,8 @@
 ---
 id: migration-v5
-title: Migration Guide to v5.x
-sidebar_label: Migration to v5.x
-description: Guide for migrating to react-native-reanimated-carousel v5.x
+title: Migration Guide to v5 beta
+sidebar_label: Migration to v5 beta
+description: Guide for migrating to the react-native-reanimated-carousel v5 beta
 keywords:
   - react-native-reanimated-carousel
   - reanimated-carousel
@@ -16,17 +16,17 @@ image:
 slug: /migration-v5
 ---
 
-# Migration Guide to v5.x
+# Migration Guide to v5 beta
 
-This guide will help you migrate your application from react-native-reanimated-carousel v4.x to v5.x.
+This guide will help you migrate your application from react-native-reanimated-carousel v4.x to the v5 beta.
 
-## 🎯 What's New in v5.x
+## 🎯 What's New in v5 beta
 
 ### Dynamic Sizing (Auto-sizing)
 The carousel can now measure the main-axis size provided by its parent layout and respond when that size changes. The parent must still provide enough layout constraints for the carousel to be visible.
 
 ### Current Expo Support
-The release matrix validates Expo SDK 54-57 with React Native 0.81-0.86.
+The release matrix validates Expo SDK 54, 55, 56, and 57 with React Native 0.81, 0.83, 0.85, and 0.86 respectively. It type-checks a packed consumer, exports Web, and builds Android; native iOS and Android E2E currently run on Expo 54.
 
 ## 📦 Version Requirements
 
@@ -63,13 +63,13 @@ The v4 style props map to v5 as follows:
 Expo projects should let Expo choose the matching versions:
 
 ```bash
-npx expo install react-native-reanimated-carousel react-native-reanimated react-native-worklets react-native-gesture-handler
+npx expo install react-native-reanimated-carousel@beta react-native-reanimated react-native-worklets react-native-gesture-handler
 ```
 
 React Native Community CLI projects can install the packages with their package manager:
 
 ```bash
-npm install react-native-reanimated-carousel react-native-reanimated react-native-worklets react-native-gesture-handler
+npm install react-native-reanimated-carousel@beta react-native-reanimated react-native-worklets react-native-gesture-handler
 ```
 
 Follow the [Reanimated installation guide](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started) and [compatibility table](https://docs.swmansion.com/react-native-reanimated/docs/guides/compatibility). Community CLI projects must replace `react-native-reanimated/plugin` with `react-native-worklets/plugin` in their Babel configuration.
@@ -87,7 +87,7 @@ Worklet-specific APIs moved to `react-native-worklets`. Reanimated still re-expo
 The carousel measures dimensions assigned by its parent layout. For example, a horizontal carousel can fill a parent with a responsive width and a defined height:
 
 ```tsx
-// ✅ v5.x - Auto-sizing
+// ✅ v5 beta - Auto-sizing
 <View style={{ height: 200 }}>
   <Carousel
     style={{ flex: 1 }}
@@ -96,7 +96,7 @@ The carousel measures dimensions assigned by its parent layout. For example, a h
   />
 </View>
 
-// ✅ v5.x - Still works (explicit sizing via style prop)
+// ✅ v5 beta - Still works (explicit sizing via style prop)
 <Carousel
   style={{ width: 300, height: 200 }}
   data={data}
@@ -109,6 +109,6 @@ The carousel measures dimensions assigned by its parent layout. For example, a h
 - `style.width` / `style.height` describe the **container size** (recommended).
 - `itemWidth` / `itemHeight` describe the **page size** (snap distance & animation progress per page). They are not the same as container size.
 
-#### New naming in v5
+#### New naming in v5 beta
 
 `defaultScrollOffsetValue` is deprecated in favor of `scrollOffsetValue` (same behavior, clearer name).

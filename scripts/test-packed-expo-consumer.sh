@@ -13,7 +13,7 @@ case "$SDK_VERSION" in
 esac
 
 REPOSITORY_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-WORK_ROOT="${PACKED_EXPO_WORK_ROOT:-$REPOSITORY_ROOT/.agent-contexts/packed-expo-consumer}"
+WORK_ROOT="${PACKED_EXPO_WORK_ROOT:-${TMPDIR:-/tmp}/rnrc-packed-expo-consumer}"
 CONSUMER_DIR="$WORK_ROOT/sdk-$SDK_VERSION"
 TARBALL_DIR="$WORK_ROOT/tarballs"
 
