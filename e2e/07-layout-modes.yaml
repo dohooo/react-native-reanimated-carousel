@@ -13,11 +13,10 @@ name: Layout Mode Switching
       notVisible: "Current Index: 1"
     times: 2
     commands:
-      - tapOn:
-          id: "e2e-carousel"
       - swipe:
-          start: "85%, 22%"
-          end: "15%, 22%"
+          from:
+            id: "e2e-carousel"
+          direction: LEFT
           duration: 500
       - waitForAnimationToEnd:
           timeout: 3000
@@ -181,11 +180,10 @@ name: Layout Mode Switching
       notVisible: "Current Index: 1"
     times: 2
     commands:
-      - tapOn:
-          id: "e2e-carousel"
       - swipe:
-          start: "85%, 22%"
-          end: "15%, 22%"
+          from:
+            id: "e2e-carousel"
+          direction: LEFT
           duration: 500
       - waitForAnimationToEnd:
           timeout: 3000
