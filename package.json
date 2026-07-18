@@ -2,7 +2,7 @@
 	"name": "react-native-reanimated-carousel",
 	"version": "5.0.0-beta.5",
 	"packageManager": "yarn@4.0.2",
-	"description": "Simple carousel component.fully implemented using Reanimated 2.Infinitely scrolling, very smooth.",
+	"description": "A performant, customizable carousel for React Native powered by Reanimated.",
 	"author": "Doho <zhaodonghao586@outlook.com> (https://github.com/dohooo)",
 	"license": "MIT",
 	"homepage": "https://rn-carousel.dev/",
@@ -45,6 +45,8 @@
 		"precommit": "yarn lint:fix && yarn format:fix",
 		"e2e": "APP_ID=${APP_ID:-com.react-native-reanimated-carousel.example} maestro test example/app/app/demos/",
 		"e2e:comprehensive": "APP_ID=${APP_ID:-com.react-native-reanimated-carousel.example} maestro test e2e/",
+		"compat:expo": "bash scripts/test-packed-expo-consumer.sh",
+		"web:smoke": "playwright test --config=playwright.config.ts",
 		"changeset:check": "node scripts/check-changeset-style.mjs"
 	},
 	"resolutions": {
@@ -57,7 +59,7 @@
 		"react": ">=18.0.0",
 		"react-native": ">=0.80.0",
 		"react-native-gesture-handler": ">=2.9.0",
-		"react-native-reanimated": ">=4.0.0",
+		"react-native-reanimated": ">=4.1.0",
 		"react-native-worklets": ">=0.5.0"
 	},
 	"devDependencies": {
@@ -72,11 +74,13 @@
 		"@changesets/changelog-github": "^0.5.0",
 		"@changesets/cli": "latest",
 		"@commitlint/config-conventional": "^11.0.0",
+		"@playwright/test": "1.61.1",
 		"@react-native/babel-preset": "0.81.1",
 		"@testing-library/jest-native": "^4.0.4",
 		"@testing-library/react-hooks": "^8.0.0",
 		"@testing-library/react-native": "^13.3.3",
 		"@types/jest": "^29.2.5",
+		"@types/node": "22.20.1",
 		"@types/react": "^19.1.10",
 		"@types/react-native": "^0.66.16",
 		"@types/react-test-renderer": "^19.1.0",
@@ -139,7 +143,12 @@
 					"configFile": "./babel.config.js"
 				}
 			],
-			"typescript"
+			[
+				"typescript",
+				{
+					"project": "tsconfig.build.json"
+				}
+			]
 		],
 		"exclude": "**/*.test.{ts,tsx}"
 	},

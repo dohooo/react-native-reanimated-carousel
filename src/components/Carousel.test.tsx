@@ -10,6 +10,8 @@ import { act, render, waitFor } from "@testing-library/react-native";
 import { fireGestureHandler, getByGestureTestId } from "react-native-gesture-handler/jest-utils";
 
 import Carousel from "./Carousel";
+import { resolveCarouselLayoutStyle } from "./CarouselLayout";
+import { resolveItemMainAxisSize } from "./ItemLayout";
 
 import type { TCarouselProps } from "../types";
 
@@ -1002,6 +1004,156 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
   });
 
   describe("Carousel sizing and measurement", () => {
+    it.each([
+      {
+        name: "horizontal",
+        vertical: false,
+        flattenedStyle: { height: slideHeight },
+        expected: { width: "100%", height: slideHeight },
+      },
+      {
+        name: "vertical",
+        vertical: true,
+        flattenedStyle: { width: slideWidth },
+        expected: { width: slideWidth, height: "100%" },
+      },
+    ])("issue #890: keeps an auto-sized $name main axis responsive", (scenario) => {
+      expect(
+        resolveCarouselLayoutStyle({
+          flattenedStyle: scenario.flattenedStyle,
+          vertical: scenario.vertical,
+          measuredSize: 350,
+          sizeExplicit: false,
+        })
+      ).toEqual(scenario.expected);
+    });
+
+    it.each([
+      {
+        name: "legacy width",
+        vertical: false,
+        legacyWidth: 350,
+        legacyHeight: undefined,
+        expected: { width: 350, height: "100%" },
+      },
+      {
+        name: "legacy height",
+        vertical: true,
+        legacyWidth: undefined,
+        legacyHeight: 350,
+        expected: { width: "100%", height: 350 },
+      },
+    ])("issue #890: preserves $name behavior", (scenario) => {
+      expect(
+        resolveCarouselLayoutStyle({
+          flattenedStyle: {},
+          vertical: scenario.vertical,
+          measuredSize: 350,
+          sizeExplicit: false,
+          legacyWidth: scenario.legacyWidth,
+          legacyHeight: scenario.legacyHeight,
+        })
+      ).toEqual(scenario.expected);
+    });
+
+    it("issue #890: preserves explicit item size behavior", () => {
+      expect(
+        resolveCarouselLayoutStyle({
+          flattenedStyle: { height: slideHeight },
+          vertical: false,
+          measuredSize: 350,
+          sizeExplicit: true,
+        })
+      ).toEqual({ width: 350, height: slideHeight });
+    });
+
+    it("issue #890: prefers the latest page size over a stale item measurement", () => {
+      expect(
+        resolveItemMainAxisSize({
+          effectivePageSize: 516,
+          measuredSize: 316,
+        })
+      ).toBe(516);
+    });
+
+    it("issue #890: preserves explicit and measured item-size fallbacks", () => {
+      expect(
+        resolveItemMainAxisSize({
+          explicitSize: 280,
+          effectivePageSize: 516,
+          measuredSize: 316,
+        })
+      ).toBe(280);
+      expect(resolveItemMainAxisSize({ measuredSize: 316 })).toBe(316);
+    });
+
+    it("issue #890: keeps the active page aligned when an auto-sized layout changes", async () => {
+      const observedOffset = { current: 0 };
+      let nextSlide: ((opts?: { animated?: boolean }) => void) | undefined;
+
+      const Wrapper: FC<Partial<TCarouselProps<string>>> = React.forwardRef((customProps, ref) => {
+        const progressAnimVal = useSharedValue(0);
+        const scrollOffsetValue = useSharedValue(0);
+        const defaultRenderItem = ({
+          item,
+          index,
+        }: {
+          item: string;
+          index: number;
+        }) => (
+          <Animated.View testID={`carousel-item-${index}`} style={{ flex: 1 }}>
+            {item}
+          </Animated.View>
+        );
+        const { renderItem = defaultRenderItem, ...defaultProps } = createDefaultProps(
+          progressAnimVal,
+          customProps
+        );
+
+        useDerivedValue(() => {
+          observedOffset.current = scrollOffsetValue.value;
+        }, [scrollOffsetValue]);
+
+        return (
+          <Carousel
+            {...defaultProps}
+            ref={ref}
+            renderItem={renderItem}
+            scrollOffsetValue={scrollOffsetValue}
+          />
+        );
+      });
+
+      const { getByTestId } = render(
+        <Wrapper
+          ref={(instance) => {
+            if (instance) nextSlide = instance.next;
+          }}
+          style={{ height: slideHeight }}
+        />
+      );
+      const contentContainer = getByTestId("carousel-content-container");
+
+      act(() => {
+        contentContainer.props.onLayout({
+          nativeEvent: { layout: { width: 320, height: slideHeight } },
+        });
+        jest.runOnlyPendingTimers();
+      });
+
+      nextSlide?.({ animated: false });
+      await waitFor(() => expect(observedOffset.current).toBe(-320));
+
+      act(() => {
+        contentContainer.props.onLayout({
+          nativeEvent: { layout: { width: 520, height: slideHeight } },
+        });
+        jest.runOnlyPendingTimers();
+      });
+
+      await waitFor(() => expect(observedOffset.current).toBe(-520));
+    });
+
     it("should render items even before onLayout provides size (flex-based sizing)", async () => {
       const progress = { current: 0 };
       const Wrapper = createCarousel(progress);

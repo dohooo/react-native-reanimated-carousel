@@ -153,6 +153,7 @@ export default function ComprehensiveE2E() {
             data={data}
             renderItem={carouselRenderItem}
             style={carouselStyle}
+            windowSize={5}
             mode={mode === "normal" ? undefined : mode}
             modeConfig={modeConfig}
             loop={loop}

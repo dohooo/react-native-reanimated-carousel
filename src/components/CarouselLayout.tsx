@@ -15,6 +15,34 @@ import { ScrollViewGesture } from "./ScrollViewGesture";
 
 export type TAnimationStyle = (value: number) => ViewStyle;
 
+export function resolveCarouselLayoutStyle(params: {
+  flattenedStyle: Partial<ViewStyle>;
+  vertical: boolean;
+  measuredSize: number;
+  sizeExplicit: boolean;
+  legacyWidth?: number;
+  legacyHeight?: number;
+}) {
+  "worklet";
+
+  const { flattenedStyle, vertical, measuredSize, sizeExplicit, legacyWidth, legacyHeight } =
+    params;
+  const { width, height } = flattenedStyle;
+  const hasLegacyMainAxisSize = vertical
+    ? typeof legacyHeight === "number" && legacyHeight > 0
+    : typeof legacyWidth === "number" && legacyWidth > 0;
+  const shouldUseMeasuredMainAxisSize = sizeExplicit || hasLegacyMainAxisSize;
+  const resolvedMainAxisSize = measuredSize || "100%";
+
+  return {
+    width:
+      width ?? (vertical ? "100%" : shouldUseMeasuredMainAxisSize ? resolvedMainAxisSize : "100%"),
+    height:
+      height ??
+      (vertical ? (shouldUseMeasuredMainAxisSize ? resolvedMainAxisSize : "100%") : "100%"),
+  };
+}
+
 export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) => {
   const { props, common } = useGlobalState();
 
@@ -46,9 +74,11 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
     onProgressChange,
     customAnimation,
     defaultIndex,
+    width: legacyWidth,
+    height: legacyHeight,
   } = props;
 
-  const { size, handlerOffset, resolvedSize, sizePhase } = common;
+  const { size, handlerOffset, resolvedSize, sizePhase, sizeExplicit } = common;
   const layoutConfig = useLayoutConfig({ ...props, size });
 
   const isSizeReady = useDerivedValue(() => {
@@ -157,18 +187,31 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
   const flattenedStyle = StyleSheet.flatten(style) || {};
 
   const layoutStyle = useAnimatedStyle(() => {
-    const { width, height } = flattenedStyle;
     const measuredSize = resolvedSize.value ?? 0;
-
-    const computedWidth = width ?? (vertical ? "100%" : measuredSize || "100%");
-    const computedHeight = height ?? (vertical ? measuredSize || "100%" : "100%");
+    const { width, height } = resolveCarouselLayoutStyle({
+      flattenedStyle,
+      vertical: !!vertical,
+      measuredSize,
+      sizeExplicit,
+      legacyWidth,
+      legacyHeight,
+    });
 
     return {
-      width: computedWidth,
-      height: computedHeight,
+      width,
+      height,
       opacity: isSizeReady.value ? 1 : 0,
     };
-  }, [flattenedStyle, isSizeReady, vertical, resolvedSize, sizePhase]);
+  }, [
+    flattenedStyle,
+    isSizeReady,
+    vertical,
+    resolvedSize,
+    sizePhase,
+    sizeExplicit,
+    legacyWidth,
+    legacyHeight,
+  ]);
 
   return (
     <GestureHandlerRootView testID={testID} style={[styles.layoutContainer, style]}>

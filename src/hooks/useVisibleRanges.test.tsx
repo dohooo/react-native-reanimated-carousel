@@ -67,6 +67,35 @@ describe("useVisibleRanges", () => {
         `);
   });
 
+  it.each([
+    { total: 1, windowSize: 1, currentIndex: 0 },
+    { total: 2, windowSize: 5, currentIndex: 1 },
+    { total: 3, windowSize: 3, currentIndex: 2 },
+    { total: 4, windowSize: 5, currentIndex: 1 },
+  ])(
+    "should display every item when windowSize=$windowSize is at least total=$total in loop mode",
+    ({ total, windowSize, currentIndex }) => {
+      const ranges = renderHook(() => {
+        const translation = useSharedValue(-currentIndex * viewSize);
+        return useVisibleRanges({
+          total,
+          translation,
+          viewSize,
+          windowSize,
+          loop: true,
+        });
+      }).result.current.value;
+
+      const visibleIndexes = Array.from({ length: total }, (_, index) => index).filter(
+        (index) =>
+          (index >= ranges.negativeRange[0] && index <= ranges.negativeRange[1]) ||
+          (index >= ranges.positiveRange[0] && index <= ranges.positiveRange[1])
+      );
+
+      expect(visibleIndexes).toEqual(Array.from({ length: total }, (_, index) => index));
+    }
+  );
+
   it("should shows the increased range of the list when the loop is false and swiped the carousel.", async () => {
     const slide0hook = renderHook(() => {
       const translation = useSharedValue(-0 * viewSize);

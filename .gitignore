@@ -77,6 +77,10 @@ lib/
 # Jest
 coverage/
 
+# Playwright
+playwright-report/
+test-results/
+
 # Issue tasks
 .issue-tasks/
 
