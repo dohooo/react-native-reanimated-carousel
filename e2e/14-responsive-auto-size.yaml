@@ -135,6 +135,7 @@ name: Responsive Auto Size
 
 - tapOn:
     id: "vertical-next"
+    point: "50%,20%"
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Vertical Index: 0"

@@ -7,6 +7,10 @@ appId: ${APP_ID}
 - launchApp:
     clearState: false
 
+# Reconnect explicitly on every flow instead of relying on Dev Client's saved
+# server state, which can be lost after repeated process restarts.
+- openLink: "exp+app://expo-development-client/?url=http%3A%2F%2F127.0.0.1%3A8081"
+
 # Wait for the app to fully load.
 - waitForAnimationToEnd:
     timeout: 5000
