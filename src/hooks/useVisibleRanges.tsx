@@ -12,12 +12,16 @@ export interface VisibleRanges {
 export type IVisibleRanges = SharedValue<VisibleRanges>;
 
 function normalizeWindowSize(total: number, windowSize?: number) {
+  "worklet";
+
   return typeof windowSize === "number" && Number.isFinite(windowSize) && windowSize > 0
     ? windowSize
     : total;
 }
 
 function normalizeLoopIndex(currentIndex: number, total: number) {
+  "worklet";
+
   return currentIndex < 0 ? (currentIndex % total) + total : currentIndex;
 }
 
