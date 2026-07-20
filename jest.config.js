@@ -1,6 +1,14 @@
 module.exports = {
   preset: "react-native",
-  modulePathIgnorePatterns: ["example", "docs", "assets", ".yarn", "lib"],
+  modulePathIgnorePatterns: [
+    "example",
+    "docs",
+    "assets",
+    "e2e-web",
+    ".agent-contexts",
+    ".yarn",
+    "lib",
+  ],
   setupFilesAfterEnv: ["./test/jest-setup.js"],
   coverageReporters: ["text", "lcov", "cobertura"],
   collectCoverageFrom: [

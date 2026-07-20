@@ -21,6 +21,12 @@ appId: ${APP_ID}
     text: "http://localhost:8081"
     optional: true
 
+# Let Dev Client finish switching away from the server list before querying
+# another optional server entry. Querying during this transition can make
+# XCUITest return kAXErrorInvalidUIElement.
+- waitForAnimationToEnd:
+    timeout: 10000
+
 - tapOn:
     text: "http://127.0.0.1:8081"
     optional: true

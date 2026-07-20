@@ -25,7 +25,7 @@ name: Gesture After Programmatic Navigation
       - swipe:
           start: "15%, 22%"
           end: "85%, 22%"
-          duration: 500
+          duration: 50
       - waitForAnimationToEnd:
           timeout: 3000
 
@@ -50,7 +50,7 @@ name: Gesture After Programmatic Navigation
       - swipe:
           start: "85%, 22%"
           end: "15%, 22%"
-          duration: 500
+          duration: 50
       - waitForAnimationToEnd:
           timeout: 3000
 
