@@ -239,6 +239,7 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
           loop={loop}
           size={size}
           windowSize={windowSize}
+          defaultIndex={defaultIndex}
           autoFillData={autoFillData}
           offsetX={offsetX}
           handlerOffset={handlerOffset}

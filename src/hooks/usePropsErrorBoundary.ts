@@ -16,7 +16,7 @@ export function usePropsErrorBoundary(props: TCarouselProps & { dataLength: numb
     if (__DEV__) {
       const { style, vertical, width, height, itemWidth, itemHeight, contentContainerStyle } =
         props;
-      const { width: styleWidth, height: styleHeight } = StyleSheet.flatten(style) || {};
+      const { width: styleWidth, height: styleHeight, flex } = StyleSheet.flatten(style) || {};
 
       // Deprecation warnings for width/height props
       if (typeof width === "number" && !warnedRefs.width) {
@@ -42,10 +42,11 @@ export function usePropsErrorBoundary(props: TCarouselProps & { dataLength: numb
       }
 
       // Updated missing size warnings
+      const hasFlexibleContainerSize = typeof flex === "number" && flex > 0;
       const hasHorizontalContainerSize =
-        typeof styleWidth === "number" || typeof width === "number";
+        styleWidth != null || typeof width === "number" || hasFlexibleContainerSize;
       const hasVerticalContainerSize =
-        typeof styleHeight === "number" || typeof height === "number";
+        styleHeight != null || typeof height === "number" || hasFlexibleContainerSize;
 
       if (!vertical && !hasHorizontalContainerSize && !warnedRefs.horizontal) {
         console.warn(
