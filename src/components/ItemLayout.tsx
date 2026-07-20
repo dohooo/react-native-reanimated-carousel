@@ -19,6 +19,20 @@ import { sanitizeAnimationStyle } from "../utils/sanitize-animation-style";
 
 export type TAnimationStyle = NonNullable<TCarouselProps["customAnimation"]>;
 
+export function resolveItemMainAxisSize(params: {
+  explicitSize?: number;
+  effectivePageSize?: number;
+  measuredSize: number | null;
+}) {
+  "worklet";
+
+  const { explicitSize, effectivePageSize, measuredSize } = params;
+
+  return typeof explicitSize === "number"
+    ? explicitSize
+    : (effectivePageSize ?? measuredSize ?? "100%");
+}
+
 export const ItemLayout: React.FC<{
   index: number;
   handlerOffset: SharedValue<number>;
@@ -71,15 +85,25 @@ export const ItemLayout: React.FC<{
     const widthCandidate = vertical ? width : (explicitItemSize ?? explicitAxisSize);
     const heightCandidate = vertical ? (explicitItemSize ?? explicitAxisSize) : height;
 
-    const computedWidth =
-      typeof widthCandidate === "number"
+    const computedWidth = vertical
+      ? typeof widthCandidate === "number"
         ? widthCandidate
-        : (measuredSize.value.width ?? (vertical ? "100%" : (effectivePageSize ?? "100%")));
+        : (measuredSize.value.width ?? "100%")
+      : resolveItemMainAxisSize({
+          explicitSize: widthCandidate,
+          effectivePageSize,
+          measuredSize: measuredSize.value.width,
+        });
 
-    const computedHeight =
-      typeof heightCandidate === "number"
+    const computedHeight = vertical
+      ? resolveItemMainAxisSize({
+          explicitSize: heightCandidate,
+          effectivePageSize,
+          measuredSize: measuredSize.value.height,
+        })
+      : typeof heightCandidate === "number"
         ? heightCandidate
-        : (measuredSize.value.height ?? (vertical ? (effectivePageSize ?? "100%") : "100%"));
+        : (measuredSize.value.height ?? "100%");
 
     return {
       width: computedWidth,

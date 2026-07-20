@@ -42,11 +42,15 @@
   "files": {
     "ignore": [
       "node_modules/**/*",
+      ".agent-contexts/**/*",
       "lib/**/*",
       "coverage/**/*",
       "dist/**/*",
+      "playwright-report/**/*",
+      "test-results/**/*",
       ".yarn/**/*",
       "example/website/**/*",
+      "example/app/expo-env.d.ts",
       "example/app/.expo/**/*",
       "example/app/.yarn/**/*",
       "example/app/.dist/**/*",

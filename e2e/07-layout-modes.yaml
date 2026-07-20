@@ -14,9 +14,10 @@ name: Layout Mode Switching
     times: 2
     commands:
       - swipe:
-          start: "85%, 22%"
-          end: "15%, 22%"
-          duration: 500
+          from:
+            id: "e2e-carousel"
+          direction: LEFT
+          duration: 50
       - waitForAnimationToEnd:
           timeout: 3000
 
@@ -180,9 +181,10 @@ name: Layout Mode Switching
     times: 2
     commands:
       - swipe:
-          start: "85%, 22%"
-          end: "15%, 22%"
-          duration: 500
+          from:
+            id: "e2e-carousel"
+          direction: LEFT
+          duration: 50
       - waitForAnimationToEnd:
           timeout: 3000
 

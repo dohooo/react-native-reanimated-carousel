@@ -46,7 +46,7 @@ name: Gesture After Data Reconfiguration
       - swipe:
           start: "85%, 22%"
           end: "15%, 22%"
-          duration: 500
+          duration: 50
       - waitForAnimationToEnd:
           timeout: 3000
 
@@ -101,7 +101,7 @@ name: Gesture After Data Reconfiguration
       - swipe:
           start: "85%, 22%"
           end: "15%, 22%"
-          duration: 500
+          duration: 50
       - waitForAnimationToEnd:
           timeout: 3000
 
@@ -132,7 +132,7 @@ name: Gesture After Data Reconfiguration
       - swipe:
           start: "85%, 22%"
           end: "15%, 22%"
-          duration: 500
+          duration: 50
       - waitForAnimationToEnd:
           timeout: 3000
 

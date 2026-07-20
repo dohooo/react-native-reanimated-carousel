@@ -22,9 +22,11 @@ jobs:
             e2e:
               - "src/**"
               - "e2e/**"
+              - "e2e-web/**"
               - "example/app/**"
               - "package.json"
               - "yarn.lock"
+              - "playwright.config.ts"
               - ".yarnrc.yml"
               - ".yarn/**"
               - "babel.config.js"
@@ -33,6 +35,46 @@ jobs:
 
       - name: Show E2E decision
         run: echo "run_e2e=${{ steps.filter.outputs.e2e }}"
+
+  e2e-web:
+    needs: changes
+    if: needs.changes.outputs.run_e2e == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Install dependencies
+        run: |
+          set -euxo pipefail
+          yarn install --frozen-lockfile
+          yarn --cwd example/app install --frozen-lockfile
+
+      - name: Build package
+        run: yarn prepare
+
+      - name: Install Playwright Chromium
+        run: yarn playwright install --with-deps chromium
+
+      - name: Run Expo Web smoke tests
+        run: yarn web:smoke
+
+      - name: Upload Web test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-results-web
+          if-no-files-found: ignore
+          retention-days: 7
+          path: |
+            playwright-report/
+            test-results/
 
   e2e-ios:
     needs: changes
@@ -93,8 +135,10 @@ jobs:
 
       - name: Install Maestro
         run: |
+          export MAESTRO_VERSION=2.6.1
           curl -Ls "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+          "$HOME/.maestro/bin/maestro" --version
 
       - name: Boot iOS Simulator
         run: |
@@ -240,7 +284,7 @@ jobs:
           xcrun simctl launch booted "$E2E_APP_ID"
           sleep 10
           MAESTRO_FLOW_TIMEOUT_SECONDS=900 \
-          MAESTRO_FLOW_MAX_ATTEMPTS=2 \
+          MAESTRO_FLOW_MAX_ATTEMPTS=1 \
           MAESTRO_REUSE_DRIVER_BETWEEN_FLOWS=0 \
           MAESTRO_FAIL_FAST=1 \
           bash "$GITHUB_WORKSPACE/scripts/e2e-maestro-suite.sh" "$GITHUB_WORKSPACE/e2e"
@@ -316,8 +360,10 @@ jobs:
 
       - name: Install Maestro
         run: |
+          export MAESTRO_VERSION=2.6.1
           curl -Ls "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+          "$HOME/.maestro/bin/maestro" --version
 
       - name: Prebuild Android
         working-directory: example/app

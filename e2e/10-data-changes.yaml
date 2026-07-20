@@ -44,6 +44,7 @@ name: Dynamic Data Count Changes
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 1"
+- assertVisible: "Slide 1"
 
 - tapOn:
     id: "btn-next"
@@ -146,6 +147,7 @@ name: Dynamic Data Count Changes
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 1"
+- assertVisible: "Slide 1"
 
 # Next wraps back to 0 (only 2 items)
 - tapOn:
@@ -153,6 +155,7 @@ name: Dynamic Data Count Changes
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible: "Current Index: 0"
+- assertVisible: "Slide 0"
 
 # === Test: Change back to 6 items ===
 

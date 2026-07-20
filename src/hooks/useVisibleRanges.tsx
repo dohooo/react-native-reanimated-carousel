@@ -39,6 +39,13 @@ export function computeVisibleRanges(params: {
     };
   }
 
+  if (loop && windowSize >= total) {
+    return {
+      negativeRange: [0, 0],
+      positiveRange: [0, total - 1],
+    };
+  }
+
   const positiveCount = Math.round(windowSize / 2);
   const negativeCount = windowSize - positiveCount;
 

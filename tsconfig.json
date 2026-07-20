@@ -19,7 +19,7 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "esnext",
-    "types": ["jest"]
+    "types": ["jest", "node"]
   },
-  "exclude": ["example", "node_modules", "**/*.test.ts", "**/*.test.tsx"]
+  "exclude": ["example", "e2e/fixtures", "node_modules", "**/*.test.ts", "**/*.test.tsx"]
 }
