@@ -47,7 +47,11 @@ describe("usePropsErrorBoundary", () => {
     expect(warnSpy).not.toHaveBeenCalledWith(expect.stringContaining("`itemHeight` sets"));
 
     warnSpy.mockClear();
-    renderHook(() => usePropsErrorBoundary(createProps({ style: { height: 190 } })));
+    renderHook(() => usePropsErrorBoundary(createProps({ style: { flex: 0, height: 190 } })));
     expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("Horizontal mode"));
+
+    warnSpy.mockClear();
+    renderHook(() => usePropsErrorBoundary(createProps({ vertical: true })));
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("Vertical mode"));
   });
 });
