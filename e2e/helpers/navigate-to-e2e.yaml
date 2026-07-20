@@ -73,10 +73,26 @@ appId: ${APP_ID}
 - waitForAnimationToEnd:
     timeout: 8000
 
-# Wait until the app home is loaded.
-- extendedWaitUntil:
-    visible: "Basic Layouts"
-    timeout: 180000
+# Retry only the startup handoff. Expo's server picker or onboarding modal can
+# appear after the initial optional taps while the first bundle is loading.
+- retry:
+    maxRetries: 2
+    commands:
+      - tapOn:
+          text: "http://localhost:8081"
+          optional: true
+      - tapOn:
+          text: "http://127.0.0.1:8081"
+          optional: true
+      - tapOn:
+          text: "Continue"
+          optional: true
+      - tapOn:
+          text: "Close"
+          optional: true
+      - extendedWaitUntil:
+          visible: "Basic Layouts"
+          timeout: 60000
 
 # Navigate to E2E test page.
 - tapOn:
