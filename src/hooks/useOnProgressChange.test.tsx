@@ -6,19 +6,23 @@ import { useOnProgressChange } from "./useOnProgressChange";
 
 // Mock Reanimated and Easing
 jest.mock("react-native-reanimated", () => {
+  const React = jest.requireActual("react");
   let reactionCallback: ((value: any) => void) | null = null;
+  let reactionRegistrationCount = 0;
 
   return {
     useSharedValue: jest.fn((initialValue) => ({
       value: initialValue,
     })),
-    useAnimatedReaction: jest.fn((deps, cb) => {
-      reactionCallback = cb;
-      const depsResult = deps();
-      cb(depsResult);
-      return () => {
-        reactionCallback = null;
-      };
+    useAnimatedReaction: jest.fn((prepare, react, dependencies) => {
+      React.useEffect(() => {
+        reactionRegistrationCount += 1;
+        reactionCallback = react;
+        react(prepare());
+        return () => {
+          if (reactionCallback === react) reactionCallback = null;
+        };
+      }, dependencies);
     }),
     Easing: {
       bezier: () => ({
@@ -28,6 +32,10 @@ jest.mock("react-native-reanimated", () => {
     // Export the helper function for testing
     __triggerReaction: (value: any) => {
       if (reactionCallback) reactionCallback(value);
+    },
+    __getReactionRegistrationCount: () => reactionRegistrationCount,
+    __resetReactionRegistrationCount: () => {
+      reactionRegistrationCount = 0;
     },
   };
 });
@@ -49,11 +57,14 @@ describe("useOnProgressChange", () => {
   const mockOffsetX = useSharedValue(0);
   const mockSizeReady = useSharedValue(true);
   const mockOnProgressChange = jest.fn();
-  const { __triggerReaction } = jest.requireMock("react-native-reanimated");
+  const { __getReactionRegistrationCount, __resetReactionRegistrationCount, __triggerReaction } =
+    jest.requireMock("react-native-reanimated");
 
   beforeEach(() => {
     jest.clearAllMocks();
+    __resetReactionRegistrationCount();
     mockOffsetX.value = 0;
+    mockSizeReady.value = true;
   });
 
   it("should handle progress change with function callback", () => {
@@ -203,5 +214,57 @@ describe("useOnProgressChange", () => {
     mockOffsetX.value = -300; // Move to next slide
     __triggerReaction({ offset: mockOffsetX.value, ready: mockSizeNotReady.value });
     expect(mockOnProgressChange).not.toHaveBeenCalled();
+  });
+
+  it("should re-register the reaction when the offset shared value changes", () => {
+    const replacementOffsetX = useSharedValue(-300);
+    const { rerender } = renderHook(
+      ({ offsetX }) =>
+        useOnProgressChange({
+          size: 300,
+          sizeReady: mockSizeReady,
+          autoFillData: false,
+          loop: false,
+          offsetX,
+          rawDataLength: 5,
+          onProgressChange: mockOnProgressChange,
+        }),
+      { initialProps: { offsetX: mockOffsetX } }
+    );
+
+    const initialRegistrationCount = __getReactionRegistrationCount();
+    rerender({ offsetX: mockOffsetX });
+    expect(__getReactionRegistrationCount()).toBe(initialRegistrationCount);
+
+    rerender({ offsetX: replacementOffsetX });
+
+    expect(__getReactionRegistrationCount()).toBe(initialRegistrationCount + 1);
+    expect(mockOnProgressChange).toHaveBeenLastCalledWith(-300, 1);
+  });
+
+  it("should re-register the reaction when the size-ready shared value changes", () => {
+    const initialSizeReady = useSharedValue(false);
+    const replacementSizeReady = useSharedValue(true);
+    const { rerender } = renderHook(
+      ({ sizeReady }) =>
+        useOnProgressChange({
+          size: 300,
+          sizeReady,
+          autoFillData: false,
+          loop: false,
+          offsetX: mockOffsetX,
+          rawDataLength: 5,
+          onProgressChange: mockOnProgressChange,
+        }),
+      { initialProps: { sizeReady: initialSizeReady } }
+    );
+
+    const initialRegistrationCount = __getReactionRegistrationCount();
+    expect(mockOnProgressChange).not.toHaveBeenCalled();
+
+    rerender({ sizeReady: replacementSizeReady });
+
+    expect(__getReactionRegistrationCount()).toBe(initialRegistrationCount + 1);
+    expect(mockOnProgressChange).toHaveBeenCalledWith(0, 0);
   });
 });
