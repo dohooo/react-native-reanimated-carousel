@@ -1,15 +1,24 @@
 import React from "react";
 import { View } from "react-native";
+import type {
+  GestureStateChangeEvent,
+  GestureUpdateEvent,
+  PanGestureHandlerEventPayload,
+} from "react-native-gesture-handler";
+import type { SharedValue } from "react-native-reanimated";
 
-import { render } from "@testing-library/react-native";
+import { act, render } from "@testing-library/react-native";
 
 import { ScrollViewGesture } from "./ScrollViewGesture";
 
-import { GlobalStateContext } from "../store";
+import { usePanGestureProxy } from "../hooks/usePanGestureProxy";
+import { GlobalStateContext, type IContext } from "../store";
 
 jest.mock("../hooks/usePanGestureProxy", () => ({
   usePanGestureProxy: jest.fn(() => ({})),
 }));
+
+const mockUsePanGestureProxy = jest.mocked(usePanGestureProxy);
 
 jest.mock("react-native-gesture-handler", () => {
   const React = require("react");
@@ -30,59 +39,117 @@ jest.mock("react-native-gesture-handler", () => {
   };
 });
 
+type RenderGestureOptions = {
+  vertical?: boolean;
+  size?: number;
+  dataLength?: number;
+  containerSize?: { width: number; height: number };
+};
+
+function renderGesture({
+  vertical = false,
+  size = 300,
+  dataLength = 3,
+  containerSize = { width: 300, height: 200 },
+}: RenderGestureOptions = {}) {
+  const translation = { value: 0 } as SharedValue<number>;
+  const contextValue = {
+    props: {
+      onConfigurePanGesture: undefined,
+      vertical,
+      pagingEnabled: true,
+      snapEnabled: true,
+      loop: false,
+      scrollAnimationDuration: 500,
+      withAnimation: undefined,
+      enabled: true,
+      dataLength,
+      overscrollEnabled: false,
+      maxScrollDistancePerSwipe: undefined,
+      minScrollDistancePerSwipe: undefined,
+      fixedDirection: undefined,
+    },
+    common: {
+      size,
+      validLength: dataLength,
+      handlerOffset: { value: 0 },
+      resolvedSize: { value: size },
+      sizePhase: { value: "ready" },
+      sizeExplicit: true,
+    },
+    layout: {
+      containerSize: { value: containerSize },
+      updateContainerSize: jest.fn(),
+      itemDimensions: { value: {} },
+      updateItemDimensions: jest.fn(),
+    },
+  } as unknown as IContext;
+
+  render(
+    <GlobalStateContext.Provider value={contextValue}>
+      <ScrollViewGesture size={size} translation={translation} style={containerSize}>
+        <View testID="content" />
+      </ScrollViewGesture>
+    </GlobalStateContext.Provider>
+  );
+
+  const gestureCallbacks =
+    mockUsePanGestureProxy.mock.calls[mockUsePanGestureProxy.mock.calls.length - 1]?.[0];
+
+  if (!gestureCallbacks) {
+    throw new Error("Expected ScrollViewGesture to configure the pan gesture");
+  }
+
+  return { gestureCallbacks, translation };
+}
+
 describe("issue #857 web regression", () => {
+  beforeEach(() => {
+    mockUsePanGestureProxy.mockClear();
+  });
+
   it("does not emit the React 19 element.ref warning from the gesture path", () => {
     const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
 
-    const contextValue = {
-      props: {
-        onConfigurePanGesture: undefined,
-        vertical: false,
-        pagingEnabled: true,
-        snapEnabled: true,
-        loop: false,
-        scrollAnimationDuration: 500,
-        withAnimation: undefined,
-        enabled: true,
-        dataLength: 3,
-        overscrollEnabled: false,
-        maxScrollDistancePerSwipe: undefined,
-        minScrollDistancePerSwipe: undefined,
-        fixedDirection: undefined,
-      },
-      common: {
-        size: 300,
-        validLength: 2,
-        handlerOffset: { value: 0 },
-        resolvedSize: { value: 300 },
-        sizePhase: { value: "ready" },
-        sizeExplicit: true,
-      },
-      layout: {
-        containerSize: { value: { width: 300, height: 200 } },
-        updateContainerSize: jest.fn(),
-        itemDimensions: { value: {} },
-        updateItemDimensions: jest.fn(),
-      },
-    };
+    try {
+      renderGesture();
 
-    render(
-      <GlobalStateContext.Provider value={contextValue as any}>
-        <ScrollViewGesture
-          size={300}
-          translation={{ value: 0 } as any}
-          style={{ width: 300, height: 200 }}
-        >
-          <View testID="content" />
-        </ScrollViewGesture>
-      </GlobalStateContext.Provider>
-    );
+      const react19RefWarnings = errorSpy.mock.calls.filter(([message]) =>
+        String(message).includes("Accessing element.ref was removed in React 19")
+      );
 
-    const react19RefWarnings = errorSpy.mock.calls.filter(([message]) =>
-      String(message).includes("Accessing element.ref was removed in React 19")
-    );
-
-    expect(react19RefWarnings).toHaveLength(0);
-    errorSpy.mockRestore();
+      expect(react19RefWarnings).toHaveLength(0);
+    } finally {
+      errorSpy.mockRestore();
+    }
   });
+
+  it.each([
+    ["horizontal", false, 300, 3, { width: 300, height: 200 }, -600],
+    ["vertical", true, 300, 3, { width: 300, height: 200 }, -700],
+    ["unmeasured container", false, 300, 3, { width: 0, height: 0 }, 0],
+    ["content smaller than its container", false, 100, 2, { width: 300, height: 200 }, 0],
+  ] as const)(
+    "uses the %s main-axis container size for the non-loop boundary",
+    (_name, vertical, size, dataLength, containerSize, expectedTranslation) => {
+      const { gestureCallbacks, translation } = renderGesture({
+        vertical,
+        size,
+        dataLength,
+        containerSize,
+      });
+
+      act(() => {
+        gestureCallbacks.onGestureStart(
+          {} as GestureStateChangeEvent<PanGestureHandlerEventPayload>
+        );
+        gestureCallbacks.onGestureUpdate({
+          translationX: -1000,
+          translationY: -1000,
+        } as GestureUpdateEvent<PanGestureHandlerEventPayload>);
+      });
+
+      expect(translation.value).toBeCloseTo(expectedTranslation);
+    }
+  );
 });
