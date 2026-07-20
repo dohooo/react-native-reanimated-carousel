@@ -8,9 +8,7 @@ import type {
 import { GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   cancelAnimation,
-  measure,
   useAnimatedReaction,
-  useAnimatedRef,
   useDerivedValue,
   useSharedValue,
   withDecay,
@@ -56,7 +54,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       fixedDirection,
     },
     common: { size, resolvedSize, sizePhase, sizeExplicit },
-    layout: { updateContainerSize },
+    layout: { containerSize, updateContainerSize },
   } = useGlobalState();
 
   const {
@@ -77,7 +75,6 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
   const validStart = useSharedValue(false);
   const scrollEndTranslation = useSharedValue(0);
   const scrollEndVelocity = useSharedValue(0);
-  const containerRef = useAnimatedRef<Animated.View>();
   const maxScrollDistancePerSwipeIsSet = typeof maxScrollDistancePerSwipe === "number";
   const minScrollDistancePerSwipeIsSet = typeof minScrollDistancePerSwipe === "number";
   const sizeReady = useDerivedValue(() => {
@@ -92,18 +89,19 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
     if (size <= 0) return 0;
 
     if (!loop && !overscrollEnabled) {
-      const measurement = measure(containerRef);
-      const containerWidth = measurement?.width || 0;
+      const containerMainAxisSize = vertical
+        ? containerSize.value.height
+        : containerSize.value.width;
 
-      // If the item's total width is less than the container's width, then there is no need to scroll.
-      if (dataLength * size < containerWidth) return 0;
+      // If the item's total size is less than the container's size, then there is no need to scroll.
+      if (containerMainAxisSize <= 0 || dataLength * size < containerMainAxisSize) return 0;
 
       // Disable the "overscroll" effect
-      return dataLength * size - containerWidth;
+      return dataLength * size - containerMainAxisSize;
     }
 
     return dataLength * size;
-  }, [loop, size, dataLength, overscrollEnabled]);
+  }, [loop, size, dataLength, overscrollEnabled, vertical, containerSize]);
 
   const withSpring = React.useCallback(
     (toValue: number, onFinished?: () => void) => {
@@ -515,7 +513,6 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
   return (
     <GestureDetector gesture={gesture}>
       <Animated.View
-        ref={containerRef}
         testID={testID}
         style={style}
         onTouchStart={onTouchBegin}
