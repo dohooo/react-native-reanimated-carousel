@@ -53,6 +53,6 @@ export function useOnProgressChange(
         }
       }
     },
-    [loop, autoFillData, rawDataLength, onProgressChange, size]
+    [loop, autoFillData, rawDataLength, onProgressChange, size, offsetX, sizeReady]
   );
 }
