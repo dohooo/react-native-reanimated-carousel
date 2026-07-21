@@ -242,7 +242,7 @@ export type TCarouselProps<T = any> = {
   customConfig?: CustomConfig | (() => CustomConfig);
   /**
    * Custom animations.
-   * Must use `worklet`, Details: https://docs.swmansion.com/react-native-reanimated/docs/2.2.0/worklets/
+   * Must be worklet-compatible. See https://docs.swmansion.com/react-native-reanimated/docs/guides/worklets/
    * @test_coverage ✅ tested in Carousel.test.tsx > should apply the custom animation
    */
   customAnimation?: (value: number, index: number) => ViewStyle;

@@ -4,45 +4,40 @@ We want this community to be friendly and respectful to each other. Please follo
 
 ## Development workflow
 
-To get started with the project, run `yarn` in the root directory to install the required dependencies for each package:
+To get started, install the library dependencies in the repository root:
 
 ```sh
-yarn
+yarn install
 ```
 
-> While it's possible to use [`npm`](https://github.com/npm/cli), the tooling is built around [`yarn`](https://classic.yarnpkg.com/), so you'll have an easier time if you use `yarn` for development.
+> The repository declares Yarn 4 in `package.json`; use Yarn so local commands match CI.
 
-While developing, you can run the [example app](/example/expo/) to test your changes. Any changes you make in your library's JavaScript code will be reflected in the example app without a rebuild. If you change any native code, then you'll need to rebuild the example app.
-
-To start build:
+Build the library once, or start the watch task while editing files under `src`:
 
 ```sh
+yarn prepare
+# or
 yarn dev
 ```
 
-To run the example app on Android:
+Install the [Expo example app](./example/app/) dependencies separately, then run the platform you need:
 
 ```sh
-cd example/expo && yarn && yarn android
+cd example/app
+yarn install
+yarn android # or: yarn ios / yarn web
 ```
 
-To run the example app on iOS:
+If native dependencies or configuration change, rebuild the development client with `yarn android` or `yarn ios`.
+
+Before opening a pull request, run the checks relevant to your change from the repository root:
 
 ```sh
-cd example/expo && yarn && yarn ios
-```
-
-To run the example app on Web:
-
-```sh
-cd example/expo && yarn && yarn web
-```
-
-Make sure your code passes TypeScript and Biome checks. Run the following to verify:
-
-```sh
-yarn typescript
+yarn types
 yarn lint
+yarn test
+yarn prepare
+yarn changeset:check
 ```
 
 To fix formatting and linting errors, run the following:
@@ -51,10 +46,12 @@ To fix formatting and linting errors, run the following:
 yarn lint:fix
 ```
 
-Remember to add tests for your change if possible. Run the unit tests by:
+To validate documentation changes, build the website as well:
 
 ```sh
-yarn test
+cd example/website
+yarn install
+yarn build
 ```
 
 ### Commit message convention
@@ -76,30 +73,34 @@ Our pre-commit hooks verify that your commit message matches this format when co
 
 We use [TypeScript](https://www.typescriptlang.org/) for type checking, [Biome](https://biomejs.dev/) for linting and formatting the code, and [Jest](https://jestjs.io/) for testing.
 
-Our pre-commit hooks verify that the linter and tests pass when committing.
+The pre-commit hook applies Biome lint and formatting fixes; CI runs the full type, test, and build checks.
 
-### Publishing to npm
+### Changesets and publishing
 
-We use [release-it](https://github.com/release-it/release-it) to make it easier to publish new versions. It handles common tasks like bumping version based on semver, creating tags and releases etc.
-
-To publish new versions, run the following:
+We use [Changesets](https://github.com/changesets/changesets) for package versions and release notes. For a user-facing library change, add a changeset and keep its summary concise and user-focused:
 
 ```sh
-yarn release
+yarn changeset
+yarn changeset:check
 ```
+
+See [the release-note style guide](./docs/changeset-style.md) for the repository convention. Documentation-only changes do not need a package changeset.
+
+Publishing is performed by the `Changesets` GitHub Actions workflow on `main`. It maintains the release pull request and publishes only after that release pull request is reviewed and merged; contributors should not run `changeset publish` locally.
 
 ### Scripts
 
-The `package.json` file contains various scripts for common tasks:
+The root `package.json` contains scripts for common tasks:
 
-- `yarn bootstrap`: setup project by installing all dependencies and pods.
-- `yarn typescript`: type-check files with TypeScript.
+- `yarn prepare`: build CommonJS, ES module, and TypeScript package outputs.
+- `yarn dev`: rebuild the package when source files change.
+- `yarn types`: type-check source files with TypeScript.
 - `yarn lint`: check files with Biome.
 - `yarn lint:fix`: fix formatting and linting issues with Biome.
 - `yarn test`: run unit tests with Jest.
-- `yarn dev`: start build.
-- `yarn android`: run the example app on Android.
-- `yarn ios`: run the example app on iOS.
+- `yarn e2e:comprehensive`: run the Maestro suite against an already-built example app.
+- `yarn web:smoke`: run the Playwright Web smoke suite.
+- `yarn compat:expo`: validate the packed package in a selected Expo SDK consumer.
 
 ### Sending a pull request
 

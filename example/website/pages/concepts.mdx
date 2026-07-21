@@ -115,49 +115,47 @@ So when the first one is at the origin `translateX:0`, the next one is at the or
 ### Directory
 ```
 ./src
-├── Carousel.tsx # RNRC component `entry file`
-├── LazyView.tsx # ShouldUpdate prop controls whether to display elements
-├── ScrollViewGesture.tsx # Gesture logic `entry file`
-├── constants
-│   └── index.ts # Constants defined
+├── components
+│   ├── Carousel.tsx # Public component facade
+│   ├── CarouselLayout.tsx # Layout, progress, controller, and autoplay wiring
+│   ├── ItemLayout.tsx # Per-item animated layout
+│   ├── ItemRenderer.tsx # Visible-item rendering
+│   ├── LazyView.tsx # Conditional item rendering
+│   ├── Pagination # Basic and custom pagination
+│   └── ScrollViewGesture.tsx # Pan gesture and boundary handling
 ├── hooks
-│   ├── useAutoPlay.ts # Managing Auto Play
-│   ├── useCarouselController.tsx # The controller that manages the behavior of the multicast graph (previous, next...)
-│   ├── useCheckMounted.ts # Check whether the wheel cast diagram has been mounted
-│   ├── useCommonVariables.ts # Pull some common variables from Props
-│   ├── useInitProps.ts # Initialize the Props passed in
-│   ├── useLayoutConfig.ts # parallax, horizontal-stack... Returns different animationStyles
-│   ├── useOffsetX.ts # The core logic of when to move the end slide to the start position
-│   ├── useOnProgressChange.ts # Listen for scrolling progress changes
-│   ├── usePropsErrorBoundary.ts # Used to catch setup errors for Props
-│   └── useVisibleRanges.tsx # Manages the visibility of the carousel elements
-├── index.tsx
-├── layouts # Some basic layouts are defined
-│   ├── BaseLayout.tsx
-│   ├── index.tsx # Layout entry file that returns the various animationStyles defined.
+│   ├── useAutoPlay.ts # Autoplay timer lifecycle
+│   ├── useCarouselController.tsx # prev, next, scrollTo, and current index
+│   ├── useCommonVariables.ts # Shared size and offset state
+│   ├── useLayoutConfig.ts # Selects normal, parallax, or stack animations
+│   ├── useOffsetX.ts # Loop-aware item positioning
+│   ├── useOnProgressChange.ts # Progress callbacks and shared values
+│   ├── usePanGestureProxy.ts # Gesture configuration
+│   └── useVisibleRanges.tsx # Render-window calculation
+├── layouts
+│   ├── index.tsx
 │   ├── normal.ts
 │   ├── parallax.ts
 │   └── stack.ts
 ├── store
-│   └── index.ts # ContextStore for Props and some base variables
-├── types.ts # The type definition
-└── utils # Some tool methods.
-    ├── computedWithAutoFillData.ts # When the default data is insufficient, the data will be automatically completed and can also be turned off with `autoFillData` prop, so this file provides ways to handle two different cases.
-    ├── dealWithAnimation.ts # Encapsulates and handles both Spring/Timing animation types
-    └── log.ts # The utility method used to type logs in `worklet` functions
+│   └── index.tsx # Context for props, shared state, and measurements
+├── utils # Pure offset, gesture, animation, and data helpers
+├── index.tsx # Package exports
+└── types.ts # Public prop and ref types
 ```
 
 ### Development
-1. Run `yarn dev` in the root directory.
-2. Run `yarn ios/ yarn android/yarn web` on exampleExpo.
-3. Modify the files under './src/*'to see the changes.
+1. Run `yarn install` and `yarn dev` in the repository root.
+2. Run `yarn install` in `example/app` once.
+3. Start the example with `yarn ios`, `yarn android`, or `yarn web` from `example/app`.
+4. Modify files under `src`; the root watch task rebuilds the linked package.
 
 ### Tips
 How to add a new animation effect?
 
-We recommend you to use [customAnimation](/custom-animations.md) prop to do this, as this is a more flexible and easy way to do it.
+Use the [`customAnimation`](/custom-animations) prop for animation effects that are not covered by the built-in layouts.
 
-1. In `./exampleExpo/src/pages/[new example]`reference other examples to create a new animation and give it a name (kebab-case dash name).
-2. In the `./exampleExpo/src/pages/Home.tsx ` file to add the entrance route.
-3. Record the demo animation. We recommend that you record the demo animation at a size of 1.8:1, usually in the same proportion as other demo GIF. Running 'yarn gif' in the root directory will automatically generate GIF files in this directory.
-4. Put the GIF files into the `./assets` directory and update the `README.md` and `README.zh-cn. md` files according to their types.
+1. Add a kebab-case demo route under `example/app/app/demos/<category>/<name>` by following a nearby example.
+2. Add or update the matching page under `example/website/pages/Examples` when the demo should appear in the documentation.
+3. Record the demo and run `yarn gif` from the repository root when a GIF asset is needed.
+4. Put generated media under `assets` and reference it from the example page.

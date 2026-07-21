@@ -139,6 +139,10 @@ const currentIndex = carouselRef.current?.getCurrentIndex();
 console.log('Current index:', currentIndex);
 ```
 
+<Callout type="warning">
+  Do not call `getCurrentIndex()` during render. It reads live animation state; call it from an event handler or an effect instead.
+</Callout>
+
 ## Practical Examples
 
 ### Pagination Control
@@ -219,30 +223,22 @@ When updating data and needing to scroll to new items:
 function DynamicCarousel() {
   const carouselRef = useRef<ICarouselInstance>(null);
   const [items, setItems] = useState(initialItems);
+  const [pendingIndex, setPendingIndex] = useState<number | null>(null);
 
   const addItemAndNavigate = (newItem) => {
-    const newItems = [...items, newItem];
-    setItems(newItems);
-    
-    // Wait for next render cycle before scrolling
-    setTimeout(() => {
-      carouselRef.current?.scrollTo({
-        index: newItems.length - 1,
-        animated: true
-      });
-    }, 0);
+    setPendingIndex(items.length);
+    setItems((currentItems) => [...currentItems, newItem]);
   };
 
-  // Alternative: Use useEffect to handle timing
   useEffect(() => {
-    if (items.length > initialItems.length) {
-      // Scroll to the last item when new items are added
-      carouselRef.current?.scrollTo({
-        index: items.length - 1,
-        animated: true
-      });
-    }
-  }, [items]);
+    if (pendingIndex === null || pendingIndex >= items.length) return;
+
+    carouselRef.current?.scrollTo({
+      index: pendingIndex,
+      animated: true
+    });
+    setPendingIndex(null);
+  }, [items.length, pendingIndex]);
 
   return (
     <Carousel
@@ -327,7 +323,7 @@ function SearchableCarousel() {
 ## Important Notes
 
 <Callout type="warning">
-  **Race Condition Warning:** When updating data and immediately calling scroll methods, you might encounter race conditions. The carousel may not have rendered the new data yet. Use `setTimeout` or `useEffect` to ensure proper timing.
+  **Data update timing:** Do not update `data` and call a scroll method in the same render path. Wait for the updated data to render, for example by issuing the scroll from an effect.
 </Callout>
 
 <Callout type="info">
