@@ -10,7 +10,7 @@ This document provides a comprehensive technical architecture analysis for the `
 
 ### Core Design Philosophy
 
-React Native Reanimated Carousel is a high-performance carousel component built on **React Native Reanimated 2**, adopting the following core design principles:
+React Native Reanimated Carousel is a high-performance carousel component built on **React Native Reanimated 4** and **React Native Worklets**, adopting the following core design principles:
 
 1. **Performance First**: All animation calculations execute on the UI thread, ensuring 60fps smooth experience
 2. **Math-Driven**: Based on precise interpolation algorithms and mathematical transformations to achieve complex animation effects
@@ -20,10 +20,10 @@ React Native Reanimated Carousel is a high-performance carousel component built 
 ### Technology Stack
 
 - **React Native**: Cross-platform mobile application framework
-- **React Native Reanimated 2**: High-performance animation engine
+- **React Native Reanimated 4**: High-performance animation engine
+- **React Native Worklets**: Worklet scheduling and UI/JS runtime interop
 - **React Native Gesture Handler**: Gesture recognition and handling
 - **TypeScript**: Type safety and development experience
-- **Worklets**: UI thread JavaScript execution environment
 
 ---
 
@@ -59,7 +59,7 @@ React Native Reanimated Carousel is a high-performance carousel component built 
 ┌─────────────────────────────────────────────────────────────┐
 │                  🛠️ Foundation Layer                         │
 ├─────────────────────────────────────────────────────────────┤
-│ • React Native Reanimated 2 (SharedValue, Worklets)        │
+│ • Reanimated 4 + React Native Worklets                     │
 │ • React Native Gesture Handler (PanGesture)                │
 │ • React Native Core (View, StyleSheet, Dimensions)         │
 └─────────────────────────────────────────────────────────────┘

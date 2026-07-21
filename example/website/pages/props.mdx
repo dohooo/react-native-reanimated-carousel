@@ -27,8 +27,8 @@ import { Callout } from 'nextra/components'
 
 ## Basic
 
-<Callout emoji="🙋‍♂️">
-Basically, each props should have a corresponding example, which is more intuitive, but due to time constraints, it has not been done for the time being. It is expected that someone can contribute to submit PR.
+<Callout type="info">
+This page documents the v5 beta API. The exported TypeScript types remain the source of truth for exact signatures.
 </Callout>
 
 ### `data`
@@ -107,15 +107,15 @@ Carousel Animated transitions
 
 | type   | default | required |
 | ------ | ------- | -------- |
-| 'horizontal-stack'\|'vertical-stack'\|'parallax' | default     | ❌      |
+| 'horizontal-stack' \| 'vertical-stack' \| 'parallax' | undefined (normal layout) | ❌ |
 
 ### `modeConfig`
 
-Different modes correspond to different configurations. For details, see below\[modeConfig\]\(#`modeConfig` Props\)
+Mode-specific animation configuration. See the Parallax Mode and Stack Mode sections below.
 
 | type   | default | required |
 | ------ | ------- | -------- |
-| \{moveSize\?: number;stackInterval\?: number;scaleInterval\?: number;rotateZDeg\?: number;snapDirection\?: 'left' \| 'right';\} | -     | ❌      |
+| object | \{\} | ❌ |
 
 ### `style`
 
@@ -270,13 +270,13 @@ The callback provides two parameters: `offsetProgress`:Total of offset distance 
 | ------ | ------- | -------- |
 | \(\(offsetProgress: number, absoluteProgress: number\) => void\) \| SharedValue\<number\> | -     | ❌      |
 
-### `modeConfig`
+### `onLayout`
 
-Stack layout animation style
+Called when the carousel content container is laid out.
 
 | type   | default | required |
 | ------ | ------- | -------- |
-| \{moveSize\?: number;stackInterval\?: number;scaleInterval\?: number;rotateZDeg\?: number;snapDirection\?: 'left' \| 'right';\} | \{ snapDirection: 'left',moveSize: window.width,stackInterval: 30,scaleInterval: 0.08,rotateZDeg: 135\}     | ❌      |
+| \(event: LayoutChangeEvent\) => void | - | ❌ |
 
 ### `pagingEnabled`
 
@@ -302,6 +302,16 @@ If enabled, releasing the touch will scroll to the nearest item, valid when pagi
 | ------ | ------- | -------- |
 | boolean | true     | ❌      |
 
+### `enableSnap`
+
+> @deprecated Use `snapEnabled` instead.
+
+Legacy name for `snapEnabled`.
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| boolean | - | ❌ |
+
 ### `enabled`
 
 when false, Carousel will not respond to any gestures
@@ -316,7 +326,7 @@ If positive, the carousel will scroll to the positive direction and vice versa.
 
 | type   | default | required |
 | ------ | ------- | -------- |
-| 'positive' \| 'negative | -     | ❌      |
+| 'positive' \| 'negative' | -     | ❌      |
 
 ### `customConfig`
 
@@ -328,11 +338,11 @@ Custom carousel config
 
 ### `customAnimation`
 
-Custom animations. For details, see below\[custom animation\]\(.\/custom-animation.md\)
+Custom worklet animation. See [Custom Animations](/custom-animations).
 
 | type   | default | required |
 | ------ | ------- | -------- |
-| \(value: number\) => ViewStyle | -     | ❌      |
+| \(value: number, index: number\) => ViewStyle | -     | ❌      |
 
 ### `maxScrollDistancePerSwipe`
 
@@ -386,14 +396,14 @@ control prev/next item scale
 
 | type   | default | required |
 | ------ | ------- | -------- |
-| number | parallaxAdjacentItemScale \|\| Math.pow\(parallaxScrollingScale, 2\)     | ❌      |
+| number | parallaxScrollingScale ** 2 | ❌ |
 
 ## Stack Mode
 
 ```tsx copy
 <Carousel
     {...restProps}
-    mode="stack"
+    mode="horizontal-stack"
     modeConfig={{
         moveSize: 200,
         stackInterval: 30,
@@ -403,6 +413,14 @@ control prev/next item scale
     }}
 />
 ```
+
+### `showLength`
+
+Maximum number of cards shown in the stack. By default, the stack can show the remaining data length.
+
+| type   | default | required |
+| ------ | ------- | -------- |
+| number | data length - 1 | ❌ |
 
 ### `stackInterval`
 
@@ -544,7 +562,7 @@ Scroll to previous item, it takes one optional argument \(count\), which allows 
 
 | type   |
 | ------ |
-| \(\{ count: number, animated: boolean, onFinished?: \(\) => void \}\) \=\> void |
+| \(options?: \{ count?: number, animated?: boolean, onFinished?: \(\) => void \}\) => void |
 
 ### `next`
 
@@ -552,7 +570,7 @@ Scroll to next item, it takes one optional argument \(count\), which allows you 
 
 | type   |
 | ------ |
-| \(\{ count: number, animated: boolean, onFinished?: \(\) => void \}\) => void |
+| \(options?: \{ count?: number, animated?: boolean, onFinished?: \(\) => void \}\) => void |
 
 ### `scrollTo`
 
@@ -564,11 +582,11 @@ Use count to scroll to a position where relative to the current position, scroll
 
 | type   |
 | ------ |
-| \(\{ index: number, count: number, animated: boolean, onFinished\?: \(\) => void \}\) => void |
+| \(options?: \{ index?: number, count?: number, animated?: boolean, onFinished\?: \(\) => void \}\) => void |
 
 ### `getCurrentIndex`
 
-Get current item index
+Get the current item index. Call this from an event handler or effect, not while React is rendering.
 
 | type   |
 | ------ |

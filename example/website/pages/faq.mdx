@@ -29,31 +29,48 @@ When rendering a large number of elements, you can use the 'windowSize' property
 
 ## Used in `ScrollView/FlatList`
 
-**[#143](https://github.com/dohooo/react-native-reanimated-carousel/issues/143) - Carousel suppresses ScrollView/FlatList scroll gesture handler:** When using a carousel with a layout oriented to only one direction (vertical/horizontal) and inside a ScrollView/FlatList, it is important for the user experience that the unused axis does not impede the scroll of the list. So that, for example, the x-axis is free we can change the [activeOffsetX](https://docs.swmansion.com/react-native-gesture-handler/docs/1.10.3/api/gesture-handlers/pan-gh/#activeoffsetx) of the gesture handler:
+**[#143](https://github.com/dohooo/react-native-reanimated-carousel/issues/143) - Carousel suppresses ScrollView/FlatList scroll gesture handler:** When a horizontal carousel is nested in a vertical `ScrollView` or `FlatList`, configure the pan gesture so small horizontal movement does not capture the parent scroll. For example, use Gesture Handler's [`activeOffsetX`](https://docs.swmansion.com/react-native-gesture-handler/docs/gestures/pan-gesture/#activeoffsetx):
 
 ```tsx copy
 <Carousel
   {...}
-  onConfigurePanGesture={gestureChain => (
-    gestureChain.activeOffsetX([-10, 10])
-  )}
+  onConfigurePanGesture={(gesture) => {
+    gesture.activeOffsetX([-10, 10]);
+  }}
 />
 ```
 
 ## RTL
 Support to RTL mode with no more configuration needed. But in RTL mode, need to manually set the autoPlayReverse props for autoplay to control scrolling direction.
 
-## EXPO
-If use EXPO managed workflow please ensure that the version is greater than 41.Because the old version not support `Reanimated(v2)`.
+## Expo
+
+Install the v5 beta and its native peers with `expo install` so Expo selects compatible versions:
+
+```shell copy
+npx expo install react-native-reanimated-carousel@beta react-native-reanimated react-native-worklets react-native-gesture-handler
+```
+
+The v5 beta requires React Native 0.80+, Reanimated 4.1+, and React Native Worklets 0.5+. See the [v5 migration guide](/migration-v5) for the validated Expo matrix and setup notes.
 
 ## Working principle
 [How it works?](/concepts)
 
-## How to run tests in `example/expo`
+## How to run the example app
+
+Build the package, then install and run the Expo app from its current location:
+
 ```shell copy
-$ yarn prepare
-$ yarn link --global
-$ cd ./example/expo
-$ yarn link react-native-reanimated-carousel --global
-$ yarn test
+yarn prepare
+cd example/app
+yarn install
+yarn ios # or: yarn android / yarn web
+```
+
+Run the library checks from the repository root:
+
+```shell copy
+yarn test
+yarn types
+yarn lint
 ```
