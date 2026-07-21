@@ -4,35 +4,35 @@
 
 ### Patch Changes
 
-- [#927](https://github.com/dohooo/react-native-reanimated-carousel/pull/927) [`0763d35`](https://github.com/dohooo/react-native-reanimated-carousel/commit/0763d35aae00e4b9f4ad04dd71d8b250db3b6dfc) Thanks [@dohooo](https://github.com/dohooo)! - - Recognize percentage and flex container styles in development sizing warnings.
+- [#927](https://github.com/dohooo/react-native-reanimated-carousel/pull/927) [`0763d35`](https://github.com/dohooo/react-native-reanimated-carousel/commit/0763d35aae00e4b9f4ad04dd71d8b250db3b6dfc) Thanks [@dohooo](https://github.com/dohooo)! - Recognize percentage and flex container styles in development sizing warnings.
 
-- [#926](https://github.com/dohooo/react-native-reanimated-carousel/pull/926) [`578a4be`](https://github.com/dohooo/react-native-reanimated-carousel/commit/578a4be46ddeb0bd9100b5568bb7144ca19fc72b) Thanks [@dohooo](https://github.com/dohooo)! - - Refresh progress reactions when the offset or size-readiness shared value instance changes (Issue #923).
+- [#926](https://github.com/dohooo/react-native-reanimated-carousel/pull/926) [`578a4be`](https://github.com/dohooo/react-native-reanimated-carousel/commit/578a4be46ddeb0bd9100b5568bb7144ca19fc72b) Thanks [@dohooo](https://github.com/dohooo)! - Refresh progress reactions when the offset or size-readiness shared value instance changes (Issue #923).
 
-- [#911](https://github.com/dohooo/react-native-reanimated-carousel/pull/911) [`da3b11b`](https://github.com/dohooo/react-native-reanimated-carousel/commit/da3b11bd6664a91994287cc0644ff6a4cfb837cb) Thanks [@dohooo](https://github.com/dohooo)! - - Avoid the React 19 `element.ref` warning on web by removing the internal gesture child ref (Issue #857).
+- [#911](https://github.com/dohooo/react-native-reanimated-carousel/pull/911) [`da3b11b`](https://github.com/dohooo/react-native-reanimated-carousel/commit/da3b11bd6664a91994287cc0644ff6a4cfb837cb) Thanks [@dohooo](https://github.com/dohooo)! - Avoid the React 19 `element.ref` warning on web by removing the internal gesture child ref (Issue #857).
 
   - Preserve horizontal and vertical non-loop boundaries with layout-derived container dimensions.
 
-- [#913](https://github.com/dohooo/react-native-reanimated-carousel/pull/913) [`b68c803`](https://github.com/dohooo/react-native-reanimated-carousel/commit/b68c80329c60a51ff58cf9363ea98ac244bc56bf) Thanks [@dohooo](https://github.com/dohooo)! - - Mount the reverse visible range on the first render so looped parallax items preserve their styles and props when swiping backward (Issue #899).
+- [#913](https://github.com/dohooo/react-native-reanimated-carousel/pull/913) [`b68c803`](https://github.com/dohooo/react-native-reanimated-carousel/commit/b68c80329c60a51ff58cf9363ea98ac244bc56bf) Thanks [@dohooo](https://github.com/dohooo)! - Mount the reverse visible range on the first render so looped parallax items preserve their styles and props when swiping backward (Issue #899).
 
 ## 5.0.0-beta.6
 
 ### Patch Changes
 
-- [#924](https://github.com/dohooo/react-native-reanimated-carousel/pull/924) [`e4fa56f`](https://github.com/dohooo/react-native-reanimated-carousel/commit/e4fa56f6160eb22cfb1f46bf314eadc29f0c74f3) Thanks [@dohooo](https://github.com/dohooo)! - - Keep every item rendered in loop mode when `windowSize` is equal to or greater than the data length (Issue #918).
+- [#924](https://github.com/dohooo/react-native-reanimated-carousel/pull/924) [`e4fa56f`](https://github.com/dohooo/react-native-reanimated-carousel/commit/e4fa56f6160eb22cfb1f46bf314eadc29f0c74f3) Thanks [@dohooo](https://github.com/dohooo)! - Keep every item rendered in loop mode when `windowSize` is equal to or greater than the data length (Issue #918).
 
   - Add unit and Maestro regression coverage for small looped data sets.
 
-- [#924](https://github.com/dohooo/react-native-reanimated-carousel/pull/924) [`e4fa56f`](https://github.com/dohooo/react-native-reanimated-carousel/commit/e4fa56f6160eb22cfb1f46bf314eadc29f0c74f3) Thanks [@dohooo](https://github.com/dohooo)! - - Keep automatically measured carousels responsive when their window or parent container changes size (Issue #890).
+- [#924](https://github.com/dohooo/react-native-reanimated-carousel/pull/924) [`e4fa56f`](https://github.com/dohooo/react-native-reanimated-carousel/commit/e4fa56f6160eb22cfb1f46bf314eadc29f0c74f3) Thanks [@dohooo](https://github.com/dohooo)! - Keep automatically measured carousels responsive when their window or parent container changes size (Issue #890).
 
   - Preserve explicit style, item size, and legacy `width`/`height` sizing behavior.
 
-- [#924](https://github.com/dohooo/react-native-reanimated-carousel/pull/924) [`e4fa56f`](https://github.com/dohooo/react-native-reanimated-carousel/commit/e4fa56f6160eb22cfb1f46bf314eadc29f0c74f3) Thanks [@dohooo](https://github.com/dohooo)! - - Require React Native Reanimated 4.1 or newer to avoid incompatible Reanimated 4.0 and React Native Worklets 0.5 combinations.
+- [#924](https://github.com/dohooo/react-native-reanimated-carousel/pull/924) [`e4fa56f`](https://github.com/dohooo/react-native-reanimated-carousel/commit/e4fa56f6160eb22cfb1f46bf314eadc29f0c74f3) Thanks [@dohooo](https://github.com/dohooo)! - Require React Native Reanimated 4.1 or newer to avoid incompatible Reanimated 4.0 and React Native Worklets 0.5 combinations.
 
 ## 5.0.0-beta.5
 
 ### Patch Changes
 
-- [#891](https://github.com/dohooo/react-native-reanimated-carousel/pull/891) [`73d066d`](https://github.com/dohooo/react-native-reanimated-carousel/commit/73d066dae6595b918c1bcf30c76bc40a7e27a6ad) Thanks [@notsuhas](https://github.com/notsuhas)! - - Fix non-loop `scrollTo()` so backward jumps keep the correct negative offset instead of briefly rendering a blank frame.
+- [#891](https://github.com/dohooo/react-native-reanimated-carousel/pull/891) [`73d066d`](https://github.com/dohooo/react-native-reanimated-carousel/commit/73d066dae6595b918c1bcf30c76bc40a7e27a6ad) Thanks [@notsuhas](https://github.com/notsuhas)! - Fix non-loop `scrollTo()` so backward jumps keep the correct negative offset instead of briefly rendering a blank frame.
   - Add regression tests for non-loop backward `scrollTo()` and returning to index `0`.
 
 ## 5.0.0-beta.4
@@ -131,7 +131,7 @@
 
 ### Minor Changes
 
-- [#853](https://github.com/dohooo/react-native-reanimated-carousel/pull/853) [`c595958`](https://github.com/dohooo/react-native-reanimated-carousel/commit/c59595896381c36cc395f95b8631aee503cfd927) Thanks [@dohooo](https://github.com/dohooo)! - - add `itemWidth`/`itemHeight` props so horizontal and vertical carousels can define their snapping step explicitly (e.g. to show multiple cards per page)
+- [#853](https://github.com/dohooo/react-native-reanimated-carousel/pull/853) [`c595958`](https://github.com/dohooo/react-native-reanimated-carousel/commit/c59595896381c36cc395f95b8631aee503cfd927) Thanks [@dohooo](https://github.com/dohooo)! - add `itemWidth`/`itemHeight` props so horizontal and vertical carousels can define their snapping step explicitly (e.g. to show multiple cards per page)
 
   - default behaviour still falls back to the carousel container size or legacy `width`/`height` props
 

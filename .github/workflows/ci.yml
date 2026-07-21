@@ -61,7 +61,9 @@ jobs:
         run: yarn types
 
       - name: Check changeset style
-        run: yarn changeset:check
+        run: |
+          node --test scripts/check-changeset-style.test.mjs
+          yarn changeset:check
 
   build-and-test:
     name: Build & Test
