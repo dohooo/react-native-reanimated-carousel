@@ -1,6 +1,6 @@
 {
 	"name": "react-native-reanimated-carousel",
-	"version": "5.0.0-beta.6",
+	"version": "5.0.0-beta.7",
 	"packageManager": "yarn@4.0.2",
 	"description": "A performant, customizable carousel for React Native powered by Reanimated.",
 	"author": "Doho <zhaodonghao586@outlook.com> (https://github.com/dohooo)",

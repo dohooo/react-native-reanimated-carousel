@@ -1,5 +1,19 @@
 # react-native-reanimated-carousel
 
+## 5.0.0-beta.7
+
+### Patch Changes
+
+- [#927](https://github.com/dohooo/react-native-reanimated-carousel/pull/927) [`0763d35`](https://github.com/dohooo/react-native-reanimated-carousel/commit/0763d35aae00e4b9f4ad04dd71d8b250db3b6dfc) Thanks [@dohooo](https://github.com/dohooo)! - - Recognize percentage and flex container styles in development sizing warnings.
+
+- [#926](https://github.com/dohooo/react-native-reanimated-carousel/pull/926) [`578a4be`](https://github.com/dohooo/react-native-reanimated-carousel/commit/578a4be46ddeb0bd9100b5568bb7144ca19fc72b) Thanks [@dohooo](https://github.com/dohooo)! - - Refresh progress reactions when the offset or size-readiness shared value instance changes (Issue #923).
+
+- [#911](https://github.com/dohooo/react-native-reanimated-carousel/pull/911) [`da3b11b`](https://github.com/dohooo/react-native-reanimated-carousel/commit/da3b11bd6664a91994287cc0644ff6a4cfb837cb) Thanks [@dohooo](https://github.com/dohooo)! - - Avoid the React 19 `element.ref` warning on web by removing the internal gesture child ref (Issue #857).
+
+  - Preserve horizontal and vertical non-loop boundaries with layout-derived container dimensions.
+
+- [#913](https://github.com/dohooo/react-native-reanimated-carousel/pull/913) [`b68c803`](https://github.com/dohooo/react-native-reanimated-carousel/commit/b68c80329c60a51ff58cf9363ea98ac244bc56bf) Thanks [@dohooo](https://github.com/dohooo)! - - Mount the reverse visible range on the first render so looped parallax items preserve their styles and props when swiping backward (Issue #899).
+
 ## 5.0.0-beta.6
 
 ### Patch Changes
