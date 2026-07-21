@@ -4,16 +4,12 @@ export const Badges = () => {
       {
         [
           {
-            label: "Hacktober Badge",
-            url: "https://img.shields.io/badge/hacktoberfest-2022-blueviolet",
-          },
-          {
             label: "platforms",
             url: "https://img.shields.io/badge/platforms-Android%20%7C%20iOS%20%7C%20Web-brightgreen.svg?style=flat-square&colorB=191A17",
           },
           {
-            label: "npm",
-            url: "https://img.shields.io/npm/v/react-native-reanimated-carousel.svg?style=flat-square",
+            label: "npm beta",
+            url: "https://img.shields.io/npm/v/react-native-reanimated-carousel/beta.svg?style=flat-square&label=beta",
           },
           {
             label: "npm",

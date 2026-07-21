@@ -37,12 +37,18 @@ import { Cards } from 'nextra/components'
 import Link from 'next/link'
 import posthog from "posthog-js";
 
+export const captureExampleClick = (name, kind) => {
+  if (process.env.NEXT_PUBLIC_POSTHOG_KEY) {
+    posthog.capture('example-clicked', { name, kind });
+  }
+};
+
 
 ### Basic Layouts
 
 <Cards num={2}>
   
-        <Link href="/Examples/basic-layouts/stack" onClick={() => posthog.capture('example-clicked', { name: 'stack', kind: 'basic-layouts' })}>
+        <Link href="/Examples/basic-layouts/stack" onClick={() => captureExampleClick('stack', 'basic-layouts')}>
           <div className='summary-item'>
             <div className='image-container'>![basic-layouts-stack](../../../app/app/demos/basic-layouts/stack/preview.png)</div>
             <div className='label-container'>
@@ -52,7 +58,7 @@ import posthog from "posthog-js";
         </Link>
   
 
-        <Link href="/Examples/basic-layouts/parallax" onClick={() => posthog.capture('example-clicked', { name: 'parallax', kind: 'basic-layouts' })}>
+        <Link href="/Examples/basic-layouts/parallax" onClick={() => captureExampleClick('parallax', 'basic-layouts')}>
           <div className='summary-item'>
             <div className='image-container'>![basic-layouts-parallax](../../../app/app/demos/basic-layouts/parallax/preview.png)</div>
             <div className='label-container'>
@@ -62,7 +68,7 @@ import posthog from "posthog-js";
         </Link>
   
 
-        <Link href="/Examples/basic-layouts/normal" onClick={() => posthog.capture('example-clicked', { name: 'normal', kind: 'basic-layouts' })}>
+        <Link href="/Examples/basic-layouts/normal" onClick={() => captureExampleClick('normal', 'basic-layouts')}>
           <div className='summary-item'>
             <div className='image-container'>![basic-layouts-normal](../../../app/app/demos/basic-layouts/normal/preview.png)</div>
             <div className='label-container'>
@@ -72,7 +78,7 @@ import posthog from "posthog-js";
         </Link>
   
 
-        <Link href="/Examples/basic-layouts/left-align" onClick={() => posthog.capture('example-clicked', { name: 'left-align', kind: 'basic-layouts' })}>
+        <Link href="/Examples/basic-layouts/left-align" onClick={() => captureExampleClick('left-align', 'basic-layouts')}>
           <div className='summary-item'>
             <div className='image-container'>![basic-layouts-left-align](../../../app/app/demos/basic-layouts/left-align/preview.png)</div>
             <div className='label-container'>
@@ -87,7 +93,7 @@ import posthog from "posthog-js";
 
 <Cards num={2}>
   
-        <Link href="/Examples/utils/pagination" onClick={() => posthog.capture('example-clicked', { name: 'pagination', kind: 'utils' })}>
+        <Link href="/Examples/utils/pagination" onClick={() => captureExampleClick('pagination', 'utils')}>
           <div className='summary-item'>
             <div className='image-container'>![utils-pagination](../../../app/app/demos/utils/pagination/preview.png)</div>
             <div className='label-container'>
@@ -102,7 +108,7 @@ import posthog from "posthog-js";
 
 <Cards num={2}>
   
-        <Link href="/Examples/custom-animations/tinder" onClick={() => posthog.capture('example-clicked', { name: 'tinder', kind: 'custom-animations' })}>
+        <Link href="/Examples/custom-animations/tinder" onClick={() => captureExampleClick('tinder', 'custom-animations')}>
           <div className='summary-item'>
             <div className='image-container'>![custom-animations-tinder](../../../app/app/demos/custom-animations/tinder/preview.png)</div>
             <div className='label-container'>
@@ -112,7 +118,7 @@ import posthog from "posthog-js";
         </Link>
   
 
-        <Link href="/Examples/custom-animations/scale-fade-in-out" onClick={() => posthog.capture('example-clicked', { name: 'scale-fade-in-out', kind: 'custom-animations' })}>
+        <Link href="/Examples/custom-animations/scale-fade-in-out" onClick={() => captureExampleClick('scale-fade-in-out', 'custom-animations')}>
           <div className='summary-item'>
             <div className='image-container'>![custom-animations-scale-fade-in-out](../../../app/app/demos/custom-animations/scale-fade-in-out/preview.png)</div>
             <div className='label-container'>
@@ -122,7 +128,7 @@ import posthog from "posthog-js";
         </Link>
   
 
-        <Link href="/Examples/custom-animations/rotate-in-out" onClick={() => posthog.capture('example-clicked', { name: 'rotate-in-out', kind: 'custom-animations' })}>
+        <Link href="/Examples/custom-animations/rotate-in-out" onClick={() => captureExampleClick('rotate-in-out', 'custom-animations')}>
           <div className='summary-item'>
             <div className='image-container'>![custom-animations-rotate-in-out](../../../app/app/demos/custom-animations/rotate-in-out/preview.png)</div>
             <div className='label-container'>
@@ -132,7 +138,7 @@ import posthog from "posthog-js";
         </Link>
   
 
-        <Link href="/Examples/custom-animations/rotate-fade-in-out" onClick={() => posthog.capture('example-clicked', { name: 'rotate-fade-in-out', kind: 'custom-animations' })}>
+        <Link href="/Examples/custom-animations/rotate-fade-in-out" onClick={() => captureExampleClick('rotate-fade-in-out', 'custom-animations')}>
           <div className='summary-item'>
             <div className='image-container'>![custom-animations-rotate-fade-in-out](../../../app/app/demos/custom-animations/rotate-fade-in-out/preview.png)</div>
             <div className='label-container'>
@@ -142,7 +148,7 @@ import posthog from "posthog-js";
         </Link>
   
 
-        <Link href="/Examples/custom-animations/quick-swipe" onClick={() => posthog.capture('example-clicked', { name: 'quick-swipe', kind: 'custom-animations' })}>
+        <Link href="/Examples/custom-animations/quick-swipe" onClick={() => captureExampleClick('quick-swipe', 'custom-animations')}>
           <div className='summary-item'>
             <div className='image-container'>![custom-animations-quick-swipe](../../../app/app/demos/custom-animations/quick-swipe/preview.png)</div>
             <div className='label-container'>
@@ -152,7 +158,7 @@ import posthog from "posthog-js";
         </Link>
   
 
-        <Link href="/Examples/custom-animations/press-swipe" onClick={() => posthog.capture('example-clicked', { name: 'press-swipe', kind: 'custom-animations' })}>
+        <Link href="/Examples/custom-animations/press-swipe" onClick={() => captureExampleClick('press-swipe', 'custom-animations')}>
           <div className='summary-item'>
             <div className='image-container'>![custom-animations-press-swipe](../../../app/app/demos/custom-animations/press-swipe/preview.png)</div>
             <div className='label-container'>
@@ -162,7 +168,7 @@ import posthog from "posthog-js";
         </Link>
   
 
-        <Link href="/Examples/custom-animations/multiple" onClick={() => posthog.capture('example-clicked', { name: 'multiple', kind: 'custom-animations' })}>
+        <Link href="/Examples/custom-animations/multiple" onClick={() => captureExampleClick('multiple', 'custom-animations')}>
           <div className='summary-item'>
             <div className='image-container'>![custom-animations-multiple](../../../app/app/demos/custom-animations/multiple/preview.png)</div>
             <div className='label-container'>
@@ -172,7 +178,7 @@ import posthog from "posthog-js";
         </Link>
   
 
-        <Link href="/Examples/custom-animations/fold" onClick={() => posthog.capture('example-clicked', { name: 'fold', kind: 'custom-animations' })}>
+        <Link href="/Examples/custom-animations/fold" onClick={() => captureExampleClick('fold', 'custom-animations')}>
           <div className='summary-item'>
             <div className='image-container'>![custom-animations-fold](../../../app/app/demos/custom-animations/fold/preview.png)</div>
             <div className='label-container'>
@@ -182,7 +188,7 @@ import posthog from "posthog-js";
         </Link>
   
 
-        <Link href="/Examples/custom-animations/flow" onClick={() => posthog.capture('example-clicked', { name: 'flow', kind: 'custom-animations' })}>
+        <Link href="/Examples/custom-animations/flow" onClick={() => captureExampleClick('flow', 'custom-animations')}>
           <div className='summary-item'>
             <div className='image-container'>![custom-animations-flow](../../../app/app/demos/custom-animations/flow/preview.png)</div>
             <div className='label-container'>
@@ -192,7 +198,7 @@ import posthog from "posthog-js";
         </Link>
   
 
-        <Link href="/Examples/custom-animations/curve" onClick={() => posthog.capture('example-clicked', { name: 'curve', kind: 'custom-animations' })}>
+        <Link href="/Examples/custom-animations/curve" onClick={() => captureExampleClick('curve', 'custom-animations')}>
           <div className='summary-item'>
             <div className='image-container'>![custom-animations-curve](../../../app/app/demos/custom-animations/curve/preview.png)</div>
             <div className='label-container'>
@@ -202,7 +208,7 @@ import posthog from "posthog-js";
         </Link>
   
 
-        <Link href="/Examples/custom-animations/cube-3d" onClick={() => posthog.capture('example-clicked', { name: 'cube-3d', kind: 'custom-animations' })}>
+        <Link href="/Examples/custom-animations/cube-3d" onClick={() => captureExampleClick('cube-3d', 'custom-animations')}>
           <div className='summary-item'>
             <div className='image-container'>![custom-animations-cube-3d](../../../app/app/demos/custom-animations/cube-3d/preview.png)</div>
             <div className='label-container'>
@@ -212,7 +218,7 @@ import posthog from "posthog-js";
         </Link>
   
 
-        <Link href="/Examples/custom-animations/circular" onClick={() => posthog.capture('example-clicked', { name: 'circular', kind: 'custom-animations' })}>
+        <Link href="/Examples/custom-animations/circular" onClick={() => captureExampleClick('circular', 'custom-animations')}>
           <div className='summary-item'>
             <div className='image-container'>![custom-animations-circular](../../../app/app/demos/custom-animations/circular/preview.png)</div>
             <div className='label-container'>
@@ -222,7 +228,7 @@ import posthog from "posthog-js";
         </Link>
   
 
-        <Link href="/Examples/custom-animations/blur-rotate" onClick={() => posthog.capture('example-clicked', { name: 'blur-rotate', kind: 'custom-animations' })}>
+        <Link href="/Examples/custom-animations/blur-rotate" onClick={() => captureExampleClick('blur-rotate', 'custom-animations')}>
           <div className='summary-item'>
             <div className='image-container'>![custom-animations-blur-rotate](../../../app/app/demos/custom-animations/blur-rotate/preview.png)</div>
             <div className='label-container'>
@@ -232,7 +238,7 @@ import posthog from "posthog-js";
         </Link>
   
 
-        <Link href="/Examples/custom-animations/blur-parallax" onClick={() => posthog.capture('example-clicked', { name: 'blur-parallax', kind: 'custom-animations' })}>
+        <Link href="/Examples/custom-animations/blur-parallax" onClick={() => captureExampleClick('blur-parallax', 'custom-animations')}>
           <div className='summary-item'>
             <div className='image-container'>![custom-animations-blur-parallax](../../../app/app/demos/custom-animations/blur-parallax/preview.png)</div>
             <div className='label-container'>
@@ -242,7 +248,7 @@ import posthog from "posthog-js";
         </Link>
   
 
-        <Link href="/Examples/custom-animations/anim-tab-bar" onClick={() => posthog.capture('example-clicked', { name: 'anim-tab-bar', kind: 'custom-animations' })}>
+        <Link href="/Examples/custom-animations/anim-tab-bar" onClick={() => captureExampleClick('anim-tab-bar', 'custom-animations')}>
           <div className='summary-item'>
             <div className='image-container'>![custom-animations-anim-tab-bar](../../../app/app/demos/custom-animations/anim-tab-bar/preview.png)</div>
             <div className='label-container'>
@@ -252,7 +258,7 @@ import posthog from "posthog-js";
         </Link>
   
 
-        <Link href="/Examples/custom-animations/advanced-parallax" onClick={() => posthog.capture('example-clicked', { name: 'advanced-parallax', kind: 'custom-animations' })}>
+        <Link href="/Examples/custom-animations/advanced-parallax" onClick={() => captureExampleClick('advanced-parallax', 'custom-animations')}>
           <div className='summary-item'>
             <div className='image-container'>![custom-animations-advanced-parallax](../../../app/app/demos/custom-animations/advanced-parallax/preview.png)</div>
             <div className='label-container'>

@@ -2,9 +2,8 @@
 
 <img src="assets/home-banner.png" width="100%"/>
 
-![Hacktober Badge](https://img.shields.io/badge/hacktoberfest-2022-blueviolet)
 ![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS%20%7C%20Web-brightgreen.svg?style=flat-square&colorB=191A17)
-[![npm](https://img.shields.io/npm/v/react-native-reanimated-carousel.svg?style=flat-square)](https://www.npmjs.com/package/react-native-reanimated-carousel)
+[![npm beta](https://img.shields.io/npm/v/react-native-reanimated-carousel/beta.svg?style=flat-square&label=beta)](https://www.npmjs.com/package/react-native-reanimated-carousel)
 [![npm](https://img.shields.io/npm/dm/react-native-reanimated-carousel.svg?style=flat-square&colorB=007ec6)](https://www.npmjs.com/package/react-native-reanimated-carousel)
 [![npm](https://img.shields.io/npm/dw/react-native-reanimated-carousel.svg?style=flat-square&colorB=007ec6)](https://www.npmjs.com/package/react-native-reanimated-carousel)
 [![github issues](https://img.shields.io/github/issues/dohooo/react-native-reanimated-carousel.svg?style=flat-square)](https://github.com/dohooo/react-native-reanimated-carousel/issues)
@@ -41,6 +40,37 @@ yarn add react-native-reanimated-carousel@beta react-native-reanimated react-nat
 ```
 
 Follow the official setup instructions for [Reanimated](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started) and [Gesture Handler](https://docs.swmansion.com/react-native-gesture-handler/docs/fundamentals/installation). When upgrading from v4, read the [v5 migration guide](https://rn-carousel.dev/migration-v5).
+
+## Quick start
+
+```tsx
+import * as React from "react";
+import { Text, useWindowDimensions, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import Carousel from "react-native-reanimated-carousel";
+
+const data = ["First", "Second", "Third"];
+
+export default function App() {
+  const { width } = useWindowDimensions();
+
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <Carousel
+          style={{ width, height: 200 }}
+          data={data}
+          renderItem={({ item }) => (
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+              <Text>{item}</Text>
+            </View>
+          )}
+        />
+      </View>
+    </GestureHandlerRootView>
+  );
+}
+```
 
 ## 📊 Version Compatibility
 

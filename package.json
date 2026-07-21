@@ -25,7 +25,9 @@
 	"source": "src/index",
 	"files": [
 		"lib",
-		"src"
+		"src",
+		"!src/**/*.test.ts",
+		"!src/**/*.test.tsx"
 	],
 	"scripts": {
 		"gif": "node scripts/makegif.js ./scripts/gif-works-directory",

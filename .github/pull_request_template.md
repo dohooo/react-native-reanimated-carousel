@@ -13,7 +13,8 @@
 
 ### Testing
 
-- [ ] I added/updated tests
-- [ ] I manually tested
+- [ ] I added or updated automated tests where applicable
+- [ ] I manually tested the affected platform or documentation
+- [ ] I added a changeset for a user-facing package change, or this change is docs-only/internal
 
-<!-- Describe any manual testing -->
+<!-- List the exact commands, devices, or pages used for verification -->
