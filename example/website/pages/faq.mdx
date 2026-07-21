@@ -29,7 +29,7 @@ When rendering a large number of elements, you can use the 'windowSize' property
 
 ## Used in `ScrollView/FlatList`
 
-**[#143](https://github.com/dohooo/react-native-reanimated-carousel/issues/143) - Carousel suppresses ScrollView/FlatList scroll gesture handler:** When a horizontal carousel is nested in a vertical `ScrollView` or `FlatList`, configure the pan gesture so small horizontal movement does not capture the parent scroll. For example, use Gesture Handler's [`activeOffsetX`](https://docs.swmansion.com/react-native-gesture-handler/docs/gestures/pan-gesture/#activeoffsetx):
+**[#143](https://github.com/dohooo/react-native-reanimated-carousel/issues/143) - Carousel suppresses ScrollView/FlatList scroll gesture handler:** When a horizontal carousel is nested in a vertical `ScrollView` or `FlatList`, configure the pan gesture so small horizontal movement does not capture the parent scroll. For example, use Gesture Handler's [`activeOffsetX`](https://docs.swmansion.com/react-native-gesture-handler/docs/gestures/pan-gesture/):
 
 ```tsx copy
 <Carousel

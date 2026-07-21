@@ -4,51 +4,37 @@ about: Thanks for taking the time to fill out this bug report!
 title: ''
 labels: bug
 assignees: dohooo
-
 ---
 
+<!-- Before filing, search existing issues and confirm the problem on the latest v5 beta. -->
 
-
-
-<!---
-I am still actively maintaining this project, but because I have more work to do in life, I will only deal with problems on weekends at present. If you have important and urgent problems, you can ask me to give some time for you through Sponsor. ❤️
--->
-
-
-
-
-
-<!---
-Any problem that does not include an accurate reproduction step is likely to be closed 
--->
 **Describe the bug**
-A clear and concise description of what the bug is. If you intend to submit a PR for this issue, tell us in the description. Thanks!
+A clear description of what happened and whether this is a regression.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+**Reproduction**
+Link to a minimal repository or Expo Snack that reproduces the problem, then list the shortest steps needed to see it. Issues that cannot be reproduced may be closed until more information is available.
+
+1. ...
+2. ...
+3. ...
 
 **Expected behavior**
-A clear and concise description of what you expected to happen.
+A clear description of what you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+**Environment**
 
-**Versions (please complete the following information):**
- - react: v0.0.0  
- - react-native: v0.0.0  
- - react-native-reanimated: v0.0.0    
- - react-native-reanimated-carousel: v0.0.0  
- - react-native-gesture-handler: v0.0.0  
+- react-native-reanimated-carousel:
+- react-native / Expo SDK:
+- react:
+- react-native-reanimated:
+- react-native-worklets:
+- react-native-gesture-handler:
+- platform and OS:
+- device or simulator:
+- New Architecture enabled: yes / no
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+**Logs, screenshots, or video**
+Include the complete error and any visual evidence that makes the behavior easier to verify.
 
 **Additional context**
-Add any other context about the problem here.
+Add anything else that may affect the reproduction.

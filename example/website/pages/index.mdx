@@ -69,10 +69,45 @@ yarn add react-native-reanimated-carousel@beta react-native-reanimated react-nat
 ```
 
 <Callout type="warning" emoji="⚠️">
-**React Native Gesture Handler** needs extra steps to finalize its installation, please follow their [installation instructions](https://docs.swmansion.com/react-native-gesture-handler/docs/installation). Please **make sure** to wrap your App with `GestureHandlerRootView` when you've upgraded to React Native Gesture Handler ^2.
+**React Native Gesture Handler** needs extra steps to finalize its installation, please follow their [installation instructions](https://docs.swmansion.com/react-native-gesture-handler/docs/fundamentals/installation). Please **make sure** to wrap your App with `GestureHandlerRootView` when you've upgraded to React Native Gesture Handler ^2.
 
 **React Native Reanimated 4** requires a compatible `react-native-worklets` version. Follow the [Reanimated installation guide](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started) and [compatibility table](https://docs.swmansion.com/react-native-reanimated/docs/guides/compatibility). Community CLI projects must use the `react-native-worklets/plugin` Babel plugin as documented there.
 </Callout>
+
+## Your first carousel
+
+Once the native dependencies are configured, this is a complete minimal example:
+
+```tsx
+import * as React from "react";
+import { Text, useWindowDimensions, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import Carousel from "react-native-reanimated-carousel";
+
+const data = ["First", "Second", "Third"];
+
+export default function App() {
+  const { width } = useWindowDimensions();
+
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <Carousel
+          style={{ width, height: 200 }}
+          data={data}
+          renderItem={({ item }) => (
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+              <Text>{item}</Text>
+            </View>
+          )}
+        />
+      </View>
+    </GestureHandlerRootView>
+  );
+}
+```
+
+Continue with [Usage](/usage) for sizing and pagination, or open the full [Props reference](/props).
 
 
 ## Special thanks
@@ -91,7 +126,7 @@ yarn add react-native-reanimated-carousel@beta react-native-reanimated react-nat
 To keep this library maintained and up-to-date please consider sponsoring to us. ☕️
 
 - [Caspian](https://github.com/sponsors/dohooo) 
-- [GX](https://github.com/gxxgcn)
+- GX
 - [Oliver Lopez](https://github.com/sponsors/oliverloops) 
 
 <p align="center">

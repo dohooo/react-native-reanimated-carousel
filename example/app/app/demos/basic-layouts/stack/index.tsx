@@ -1,7 +1,7 @@
 import * as React from "react";
 import { View } from "react-native";
 import type { StyleProp, ViewStyle } from "react-native";
-import Carousel, { ICarouselInstance, TCarouselProps } from "react-native-reanimated-carousel";
+import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
 
 import { CustomSelectActionItem } from "@/components/ActionItems";
 import { CarouselAdvancedSettingsPanel } from "@/components/CarouselAdvancedSettingsPanel";
@@ -23,39 +23,23 @@ function Index() {
       autoPlayInterval: 2000,
       autoPlayReverse: false,
       data: defaultDataWith6Colors,
-      height: 258,
       loop: true,
       pagingEnabled: true,
       snapEnabled: true,
       vertical: false,
-      width: window.width,
     },
   });
 
-  const {
-    width,
-    height,
-    style: advancedStyle,
-    ...restSettings
-  } = advancedSettings as {
-    width?: number;
-    height?: number;
-    style?: StyleProp<ViewStyle>;
-  } & TCarouselProps;
-
-  const baseDimensions = React.useMemo(() => {
-    if (typeof width === "number" || typeof height === "number") {
-      return { width, height };
-    }
-    return { width: 280, height: 210 };
-  }, [width, height]);
+  const { style: advancedStyle, ...restSettings } = advancedSettings;
 
   const mergedStyle = React.useMemo<StyleProp<ViewStyle>>(
     () =>
-      [baseDimensions, { alignItems: "center", justifyContent: "center" }, advancedStyle].filter(
-        Boolean
-      ) as StyleProp<ViewStyle>[],
-    [baseDimensions, advancedStyle]
+      [
+        { width: window.width, height: 258 },
+        { alignItems: "center", justifyContent: "center" },
+        advancedStyle,
+      ].filter(Boolean) as StyleProp<ViewStyle>[],
+    [advancedStyle]
   );
 
   return (

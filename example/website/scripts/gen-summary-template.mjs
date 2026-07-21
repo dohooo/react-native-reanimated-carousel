@@ -49,6 +49,12 @@ import { Cards } from 'nextra/components'
 import Link from 'next/link'
 import posthog from "posthog-js";
 
+export const captureExampleClick = (name, kind) => {
+  if (process.env.NEXT_PUBLIC_POSTHOG_KEY) {
+    posthog.capture('example-clicked', { name, kind });
+  }
+};
+
 ${Object.keys(groupedPages)
   .sort((a, b) => {
     const kindsSort = ["basic-layouts", "utils", "custom-animations"];
@@ -69,7 +75,7 @@ ${Object.keys(groupedPages)
     .map((page) => {
       const { pageKind, pageName } = page.demo;
       return `
-        <Link href="/Examples/${pageKind}/${pageName}" onClick={() => posthog.capture('example-clicked', { name: '${pageName}', kind: '${pageKind}' })}>
+        <Link href="/Examples/${pageKind}/${pageName}" onClick={() => captureExampleClick('${pageName}', '${pageKind}')}>
           <div className='summary-item'>
             <div className='image-container'>![${pageKind}-${pageName}](../../../app/app/demos/${pageKind}/${pageName}/preview.png)</div>
             <div className='label-container'>

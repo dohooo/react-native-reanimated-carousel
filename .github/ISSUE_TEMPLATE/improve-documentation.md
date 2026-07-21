@@ -4,18 +4,13 @@ about: Suggest improvements to the Documentation. If this doesn’t look right.
 title: ''
 labels: documentation
 assignees: dohooo
-
 ---
 
+**Page or section**
+Link to the page or name the documentation section that should change.
 
+**What is unclear or missing?**
+Describe the problem and the reader task it blocks.
 
-
-<!---
-I am still actively maintaining this project, but because I have more work to do in life, I will only deal with problems on weekends at present. If you have important and urgent problems, you can ask me to give some time for you through Sponsor. ❤️
--->
-
-
-
-
-
-
+**Suggested improvement**
+Describe the correction, example, or structure you would find more useful.

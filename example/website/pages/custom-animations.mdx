@@ -26,15 +26,24 @@ slug: /custom-animations
 import { Callout } from 'nextra/components'
 
 
-After some effort, we finally implemented custom animation in v2, now we just need to implement a callback function of type `TAnimationStyle` and pass it to the `customAnimation` property of `Carousel`.
+Pass a worklet-compatible callback of type `TAnimationStyle` to the `customAnimation` prop.
 
 ### Prepare
 
-```
-type TAnimationStyle = (value: number) => ViewStyle;
+```ts
+import type { TAnimationStyle } from "react-native-reanimated-carousel";
+
+const animationStyle: TAnimationStyle = (value, _index) => {
+  "worklet";
+
+  return {
+    opacity: Math.max(0, 1 - Math.abs(value)),
+    zIndex: Math.round(100 - Math.abs(value)),
+  };
+};
 ```
 
-This function will be called in each item and accepts a parameter `value` indicating the position of the current item relative to `window`. The following picture shows the relationship between `value` and position
+The callback receives `value`, the item's animated position relative to the viewport, and `index`, the item's data index. The following picture shows the relationship between `value` and position.
 
 ![Sketch File](../../../assets/custom-animation-sketch.png)
 
@@ -50,7 +59,7 @@ Here are a few examples.
 
 #### Parallax
 
-<a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/app/src/pages/advanced-parallax/index.tsx">
+<a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/app/app/demos/custom-animations/advanced-parallax/demo.tsx">
     ![advanced-parallax](../../../assets/advanced-parallax.gif)
 </a>
 
@@ -124,7 +133,7 @@ In order to implement some animation effects outside `Carousel`, such as `MaskVi
 
 #### ScaleFadeInOut
 
-<a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/app/src/pages/scale-fade-in-out/index.tsx">
+<a href="https://github.com/dohooo/react-native-reanimated-carousel/blob/main/example/app/app/demos/custom-animations/scale-fade-in-out/demo.tsx">
     ![scale-fade-in-out](../../../assets/scale-fade-in-out.gif)
 </a>
 

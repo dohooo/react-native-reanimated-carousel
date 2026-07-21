@@ -13,9 +13,10 @@ const config: DocsThemeConfig = {
   chat: {
     link: "https://discord.gg/qB9h3kGNas",
   },
-  docsRepositoryBase: "https://github.com/dohooo/react-native-reanimated-carousel",
+  docsRepositoryBase:
+    "https://github.com/dohooo/react-native-reanimated-carousel/tree/main/example/website",
   footer: {
-    text: "Copyright © 2024 Caspian. Built with Nextra.",
+    text: `Copyright © ${new Date().getFullYear()} Caspian. Built with Nextra.`,
   },
   sidebar: {
     defaultMenuCollapseLevel: 1,
