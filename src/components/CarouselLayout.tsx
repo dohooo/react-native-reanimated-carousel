@@ -1,6 +1,5 @@
 import React from "react";
-import { StyleSheet, type ViewStyle } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { StyleSheet, View, type ViewStyle } from "react-native";
 import { useAnimatedReaction, useAnimatedStyle, useDerivedValue } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 import { useAutoPlay } from "../hooks/useAutoPlay";
@@ -214,7 +213,7 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
   ]);
 
   return (
-    <GestureHandlerRootView testID={testID} style={[styles.layoutContainer, style]}>
+    <View testID={testID} style={[styles.layoutContainer, style]}>
       <ScrollViewGesture
         size={size}
         key={mode}
@@ -248,7 +247,7 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
           customAnimation={customAnimation}
         />
       </ScrollViewGesture>
-    </GestureHandlerRootView>
+    </View>
   );
 });
 
