@@ -2,6 +2,7 @@
 
 import fs from "node:fs/promises";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const CHANGESET_DIR = path.join(process.cwd(), ".changeset");
 const IGNORED_FILES = new Set(["README.md", "config.json", "pre.json"]);
@@ -17,13 +18,13 @@ const FORBIDDEN_PATTERNS = [
   /\bmigration steps?\b/i,
 ];
 
-function getBody(content) {
+export function getBody(content) {
   const match = /^---\n[\s\S]*?\n---\n?/u.exec(content);
   if (!match) return null;
   return content.slice(match[0].length).trim();
 }
 
-function checkChangeset(content) {
+export function checkChangeset(content) {
   const errors = [];
   const body = getBody(content);
 
@@ -53,14 +54,23 @@ function checkChangeset(content) {
     errors.push(`too many summary lines (${lines.length}); max is ${MAX_LINES}`);
   }
 
-  let bulletCount = 0;
-  for (const line of lines) {
+  const [summary, ...details] = lines;
+  if (/^(?:[-*+]|\d+[.)])\s+/u.test(summary)) {
+    errors.push(`summary line must not start with a list marker: "${summary}"`);
+  }
+
+  if (summary.length > MAX_LINE_LENGTH) {
+    errors.push(
+      `summary line too long (${summary.length}); max is ${MAX_LINE_LENGTH}`
+    );
+  }
+
+  for (const line of details) {
     if (!line.startsWith("- ")) {
-      errors.push(`line must start with "- ": "${line}"`);
+      errors.push(`detail line must start with "- ": "${line}"`);
       continue;
     }
 
-    bulletCount += 1;
     const text = line.slice(2).trim();
     if (!text) {
       errors.push("contains empty bullet line");
@@ -70,10 +80,6 @@ function checkChangeset(content) {
     if (text.length > MAX_LINE_LENGTH) {
       errors.push(`bullet too long (${text.length}); max is ${MAX_LINE_LENGTH}`);
     }
-  }
-
-  if (bulletCount === 0) {
-    errors.push("must include at least one bullet line");
   }
 
   return errors;
@@ -116,4 +122,10 @@ async function main() {
   console.log(`Changeset style check passed for ${files.length} file(s).`);
 }
 
-main();
+const isDirectExecution =
+  process.argv[1] &&
+  path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url));
+
+if (isDirectExecution) {
+  main();
+}

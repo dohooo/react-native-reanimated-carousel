@@ -49,7 +49,7 @@
 		"e2e:comprehensive": "APP_ID=${APP_ID:-com.react-native-reanimated-carousel.example} maestro test e2e/",
 		"compat:expo": "bash scripts/test-packed-expo-consumer.sh",
 		"web:smoke": "playwright test --config=playwright.config.ts",
-		"changeset:check": "node scripts/check-changeset-style.mjs"
+		"changeset:check": "node --test scripts/check-changeset-style.test.mjs && node scripts/check-changeset-style.mjs"
 	},
 	"resolutions": {
 		"@babel/plugin-transform-block-scoping": "7.28.4"

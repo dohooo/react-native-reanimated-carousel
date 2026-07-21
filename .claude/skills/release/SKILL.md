@@ -11,7 +11,7 @@ Use this skill to generate release-ready changeset entries in the repository sty
 
 - Review current branch changes.
 - Propose release impact (major/minor/patch) from code diffs.
-- Draft concise changeset bullets.
+- Draft concise Changesets-compatible summaries.
 - Preview and ask for explicit user confirmation.
 - Create or update `.changeset/*.md` only after confirmation.
 
@@ -19,8 +19,8 @@ Use this skill to generate release-ready changeset entries in the repository sty
 
 Follow `docs/changeset-style.md` strictly:
 
-1. Bullet-only summary lines (`- ...`).
-2. 1-6 bullets, each concise and user-facing.
+1. Start with one plain summary sentence without a list marker.
+2. Add up to five optional follow-up bullets (`- ...`); keep every line concise and user-facing.
 3. No headings, code blocks, root-cause sections, or file lists.
 4. Keep implementation detail in PR discussion/docs, not release notes.
 
@@ -92,7 +92,7 @@ When previewing, always include:
 2. `Confidence:`
 3. `Why:`
 4. `Alternative bump options:`
-5. `Draft changeset:` fenced markdown block
+5. `Draft changeset:` fenced markdown block using a plain first summary line
 6. `Confirmation prompt`
 
 Never write or modify `.changeset/*.md` before explicit `confirm`.
