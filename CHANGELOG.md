@@ -1,5 +1,14 @@
 # react-native-reanimated-carousel
 
+## 5.0.0-beta.8
+
+### Patch Changes
+
+- [#933](https://github.com/dohooo/react-native-reanimated-carousel/pull/933) [`4561a8b`](https://github.com/dohooo/react-native-reanimated-carousel/commit/4561a8bcdbcf804179344f233f77e6e96e96bec1) Thanks [@dohooo](https://github.com/dohooo)! - Exclude test files from published package tarballs while keeping the React Native source entry intact.
+
+- [#931](https://github.com/dohooo/react-native-reanimated-carousel/pull/931) [`a5f22a6`](https://github.com/dohooo/react-native-reanimated-carousel/commit/a5f22a6c05f22020d9f45c7eb19c0f7943907b88) Thanks [@dohooo](https://github.com/dohooo)! - Remove the nested `GestureHandlerRootView` so correctly configured apps no longer log the Android parent-root warning (Issue #921).
+  - Preserve carousel navigation and gestures by relying on the application-level Gesture Handler root required during installation.
+
 ## 5.0.0-beta.7
 
 ### Patch Changes
