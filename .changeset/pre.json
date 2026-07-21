@@ -6,9 +6,11 @@
   },
   "changesets": [
     "blue-news-stare",
+    "clean-package-tests",
     "fix-container-size-warning",
     "fix-flex-gesture-blocking",
     "fix-loop-window-visible-ranges",
+    "fix-nested-gesture-root",
     "fix-nonloop-overdrag-visible-ranges",
     "fix-nonloop-overscroll",
     "fix-nonloop-scrollto-offset-regression",
