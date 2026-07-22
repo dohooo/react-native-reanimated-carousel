@@ -141,10 +141,7 @@ name: Layout Mode Switching
 - waitForAnimationToEnd:
     timeout: 3000
 
-- scrollUntilVisible:
-    element: "Index: 1"
-    direction: DOWN
-    timeout: 5000
+- assertVisible: "Current Index: 1"
 
 # === Test: Switch back to Normal mode ===
 

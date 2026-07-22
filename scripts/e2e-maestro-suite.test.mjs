@@ -130,3 +130,19 @@ test("retries the iOS E2E entry tap when it produces no UI change", async () => 
     /id: "navigate-e2e-comprehensive"\n\s+optional: true\n\s+retryTapIfNoChange: true/
   );
 });
+
+test("checks vertical-stack navigation through the stable current-index status", async () => {
+  const flow = await readFile(
+    path.join(repoRoot, "e2e/07-layout-modes.yaml"),
+    "utf8"
+  );
+  const verticalStackSection = flow
+    .split("# === Test: Switch to Vertical Stack mode ===")[1]
+    .split("# === Test: Switch back to Normal mode ===")[0];
+
+  assert.match(
+    verticalStackSection,
+    /id: "btn-next"[\s\S]*assertVisible: "Current Index: 1"/
+  );
+  assert.doesNotMatch(verticalStackSection, /element: "Index: 1"/);
+});
