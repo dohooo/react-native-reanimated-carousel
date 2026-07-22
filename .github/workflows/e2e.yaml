@@ -3,7 +3,7 @@ name: E2E Tests
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, dohooo/v5-release-main]
 
 jobs:
   changes:

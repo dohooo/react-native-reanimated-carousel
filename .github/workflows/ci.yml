@@ -5,10 +5,12 @@ on:
     branches:
       - main
       - develop
+      - dohooo/v5-release-main
   pull_request:
     branches:
       - main
       - develop
+      - dohooo/v5-release-main
     types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
 
