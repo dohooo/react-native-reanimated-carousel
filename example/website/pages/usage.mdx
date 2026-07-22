@@ -32,6 +32,7 @@ Here is a simple usage of the **React Native Reanimated Carousel**. For more scr
 ```tsx
 import * as React from "react";
 import { Dimensions, Text, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSharedValue } from "react-native-reanimated";
 import Carousel, {
   ICarouselInstance,
@@ -57,7 +58,7 @@ function App() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <Carousel
         ref={ref}
         style={{ width, height: width / 2 }}
@@ -82,12 +83,30 @@ function App() {
         dotStyle={{ backgroundColor: "rgba(0,0,0,0.2)", borderRadius: 50 }}
         containerStyle={{ gap: 5, marginTop: 10 }}
         onPress={onPressPagination}
+        carouselName="Main carousel"
       />
-    </View>
+    </GestureHandlerRootView>
   );
 }
 
 export default App;
+```
+
+### Accessible Pagination
+
+`Pagination.Basic` and `Pagination.Custom` announce each item as a button by default. Set `carouselName` to add context to the default label, or use `paginationItemAccessibility` when you need custom or localized announcements:
+
+```tsx
+<Pagination.Basic
+  progress={progress}
+  data={data}
+  onPress={onPressPagination}
+  carouselName="Featured products"
+  paginationItemAccessibility={(index, length) => ({
+    accessibilityLabel: `Product ${index + 1} of ${length}`,
+    accessibilityHint: `Go to product ${index + 1}`,
+  })}
+/>
 ```
 
 ## Sizing Your Carousel

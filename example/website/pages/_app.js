@@ -1,7 +1,6 @@
 import "../styles.css";
 import posthog from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
-import Script from "next/script";
 
 const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
 
@@ -23,17 +22,5 @@ export default function MyApp({
 }) {
   const page = <Component {...pageProps} />;
 
-  return (
-    <>
-      {/* Google AdSense Script */}
-      <Script
-        async
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2209220476314227"
-        crossOrigin="anonymous"
-        strategy="afterInteractive"
-      />
-      
-      {posthogKey ? <PostHogProvider client={posthog}>{page}</PostHogProvider> : page}
-    </>
-  );
+  return posthogKey ? <PostHogProvider client={posthog}>{page}</PostHogProvider> : page;
 }
