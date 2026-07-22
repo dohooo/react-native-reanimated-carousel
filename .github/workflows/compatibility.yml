@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+      - dohooo/v5-release-main
     paths:
       - "src/**"
       - "e2e/fixtures/packed-expo/**"
