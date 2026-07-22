@@ -55,6 +55,7 @@ function Index() {
           activeDotStyle={{ backgroundColor: "#f1f1f1" }}
           containerStyle={{ gap: 5, marginBottom: 10 }}
           onPress={onPressPagination}
+          carouselName="Color carousel"
         />
 
         <Pagination.Basic<{ color: string }>
@@ -75,6 +76,10 @@ function Index() {
           }}
           horizontal
           onPress={onPressPagination}
+          paginationItemAccessibility={(index, length) => ({
+            accessibilityLabel: `Color ${index + 1} of ${length}`,
+            accessibilityHint: `Go to color ${index + 1}`,
+          })}
         />
 
         <Pagination.Basic<{ color: string }>
