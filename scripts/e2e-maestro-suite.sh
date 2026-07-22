@@ -10,6 +10,7 @@ FLOW_FILES="${MAESTRO_FLOW_FILES:-}"
 FLOW_REUSE_DRIVER_BETWEEN_FLOWS="${MAESTRO_REUSE_DRIVER_BETWEEN_FLOWS:-1}"
 FLOW_RETRY_DRIVER_STARTUP_TIMEOUTS_ONLY="${MAESTRO_RETRY_DRIVER_STARTUP_TIMEOUTS_ONLY:-0}"
 FLOW_RETRY_IOS_VIEW_HIERARCHY_TIMEOUTS_ONLY="${MAESTRO_RETRY_IOS_VIEW_HIERARCHY_TIMEOUTS_ONLY:-0}"
+FLOW_RETRY_IOS_TRANSIENT_DRIVER_FAILURES_ONLY="${MAESTRO_RETRY_IOS_TRANSIENT_DRIVER_FAILURES_ONLY:-0}"
 
 MAESTRO_BIN="${MAESTRO_BIN:-}"
 if [ -z "$MAESTRO_BIN" ]; then
@@ -114,6 +115,15 @@ for flow in "${FLOWS[@]}"; do
         break
       fi
       echo "Retrying Maestro driver startup timeout before the Flow began."
+    elif [ "$FLOW_RETRY_IOS_TRANSIENT_DRIVER_FAILURES_ONLY" = "1" ]; then
+      if [ "$flow_status" -eq 124 ] && grep -q "kAXErrorInvalidUIElement" "$flow_log_file"; then
+        echo "Retrying iOS view-hierarchy driver timeout."
+      elif grep -Eq 'Unable to set permissions for app .*Failed to connect to /127\.0\.0\.1:[0-9]+' "$flow_log_file"; then
+        echo "Retrying iOS Maestro driver connection failure."
+      else
+        echo "Not retrying because this was not a transient iOS Maestro driver failure."
+        break
+      fi
     elif [ "$FLOW_RETRY_IOS_VIEW_HIERARCHY_TIMEOUTS_ONLY" = "1" ]; then
       if [ "$flow_status" -ne 124 ] || ! grep -q "kAXErrorInvalidUIElement" "$flow_log_file"; then
         echo "Not retrying because this was not an iOS view-hierarchy driver timeout."

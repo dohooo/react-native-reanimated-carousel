@@ -60,9 +60,9 @@ jobs:
       - name: Type check
         run: yarn types
 
-      - name: Check changeset style
+      - name: Check repository scripts
         run: |
-          node --test scripts/check-changeset-style.test.mjs
+          node --test scripts/check-changeset-style.test.mjs scripts/e2e-maestro-suite.test.mjs
           yarn changeset:check
 
   build-and-test:
