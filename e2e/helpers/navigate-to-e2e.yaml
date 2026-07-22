@@ -102,6 +102,7 @@ appId: ${APP_ID}
 - tapOn:
     id: "navigate-e2e-comprehensive"
     optional: true
+    retryTapIfNoChange: true
 
 # Wait for the E2E test page to fully load
 - extendedWaitUntil:

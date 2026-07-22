@@ -118,3 +118,15 @@ test("does not retry a non-driver Maestro failure", async () => {
     /Not retrying because this was not a transient iOS Maestro driver failure/
   );
 });
+
+test("retries the iOS E2E entry tap when it produces no UI change", async () => {
+  const helper = await readFile(
+    path.join(repoRoot, "e2e/helpers/navigate-to-e2e.yaml"),
+    "utf8"
+  );
+
+  assert.match(
+    helper,
+    /id: "navigate-e2e-comprehensive"\n\s+optional: true\n\s+retryTapIfNoChange: true/
+  );
+});
