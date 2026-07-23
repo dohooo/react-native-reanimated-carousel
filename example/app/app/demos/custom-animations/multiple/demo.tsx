@@ -1,6 +1,6 @@
 import * as React from "react";
 import { View } from "react-native";
-import Carousel from "react-native-reanimated-carousel";
+import { Carousel } from "react-native-reanimated-carousel";
 
 import { SBItem } from "@/components/SBItem";
 import { PURPLE_IMAGES } from "@/constants/purple-images";
@@ -19,11 +19,9 @@ function Index() {
     >
       <Carousel
         loop
-        autoPlay
-        vertical={false}
+        autoplay
         style={{ width: PAGE_WIDTH, height: PAGE_WIDTH / 2 }}
-        itemWidth={PAGE_WIDTH / COUNT}
-        itemHeight={PAGE_WIDTH / 2}
+        itemSize={PAGE_WIDTH / COUNT}
         data={PURPLE_IMAGES}
         renderItem={({ index }) => (
           <View style={{ width: PAGE_WIDTH / COUNT, height: PAGE_WIDTH / 2 }}>

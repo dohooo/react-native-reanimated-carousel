@@ -28,7 +28,7 @@ describe("dealWithAnimation", () => {
 
     const animation = dealWithAnimation({
       type: "spring",
-      config: springConfig,
+      ...springConfig,
     });
 
     const result = animation(100, callback);
@@ -46,7 +46,7 @@ describe("dealWithAnimation", () => {
 
     const animation = dealWithAnimation({
       type: "timing",
-      config: timingConfig,
+      ...timingConfig,
     });
 
     const result = animation(100, callback);
@@ -65,7 +65,7 @@ describe("dealWithAnimation", () => {
 
     const animation = dealWithAnimation({
       type: "spring",
-      config: springConfig,
+      ...springConfig,
     });
 
     animation(100, jest.fn());
@@ -81,7 +81,7 @@ describe("dealWithAnimation", () => {
     const callback = jest.fn();
     const animation = dealWithAnimation({
       type: "timing",
-      config: { duration: 300 },
+      duration: 300,
     });
 
     animation(100, callback);
@@ -93,7 +93,7 @@ describe("dealWithAnimation", () => {
     const callback = jest.fn();
     const animation = dealWithAnimation({
       type: "spring",
-      config: { damping: 15 },
+      damping: 15,
     });
 
     animation(0, callback);
@@ -110,7 +110,7 @@ describe("dealWithAnimation", () => {
     const callback = jest.fn();
     const animation = dealWithAnimation({
       type: "timing",
-      config: { duration: 500 },
+      duration: 500,
     });
 
     animation(0, callback);
@@ -127,7 +127,6 @@ describe("dealWithAnimation", () => {
     const callback = jest.fn();
     const animation = dealWithAnimation({
       type: "spring",
-      config: {},
     });
 
     animation(100, callback);
@@ -140,7 +139,6 @@ describe("dealWithAnimation", () => {
     const callback = jest.fn();
     const animation = dealWithAnimation({
       type: "timing",
-      config: {},
     });
 
     animation(100, callback);
@@ -153,7 +151,7 @@ describe("dealWithAnimation", () => {
     const callback = jest.fn();
     const animation = dealWithAnimation({
       type: "spring",
-      config: { damping: 10 },
+      damping: 10,
     });
 
     animation(50.5, callback);
@@ -166,12 +164,12 @@ describe("dealWithAnimation", () => {
   it("should create different animation functions for different configs", () => {
     const animation1 = dealWithAnimation({
       type: "spring",
-      config: { damping: 10 },
+      damping: 10,
     });
 
     const animation2 = dealWithAnimation({
       type: "timing",
-      config: { duration: 200 },
+      duration: 200,
     });
 
     expect(animation1).not.toBe(animation2);

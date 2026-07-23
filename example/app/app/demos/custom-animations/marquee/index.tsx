@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Text, View } from "react-native";
 import Animated, { Easing } from "react-native-reanimated";
-import Carousel from "react-native-reanimated-carousel";
+import { Carousel } from "react-native-reanimated-carousel";
 
 import { window } from "@/constants/sizes";
 import { CaptureWrapper } from "@/store/CaptureProvider";
@@ -68,21 +68,18 @@ function Index() {
                     height: 30,
                   },
                 ]}
-                snapEnabled={false}
-                pagingEnabled={false}
+                snapMode="none"
                 loop
-                autoPlay
-                withAnimation={{
+                autoplay
+                animation={{
                   type: "timing",
-                  config: {
-                    duration: 10000,
-                    easing: Easing.linear,
-                  },
+                  duration: 10000,
+                  easing: Easing.linear,
                 }}
-                autoPlayInterval={0}
+                autoplayInterval={0}
                 data={[...new Array(6).keys()]}
                 renderItem={() => text}
-                enabled={false}
+                scrollEnabled={false}
               />
             </View>
           );

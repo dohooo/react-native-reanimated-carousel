@@ -1,39 +1,41 @@
 import React from "react";
 import type { FC } from "react";
-import type { ViewStyle } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 import { useAnimatedReaction } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 
-import type { TAnimationStyle } from "./ItemLayout";
+import type { ItemAnimationStyle } from "./ItemLayout";
 import { ItemLayout } from "./ItemLayout";
 
 import type { VisibleRanges } from "../hooks/useVisibleRanges";
 import { computeVisibleRanges, useVisibleRanges } from "../hooks/useVisibleRanges";
-import type { CarouselRenderItem } from "../types";
+import type { CarouselItemAnimation, CarouselRenderItem } from "../types";
 import { computedRealIndexWithAutoFillData } from "../utils/computed-with-auto-fill-data";
 
 interface Props {
-  data: any[];
+  data: unknown[];
+  rawData: unknown[];
   dataLength: number;
   rawDataLength: number;
   loop: boolean;
   size: number;
-  windowSize?: number;
+  renderWindowSize?: number;
   defaultIndex: number;
   autoFillData: boolean;
   offsetX: SharedValue<number>;
   handlerOffset: SharedValue<number>;
-  layoutConfig: TAnimationStyle;
-  renderItem: CarouselRenderItem<any>;
-  customAnimation?: (value: number, index: number) => ViewStyle;
+  layoutConfig: ItemAnimationStyle;
+  renderItem: CarouselRenderItem<unknown>;
+  itemAnimation?: CarouselItemAnimation;
+  keyExtractor?: (item: unknown, index: number) => string;
 }
 
 export const ItemRenderer: FC<Props> = (props) => {
   const {
     data,
+    rawData,
     size,
-    windowSize,
+    renderWindowSize,
     defaultIndex,
     handlerOffset,
     offsetX,
@@ -43,14 +45,15 @@ export const ItemRenderer: FC<Props> = (props) => {
     autoFillData,
     layoutConfig,
     renderItem,
-    customAnimation,
+    itemAnimation,
+    keyExtractor,
   } = props;
 
   const visibleRanges = useVisibleRanges({
     total: dataLength,
     viewSize: size,
     translation: handlerOffset,
-    windowSize,
+    windowSize: renderWindowSize,
     loop,
   });
 
@@ -59,11 +62,11 @@ export const ItemRenderer: FC<Props> = (props) => {
     () =>
       computeVisibleRanges({
         total: dataLength,
-        windowSize,
+        windowSize: renderWindowSize,
         currentIndex: defaultIndex,
         loop,
       }),
-    [dataLength, defaultIndex, loop, windowSize]
+    [dataLength, defaultIndex, loop, renderWindowSize]
   );
 
   const [displayedItems, setDisplayedItems] = React.useState<VisibleRanges>(initialRanges);
@@ -92,19 +95,27 @@ export const ItemRenderer: FC<Props> = (props) => {
 
         if (!shouldRender) return null;
 
+        const rawItem = rawData[realIndex] ?? item;
+        const key = keyExtractor
+          ? `${keyExtractor(rawItem, realIndex)}::rnrc-copy-${Math.floor(
+              index / Math.max(rawDataLength, 1)
+            )}`
+          : String(index);
+
         return (
           <ItemLayout
-            key={index}
+            key={key}
             index={index}
+            rawIndex={realIndex}
             handlerOffset={offsetX}
             visibleRanges={visibleRanges}
-            animationStyle={customAnimation || layoutConfig}
+            animationStyle={itemAnimation || layoutConfig}
           >
-            {({ animationValue }) =>
+            {({ relativeProgress }) =>
               renderItem({
-                item,
+                item: rawItem,
                 index: realIndex,
-                animationValue,
+                relativeProgress,
               })
             }
           </ItemLayout>

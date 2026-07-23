@@ -4,14 +4,14 @@ import type { SharedValue } from "react-native-reanimated";
 import { useAnimatedReaction, useSharedValue } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 
-import type { TInitializeCarouselProps } from "./useInitProps";
+import type { InitializedCarouselProps } from "./useInitProps";
 
 import { reconcileOffsetAfterDataChange } from "../utils/carousel-math";
 import { computeOffsetIfSizeChanged } from "../utils/compute-offset-if-size-changed";
 
 export type TCarouselSizePhase = "pending" | "ready" | "updating";
 
-export interface ICommonVariables {
+export interface CarouselCommonVariables {
   size: number;
   validLength: number;
   handlerOffset: SharedValue<number>;
@@ -24,41 +24,25 @@ export interface ICommonVariables {
   settleMovement: () => void;
 }
 
-export function useCommonVariables(props: TInitializeCarouselProps<any>): ICommonVariables {
-  const {
-    vertical,
-    style,
-    dataLength,
-    defaultIndex,
-    defaultScrollOffsetValue,
-    loop,
-    width: explicitWidth,
-    height: explicitHeight,
-    itemWidth: explicitItemWidth,
-    itemHeight: explicitItemHeight,
-  } = props;
+export function useCommonVariables(
+  props: InitializedCarouselProps<unknown>
+): CarouselCommonVariables {
+  const { orientation, style, dataLength, defaultIndex, loop, itemSize } = props;
+  const isVertical = orientation === "vertical";
 
   const manualSize = React.useMemo(() => {
-    const explicitPageSize = vertical ? explicitItemHeight : explicitItemWidth;
-    if (typeof explicitPageSize === "number" && explicitPageSize > 0) {
-      return explicitPageSize;
+    if (typeof itemSize === "number" && itemSize > 0) {
+      return itemSize;
     }
 
     const { width, height } = StyleSheet.flatten(style) || {};
-    const candidate = vertical ? height : width;
+    const candidate = isVertical ? height : width;
     if (typeof candidate === "number" && candidate > 0) {
       return candidate;
     }
 
-    // NOTE: `width`/`height` props are deprecated in v5. They are still respected here to
-    // maintain backwards compatibility with v4-style usage. Prefer using `style` when both exist.
-    const explicitCandidate = vertical ? explicitHeight : explicitWidth;
-    if (typeof explicitCandidate === "number" && explicitCandidate > 0) {
-      return explicitCandidate;
-    }
-
     return null;
-  }, [vertical, style, explicitWidth, explicitHeight, explicitItemHeight, explicitItemWidth]);
+  }, [isVertical, itemSize, style]);
 
   const resolvedSize = useSharedValue<number | null>(manualSize);
   const sizePhase = useSharedValue<TCarouselSizePhase>(manualSize ? "ready" : "pending");
@@ -66,8 +50,7 @@ export function useCommonVariables(props: TInitializeCarouselProps<any>): ICommo
   const defaultHandlerOffsetValue =
     manualSize && dataLength > 0 ? -Math.abs(defaultIndex * manualSize) : 0;
   const _handlerOffset = useSharedValue<number>(defaultHandlerOffsetValue);
-  // Prefer the newer `scrollOffsetValue` name, but keep the legacy prop for compatibility.
-  const handlerOffset = props.scrollOffsetValue ?? defaultScrollOffsetValue ?? _handlerOffset;
+  const handlerOffset = props.scrollOffsetValue ?? _handlerOffset;
   const prevDataLength = useSharedValue(dataLength);
   const isMoving = useSharedValue(false);
   const pendingDataChange = useSharedValue<{
@@ -79,10 +62,7 @@ export function useCommonVariables(props: TInitializeCarouselProps<any>): ICommo
   // into consumer-provided SharedValues as well as the internal value.
   const prevSize = useSharedValue(0);
   const hasInitializedOffset = useSharedValue(false);
-  const sizeExplicit = React.useMemo(() => {
-    const explicitPageSize = vertical ? explicitItemHeight : explicitItemWidth;
-    return typeof explicitPageSize === "number" && explicitPageSize > 0;
-  }, [explicitItemHeight, explicitItemWidth, vertical]);
+  const sizeExplicit = typeof itemSize === "number" && itemSize > 0;
 
   const [size, setSize] = React.useState<number>(manualSize ?? 0);
 

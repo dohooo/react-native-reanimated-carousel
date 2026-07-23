@@ -1,14 +1,14 @@
 import { useRef, useState } from "react";
 import { Button, type LayoutChangeEvent, StyleSheet, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import Carousel, { type ICarouselInstance } from "react-native-reanimated-carousel";
+import { Carousel, type CarouselRef } from "react-native-reanimated-carousel";
 
 const DATA = ["#B0604D", "#899F9C"];
 
 export default function App() {
-  const carouselRef = useRef<ICarouselInstance>(null);
+  const carouselRef = useRef<CarouselRef>(null);
   const [parentWidth, setParentWidth] = useState(280);
-  const [itemWidth, setItemWidth] = useState(0);
+  const [itemSize, setItemWidth] = useState(0);
   const [index, setIndex] = useState(0);
 
   const measureItem = (event: LayoutChangeEvent) => {
@@ -18,13 +18,13 @@ export default function App() {
   return (
     <GestureHandlerRootView style={styles.root}>
       <Text style={styles.title}>Packed Package Smoke</Text>
-      <Text testID="status">{`Index: ${index}; Item Width: ${itemWidth}`}</Text>
+      <Text testID="status">{`Index: ${index}; Item Width: ${itemSize}`}</Text>
       <View style={{ width: parentWidth, height: 180 }}>
         <Carousel
           ref={carouselRef}
           data={DATA}
           loop
-          windowSize={5}
+          renderWindowSize={5}
           style={styles.carousel}
           onSnapToItem={setIndex}
           renderItem={({ index: itemIndex, item }) => (

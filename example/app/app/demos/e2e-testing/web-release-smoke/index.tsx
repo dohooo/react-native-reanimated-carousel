@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import Carousel, { type ICarouselInstance } from "react-native-reanimated-carousel";
+import { Carousel, type CarouselRef } from "react-native-reanimated-carousel";
 
 const DATA = ["#B0604D", "#899F9C"];
 
@@ -33,8 +33,8 @@ function ControlButton({
 }
 
 export default function WebReleaseSmoke() {
-  const horizontalRef = useRef<ICarouselInstance>(null);
-  const verticalRef = useRef<ICarouselInstance>(null);
+  const horizontalRef = useRef<CarouselRef>(null);
+  const verticalRef = useRef<CarouselRef>(null);
   const [horizontalWidth, setHorizontalWidth] = useState(320);
   const [verticalHeight, setVerticalHeight] = useState(240);
   const [horizontalIndex, setHorizontalIndex] = useState(0);
@@ -64,11 +64,9 @@ export default function WebReleaseSmoke() {
             testID="horizontal-carousel"
             data={DATA}
             loop
-            windowSize={5}
+            renderWindowSize={5}
             style={styles.horizontalCarousel}
-            onProgressChange={(_offsetProgress, absoluteProgress) =>
-              setHorizontalIndex(normalizeIndex(absoluteProgress))
-            }
+            onProgressChange={(progress) => setHorizontalIndex(normalizeIndex(progress))}
             renderItem={({ index, item }) => (
               <View
                 testID={`horizontal-slide-${index}`}
@@ -107,12 +105,10 @@ export default function WebReleaseSmoke() {
             testID="vertical-carousel"
             data={DATA}
             loop
-            vertical
-            windowSize={5}
+            orientation="vertical"
+            renderWindowSize={5}
             style={styles.verticalCarousel}
-            onProgressChange={(_offsetProgress, absoluteProgress) =>
-              setVerticalIndex(normalizeIndex(absoluteProgress))
-            }
+            onProgressChange={(progress) => setVerticalIndex(normalizeIndex(progress))}
             renderItem={({ index, item }) => (
               <View
                 testID={`vertical-slide-${index}`}

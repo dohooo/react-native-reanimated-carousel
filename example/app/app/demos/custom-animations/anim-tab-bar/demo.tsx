@@ -11,15 +11,15 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import type { SharedValue } from "react-native-reanimated";
-import type { ICarouselInstance } from "react-native-reanimated-carousel";
-import Carousel from "react-native-reanimated-carousel";
+import type { CarouselRef } from "react-native-reanimated-carousel";
+import { Carousel } from "react-native-reanimated-carousel";
 
 const PAGE_WIDTH = 60;
 const PAGE_HEIGHT = 40;
 const DATA = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 function Index() {
-  const r = React.useRef<ICarouselInstance>(null);
+  const r = React.useRef<CarouselRef>(null);
   const AutoPLay = useToggleButton({
     defaultValue: false,
     buttonTitle: ElementsText.AUTOPLAY,
@@ -49,21 +49,21 @@ function Index() {
             height: PAGE_HEIGHT,
           }}
           data={DATA}
-          renderItem={({ item, animationValue }) => {
+          renderItem={({ index, item, relativeProgress }) => {
             return (
               <Item
-                animationValue={animationValue}
+                relativeProgress={relativeProgress}
                 label={item}
                 onPress={() =>
                   r.current?.scrollTo({
-                    count: animationValue.value,
+                    index,
                     animated: true,
                   })
                 }
               />
             );
           }}
-          autoPlay={AutoPLay.status}
+          autoplay={AutoPLay.status}
         />
       </View>
     </View>
@@ -73,19 +73,19 @@ function Index() {
 export default Index;
 
 interface Props {
-  animationValue: SharedValue<number>;
+  relativeProgress: SharedValue<number>;
   label: string;
   onPress?: () => void;
 }
 
 const Item: React.FC<Props> = (props) => {
-  const { animationValue, label, onPress } = props;
+  const { relativeProgress, label, onPress } = props;
 
   const translateY = useSharedValue(0);
 
   const containerStyle = useAnimatedStyle(() => {
     const opacity = interpolate(
-      animationValue.value,
+      relativeProgress.value,
       [-1, 0, 1],
       [0.5, 1, 0.5],
       Extrapolation.CLAMP
@@ -94,13 +94,18 @@ const Item: React.FC<Props> = (props) => {
     return {
       opacity,
     };
-  }, [animationValue]);
+  }, [relativeProgress]);
 
   const labelStyle = useAnimatedStyle(() => {
-    const scale = interpolate(animationValue.value, [-1, 0, 1], [1, 1.25, 1], Extrapolation.CLAMP);
+    const scale = interpolate(
+      relativeProgress.value,
+      [-1, 0, 1],
+      [1, 1.25, 1],
+      Extrapolation.CLAMP
+    );
 
     const color = interpolateColor(
-      animationValue.value,
+      relativeProgress.value,
       [-1, 0, 1],
       ["#ffffff", "#002a57", "#ffffff"]
     );
@@ -109,7 +114,7 @@ const Item: React.FC<Props> = (props) => {
       transform: [{ scale }, { translateY: translateY.value }],
       color,
     };
-  }, [animationValue, translateY]);
+  }, [relativeProgress, translateY]);
 
   const onPressIn = React.useCallback(() => {
     translateY.value = withTiming(-8, { duration: 250 });

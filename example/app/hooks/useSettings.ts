@@ -1,7 +1,7 @@
 import { BasicSettings, getDefaultBasicSettings } from "@/components/CarouselBasicSettingsPanel";
 import { window } from "@/constants/sizes";
 import * as React from "react";
-import { TCarouselProps } from "react-native-reanimated-carousel";
+import { CarouselProps } from "react-native-reanimated-carousel";
 
 interface AdvancedSettings extends BasicSettings {
   data: string[];
@@ -18,13 +18,13 @@ export function useAdvancedSettings(
 ) {
   const { defaultSettings = {} } = options;
   const [advancedSettings, setAdvancedSettings] =
-    React.useState<Partial<TCarouselProps>>(defaultSettings);
+    React.useState<Partial<CarouselProps<string>>>(defaultSettings);
 
   return {
     advancedSettings: {
       ...getDefaultBasicSettings(),
       ...advancedSettings,
-    } as TCarouselProps,
+    } as CarouselProps<string>,
     onAdvancedSettingsChange: setAdvancedSettings,
     constants,
   };

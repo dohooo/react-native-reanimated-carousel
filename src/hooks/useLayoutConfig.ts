@@ -1,26 +1,32 @@
 import React from "react";
 
-import type { TInitializeCarouselProps } from "./useInitProps";
-
-import type { TAnimationStyle } from "../components/ItemLayout";
 import { Layouts } from "../layouts";
+import type { CarouselItemAnimation } from "../types";
+import type { InitializedCarouselProps } from "./useInitProps";
 
-type TLayoutConfigOpts<T> = TInitializeCarouselProps<T> & { size: number };
+type LayoutConfigOptions<Item> = InitializedCarouselProps<Item> & { size: number };
 
-export function useLayoutConfig<T>(opts: TLayoutConfigOpts<T>): TAnimationStyle {
-  const { size, vertical } = opts as Required<TLayoutConfigOpts<T>>;
+export function useLayoutConfig<Item>(options: LayoutConfigOptions<Item>): CarouselItemAnimation {
+  const { dataLength, layout, orientation, size } = options;
+  const isVertical = orientation === "vertical";
 
   return React.useMemo(() => {
-    const baseConfig = { size, vertical };
-    switch (opts.mode) {
+    const baseConfig = { size, isVertical };
+    switch (layout?.type) {
       case "parallax":
-        return Layouts.parallax(baseConfig, opts.modeConfig);
+        return Layouts.parallax(baseConfig, layout);
       case "horizontal-stack":
-        return Layouts.horizontalStack(opts.modeConfig);
+        return Layouts.horizontalStack({
+          ...layout,
+          visibleCount: layout.visibleCount ?? Math.max(0, dataLength - 1),
+        });
       case "vertical-stack":
-        return Layouts.verticalStack(opts.modeConfig);
+        return Layouts.verticalStack({
+          ...layout,
+          visibleCount: layout.visibleCount ?? Math.max(0, dataLength - 1),
+        });
       default:
         return Layouts.normal(baseConfig);
     }
-  }, [opts.mode, opts.modeConfig, size, vertical]);
+  }, [dataLength, isVertical, layout, size]);
 }

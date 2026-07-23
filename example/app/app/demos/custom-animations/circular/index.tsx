@@ -2,7 +2,7 @@ import * as React from "react";
 import { Text, View } from "react-native";
 import { Pressable } from "react-native-gesture-handler";
 import { interpolate } from "react-native-reanimated";
-import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
+import { Carousel, CarouselItemAnimation } from "react-native-reanimated-carousel";
 
 import { faker } from "@faker-js/faker";
 
@@ -21,7 +21,7 @@ function Index() {
   const itemSize = 80;
   const centerOffset = PAGE_WIDTH / 2 - itemSize / 2;
 
-  const animationStyle: TAnimationStyle = React.useCallback(
+  const animationStyle: CarouselItemAnimation = React.useCallback(
     (value: number) => {
       "worklet";
 
@@ -47,8 +47,8 @@ function Index() {
             height: PAGE_WIDTH / 2,
           }}
           loop
-          autoPlay={isAutoPlay}
-          autoPlayInterval={isFast ? 100 : 2000}
+          autoplay={isAutoPlay}
+          autoplayInterval={isFast ? 100 : 2000}
           data={getImages(12)}
           renderItem={({ index }) => (
             <Pressable
@@ -74,7 +74,7 @@ function Index() {
               </View>
             </Pressable>
           )}
-          customAnimation={animationStyle}
+          itemAnimation={animationStyle}
         />
       </CaptureWrapper>
       <SButton

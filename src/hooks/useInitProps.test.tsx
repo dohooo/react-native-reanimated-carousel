@@ -1,196 +1,133 @@
-import React from "react";
-import { Text } from "react-native";
+import { renderHook } from "@testing-library/react-hooks";
 
-import { act, renderHook } from "@testing-library/react-hooks";
-
+import type { CarouselProps } from "../types";
 import { useInitProps } from "./useInitProps";
 
-import type { TCarouselProps } from "../types";
+function createProps(overrides: Partial<CarouselProps<number>> = {}): CarouselProps<number> {
+  return {
+    data: [0, 1, 2, 3],
+    renderItem: () => null,
+    ...overrides,
+  };
+}
 
 describe("useInitProps", () => {
-  const defaultData = [1, 2, 3, 4];
-  const defaultProps: TCarouselProps<number> = {
-    data: defaultData,
-    width: 300,
-    height: 200,
-    renderItem: ({ item: _item }) => <Text>Item</Text>,
-  };
-
-  it("should initialize with default values", () => {
-    const { result } = renderHook(() => useInitProps(defaultProps));
-
-    expect(result.current).toEqual(
-      expect.objectContaining({
-        defaultIndex: 0,
-        loop: true,
-        autoPlayInterval: 1000,
-        scrollAnimationDuration: 500,
-        width: 300,
-        height: 200,
-        enabled: true,
-        autoFillData: true,
-        pagingEnabled: true,
-        snapEnabled: true,
-        overscrollEnabled: true,
-        data: defaultData,
-        rawData: defaultData,
-        dataLength: 4,
-        rawDataLength: 4,
-      })
-    );
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
-  it("should handle custom values", () => {
-    const customProps: TCarouselProps<number> = {
-      ...defaultProps,
-      defaultIndex: 2,
+  it("applies the v5 defaults", () => {
+    const { result } = renderHook(() => useInitProps(createProps()));
+
+    expect(result.current).toMatchObject({
+      defaultIndex: 0,
       loop: false,
-      autoPlayInterval: 2000,
-      scrollAnimationDuration: 300,
-      enabled: false,
-      autoFillData: false,
-      pagingEnabled: false,
-      snapEnabled: false,
+      autoplay: false,
+      autoplayInterval: 3000,
+      autoplayDirection: "forward",
+      orientation: "horizontal",
+      scrollEnabled: true,
+      snapMode: "page",
+      overscrollEnabled: true,
+      dataLength: 4,
+      rawDataLength: 4,
+      autoFillData: true,
+    });
+    expect(result.current.animation).toMatchObject({ type: "timing", duration: 500 });
+  });
+
+  it("preserves explicit v5 values", () => {
+    const props = createProps({
+      defaultIndex: 2,
+      loop: true,
+      autoplay: true,
+      autoplayInterval: 1200,
+      autoplayDirection: "backward",
+      orientation: "vertical",
+      scrollEnabled: false,
+      snapMode: "nearest",
       overscrollEnabled: false,
-    };
-
-    const { result } = renderHook(() => useInitProps(customProps));
-
-    expect(result.current).toEqual(
-      expect.objectContaining({
-        ...customProps,
-        data: defaultData,
-        rawData: defaultData,
-        dataLength: 4,
-        rawDataLength: 4,
-      })
-    );
-  });
-  it("should handle stack mode configuration", () => {
-    const stackProps: TCarouselProps<number> = {
-      ...defaultProps,
-      mode: "horizontal-stack",
-      modeConfig: {
-        showLength: 3,
-      },
-    };
-
-    const { result } = renderHook(() => useInitProps(stackProps));
-
-    expect(result.current.modeConfig).toBeDefined();
-    if (result.current.modeConfig && "showLength" in result.current.modeConfig)
-      expect(result.current.modeConfig.showLength).toBe(3); // dataLength - 1
-  });
-
-  it("should handle empty data array", () => {
-    const props: TCarouselProps<number> = {
-      ...defaultProps,
-      data: [],
-    };
-
+      animation: { type: "spring", damping: 18 },
+      style: { height: 320 },
+    });
     const { result } = renderHook(() => useInitProps(props));
 
-    expect(result.current.dataLength).toBe(0);
-    expect(result.current.rawDataLength).toBe(0);
+    expect(result.current).toMatchObject({
+      defaultIndex: 2,
+      loop: true,
+      autoplay: true,
+      autoplayInterval: 1200,
+      autoplayDirection: "backward",
+      orientation: "vertical",
+      scrollEnabled: false,
+      snapMode: "nearest",
+      overscrollEnabled: false,
+      animation: { type: "spring", damping: 18 },
+    });
   });
 
-  it.each([-1, 4, 1.5])(
-    "throws synchronously for invalid defaultIndex %s with non-empty data",
-    (defaultIndex) => {
-      const error = jest.spyOn(console, "error").mockImplementation(() => {});
-      const hook = renderHook(() =>
-        useInitProps({
-          ...defaultProps,
-          defaultIndex,
-        })
-      );
+  it.each([
+    ["itemSize", { itemSize: 0 }],
+    ["autoplayInterval", { autoplayInterval: -1 }],
+    ["renderWindowSize", { renderWindowSize: 1.5 }],
+  ] as const)("rejects invalid %s", (_name, invalid) => {
+    jest.spyOn(console, "error").mockImplementation(() => {});
+    const { result } = renderHook(() => useInitProps(createProps(invalid)));
+    expect(result.error).toBeInstanceOf(Error);
+  });
 
-      expect(hook.result.error).toEqual(
-        new Error(
-          "[react-native-reanimated-carousel] defaultIndex must be an integer between 0 and 3."
-        )
-      );
-      error.mockRestore();
-    }
-  );
-
-  it("defers a valid defaultIndex until data first becomes non-empty", () => {
-    const hook = renderHook(
-      ({ data }) =>
-        useInitProps({
-          ...defaultProps,
-          data,
-          defaultIndex: 2,
-        }),
-      { initialProps: { data: [] as number[] } }
+  it("rejects layout and itemAnimation together", () => {
+    jest.spyOn(console, "error").mockImplementation(() => {});
+    const { result } = renderHook(() =>
+      useInitProps(
+        createProps({
+          layout: { type: "parallax" },
+          itemAnimation: () => ({}),
+        } as never)
+      )
     );
 
-    expect(hook.result.current.defaultIndex).toBe(0);
+    expect(result.error?.message).toContain("mutually exclusive");
+  });
 
-    act(() => {
-      hook.rerender({ data: [1, 2, 3] });
+  it("throws synchronously for an invalid initial defaultIndex", () => {
+    jest.spyOn(console, "error").mockImplementation(() => {});
+    const { result } = renderHook(() => useInitProps(createProps({ defaultIndex: 4 })));
+
+    expect(result.error?.message).toContain("between 0 and 3");
+  });
+
+  it("defers a valid defaultIndex until data first becomes non-empty", () => {
+    const hook = renderHook(({ props }) => useInitProps(props), {
+      initialProps: { props: createProps({ data: [], defaultIndex: 2 }) },
     });
 
+    expect(hook.result.current.defaultIndex).toBe(0);
+    hook.rerender({ props: createProps({ data: [0, 1, 2], defaultIndex: 2 }) });
     expect(hook.result.current.defaultIndex).toBe(2);
   });
 
-  it("warns and falls back to zero when a deferred defaultIndex is invalid", () => {
-    const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
-    const hook = renderHook(
-      ({ data }) =>
-        useInitProps({
-          ...defaultProps,
-          data,
-          defaultIndex: 5,
-        }),
-      { initialProps: { data: [] as number[] } }
-    );
-
-    act(() => {
-      hook.rerender({ data: [1, 2, 3] });
+  it("warns and falls back when a deferred defaultIndex is invalid", () => {
+    const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
+    const hook = renderHook(({ props }) => useInitProps(props), {
+      initialProps: { props: createProps({ data: [], defaultIndex: 3 }) },
     });
 
+    hook.rerender({ props: createProps({ data: [0, 1], defaultIndex: 3 }) });
+    hook.rerender({ props: createProps({ data: [0, 1], defaultIndex: 3 }) });
+
     expect(hook.result.current.defaultIndex).toBe(0);
-    expect(warn).toHaveBeenCalledTimes(1);
-
-    warn.mockRestore();
+    expect(warnSpy).toHaveBeenCalledTimes(1);
   });
 
-  it("should round width and height values", () => {
-    const props: TCarouselProps<number> = {
-      ...defaultProps,
-      width: 300.6,
-      height: 200.4,
-    };
+  it.each([
+    { data: [1], expected: [1, 1, 1] },
+    { data: [1, 2], expected: [1, 2, 1, 2] },
+    { data: [1, 2, 3], expected: [1, 2, 3] },
+  ])("auto-fills short loop data", ({ data, expected }) => {
+    const { result } = renderHook(() => useInitProps(createProps({ data, loop: true })));
 
-    const { result } = renderHook(() => useInitProps(props));
-
-    expect(result.current.width).toBe(301);
-    expect(result.current.height).toBe(200);
-  });
-
-  it("should handle enableSnap property", () => {
-    const props: TCarouselProps<number> = {
-      ...defaultProps,
-      enableSnap: false,
-    };
-
-    const { result } = renderHook(() => useInitProps(props));
-
-    expect(result.current.snapEnabled).toBe(false);
-  });
-  it("should handle vertical-stack mode", () => {
-    const props: TCarouselProps<number> = {
-      ...defaultProps,
-      mode: "vertical-stack",
-      modeConfig: {
-        showLength: 3,
-      },
-    };
-
-    const { result } = renderHook(() => useInitProps(props));
-    expect(result.current.modeConfig).toBeDefined();
-    if (result.current.modeConfig && "showLength" in result.current.modeConfig)
-      expect(result.current.modeConfig.showLength).toBe(3); // dataLength - 1
+    expect(result.current.data).toEqual(expected);
+    expect(result.current.rawData).toEqual(data);
   });
 });

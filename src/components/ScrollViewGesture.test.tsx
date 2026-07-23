@@ -12,7 +12,7 @@ import { act, render } from "@testing-library/react-native";
 import { ScrollViewGesture } from "./ScrollViewGesture";
 
 import { usePanGestureProxy } from "../hooks/usePanGestureProxy";
-import { GlobalStateContext, type IContext } from "../store";
+import { type CarouselContext, GlobalStateContext } from "../store";
 
 jest.mock("../hooks/usePanGestureProxy", () => ({
   usePanGestureProxy: jest.fn(() => ({})),
@@ -56,18 +56,13 @@ function renderGesture({
   const contextValue = {
     props: {
       onConfigurePanGesture: undefined,
-      vertical,
-      pagingEnabled: true,
-      snapEnabled: true,
+      orientation: vertical ? "vertical" : "horizontal",
+      snapMode: "page",
       loop: false,
-      scrollAnimationDuration: 500,
-      withAnimation: undefined,
-      enabled: true,
+      animation: { type: "timing", duration: 500 },
+      scrollEnabled: true,
       dataLength,
       overscrollEnabled: false,
-      maxScrollDistancePerSwipe: undefined,
-      minScrollDistancePerSwipe: undefined,
-      fixedDirection: undefined,
     },
     common: {
       size,
@@ -76,6 +71,10 @@ function renderGesture({
       resolvedSize: { value: size },
       sizePhase: { value: "ready" },
       sizeExplicit: true,
+      isMoving: { value: false },
+      startMovement: jest.fn(),
+      cancelMovement: jest.fn(),
+      settleMovement: jest.fn(),
     },
     layout: {
       containerSize: { value: containerSize },
@@ -83,7 +82,7 @@ function renderGesture({
       itemDimensions: { value: {} },
       updateItemDimensions: jest.fn(),
     },
-  } as unknown as IContext;
+  } as unknown as CarouselContext;
 
   render(
     <GlobalStateContext.Provider value={contextValue}>

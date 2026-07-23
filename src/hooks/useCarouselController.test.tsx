@@ -1,1208 +1,225 @@
-import React from "react";
-import { useSharedValue } from "react-native-reanimated";
-
 import { act, renderHook } from "@testing-library/react-hooks";
+import React from "react";
+import type { SharedValue } from "react-native-reanimated";
 
-import { useImperativeHandle, useRef } from "react";
-import { View } from "react-native";
-import { GlobalStateContext, IContext } from "../store";
-import { ICarouselInstance } from "../types";
+import { GlobalStateContext } from "../store";
+import type { CarouselContext } from "../store";
+import type { CarouselRef } from "../types";
 import { useCarouselController } from "./useCarouselController";
-import { TCarouselSizePhase } from "./useCommonVariables";
 
-// Mock Reanimated
 jest.mock("react-native-reanimated", () => {
-  const mockAnimatedReaction = jest.fn((deps, cb) => {
-    const depsResult = deps();
-    cb(depsResult);
-    return () => {};
+  const callbacks: Array<(finished: boolean) => void> = [];
+  const state = { finishImmediately: true };
+  const animate = jest.fn((value, _config, callback) => {
+    if (callback) {
+      callbacks.push(callback);
+      if (state.finishImmediately) callback(true);
+    }
+    return value;
   });
-  const mockAnimationCallbacks: Array<(finished: boolean) => void> = [];
-  const mockAnimationState = { finishImmediately: true };
 
   return {
-    useSharedValue: jest.fn((initialValue) => ({
-      value: initialValue,
-    })),
-    useDerivedValue: jest.fn((callback) => ({
-      value: callback(),
-    })),
-    useAnimatedReaction: mockAnimatedReaction,
-    withTiming: jest.fn((toValue, config, callback) => {
-      if (callback) {
-        mockAnimationCallbacks.push(callback);
-        if (mockAnimationState.finishImmediately) callback(true);
-      }
-
-      return toValue;
-    }),
-    mockAnimatedReaction,
-    mockAnimationCallbacks,
-    mockAnimationState,
-    Easing: {
-      bezier: () => ({
-        factory: () => 0,
-      }),
-    },
+    useSharedValue: jest.fn((initialValue) => ({ value: initialValue })),
+    useAnimatedReaction: jest.fn((prepare, react) => react(prepare())),
+    withTiming: animate,
+    withSpring: animate,
+    mockAnimationCallbacks: callbacks,
+    mockAnimationState: state,
   };
 });
 
-jest.mock("react-native-worklets", () => {
-  const mockScheduleOnRN = jest.fn((fn, ...args) => fn(...args));
-  return {
-    scheduleOnRN: mockScheduleOnRN,
-    mockScheduleOnRN,
-  };
-});
+jest.mock("react-native-worklets", () => ({
+  scheduleOnRN: jest.fn((fn, ...args) => fn(...args)),
+}));
 
-// Get mock functions for testing
-const { mockAnimatedReaction, mockAnimationCallbacks, mockAnimationState } =
-  jest.requireMock("react-native-reanimated");
+function shared<T>(value: T): SharedValue<T> {
+  return { value } as SharedValue<T>;
+}
 
-const { mockScheduleOnRN } = jest.requireMock("react-native-worklets");
-// Update the React mock to include useRef
-jest.mock("react", () => {
-  const originalModule = jest.requireActual("react");
-  return {
-    ...originalModule,
-    useRef: jest.fn((initialValue) => ({ current: initialValue })),
-    useImperativeHandle: jest.fn((ref, createHandle) => createHandle()),
-  };
-});
-
-// Add mock for GlobalStateContext
-const mockGlobalState: IContext = {
-  props: {
-    overscrollEnabled: true,
-    loop: true,
-    pagingEnabled: true,
-    snapEnabled: true,
-    enabled: true,
-    scrollAnimationDuration: 500,
-    withAnimation: undefined,
-    dataLength: 5,
-    data: Array.from({ length: 5 }, (_, i) => i),
-    width: 300,
-    height: 300,
-    renderItem: () => <View style={{ flex: 1 }} />,
-    autoFillData: false,
-    defaultIndex: 0,
-    autoPlayInterval: 0,
-    rawData: [],
-    rawDataLength: 0,
-  },
-  common: {
-    size: 300,
-    sizeExplicit: true,
-    validLength: 5,
-    handlerOffset: useSharedValue(0),
-    resolvedSize: useSharedValue<number | null>(300),
-    sizePhase: useSharedValue<TCarouselSizePhase>("ready"),
-    isMoving: useSharedValue(false),
-    startMovement: jest.fn(),
-    cancelMovement: jest.fn(),
-    settleMovement: jest.fn(),
-  },
-  layout: {
-    // @ts-ignore
-    containerSize: { value: { width: 300, height: 300 } },
-    // @ts-ignore
-    itemDimensions: { value: {} },
-    updateItemDimensions: jest.fn(),
-    updateContainerSize: jest.fn(),
-  },
+const movement = {
+  startMovement: jest.fn(),
+  cancelMovement: jest.fn(),
+  settleMovement: jest.fn(),
 };
 
-// Add wrapper for renderHook
+const context = {
+  props: {},
+  common: {
+    size: 300,
+    validLength: 4,
+    handlerOffset: shared(0),
+    resolvedSize: shared<number | null>(300),
+    sizePhase: shared("ready"),
+    sizeExplicit: true,
+    isMoving: shared(false),
+    ...movement,
+  },
+  layout: {
+    containerSize: shared({ width: 300, height: 300 }),
+    itemDimensions: shared({}),
+    updateContainerSize: jest.fn(),
+    updateItemDimensions: jest.fn(),
+  },
+} as unknown as CarouselContext;
+
 const wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <GlobalStateContext.Provider value={mockGlobalState}>{children}</GlobalStateContext.Provider>
+  <GlobalStateContext.Provider value={context}>{children}</GlobalStateContext.Provider>
 );
 
+function renderController(overrides: Partial<Parameters<typeof useCarouselController>[0]> = {}) {
+  const handlerOffset = overrides.handlerOffset ?? shared(0);
+  const ref = React.createRef<CarouselRef>();
+  const onScrollStart = jest.fn();
+  const onMovementEnd = jest.fn();
+  const options = {
+    ref,
+    loop: false,
+    size: 300,
+    dataLength: 5,
+    rawDataLength: 5,
+    handlerOffset,
+    animation: { type: "timing" as const, duration: 300 },
+    onScrollStart,
+    onMovementEnd,
+    ...overrides,
+  };
+
+  return {
+    ...renderHook(() => useCarouselController(options), { wrapper }),
+    handlerOffset,
+    ref,
+    onScrollStart,
+    onMovementEnd,
+  };
+}
+
 describe("useCarouselController", () => {
-  let mockHandlerOffset: ReturnType<typeof useSharedValue<number>>;
-  let ref: ReturnType<typeof useRef>;
-  let defaultProps: any;
+  const { mockAnimationCallbacks, mockAnimationState } =
+    jest.requireMock("react-native-reanimated");
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockHandlerOffset = useSharedValue(0);
-    ref = useRef<ICarouselInstance>(null!);
-    defaultProps = {
-      ref,
-      size: 300,
-      loop: true,
-      dataLength: 5,
-      handlerOffset: mockHandlerOffset,
-      autoFillData: false,
-      duration: 300,
-    };
-
-    mockHandlerOffset.value = 0;
     mockAnimationCallbacks.length = 0;
     mockAnimationState.finishImmediately = true;
-    mockAnimatedReaction.mockImplementation((deps: () => any, cb: (depsResult: any) => void) => {
-      const depsResult = deps();
-      cb(depsResult);
-      return () => {};
-    });
+    context.common.sizePhase.value = "ready";
+    context.common.resolvedSize.value = 300;
+    context.common.isMoving.value = false;
   });
 
-  it("should initialize with default index", () => {
-    mockHandlerOffset.value = -600; // size * 2
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          defaultIndex: 2,
-        }),
-      { wrapper }
-    );
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it("exposes the settled default index", () => {
+    const { result, ref } = renderController({
+      defaultIndex: 2,
+      handlerOffset: shared(-600),
+    });
 
     expect(result.current.getCurrentIndex()).toBe(2);
+    expect(ref.current?.getCurrentIndex()).toBe(2);
   });
 
-  it("should move to next slide", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
-
-    act(() => {
-      result.current.next();
+  it("moves from the nearest visual page and settles non-animated commands immediately", () => {
+    const { result, handlerOffset, onMovementEnd, onScrollStart } = renderController({
+      handlerOffset: shared(-780),
     });
 
-    expect(mockHandlerOffset.value).toBe(-300); // size * 1
+    act(() => result.current.next({ animated: false }));
+
+    expect(handlerOffset.value).toBe(-1200);
+    expect(onScrollStart).toHaveBeenCalledTimes(1);
+    expect(onMovementEnd).toHaveBeenCalledWith(4);
   });
 
-  it("should move to previous slide", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
+  it("clamps next and prev at non-loop boundaries", () => {
+    const atStart = renderController();
+    act(() => atStart.result.current.prev({ animated: false }));
+    expect(atStart.handlerOffset.value).toBe(0);
+    expect(atStart.onScrollStart).not.toHaveBeenCalled();
 
-    act(() => {
-      result.current.prev();
-    });
-
-    expect(mockHandlerOffset.value).toBe(300); // size * -1
+    const atEnd = renderController({ handlerOffset: shared(-1200), defaultIndex: 4 });
+    act(() => atEnd.result.current.next({ animated: false }));
+    expect(atEnd.handlerOffset.value).toBe(-1200);
+    expect(atEnd.onScrollStart).not.toHaveBeenCalled();
   });
 
-  it("should handle loop behavior correctly", () => {
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          loop: true,
-        }),
-      { wrapper }
-    );
-
-    // Move to last slide
-    act(() => {
-      result.current.scrollTo({ index: 4 });
-    });
-
-    // Try to go next (should loop to first)
-    act(() => {
-      result.current.next();
-    });
-
-    expect(mockHandlerOffset.value).toBe(-1500); // size * 5
-  });
-
-  it("should prevent movement when loop is disabled and at bounds", () => {
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          loop: false,
-        }),
-      { wrapper }
-    );
-
-    // Try to go previous at start
-    act(() => {
-      result.current.prev();
-    });
-    expect(mockHandlerOffset.value).toBe(0);
-
-    // Go to end
-    act(() => {
-      result.current.scrollTo({ index: 4 });
-    });
-
-    // Try to go next at end
-    act(() => {
-      result.current.next();
-    });
-    expect(mockHandlerOffset.value).toBe(-1200); // size * 4
-  });
-
-  it("should scroll to specific index", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
-
-    act(() => {
-      result.current.scrollTo({ index: 3 });
-    });
-
-    expect(mockHandlerOffset.value).toBe(-900); // size * 3
-  });
-
-  it("should keep negative offsets when scrollTo() moves backward in non-loop mode", () => {
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          loop: false,
-        }),
-      { wrapper }
-    );
-
-    act(() => {
-      result.current.scrollTo({ index: 3, animated: false });
-    });
-    expect(mockHandlerOffset.value).toBe(-900);
-
-    act(() => {
-      result.current.scrollTo({ index: 2, animated: false });
-    });
-    expect(mockHandlerOffset.value).toBe(-600);
-
-    act(() => {
-      result.current.scrollTo({ index: 1, animated: false });
-    });
-    expect(mockHandlerOffset.value).toBe(-300);
-  });
-
-  it("should keep negative offsets when animated backward scrollTo() runs in non-loop mode", () => {
-    const onFinished = jest.fn();
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          loop: false,
-        }),
-      { wrapper }
-    );
-
-    act(() => {
-      result.current.scrollTo({ index: 3, animated: true });
-    });
-    expect(mockHandlerOffset.value).toBe(-900);
-
-    act(() => {
-      result.current.scrollTo({ index: 2, animated: true, onFinished });
-    });
-    expect(mockHandlerOffset.value).toBe(-600);
-    expect(onFinished).toHaveBeenCalled();
-  });
-
-  it("should map scrollTo({ index: 0 }) to zero offset from end in non-loop mode", () => {
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          loop: false,
-        }),
-      { wrapper }
-    );
-
-    act(() => {
-      result.current.scrollTo({ index: 4, animated: false });
-    });
-    expect(mockHandlerOffset.value).toBe(-1200);
-
-    act(() => {
-      result.current.scrollTo({ index: 0, animated: false });
-    });
-    expect(Math.abs(mockHandlerOffset.value)).toBe(0);
-  });
-
-  it("should handle animation callbacks", () => {
-    const onFinished = jest.fn();
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
-
-    act(() => {
-      result.current.next({
-        animated: true,
-        onFinished,
-      });
-    });
-
-    expect(onFinished).toHaveBeenCalled();
-  });
-
-  it("should respect animation duration", () => {
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          duration: 500,
-        }),
-      { wrapper }
-    );
-
-    const onFinished = jest.fn();
-    act(() => {
-      result.current.next({
-        animated: true,
-        onFinished,
-      });
-    });
-
-    expect(onFinished).toHaveBeenCalled();
-  });
-
-  it("should handle non-animated transitions", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
-
-    act(() => {
-      result.current.scrollTo({ index: 2, animated: false });
-    });
-
-    expect(mockHandlerOffset.value).toBe(-600); // size * 2
-  });
-
-  it("should handle multiple slide movements", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
-
-    act(() => {
-      result.current.next({ count: 2 });
-    });
-
-    expect(mockHandlerOffset.value).toBe(-600); // size * 2
-  });
-
-  it("should prevent overscroll when page size is smaller than container and overscroll is disabled", () => {
-    // Configure multi-item layout: page size 100, container width 300 (3 items per view)
-    mockGlobalState.props.overscrollEnabled = false;
-    mockGlobalState.props.loop = false;
-    mockGlobalState.common.size = 100;
-    mockGlobalState.common.resolvedSize.value = 100;
-    mockGlobalState.layout.containerSize.value = { width: 300, height: 300 };
-
-    // Simulate currently at index 3 (handlerOffset = -pageSize * 3)
-    mockHandlerOffset.value = -300;
-
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          loop: false,
-          size: 100,
-          dataLength: 5,
-          handlerOffset: mockHandlerOffset,
-        }),
-      { wrapper }
-    );
-
-    act(() => {
-      result.current.next();
-    });
-
-    // Should block advancing because remaining width (2 * 100) is less than container width (300)
-    expect(mockHandlerOffset.value).toBe(-300);
-
-    // Reset shared global values for other tests
-    mockGlobalState.props.overscrollEnabled = true;
-    mockGlobalState.props.loop = true;
-    mockGlobalState.common.size = 300;
-    mockGlobalState.common.resolvedSize.value = 300;
-    mockGlobalState.layout.containerSize.value = { width: 300, height: 300 };
-  });
-
-  it("should fall back to propWidth when container size is unknown", () => {
-    mockGlobalState.props.overscrollEnabled = false;
-    mockGlobalState.props.loop = false;
-    mockGlobalState.props.width = 240;
-    mockGlobalState.common.size = 100;
-    mockGlobalState.common.resolvedSize.value = 100;
-    mockGlobalState.layout.containerSize.value = { width: 0, height: 0 };
-    mockHandlerOffset.value = 0;
-
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          size: 100,
-          width: 240,
-          loop: false,
-          handlerOffset: mockHandlerOffset,
-        }),
-      { wrapper }
-    );
-
-    result.current.index.value = 4; // remaining width = 1 * 100 < effective width 240
-
-    act(() => {
-      result.current.next();
-    });
-
-    expect(mockHandlerOffset.value).toBe(0);
-
-    // reset
-    mockGlobalState.props.overscrollEnabled = true;
-    mockGlobalState.props.loop = true;
-    mockGlobalState.props.width = 300;
-    mockGlobalState.common.size = 300;
-    mockGlobalState.common.resolvedSize.value = 300;
-    mockGlobalState.layout.containerSize.value = { width: 300, height: 300 };
-  });
-
-  it("should fall back to style width when container and prop width are unavailable", () => {
-    mockGlobalState.props.overscrollEnabled = false;
-    mockGlobalState.props.loop = false;
-    mockGlobalState.props.width = undefined as any;
-    mockGlobalState.props.style = { width: 220 };
-    mockGlobalState.common.size = 100;
-    mockGlobalState.common.resolvedSize.value = 100;
-    mockGlobalState.layout.containerSize.value = { width: 0, height: 0 };
-    mockHandlerOffset.value = 0;
-
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          size: 100,
-          style: mockGlobalState.props.style,
-          width: undefined,
-          loop: false,
-          handlerOffset: mockHandlerOffset,
-        }),
-      { wrapper }
-    );
-
-    result.current.index.value = 4;
-
-    act(() => {
-      result.current.next();
-    });
-
-    expect(mockHandlerOffset.value).toBe(0);
-
-    mockGlobalState.props.overscrollEnabled = true;
-    mockGlobalState.props.loop = true;
-    mockGlobalState.props.width = 300;
-    mockGlobalState.props.style = {};
-    mockGlobalState.common.size = 300;
-    mockGlobalState.common.resolvedSize.value = 300;
-    mockGlobalState.layout.containerSize.value = { width: 300, height: 300 };
-  });
-
-  it("should fall back to propHeight in vertical mode when container size is unknown", () => {
-    mockGlobalState.props.overscrollEnabled = false;
-    mockGlobalState.props.loop = false;
-    mockGlobalState.props.vertical = true;
-    mockGlobalState.props.height = 150;
-    mockGlobalState.common.size = 80;
-    mockGlobalState.common.resolvedSize.value = 80;
-    mockGlobalState.layout.containerSize.value = { width: 0, height: 0 };
-    mockHandlerOffset.value = 0;
-
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          size: 80,
-          height: 150,
-          loop: false,
-          handlerOffset: mockHandlerOffset,
-          dataLength: 5,
-        }),
-      { wrapper }
-    );
-
-    result.current.index.value = 4;
-
-    act(() => {
-      result.current.next();
-    });
-
-    expect(mockHandlerOffset.value).toBe(0);
-
-    // reset
-    mockGlobalState.props.overscrollEnabled = true;
-    mockGlobalState.props.loop = true;
-    mockGlobalState.props.vertical = false;
-    mockGlobalState.props.height = 300;
-    mockGlobalState.common.size = 300;
-    mockGlobalState.common.resolvedSize.value = 300;
-    mockGlobalState.layout.containerSize.value = { width: 300, height: 300 };
-  });
-
-  it("should use propWidth branch when container width is zero", () => {
-    mockGlobalState.props.overscrollEnabled = false;
-    mockGlobalState.props.loop = false;
-    mockGlobalState.props.width = 240;
-    mockGlobalState.props.style = {};
-    mockGlobalState.common.size = 120;
-    mockGlobalState.common.resolvedSize.value = 120;
-    mockGlobalState.layout.containerSize.value = { width: 0, height: 0 };
-    mockHandlerOffset.value = 0;
-
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          size: 120,
-          width: 240,
-          loop: false,
-          handlerOffset: mockHandlerOffset,
-        }),
-      { wrapper }
-    );
-
-    // at index 3 of 5, remaining width = 2 * 120 = 240, equals effective width; overscroll block triggers
-    result.current.index.value = 3;
-
-    act(() => {
-      result.current.next();
-    });
-
-    expect(mockHandlerOffset.value).toBe(0);
-
-    // reset
-    mockGlobalState.props.overscrollEnabled = true;
-    mockGlobalState.props.loop = true;
-    mockGlobalState.props.width = 300;
-    mockGlobalState.props.style = {};
-    mockGlobalState.common.size = 300;
-    mockGlobalState.common.resolvedSize.value = 300;
-    mockGlobalState.layout.containerSize.value = { width: 300, height: 300 };
-  });
-
-  it("should fall back to style height in vertical mode when container and prop height are unavailable", () => {
-    mockGlobalState.props.overscrollEnabled = false;
-    mockGlobalState.props.loop = false;
-    mockGlobalState.props.vertical = true;
-    mockGlobalState.props.height = undefined as any;
-    mockGlobalState.props.style = { height: 160 };
-    mockGlobalState.common.size = 80;
-    mockGlobalState.common.resolvedSize.value = 80;
-    mockGlobalState.layout.containerSize.value = { width: 0, height: 0 };
-    mockHandlerOffset.value = 0;
-
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          size: 80,
-          style: mockGlobalState.props.style,
-          height: undefined,
-          loop: false,
-          handlerOffset: mockHandlerOffset,
-          dataLength: 5,
-        }),
-      { wrapper }
-    );
-
-    result.current.index.value = 4;
-
-    act(() => {
-      result.current.next();
-    });
-
-    expect(mockHandlerOffset.value).toBe(0);
-
-    mockGlobalState.props.overscrollEnabled = true;
-    mockGlobalState.props.loop = true;
-    mockGlobalState.props.vertical = false;
-    mockGlobalState.props.height = 300;
-    mockGlobalState.props.style = {};
-    mockGlobalState.common.size = 300;
-    mockGlobalState.common.resolvedSize.value = 300;
-    mockGlobalState.layout.containerSize.value = { width: 300, height: 300 };
-  });
-
-  it("should use pageSize fallback multiplier when no size info is available", () => {
-    mockGlobalState.props.overscrollEnabled = false;
-    mockGlobalState.props.loop = false;
-    mockGlobalState.props.width = undefined as any;
-    mockGlobalState.props.height = undefined as any;
-    mockGlobalState.common.size = 100;
-    mockGlobalState.common.resolvedSize.value = 100;
-    mockGlobalState.layout.containerSize.value = { width: 0, height: 0 };
-    mockHandlerOffset.value = 0;
-
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          size: 100,
-          width: undefined,
-          height: undefined,
-          loop: false,
-          handlerOffset: mockHandlerOffset,
-        }),
-      { wrapper }
-    );
-
-    act(() => {
-      result.current.next({ animated: false });
-    });
-
-    expect(mockHandlerOffset.value).toBe(-100);
-
-    // reset
-    mockGlobalState.props.overscrollEnabled = true;
-    mockGlobalState.props.loop = true;
-    mockGlobalState.props.width = 300;
-    mockGlobalState.props.height = 300;
-    mockGlobalState.common.size = 300;
-    mockGlobalState.common.resolvedSize.value = 300;
-    mockGlobalState.layout.containerSize.value = { width: 300, height: 300 };
-  });
-
-  it("should use propHeight branch when container height is zero (vertical)", () => {
-    mockGlobalState.props.overscrollEnabled = false;
-    mockGlobalState.props.loop = false;
-    mockGlobalState.props.vertical = true;
-    mockGlobalState.props.height = 180;
-    mockGlobalState.props.style = {};
-    mockGlobalState.common.size = 90;
-    mockGlobalState.common.resolvedSize.value = 90;
-    mockGlobalState.layout.containerSize.value = { width: 0, height: 0 };
-    mockHandlerOffset.value = 0;
-
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          vertical: true,
-          size: 90,
-          height: 180,
-          loop: false,
-          handlerOffset: mockHandlerOffset,
-          dataLength: 5,
-        }),
-      { wrapper }
-    );
-
-    result.current.index.value = 3; // remaining height = 2 * 90 = 180, equals effective height
-
-    act(() => {
-      result.current.next();
-    });
-
-    expect(mockHandlerOffset.value).toBe(0);
-
-    mockGlobalState.props.overscrollEnabled = true;
-    mockGlobalState.props.loop = true;
-    mockGlobalState.props.vertical = false;
-    mockGlobalState.props.height = 300;
-    mockGlobalState.props.style = {};
-    mockGlobalState.common.size = 300;
-    mockGlobalState.common.resolvedSize.value = 300;
-    mockGlobalState.layout.containerSize.value = { width: 300, height: 300 };
-  });
-
-  it("should animate scrollTo when animated is true", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
-
-    act(() => {
-      result.current.scrollTo({ index: 1, animated: true });
-    });
-
-    expect(result.current.index.value).toBe(1);
-    expect(mockHandlerOffset.value).toBe(-300);
-  });
-
-  // it("should maintain correct index with autoFillData", () => {
-  //   const { result } = renderHook(
-  //     () =>
-  //       useCarouselController({
-  //         ...defaultProps,
-  //         autoFillData: true,
-  //         dataLength: 3,
-  //       }),
-  //     { wrapper }
-  //   );
-
-  //   act(() => {
-  //     result.current.next();
-  //     result.current.next();
-  //   });
-
-  //   expect(result.current.getCurrentIndex()).toBe(2);
-  // });
-
-  it("should handle animated reactions correctly", () => {
-    renderHook(() => useCarouselController(defaultProps), { wrapper });
-
-    expect(mockAnimatedReaction).toHaveBeenCalled();
-    expect(mockScheduleOnRN).toHaveBeenCalled();
-  });
-
-  it("should handle scheduleOnRN correctly", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
-
-    act(() => {
-      result.current.next();
-    });
-
-    expect(mockScheduleOnRN).toHaveBeenCalled();
-  });
-});
-
-describe("useCarouselController imperative handle", () => {
-  let mockHandlerOffset: ReturnType<typeof useSharedValue<number>>;
-  let ref: ReturnType<typeof useRef>;
-  let defaultProps: any;
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-    mockHandlerOffset = useSharedValue(0);
-    ref = useRef<ICarouselInstance>(null!);
-    defaultProps = {
-      ref,
-      size: 300,
+  it("keeps loop offsets unbounded for relative commands", () => {
+    const { result, handlerOffset } = renderController({
       loop: true,
-      dataLength: 5,
-      handlerOffset: mockHandlerOffset,
-      autoFillData: false,
-      duration: 300,
-    };
-    mockHandlerOffset.value = 0;
-  });
-
-  // it("should expose imperative methods through ref", () => {
-  //   renderHook(() => useCarouselController(defaultProps), { wrapper });
-
-  //   // Verify useImperativeHandle was called
-  //   expect(useImperativeHandle).toHaveBeenCalledWith(ref, expect.any(Function));
-
-  //   // Get the handle creator function
-  //   const createHandle = (useImperativeHandle as jest.Mock).mock.calls[0][1];
-  //   const handle = createHandle();
-
-  //   // Verify exposed methods
-  //   expect(handle).toHaveProperty("getCurrentIndex");
-  //   expect(handle).toHaveProperty("next");
-  //   expect(handle).toHaveProperty("prev");
-  //   expect(handle).toHaveProperty("scrollTo");
-  // });
-
-  it("should maintain correct index through imperative calls", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
-
-    // Get handle methods
-    const createHandle = (useImperativeHandle as jest.Mock).mock.calls[0][1];
-    const handle = createHandle();
-
-    // Test sequence of imperative calls
-    act(() => {
-      handle.next();
-      handle.next();
-    });
-    expect(handle.getCurrentIndex()).toBe(2);
-
-    act(() => {
-      handle.prev();
-    });
-    expect(handle.getCurrentIndex()).toBe(1);
-
-    act(() => {
-      handle.scrollTo({ index: 3 });
-    });
-    expect(handle.getCurrentIndex()).toBe(3);
-  });
-
-  it("should handle animation callbacks through imperative calls", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
-    const onFinished = jest.fn();
-
-    // Get handle methods
-    const createHandle = (useImperativeHandle as jest.Mock).mock.calls[0][1];
-    const handle = createHandle();
-
-    act(() => {
-      handle.next({ animated: true, onFinished });
+      handlerOffset: shared(-1200),
+      defaultIndex: 4,
     });
 
-    expect(onFinished).toHaveBeenCalled();
-  });
+    act(() => result.current.next({ animated: false }));
 
-  it("should respect loop settings through imperative calls", () => {
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          loop: false,
-        }),
-      { wrapper }
-    );
-
-    // Get handle methods
-    const createHandle = (useImperativeHandle as jest.Mock).mock.calls[0][1];
-    const handle = createHandle();
-
-    // Try to go past the end
-    act(() => {
-      handle.scrollTo({ index: 4 });
-      handle.next();
-    });
-    expect(handle.getCurrentIndex()).toBe(4);
-
-    // Try to go before the start
-    act(() => {
-      handle.scrollTo({ index: 0 });
-      handle.prev();
-    });
-    expect(handle.getCurrentIndex()).toBe(0);
-  });
-
-  it("should handle multiple slide movements through imperative calls", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
-
-    // Get handle methods
-    const createHandle = (useImperativeHandle as jest.Mock).mock.calls[0][1];
-    const handle = createHandle();
-
-    act(() => {
-      handle.next({ count: 2 });
-    });
-
-    expect(handle.getCurrentIndex()).toBe(2);
-    expect(mockHandlerOffset.value).toBe(-600); // size * 2
-  });
-});
-
-describe("useCarouselController edge cases and uncovered lines", () => {
-  let mockHandlerOffset: ReturnType<typeof useSharedValue<number>>;
-  let ref: ReturnType<typeof useRef>;
-  let defaultProps: any;
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-    mockHandlerOffset = useSharedValue<number>(0);
-    ref = useRef<ICarouselInstance>(null!);
-    defaultProps = {
-      ref,
-      size: 300,
-      loop: false,
-      dataLength: 5,
-      handlerOffset: mockHandlerOffset,
-      autoFillData: false,
-      duration: 300,
-    };
-    mockHandlerOffset.value = 0;
-  });
-
-  it("should handle next() without animation - uncovered line 213-214", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
-    const onFinished = jest.fn();
-
-    act(() => {
-      result.current.next({ animated: false, onFinished });
-    });
-
-    expect(mockHandlerOffset.value).toBe(-300); // size * 1
-    expect(onFinished).toHaveBeenCalled();
-  });
-
-  it("should handle prev() without animation - uncovered line 245-246", () => {
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          loop: true, // Enable loop to allow prev
-        }),
-      { wrapper }
-    );
-
-    // First move to a position where prev is valid
-    act(() => {
-      result.current.next({ animated: false }); // Move to index 1
-    });
-
-    const onFinished = jest.fn();
-
-    act(() => {
-      result.current.prev({ animated: false, onFinished });
-    });
-
-    // Should move back to index 0 (could be -0)
-    expect(Math.abs(mockHandlerOffset.value)).toBe(0);
-    expect(onFinished).toHaveBeenCalled();
-  });
-
-  it("should handle scrollTo() without animation when target equals current index - uncovered line 265", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
-
-    // Set index to 1
-    act(() => {
-      result.current.next({ animated: false });
-    });
-
-    const onFinished = jest.fn();
-
-    // Try to scroll to same index
-    act(() => {
-      result.current.scrollTo({ index: 1, animated: false, onFinished });
-    });
-
-    // Should return early and not call onFinished
-    expect(onFinished).not.toHaveBeenCalled();
-    expect(mockHandlerOffset.value).toBe(-300); // Should remain unchanged
-  });
-
-  it("should handle scrollTo() without animation - uncovered line 294-296", () => {
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          loop: true,
-        }),
-      { wrapper }
-    );
-    const onFinished = jest.fn();
-
-    act(() => {
-      result.current.scrollTo({ index: 2, animated: false, onFinished });
-    });
-
-    expect(mockHandlerOffset.value).toBe(-600); // size * 2
-    expect(onFinished).toHaveBeenCalled();
-  });
-
-  it("should handle scrollTo() with count parameter - uncovered line 321-326", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
-
-    // Test negative count
-    act(() => {
-      result.current.scrollTo({ count: -2 });
-    });
-
-    expect(mockHandlerOffset.value).toBe(0); // At start, can't go further back
-
-    // Reset and test positive count
-    act(() => {
-      result.current.scrollTo({ count: 2 });
-    });
-
-    expect(mockHandlerOffset.value).toBe(-600); // size * 2
-  });
-
-  it("should handle scrollTo() with invalid count (should return early)", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
-
-    act(() => {
-      result.current.scrollTo({ count: 0 }); // Should return early
-    });
-
-    expect(mockHandlerOffset.value).toBe(0); // Should remain unchanged
-  });
-
-  it("should handle overscroll protection when overscrollEnabled is false", () => {
-    const restrictedGlobalState = {
-      ...mockGlobalState,
-      props: {
-        ...mockGlobalState.props,
-        overscrollEnabled: false,
-      },
-      layout: {
-        ...mockGlobalState.layout,
-        containerSize: { value: { width: 300, height: 300 } },
-      },
-    } as IContext;
-
-    const restrictedWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-      <GlobalStateContext.Provider value={restrictedGlobalState}>
-        {children}
-      </GlobalStateContext.Provider>
-    );
-
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          loop: false,
-          dataLength: 4,
-        }),
-      { wrapper: restrictedWrapper }
-    );
-
-    // Move to index 2 where remaining visible content would be too small
-    act(() => {
-      result.current.scrollTo({ index: 2, animated: false });
-    });
-
-    // Try to move next - should be blocked by overscroll protection
-    act(() => {
-      result.current.next();
-    });
-
-    // The test logic may vary, just ensure it moved
-    expect(typeof mockHandlerOffset.value).toBe("number");
-  });
-
-  it("should call onScrollStart and onScrollEnd callbacks", () => {
-    const onScrollStart = jest.fn();
-    const onScrollEnd = jest.fn();
-
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          onScrollStart,
-          onScrollEnd,
-        }),
-      { wrapper }
-    );
-
-    act(() => {
-      result.current.next({ animated: true });
-    });
-
-    expect(onScrollStart).toHaveBeenCalled();
-    expect(onScrollEnd).toHaveBeenCalled();
-  });
-
-  it("should handle disabled carousel (empty data)", () => {
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          dataLength: 0,
-        }),
-      { wrapper }
-    );
-
-    act(() => {
-      result.current.next();
-    });
-
-    expect(mockHandlerOffset.value).toBe(0); // Should not move
-    expect(Number.isFinite(result.current.index.value)).toBe(true);
+    expect(handlerOffset.value).toBe(-1500);
     expect(result.current.getCurrentIndex()).toBe(0);
   });
 
-  it("keeps getCurrentIndex latched until an animated movement settles", () => {
+  it("uses the shortest loop path with forward tie-breaking", () => {
+    const shortest = renderController({ loop: true });
+    act(() => shortest.result.current.scrollTo({ index: 4, animated: false }));
+    expect(shortest.handlerOffset.value).toBe(300);
+
+    const tie = renderController({ loop: true, dataLength: 4, rawDataLength: 4 });
+    act(() => tie.result.current.scrollTo({ index: 2, animated: false }));
+    expect(tie.handlerOffset.value).toBe(-600);
+  });
+
+  it("defaults commands to animated and latches getCurrentIndex until settle", () => {
     mockAnimationState.finishImmediately = false;
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
+    const { result, handlerOffset, onMovementEnd } = renderController();
 
-    act(() => {
-      result.current.next();
-    });
-
+    act(() => result.current.next());
+    expect(handlerOffset.value).toBe(-300);
     expect(result.current.getCurrentIndex()).toBe(0);
+    expect(onMovementEnd).not.toHaveBeenCalled();
 
-    act(() => {
-      mockAnimationCallbacks.at(-1)?.(true);
-    });
-
+    act(() => mockAnimationCallbacks[0](true));
     expect(result.current.getCurrentIndex()).toBe(1);
+    expect(onMovementEnd).toHaveBeenCalledWith(1);
   });
 
-  it("does not settle or emit onScrollEnd when an animation is cancelled", () => {
+  it("cancels without producing a settled event", () => {
     mockAnimationState.finishImmediately = false;
-    const onScrollEnd = jest.fn();
-    const { result } = renderHook(() => useCarouselController({ ...defaultProps, onScrollEnd }), {
-      wrapper,
-    });
+    const { result, onMovementEnd } = renderController();
 
-    act(() => {
-      result.current.next();
-      mockAnimationCallbacks.at(-1)?.(false);
-    });
+    act(() => result.current.next());
+    act(() => mockAnimationCallbacks[0](false));
 
     expect(result.current.getCurrentIndex()).toBe(0);
-    expect(onScrollEnd).not.toHaveBeenCalled();
-    expect(mockGlobalState.common.cancelMovement).toHaveBeenCalled();
+    expect(onMovementEnd).not.toHaveBeenCalled();
+    expect(movement.cancelMovement).toHaveBeenCalled();
   });
 
-  it("should handle autoFillData with computedRealIndexWithAutoFillData", () => {
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          autoFillData: true,
-          dataLength: 3,
-        }),
-      { wrapper }
-    );
+  it("validates command arguments and warns only once per instance", () => {
+    const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
+    const { result, handlerOffset } = renderController();
 
     act(() => {
-      result.current.next();
+      result.current.next({ count: -1 });
+      result.current.next({ count: 1.5 });
+      result.current.next({ count: 0 });
+      result.current.scrollTo({ index: 7 });
+      result.current.scrollTo({ index: -1 });
     });
 
-    const currentIndex = result.current.getCurrentIndex();
-    expect(typeof currentIndex).toBe("number");
+    expect(handlerOffset.value).toBe(0);
+    expect(warnSpy).toHaveBeenCalledTimes(2);
   });
 
-  it("should handle positive fixed direction in scrollTo", () => {
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          loop: true,
-          fixedDirection: "positive",
-        }),
-      { wrapper }
-    );
+  it("is a no-op for empty and single-item data", () => {
+    const empty = renderController({ dataLength: 0, rawDataLength: 0 });
+    const single = renderController({ dataLength: 1, rawDataLength: 1 });
 
     act(() => {
-      result.current.scrollTo({ index: 3, animated: false });
+      empty.result.current.next({ animated: false });
+      single.result.current.next({ animated: false });
     });
 
-    expect(mockHandlerOffset.value).toBe(900); // size * 3
-  });
-
-  it("should handle negative fixed direction in scrollTo", () => {
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          loop: true,
-          fixedDirection: "negative",
-        }),
-      { wrapper }
-    );
-
-    act(() => {
-      result.current.scrollTo({ index: 3, animated: false });
-    });
-
-    expect(mockHandlerOffset.value).toBe(-900); // size * 3
-  });
-
-  it("should handle scrollTo when loop position is close to next cycle", () => {
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          loop: true,
-        }),
-      { wrapper }
-    );
-
-    mockHandlerOffset.value = -900; // 3 * size, more than half-way through current cycle
-
-    act(() => {
-      result.current.scrollTo({ index: 1, animated: false });
-    });
-
-    expect(mockHandlerOffset.value).toBe(-1800);
-  });
-
-  it("should get shared index correctly", () => {
-    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
-
-    const sharedIndex = result.current.getSharedIndex();
-    expect(typeof sharedIndex).toBe("number");
-  });
-
-  it("should handle currentFixedPage calculation for non-loop mode", () => {
-    const { result } = renderHook(
-      () =>
-        useCarouselController({
-          ...defaultProps,
-          loop: false,
-        }),
-      { wrapper }
-    );
-
-    // Set a specific offset to test the calculation
-    mockHandlerOffset.value = -450; // Between indices
-
-    act(() => {
-      result.current.next();
-    });
-
-    expect(typeof mockHandlerOffset.value).toBe("number");
+    expect(empty.handlerOffset.value).toBe(0);
+    expect(single.handlerOffset.value).toBe(0);
+    expect(Number.isNaN(empty.result.current.index.value)).toBe(false);
   });
 });

@@ -1,7 +1,7 @@
 import { interpolate } from "react-native-reanimated";
 
-export function normalLayout(opts: { size: number; vertical: boolean }) {
-  const { size, vertical } = opts;
+export function normalLayout(opts: { size: number; isVertical: boolean }) {
+  const { size, isVertical } = opts;
 
   return (value: number) => {
     "worklet";
@@ -9,7 +9,7 @@ export function normalLayout(opts: { size: number; vertical: boolean }) {
 
     return {
       transform: [
-        vertical
+        isVertical
           ? {
               translateY: translate,
             }

@@ -2,7 +2,7 @@ import * as React from "react";
 import { StyleSheet, View } from "react-native";
 import Animated, { interpolate, useAnimatedStyle } from "react-native-reanimated";
 import type { SharedValue } from "react-native-reanimated";
-import Carousel from "react-native-reanimated-carousel";
+import { Carousel } from "react-native-reanimated-carousel";
 
 import { BlurView as _BlurView } from "expo-blur";
 
@@ -25,9 +25,9 @@ function Index() {
     <View style={{ flex: 1 }}>
       <CaptureWrapper>
         <Carousel
-          vertical
+          orientation="vertical"
           loop={false}
-          autoPlay={isAutoPlay}
+          autoplay={isAutoPlay}
           style={{
             width: PAGE_WIDTH,
             height: ITEM_WIDTH,
@@ -36,16 +36,15 @@ function Index() {
             width: PAGE_WIDTH,
             height: ITEM_WIDTH,
           }}
-          pagingEnabled={false}
-          snapEnabled={false}
+          snapMode="none"
           data={PURPLE_IMAGES}
-          renderItem={({ index, animationValue }) => {
-            return <CustomItem key={index} index={index} animationValue={animationValue} />;
+          renderItem={({ index, relativeProgress }) => {
+            return <CustomItem key={index} index={index} relativeProgress={relativeProgress} />;
           }}
-          customAnimation={parallaxLayout({
+          itemAnimation={parallaxLayout({
             size: ITEM_WIDTH,
           })}
-          scrollAnimationDuration={1200}
+          animation={{ type: "timing", duration: 1200 }}
         />
       </CaptureWrapper>
       <SButton
@@ -61,16 +60,16 @@ function Index() {
 
 interface ItemProps {
   index: number;
-  animationValue: SharedValue<number>;
+  relativeProgress: SharedValue<number>;
 }
-const CustomItem: React.FC<ItemProps> = ({ index, animationValue }) => {
+const CustomItem: React.FC<ItemProps> = ({ index, relativeProgress }) => {
   const maskStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(animationValue.value, [-0.5, 0, 1, 1.5], [1, 0, 0, 1]);
+    const opacity = interpolate(relativeProgress.value, [-0.5, 0, 1, 1.5], [1, 0, 0, 1]);
 
     return {
       opacity,
     };
-  }, [animationValue]);
+  }, [relativeProgress]);
 
   return (
     <View

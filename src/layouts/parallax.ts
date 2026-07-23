@@ -1,75 +1,35 @@
 import { Extrapolation, interpolate } from "react-native-reanimated";
 
-import type { IComputedDirectionTypes } from "../types";
+import type { CarouselLayout } from "../types";
 
-interface TBaseConfig {
-  size: number;
-  vertical: boolean;
-}
+type ParallaxLayout = Extract<CarouselLayout, { type: "parallax" }>;
 
-export interface ILayoutConfig {
-  /**
-   * control prev/next item offset.
-   * @default 100
-   */
-  parallaxScrollingOffset?: number;
-  /**
-   * control prev/current/next item offset.
-   * @default 0.8
-   */
-  parallaxScrollingScale?: number;
-  /**
-   * control prev/next item offset.
-   * @default Math.pow(parallaxScrollingScale, 2)
-   */
-  parallaxAdjacentItemScale?: number;
-}
+export function parallaxLayout(
+  baseConfig: { size: number; isVertical: boolean },
+  config: ParallaxLayout
+) {
+  const { size, isVertical } = baseConfig;
+  const { offset = 100, scale = 0.8, adjacentScale = scale ** 2 } = config;
 
-export type TParallaxModeProps = IComputedDirectionTypes<{
-  /**
-   * Carousel Animated transitions.
-   */
-  mode?: "parallax";
-  modeConfig?: ILayoutConfig;
-}>;
-
-export function parallaxLayout(baseConfig: TBaseConfig, modeConfig: ILayoutConfig = {}) {
-  const { size, vertical } = baseConfig;
-  const {
-    parallaxScrollingOffset = 100,
-    parallaxScrollingScale = 0.8,
-    parallaxAdjacentItemScale = parallaxScrollingScale ** 2,
-  } = modeConfig;
-
-  return (value: number) => {
+  return (relativeProgress: number) => {
     "worklet";
-    const translate = interpolate(
-      value,
-      [-1, 0, 1],
-      [-size + parallaxScrollingOffset, 0, size - parallaxScrollingOffset]
+    const translate = interpolate(relativeProgress, [-1, 0, 1], [-size + offset, 0, size - offset]);
+
+    const zIndex = Math.round(
+      interpolate(relativeProgress, [-1, 0, 1], [0, size, 0], Extrapolation.CLAMP)
     );
 
-    const zIndex = Math.round(interpolate(value, [-1, 0, 1], [0, size, 0], Extrapolation.CLAMP));
-
-    const scale = interpolate(
-      value,
+    const animatedScale = interpolate(
+      relativeProgress,
       [-1, 0, 1],
-      [parallaxAdjacentItemScale, parallaxScrollingScale, parallaxAdjacentItemScale],
+      [adjacentScale, scale, adjacentScale],
       Extrapolation.CLAMP
     );
 
     return {
       transform: [
-        vertical
-          ? {
-              translateY: translate,
-            }
-          : {
-              translateX: translate,
-            },
-        {
-          scale,
-        },
+        isVertical ? { translateY: translate } : { translateX: translate },
+        { scale: animatedScale },
       ],
       zIndex,
     };

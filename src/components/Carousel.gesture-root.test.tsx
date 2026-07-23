@@ -3,7 +3,7 @@ import { View } from "react-native";
 
 import { render } from "@testing-library/react-native";
 
-import Carousel from "./Carousel";
+import { Carousel } from "./Carousel";
 
 jest.mock("react-native-gesture-handler", () => {
   const actual = jest.requireActual("react-native-gesture-handler");

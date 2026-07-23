@@ -21,13 +21,17 @@ describe("useAutoPlay", () => {
     getCurrentIndex: jest.fn(),
     getSharedIndex: jest.fn(),
     scrollTo: jest.fn(),
+    index: { value: 0 },
+    startMovement: jest.fn(),
+    cancelMovement: jest.fn(),
+    settle: jest.fn(),
   };
 
   it("should start autoplay when autoPlay is true", () => {
     renderHook(() =>
       useAutoPlay({
-        autoPlay: true,
-        autoPlayInterval: 1000,
+        autoplay: true,
+        autoplayInterval: 1000,
         carouselController: mockCarouselController,
       })
     );
@@ -47,8 +51,8 @@ describe("useAutoPlay", () => {
   it("should not start autoplay when autoPlay is false", () => {
     renderHook(() =>
       useAutoPlay({
-        autoPlay: false,
-        autoPlayInterval: 1000,
+        autoplay: false,
+        autoplayInterval: 1000,
         carouselController: mockCarouselController,
       })
     );
@@ -63,9 +67,9 @@ describe("useAutoPlay", () => {
   it("should play in reverse when autoPlayReverse is true", () => {
     renderHook(() =>
       useAutoPlay({
-        autoPlay: true,
-        autoPlayReverse: true,
-        autoPlayInterval: 1000,
+        autoplay: true,
+        autoplayDirection: "backward",
+        autoplayInterval: 1000,
         carouselController: mockCarouselController,
       })
     );
@@ -81,8 +85,8 @@ describe("useAutoPlay", () => {
   it("should clear timer on unmount", () => {
     const { unmount } = renderHook(() =>
       useAutoPlay({
-        autoPlay: true,
-        autoPlayInterval: 1000,
+        autoplay: true,
+        autoplayInterval: 1000,
         carouselController: mockCarouselController,
       })
     );
@@ -107,8 +111,8 @@ describe("useAutoPlay", () => {
   it("should pause and resume autoplay", () => {
     const { result } = renderHook(() =>
       useAutoPlay({
-        autoPlay: true,
-        autoPlayInterval: 1000,
+        autoplay: true,
+        autoplayInterval: 1000,
         carouselController: mockCarouselController,
       })
     );
@@ -141,8 +145,8 @@ describe("useAutoPlay", () => {
   it("should respect autoPlayInterval timing", () => {
     renderHook(() =>
       useAutoPlay({
-        autoPlay: true,
-        autoPlayInterval: 2000,
+        autoplay: true,
+        autoplayInterval: 2000,
         carouselController: mockCarouselController,
       })
     );
@@ -163,8 +167,8 @@ describe("useAutoPlay", () => {
   it("should chain autoplay calls correctly", () => {
     renderHook(() =>
       useAutoPlay({
-        autoPlay: true,
-        autoPlayInterval: 1000,
+        autoplay: true,
+        autoplayInterval: 1000,
         carouselController: mockCarouselController,
       })
     );

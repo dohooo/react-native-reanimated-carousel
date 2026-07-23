@@ -1,7 +1,7 @@
 import * as React from "react";
 import { View } from "react-native";
 import { Extrapolation, interpolate, useSharedValue } from "react-native-reanimated";
-import Carousel, { ICarouselInstance, Pagination } from "react-native-reanimated-carousel";
+import { Carousel, CarouselRef, Pagination } from "react-native-reanimated-carousel";
 
 import { renderItem } from "@/utils/render-item";
 
@@ -12,18 +12,14 @@ const PAGE_WIDTH = 430;
 function Index() {
   const progress = useSharedValue<number>(0);
   const baseOptions = {
-    vertical: false,
+    orientation: "horizontal",
   } as const;
 
-  const ref = React.useRef<ICarouselInstance>(null);
+  const ref = React.useRef<CarouselRef>(null);
 
   const onPressPagination = (index: number) => {
     ref.current?.scrollTo({
-      /**
-       * Calculate the difference between the current index and the target index
-       * to ensure that the carousel scrolls to the nearest index
-       */
-      count: index - progress.value,
+      index,
       animated: true,
     });
   };
@@ -39,9 +35,7 @@ function Index() {
           ref={ref}
           {...baseOptions}
           loop
-          onProgressChange={(offsetProgress, absoluteProgress) => {
-            progress.value = absoluteProgress;
-          }}
+          progress={progress}
           contentContainerStyle={{ width: PAGE_WIDTH }}
           style={{ width: PAGE_WIDTH, height: PAGE_WIDTH * 0.6 }}
           data={defaultDataWith6Colors}

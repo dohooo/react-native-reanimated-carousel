@@ -4,7 +4,7 @@ import { renderHook } from "@testing-library/react-hooks";
 
 import type { IOpts } from "./useOffsetX";
 import { useOffsetX } from "./useOffsetX";
-import type { IVisibleRanges } from "./useVisibleRanges";
+import type { VisibleRangesValue } from "./useVisibleRanges";
 
 describe("useSharedValue", () => {
   it("should return the correct values", async () => {
@@ -12,10 +12,10 @@ describe("useSharedValue", () => {
       const range = useSharedValue({
         negativeRange: [7, 9],
         positiveRange: [0, 3],
-      }) as IVisibleRanges;
+      }) as VisibleRangesValue;
       const inputs: Array<{
         config: IOpts;
-        range: IVisibleRanges;
+        range: VisibleRangesValue;
       }> = Array.from({ length: 10 }).map((_, index) => ({
         config: {
           dataLength: 10,

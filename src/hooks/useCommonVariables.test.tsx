@@ -1,158 +1,97 @@
 import { act, renderHook } from "@testing-library/react-hooks";
-import { StyleProp, ViewStyle } from "react-native";
-import { SharedValue, useSharedValue } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 
 import { useCommonVariables } from "./useCommonVariables";
-import type { TInitializeCarouselProps } from "./useInitProps";
+import type { InitializedCarouselProps } from "./useInitProps";
 
-function createBaseProps(
-  overrides: Partial<TInitializeCarouselProps<any>> = {}
-): TInitializeCarouselProps<any> {
+function createProps(
+  overrides: Partial<InitializedCarouselProps<number>> = {}
+): InitializedCarouselProps<number> {
   return {
-    defaultIndex: 0,
-    loop: true,
-    scrollAnimationDuration: 500,
-    autoFillData: true,
-    autoPlayInterval: 2000,
-    autoPlay: false,
     data: [0, 1, 2, 3],
-    dataLength: 4,
     rawData: [0, 1, 2, 3],
+    dataLength: 4,
     rawDataLength: 4,
-    vertical: false,
-    style: { width: 700, height: 350 } as StyleProp<ViewStyle>,
     renderItem: () => null,
-    pagingEnabled: true,
-    enabled: true,
+    defaultIndex: 0,
+    loop: false,
+    autoFillData: true,
+    autoplay: false,
+    autoplayInterval: 3000,
+    autoplayDirection: "forward",
+    orientation: "horizontal",
+    scrollEnabled: true,
+    snapMode: "page",
     overscrollEnabled: true,
-    snapEnabled: true,
-    testID: "carousel",
+    animation: { type: "timing", duration: 500 },
+    style: { width: 700, height: 350 },
     ...overrides,
-  } as TInitializeCarouselProps<any>;
+  };
 }
 
 describe("useCommonVariables", () => {
-  it("returns expected values when style provides width", () => {
-    const props = createBaseProps();
-    const { result } = renderHook(() => useCommonVariables(props));
+  it("resolves the main-axis size from style", () => {
+    const horizontal = renderHook(() => useCommonVariables(createProps())).result.current;
+    const vertical = renderHook(() => useCommonVariables(createProps({ orientation: "vertical" })))
+      .result.current;
 
-    expect(result.current.size).toBe(700);
-    expect(result.current.validLength).toBe(3);
-    expect(result.current.handlerOffset.value).toBeCloseTo(0);
-    expect(result.current.resolvedSize.value).toBe(700);
-    expect(result.current.sizePhase.value).toBe("ready");
+    expect(horizontal.size).toBe(700);
+    expect(vertical.size).toBe(350);
+    expect(horizontal.sizePhase.value).toBe("ready");
   });
 
-  it("uses style.height as size when vertical", () => {
-    const props = createBaseProps({ vertical: true, style: { height: 360 } });
-    const { result } = renderHook(() => useCommonVariables(props));
+  it("gives itemSize precedence and marks it explicit", () => {
+    const { result } = renderHook(() => useCommonVariables(createProps({ itemSize: 280 })));
 
-    expect(result.current.size).toBe(360);
-    expect(result.current.resolvedSize.value).toBe(360);
+    expect(result.current.size).toBe(280);
+    expect(result.current.sizeExplicit).toBe(true);
   });
 
-  it("initializes handlerOffset when defaultIndex is non-zero", () => {
-    const props = createBaseProps({ defaultIndex: 2 });
-    const { result } = renderHook(() => useCommonVariables(props));
+  it("stays pending until an automatic size is measured", () => {
+    const { result } = renderHook(() =>
+      useCommonVariables(createProps({ style: { width: "100%" } }))
+    );
 
-    expect(result.current.handlerOffset.value).toBe(-1400);
+    expect(result.current.size).toBe(0);
+    expect(result.current.resolvedSize.value).toBeNull();
+    expect(result.current.sizePhase.value).toBe("pending");
   });
 
-  it("initializes the deprecated custom offset at the default index", () => {
-    let shared!: SharedValue<number>;
-    const { result } = renderHook(() => {
-      shared = useSharedValue(-500);
-      const props = createBaseProps({ defaultScrollOffsetValue: shared });
-      return useCommonVariables(props);
-    });
+  it("initializes internal and consumer offsets from defaultIndex", () => {
+    const external = { value: 999 } as SharedValue<number>;
+    const internal = renderHook(() => useCommonVariables(createProps({ defaultIndex: 2 }))).result
+      .current;
+    const consumer = renderHook(() =>
+      useCommonVariables(createProps({ defaultIndex: 2, scrollOffsetValue: external }))
+    ).result.current;
 
-    expect(result.current.handlerOffset).toBe(shared);
-    expect(result.current.handlerOffset.value).toBeCloseTo(0);
+    expect(internal.handlerOffset.value).toBe(-1400);
+    expect(consumer.handlerOffset).toBe(external);
+    expect(external.value).toBe(-1400);
   });
 
-  it("initializes a consumer scrollOffsetValue from defaultIndex when size is ready", () => {
-    let shared!: SharedValue<number>;
-    const { result } = renderHook(() => {
-      shared = useSharedValue(-500);
-      const props = createBaseProps({
-        defaultIndex: 2,
-        scrollOffsetValue: shared,
-      });
-      return useCommonVariables(props);
-    });
-
-    expect(result.current.handlerOffset).toBe(shared);
-    expect(result.current.handlerOffset.value).toBe(-1400);
-  });
-
-  it("sets validLength to 0 when dataLength is 1", () => {
-    const props = createBaseProps({ dataLength: 1, data: [0] });
-    const { result } = renderHook(() => useCommonVariables(props));
-
-    expect(result.current.validLength).toBe(0);
-  });
-
-  it("sets validLength to -1 when dataLength is 0", () => {
-    const props = createBaseProps({ dataLength: 0, data: [] });
-    const { result } = renderHook(() => useCommonVariables(props));
+  it("handles empty data without producing NaN", () => {
+    const { result } = renderHook(() =>
+      useCommonVariables(createProps({ data: [], rawData: [], dataLength: 0, rawDataLength: 0 }))
+    );
 
     expect(result.current.validLength).toBe(-1);
-  });
-
-  it("handles negative defaultIndex", () => {
-    const props = createBaseProps({ defaultIndex: -1 });
-    const { result } = renderHook(() => useCommonVariables(props));
-
-    expect(result.current.handlerOffset.value).toBe(700);
-  });
-
-  it("keeps size calculation when loop is disabled", () => {
-    const props = createBaseProps({ loop: false });
-    const { result } = renderHook(() => useCommonVariables(props));
-
-    expect(result.current.size).toBe(700);
-    expect(result.current.validLength).toBe(3);
-  });
-
-  it("syncs resolvedSize when style width changes", () => {
-    const initial = createBaseProps();
-    const hook = renderHook(({ p }) => useCommonVariables(p), { initialProps: { p: initial } });
-    expect(hook.result.current.resolvedSize.value).toBe(700);
-
-    const updated = createBaseProps({ style: { width: 800 } });
-    act(() => {
-      hook.rerender({ p: updated });
-    });
-
-    expect(hook.result.current.resolvedSize.value).toBe(800);
-  });
-
-  it("updates validLength when dataLength changes", () => {
-    const hook = renderHook(({ p }) => useCommonVariables(p), {
-      initialProps: { p: createBaseProps() },
-    });
-    expect(hook.result.current.validLength).toBe(3);
-
-    act(() => {
-      hook.rerender({ p: createBaseProps({ dataLength: 6, data: [0, 1, 2, 3, 4, 5] }) });
-    });
-
-    expect(hook.result.current.validLength).toBe(5);
+    expect(result.current.handlerOffset.value).toBe(0);
+    expect(Number.isNaN(result.current.handlerOffset.value)).toBe(false);
   });
 
   it("clamps a non-loop offset immediately when data shrinks while idle", () => {
-    const hook = renderHook(({ p }) => useCommonVariables(p), {
-      initialProps: { p: createBaseProps({ loop: false }) },
+    const hook = renderHook(({ props }) => useCommonVariables(props), {
+      initialProps: { props: createProps() },
     });
     hook.result.current.handlerOffset.value = -2100;
 
     act(() => {
       hook.rerender({
-        p: createBaseProps({
-          loop: false,
-          dataLength: 2,
+        props: createProps({
           data: [0, 1],
           rawData: [0, 1],
+          dataLength: 2,
           rawDataLength: 2,
         }),
       });
@@ -162,317 +101,51 @@ describe("useCommonVariables", () => {
   });
 
   it("defers data reconciliation until active movement settles", () => {
-    const hook = renderHook(({ p }) => useCommonVariables(p), {
-      initialProps: { p: createBaseProps({ loop: false }) },
+    const hook = renderHook(({ props }) => useCommonVariables(props), {
+      initialProps: { props: createProps() },
     });
     hook.result.current.handlerOffset.value = -2100;
 
     act(() => {
       hook.result.current.startMovement();
       hook.rerender({
-        p: createBaseProps({
-          loop: false,
-          dataLength: 2,
+        props: createProps({
           data: [0, 1],
           rawData: [0, 1],
+          dataLength: 2,
           rawDataLength: 2,
         }),
       });
     });
-
     expect(hook.result.current.handlerOffset.value).toBe(-2100);
 
-    act(() => {
-      hook.result.current.settleMovement();
-    });
-
+    act(() => hook.result.current.settleMovement());
     expect(hook.result.current.handlerOffset.value).toBe(-700);
   });
 
   it("applies a deferred defaultIndex when data first becomes non-empty", () => {
-    const hook = renderHook(({ p }) => useCommonVariables(p), {
+    const hook = renderHook(({ props }) => useCommonVariables(props), {
       initialProps: {
-        p: createBaseProps({
+        props: createProps({
           data: [],
-          dataLength: 0,
           rawData: [],
+          dataLength: 0,
           rawDataLength: 0,
           defaultIndex: 2,
         }),
       },
     });
 
-    expect(hook.result.current.handlerOffset.value).toBe(0);
-
-    act(() => {
-      hook.rerender({
-        p: createBaseProps({
-          data: [0, 1, 2],
-          dataLength: 3,
-          rawData: [0, 1, 2],
-          rawDataLength: 3,
-          defaultIndex: 2,
-        }),
-      });
+    hook.rerender({
+      props: createProps({
+        data: [0, 1, 2],
+        rawData: [0, 1, 2],
+        dataLength: 3,
+        rawDataLength: 3,
+        defaultIndex: 2,
+      }),
     });
 
     expect(hook.result.current.handlerOffset.value).toBe(-1400);
-  });
-
-  it("remains pending when style lacks numeric size", () => {
-    const props = createBaseProps({ style: { width: "100%" } });
-    const { result } = renderHook(() => useCommonVariables(props));
-
-    expect(result.current.size).toBe(0);
-    expect(result.current.resolvedSize.value).toBeNull();
-    expect(result.current.sizePhase.value).toBe("pending");
-  });
-
-  it("keeps handlerOffset at zero when width is 0", () => {
-    const props = createBaseProps({ style: { width: 0 } });
-    const { result } = renderHook(() => useCommonVariables(props));
-
-    expect(result.current.size).toBe(0);
-    expect(result.current.handlerOffset.value).toBeCloseTo(0);
-  });
-
-  it("handles large defaultIndex values", () => {
-    const props = createBaseProps({ defaultIndex: 10 });
-    const { result } = renderHook(() => useCommonVariables(props));
-
-    expect(result.current.handlerOffset.value).toBe(-7000);
-  });
-
-  it("returns zero size when vertical height is 0", () => {
-    const props = createBaseProps({ vertical: true, style: { height: 0 } });
-    const { result } = renderHook(() => useCommonVariables(props));
-
-    expect(result.current.size).toBe(0);
-  });
-
-  it("accepts floating point dimensions", () => {
-    const props = createBaseProps({ style: { width: 700.5 } });
-    const { result } = renderHook(() => useCommonVariables(props));
-
-    expect(result.current.size).toBe(700.5);
-    expect(result.current.resolvedSize.value).toBe(700.5);
-  });
-
-  it("stays pending when only height is provided", () => {
-    const props = createBaseProps({ style: { height: 200 } });
-    const { result } = renderHook(() => useCommonVariables(props));
-
-    expect(result.current.size).toBe(0);
-    expect(result.current.sizePhase.value).toBe("pending");
-  });
-
-  describe("itemWidth/itemHeight props", () => {
-    it("uses itemWidth for horizontal carousel size when provided", () => {
-      const props = createBaseProps({
-        style: { width: 700, height: 350 },
-        itemWidth: 350,
-      });
-      const { result } = renderHook(() => useCommonVariables(props));
-
-      expect(result.current.size).toBe(350);
-      expect(result.current.resolvedSize.value).toBe(350);
-      expect(result.current.sizePhase.value).toBe("ready");
-    });
-
-    it("uses itemHeight for vertical carousel size when provided", () => {
-      const props = createBaseProps({
-        vertical: true,
-        style: { width: 700, height: 350 },
-        itemHeight: 200,
-      });
-      const { result } = renderHook(() => useCommonVariables(props));
-
-      expect(result.current.size).toBe(200);
-      expect(result.current.resolvedSize.value).toBe(200);
-      expect(result.current.sizePhase.value).toBe("ready");
-    });
-
-    it("prioritizes itemWidth over style.width for horizontal carousel", () => {
-      const props = createBaseProps({
-        style: { width: 700 },
-        itemWidth: 350,
-      });
-      const { result } = renderHook(() => useCommonVariables(props));
-
-      expect(result.current.size).toBe(350);
-    });
-
-    it("prioritizes itemHeight over style.height for vertical carousel", () => {
-      const props = createBaseProps({
-        vertical: true,
-        style: { height: 400 },
-        itemHeight: 200,
-      });
-      const { result } = renderHook(() => useCommonVariables(props));
-
-      expect(result.current.size).toBe(200);
-    });
-
-    it("prioritizes itemWidth over deprecated width prop", () => {
-      const props = createBaseProps({
-        width: 700,
-        itemWidth: 350,
-      });
-      const { result } = renderHook(() => useCommonVariables(props));
-
-      expect(result.current.size).toBe(350);
-    });
-
-    it("prefers style.width over deprecated width prop when itemWidth not provided", () => {
-      const props = createBaseProps({
-        width: 500,
-      });
-      const { result } = renderHook(() => useCommonVariables(props));
-
-      expect(result.current.size).toBe(700);
-    });
-
-    it("prefers style.height over deprecated height prop when itemHeight not provided in vertical mode", () => {
-      const props = createBaseProps({
-        vertical: true,
-        height: 400,
-      });
-      const { result } = renderHook(() => useCommonVariables(props));
-
-      expect(result.current.size).toBe(350);
-    });
-
-    it("falls back to deprecated width prop when style.width is not provided", () => {
-      const props = createBaseProps({
-        style: {},
-        width: 500,
-      });
-      const { result } = renderHook(() => useCommonVariables(props));
-
-      expect(result.current.size).toBe(500);
-    });
-
-    it("falls back to deprecated height prop when style.height is not provided (vertical mode)", () => {
-      const props = createBaseProps({
-        vertical: true,
-        style: {},
-        height: 400,
-      });
-      const { result } = renderHook(() => useCommonVariables(props));
-
-      expect(result.current.size).toBe(400);
-    });
-
-    it("ignores zero or negative itemWidth", () => {
-      const props = createBaseProps({
-        style: { width: 700 },
-        itemWidth: 0,
-      });
-      const { result } = renderHook(() => useCommonVariables(props));
-
-      expect(result.current.size).toBe(700);
-    });
-
-    it("ignores zero or negative itemHeight", () => {
-      const props = createBaseProps({
-        vertical: true,
-        style: { height: 400 },
-        itemHeight: -10,
-      });
-      const { result } = renderHook(() => useCommonVariables(props));
-
-      expect(result.current.size).toBe(400);
-    });
-
-    it("calculates handlerOffset correctly with itemWidth", () => {
-      const props = createBaseProps({
-        style: { width: 700 },
-        itemWidth: 350,
-        defaultIndex: 2,
-      });
-      const { result } = renderHook(() => useCommonVariables(props));
-
-      // defaultIndex 2 * itemWidth 350 = -700
-      expect(result.current.handlerOffset.value).toBe(-700);
-    });
-
-    it("updates resolvedSize when itemWidth changes", () => {
-      const initial = createBaseProps({ style: { width: 700 }, itemWidth: 350 });
-      const hook = renderHook(({ p }) => useCommonVariables(p), { initialProps: { p: initial } });
-      expect(hook.result.current.size).toBe(350);
-      expect(hook.result.current.resolvedSize.value).toBe(350);
-
-      const updated = createBaseProps({ style: { width: 700 }, itemWidth: 400 });
-      act(() => {
-        hook.rerender({ p: updated });
-      });
-
-      // resolvedSize (SharedValue) updates immediately via useEffect
-      expect(hook.result.current.resolvedSize.value).toBe(400);
-      // size (state) updates asynchronously via useAnimatedReaction
-      // In test environment, this requires waiting for the animated reaction to fire
-    });
-  });
-
-  describe("sizeExplicit flag", () => {
-    it("sets sizeExplicit to true when itemWidth is provided for horizontal carousel", () => {
-      const props = createBaseProps({
-        style: { width: 700 },
-        itemWidth: 350,
-      });
-      const { result } = renderHook(() => useCommonVariables(props));
-
-      expect(result.current.sizeExplicit).toBe(true);
-    });
-
-    it("sets sizeExplicit to true when itemHeight is provided for vertical carousel", () => {
-      const props = createBaseProps({
-        vertical: true,
-        style: { height: 400 },
-        itemHeight: 200,
-      });
-      const { result } = renderHook(() => useCommonVariables(props));
-
-      expect(result.current.sizeExplicit).toBe(true);
-    });
-
-    it("sets sizeExplicit to false when only style.width is provided", () => {
-      const props = createBaseProps({
-        style: { width: 700 },
-      });
-      const { result } = renderHook(() => useCommonVariables(props));
-
-      expect(result.current.sizeExplicit).toBe(false);
-    });
-
-    it("sets sizeExplicit to false when only deprecated width prop is provided", () => {
-      const props = createBaseProps({
-        width: 700,
-      });
-      const { result } = renderHook(() => useCommonVariables(props));
-
-      expect(result.current.sizeExplicit).toBe(false);
-    });
-
-    it("sets sizeExplicit to false when itemWidth is zero", () => {
-      const props = createBaseProps({
-        style: { width: 700 },
-        itemWidth: 0,
-      });
-      const { result } = renderHook(() => useCommonVariables(props));
-
-      expect(result.current.sizeExplicit).toBe(false);
-    });
-
-    it("sets sizeExplicit to false when itemHeight is negative", () => {
-      const props = createBaseProps({
-        vertical: true,
-        style: { height: 400 },
-        itemHeight: -10,
-      });
-      const { result } = renderHook(() => useCommonVariables(props));
-
-      expect(result.current.sizeExplicit).toBe(false);
-    });
   });
 });
