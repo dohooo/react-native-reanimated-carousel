@@ -1,7 +1,9 @@
 import React from "react";
+import { I18nManager } from "react-native";
 
 import { Easing } from "../constants";
 import type { CarouselAnimation, CarouselProps } from "../types";
+import { type CarouselDirectionSign, getCarouselDirectionSign } from "../utils/carousel-direction";
 import { computedFillDataWithAutoFillData } from "../utils/computed-with-auto-fill-data";
 
 type CarouselSnapMode = NonNullable<CarouselProps<unknown>["snapMode"]>;
@@ -36,6 +38,7 @@ export type InitializedCarouselProps<Item> = Omit<
   dataLength: number;
   rawDataLength: number;
   autoFillData: true;
+  directionSign: CarouselDirectionSign;
 };
 
 export function useInitProps<Item>(props: CarouselProps<Item>): InitializedCarouselProps<Item> {
@@ -48,6 +51,10 @@ export function useInitProps<Item>(props: CarouselProps<Item>): InitializedCarou
   const autoplayInterval = props.autoplayInterval ?? 3000;
   const autoplayDirection = props.autoplayDirection ?? "forward";
   const orientation = props.orientation ?? "horizontal";
+  const directionSign = getCarouselDirectionSign({
+    isRTL: I18nManager.isRTL,
+    orientation,
+  });
   const scrollEnabled = props.scrollEnabled ?? true;
   const snapMode = props.snapMode ?? "page";
   const overscrollEnabled = props.overscrollEnabled ?? true;
@@ -123,6 +130,7 @@ export function useInitProps<Item>(props: CarouselProps<Item>): InitializedCarou
     dataLength: data.length,
     rawDataLength: rawData.length,
     autoFillData: true,
+    directionSign,
   };
 }
 

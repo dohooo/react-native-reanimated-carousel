@@ -56,6 +56,21 @@ describe("stack layouts", () => {
     expect(layout(1).transform).toEqual([{ translateX: 400 }, { scale: 1 }, { rotateZ: "45deg" }]);
   });
 
+  it("maps logical progress to physical RTL progress without mirroring exitDirection", () => {
+    const layout = horizontalStackLayout(
+      {
+        type: "horizontal-stack",
+        visibleCount: 4,
+        exitDirection: "left",
+        exitDistance: 400,
+      },
+      -1
+    );
+
+    expect(layout(1).transform?.[0]).toEqual({ translateX: -400 });
+    expect(layout(-1).transform?.[0]).toEqual({ translateX: 18 });
+  });
+
   it("uses a vertical translation for vertical-stack", () => {
     const layout = verticalStackLayout({
       type: "vertical-stack",

@@ -41,6 +41,7 @@ jest.mock("react-native-gesture-handler", () => {
 
 type RenderGestureOptions = {
   vertical?: boolean;
+  rtl?: boolean;
   size?: number;
   dataLength?: number;
   containerSize?: { width: number; height: number };
@@ -48,6 +49,7 @@ type RenderGestureOptions = {
 
 function renderGesture({
   vertical = false,
+  rtl = false,
   size = 300,
   dataLength = 3,
   containerSize = { width: 300, height: 200 },
@@ -57,6 +59,7 @@ function renderGesture({
     props: {
       onConfigurePanGesture: undefined,
       orientation: vertical ? "vertical" : "horizontal",
+      directionSign: !vertical && rtl ? -1 : 1,
       snapMode: "page",
       loop: false,
       animation: { type: "timing", duration: 500 },
@@ -151,4 +154,32 @@ describe("issue #857 web regression", () => {
       expect(translation.value).toBeCloseTo(expectedTranslation);
     }
   );
+
+  it("maps a physical rightward RTL swipe to logical forward movement", () => {
+    const { gestureCallbacks, translation } = renderGesture({ rtl: true });
+
+    act(() => {
+      gestureCallbacks.onGestureStart({} as GestureStateChangeEvent<PanGestureHandlerEventPayload>);
+      gestureCallbacks.onGestureUpdate({
+        translationX: 180,
+        translationY: -250,
+      } as GestureUpdateEvent<PanGestureHandlerEventPayload>);
+    });
+
+    expect(translation.value).toBe(-180);
+  });
+
+  it("does not apply horizontal RTL mapping to vertical gestures", () => {
+    const { gestureCallbacks, translation } = renderGesture({ rtl: true, vertical: true });
+
+    act(() => {
+      gestureCallbacks.onGestureStart({} as GestureStateChangeEvent<PanGestureHandlerEventPayload>);
+      gestureCallbacks.onGestureUpdate({
+        translationX: 180,
+        translationY: -180,
+      } as GestureUpdateEvent<PanGestureHandlerEventPayload>);
+    });
+
+    expect(translation.value).toBe(-180);
+  });
 });

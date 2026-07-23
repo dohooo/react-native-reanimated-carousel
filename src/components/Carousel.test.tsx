@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { I18nManager, View } from "react-native";
 import type { PanGesture } from "react-native-gesture-handler";
 import { Gesture, State } from "react-native-gesture-handler";
 import type { SharedValue } from "react-native-reanimated";
@@ -33,6 +33,14 @@ import type { CarouselProps, CarouselRef } from "../types";
 
 const gestureTestId = "rnrc-gesture-handler";
 const realPan = Gesture.Pan();
+const originalIsRTL = I18nManager.isRTL;
+
+function setRTL(isRTL: boolean) {
+  Object.defineProperty(I18nManager, "isRTL", {
+    configurable: true,
+    value: isRTL,
+  });
+}
 
 function TestCarousel({
   progress,
@@ -62,6 +70,7 @@ function TestCarousel({
 
 describe("Carousel v5 integration", () => {
   beforeEach(() => {
+    setRTL(false);
     jest.useFakeTimers();
     jest.spyOn(Gesture, "Pan").mockImplementation(() => realPan.withTestId(gestureTestId));
   });
@@ -71,6 +80,7 @@ describe("Carousel v5 integration", () => {
       jest.runOnlyPendingTimers();
     });
     jest.useRealTimers();
+    setRTL(originalIsRTL);
     jest.restoreAllMocks();
   });
 
@@ -143,6 +153,45 @@ describe("Carousel v5 integration", () => {
       expect(onScrollStart).toHaveBeenCalledTimes(1);
       expect(onSnapToItem).toHaveBeenCalledWith(1);
     });
+  });
+
+  it("uses a physical rightward swipe for logical forward navigation in RTL", async () => {
+    setRTL(true);
+    const onSnapToItem = jest.fn();
+    const onObservedUpdate = jest.fn();
+    render(
+      <TestCarousel
+        onConfigurePanGesture={(gesture) => {
+          gesture.onUpdate(onObservedUpdate);
+        }}
+        onSnapToItem={onSnapToItem}
+      />
+    );
+
+    fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
+      { state: State.BEGAN, translationX: 0, velocityX: 0 },
+      { state: State.ACTIVE, translationX: 0, velocityX: 0 },
+      { state: State.ACTIVE, translationX: 180, velocityX: 300 },
+      { state: State.END, translationX: 300, velocityX: 300 },
+    ]);
+
+    act(() => jest.runOnlyPendingTimers());
+    await waitFor(() => {
+      expect(onSnapToItem).toHaveBeenCalledWith(1);
+    });
+    expect(onObservedUpdate).toHaveBeenCalledWith(expect.objectContaining({ translationX: 180 }));
+  });
+
+  it("keeps imperative navigation and signed offsets logical in RTL", () => {
+    setRTL(true);
+    const ref = React.createRef<CarouselRef>();
+    const offset = { value: 0 } as SharedValue<number>;
+    render(<TestCarousel ref={ref} scrollOffsetValue={offset} />);
+
+    act(() => ref.current?.next({ animated: false }));
+
+    expect(offset.value).toBe(-300);
+    expect(ref.current?.getCurrentIndex()).toBe(1);
   });
 
   it("uses itemSize as the page size", () => {

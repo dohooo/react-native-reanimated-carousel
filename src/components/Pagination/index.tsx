@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, type ViewStyle } from "react-native";
+import { I18nManager, StyleSheet, View, type ViewStyle } from "react-native";
 
 import type { PaginationProps } from "../../public-types";
 import { PaginationItem } from "./PaginationItem";
@@ -84,6 +84,7 @@ export function Pagination(props: PaginationProps) {
       style={[
         safeContainerStyle,
         {
+          direction: orientation === "horizontal" ? (I18nManager.isRTL ? "rtl" : "ltr") : undefined,
           flexDirection: orientation === "vertical" ? "column" : "row",
         },
       ]}

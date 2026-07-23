@@ -1,7 +1,17 @@
 import { renderHook } from "@testing-library/react-hooks";
+import { I18nManager } from "react-native";
 
 import type { CarouselProps } from "../types";
 import { useInitProps } from "./useInitProps";
+
+const originalIsRTL = I18nManager.isRTL;
+
+function setRTL(isRTL: boolean) {
+  Object.defineProperty(I18nManager, "isRTL", {
+    configurable: true,
+    value: isRTL,
+  });
+}
 
 function createProps(overrides: Partial<CarouselProps<number>> = {}): CarouselProps<number> {
   return {
@@ -13,6 +23,7 @@ function createProps(overrides: Partial<CarouselProps<number>> = {}): CarouselPr
 
 describe("useInitProps", () => {
   afterEach(() => {
+    setRTL(originalIsRTL);
     jest.restoreAllMocks();
   });
 
@@ -64,6 +75,17 @@ describe("useInitProps", () => {
       overscrollEnabled: false,
       animation: { type: "spring", damping: 18 },
     });
+  });
+
+  it("derives RTL direction only for horizontal carousels", () => {
+    setRTL(true);
+
+    const horizontal = renderHook(() => useInitProps(createProps())).result.current;
+    const vertical = renderHook(() => useInitProps(createProps({ orientation: "vertical" }))).result
+      .current;
+
+    expect(horizontal.directionSign).toBe(-1);
+    expect(vertical.directionSign).toBe(1);
   });
 
   it.each([

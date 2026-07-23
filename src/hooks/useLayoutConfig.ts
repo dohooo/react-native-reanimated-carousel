@@ -7,19 +7,22 @@ import type { InitializedCarouselProps } from "./useInitProps";
 type LayoutConfigOptions<Item> = InitializedCarouselProps<Item> & { size: number };
 
 export function useLayoutConfig<Item>(options: LayoutConfigOptions<Item>): CarouselItemAnimation {
-  const { dataLength, layout, orientation, size } = options;
+  const { dataLength, directionSign, layout, orientation, size } = options;
   const isVertical = orientation === "vertical";
 
   return React.useMemo(() => {
-    const baseConfig = { size, isVertical };
+    const baseConfig = { size, isVertical, directionSign };
     switch (layout?.type) {
       case "parallax":
         return Layouts.parallax(baseConfig, layout);
       case "horizontal-stack":
-        return Layouts.horizontalStack({
-          ...layout,
-          visibleCount: layout.visibleCount ?? Math.max(0, dataLength - 1),
-        });
+        return Layouts.horizontalStack(
+          {
+            ...layout,
+            visibleCount: layout.visibleCount ?? Math.max(0, dataLength - 1),
+          },
+          directionSign
+        );
       case "vertical-stack":
         return Layouts.verticalStack({
           ...layout,
@@ -28,5 +31,5 @@ export function useLayoutConfig<Item>(options: LayoutConfigOptions<Item>): Carou
       default:
         return Layouts.normal(baseConfig);
     }
-  }, [dataLength, isVertical, layout, size]);
+  }, [dataLength, directionSign, isVertical, layout, size]);
 }

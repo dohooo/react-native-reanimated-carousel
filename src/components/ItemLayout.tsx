@@ -15,6 +15,7 @@ import { useOffsetX } from "../hooks/useOffsetX";
 import type { VisibleRangesValue } from "../hooks/useVisibleRanges";
 import { useGlobalState } from "../store";
 import type { CarouselItemAnimation } from "../types";
+import { getHorizontalStackOffsetType } from "../utils/carousel-direction";
 import { positiveModulo } from "../utils/carousel-math";
 import { sanitizeAnimationStyle } from "../utils/sanitize-animation-style";
 
@@ -47,7 +48,7 @@ export const ItemLayout: React.FC<{
   const { handlerOffset, index, rawIndex, children, visibleRanges, animationStyle } = props;
 
   const {
-    props: { loop, dataLength, orientation, layout, style, itemSize },
+    props: { loop, dataLength, directionSign, orientation, layout, style, itemSize },
     common,
     layout: { updateItemDimensions },
   } = useGlobalState();
@@ -111,7 +112,7 @@ export const ItemLayout: React.FC<{
       size,
       dataLength,
       loop,
-      type: layout.exitDirection === "right" ? "negative" : "positive",
+      type: getHorizontalStackOffsetType(layout.exitDirection ?? "left", directionSign),
       viewCount: layout.visibleCount,
     };
   }

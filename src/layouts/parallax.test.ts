@@ -23,7 +23,7 @@ jest.mock("react-native-reanimated", () => ({
 }));
 
 describe("parallaxLayout", () => {
-  const baseConfig = { size: 300, isVertical: false };
+  const baseConfig = { size: 300, isVertical: false, directionSign: 1 as const };
 
   it("uses the v4 runtime defaults", () => {
     const layout = parallaxLayout(baseConfig, { type: "parallax" });
@@ -55,6 +55,16 @@ describe("parallaxLayout", () => {
 
     expect(layout(-1).transform[0]).toEqual({ translateY: -220 });
     expect(layout(1).transform[0]).toEqual({ translateY: 220 });
+  });
+
+  it("mirrors the horizontal physical transform in RTL", () => {
+    const layout = parallaxLayout(
+      { ...baseConfig, directionSign: -1 },
+      { type: "parallax", offset: 80 }
+    );
+
+    expect(layout(-1).transform[0]).toEqual({ translateX: 220 });
+    expect(layout(1).transform[0]).toEqual({ translateX: -220 });
   });
 
   it("keeps the centered item above adjacent items", () => {

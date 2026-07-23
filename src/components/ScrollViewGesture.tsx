@@ -18,6 +18,7 @@ import { scheduleOnRN } from "react-native-worklets";
 
 import { usePanGestureProxy } from "../hooks/usePanGestureProxy";
 import { useGlobalState } from "../store";
+import { toLogicalGestureValue } from "../utils/carousel-direction";
 import { computeGestureTranslation } from "../utils/compute-gesture-translation";
 import { dealWithAnimation } from "../utils/deal-with-animation";
 
@@ -44,6 +45,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       scrollEnabled,
       dataLength,
       overscrollEnabled,
+      directionSign,
     },
     common: { size, resolvedSize, sizePhase, sizeExplicit },
     layout: { containerSize, updateContainerSize },
@@ -301,7 +303,8 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       touching.value = true;
       const { translationX, translationY } = e;
 
-      const panTranslation = isHorizontal.value ? translationX : translationY;
+      const physicalPanTranslation = isHorizontal.value ? translationX : translationY;
+      const panTranslation = toLogicalGestureValue(physicalPanTranslation, directionSign);
       if (!hasStartedMovement.value && panTranslation !== 0) {
         hasStartedMovement.value = true;
         if (onScrollStart) scheduleOnRN(onScrollStart);
@@ -329,6 +332,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       touching,
       sizeReady,
       resolvedSize,
+      directionSign,
     ]
   );
 
@@ -355,10 +359,12 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       }
 
       const { velocityX, velocityY, translationX, translationY } = e;
-      const scrollEndVelocityValue = isHorizontal.value ? velocityX : velocityY;
+      const physicalVelocity = isHorizontal.value ? velocityX : velocityY;
+      const scrollEndVelocityValue = toLogicalGestureValue(physicalVelocity, directionSign);
       scrollEndVelocity.value = scrollEndVelocityValue; // may update async: see https://docs.swmansion.com/react-native-reanimated/docs/core/useSharedValue#remarks
 
-      const panTranslation = isHorizontal.value ? translationX : translationY;
+      const physicalPanTranslation = isHorizontal.value ? translationX : translationY;
+      const panTranslation = toLogicalGestureValue(physicalPanTranslation, directionSign);
 
       scrollEndTranslation.value = panTranslation; // may update async: see https://docs.swmansion.com/react-native-reanimated/docs/core/useSharedValue#remarks
 
@@ -381,6 +387,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       hasStartedMovement,
       sizeReady,
       resolvedSize,
+      directionSign,
     ]
   );
 

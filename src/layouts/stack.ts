@@ -3,12 +3,17 @@ import { Dimensions } from "react-native";
 import { Extrapolation, interpolate } from "react-native-reanimated";
 
 import type { CarouselLayout } from "../types";
+import type { CarouselDirectionSign } from "../utils/carousel-direction";
+import { toPhysicalHorizontalValue } from "../utils/carousel-direction";
 
 const screen = Dimensions.get("window");
 
 type StackLayout = Extract<CarouselLayout, { type: "horizontal-stack" | "vertical-stack" }>;
 
-export function horizontalStackLayout(config: StackLayout) {
+export function horizontalStackLayout(
+  config: StackLayout,
+  directionSign: CarouselDirectionSign = 1
+) {
   return (_value: number) => {
     "worklet";
 
@@ -22,9 +27,10 @@ export function horizontalStackLayout(config: StackLayout) {
       rotation: rotateZDeg = 30,
     } = config;
 
+    const physicalProgress = toPhysicalHorizontalValue(_value, directionSign);
     const { validLength, value, inputRange } = getCommonVariables({
       showLength: visibleCount!,
-      value: _value,
+      value: physicalProgress,
       snapDirection,
     });
     const { zIndex, opacity } = getCommonStyles({

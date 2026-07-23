@@ -19,6 +19,7 @@ function createProps(
     autoplayInterval: 3000,
     autoplayDirection: "forward",
     orientation: "horizontal",
+    directionSign: 1,
     scrollEnabled: true,
     snapMode: "page",
     overscrollEnabled: true,
@@ -41,6 +42,22 @@ describe("useLayoutConfig", () => {
     const { result } = renderHook(() => useLayoutConfig(createProps({ orientation: "vertical" })));
 
     expect(result.current(1).transform).toContainEqual({ translateY: 300 });
+  });
+
+  it("mirrors only horizontal built-in transforms in RTL", () => {
+    const normal = renderHook(() => useLayoutConfig(createProps({ directionSign: -1 }))).result
+      .current;
+    const parallax = renderHook(() =>
+      useLayoutConfig(
+        createProps({
+          directionSign: -1,
+          layout: { type: "parallax", offset: 50 },
+        })
+      )
+    ).result.current;
+
+    expect(normal(1).transform).toContainEqual({ translateX: -300 });
+    expect(parallax(1).transform).toContainEqual({ translateX: -250 });
   });
 
   it("accepts a flat parallax layout", () => {

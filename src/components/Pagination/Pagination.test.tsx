@@ -1,15 +1,25 @@
 import { fireEvent, render } from "@testing-library/react-native";
-import { StyleSheet, View } from "react-native";
+import { I18nManager, StyleSheet, View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 
 import { Pagination } from ".";
 import { getPaginationDotDistance, getPaginationSelectedIndex } from "./PaginationItem";
+
+const originalIsRTL = I18nManager.isRTL;
+
+function setRTL(isRTL: boolean) {
+  Object.defineProperty(I18nManager, "isRTL", {
+    configurable: true,
+    value: isRTL,
+  });
+}
 
 beforeEach(() => {
   jest.useFakeTimers();
 });
 
 afterEach(() => {
+  setRTL(originalIsRTL);
   jest.useRealTimers();
   jest.restoreAllMocks();
 });
@@ -126,6 +136,24 @@ describe("Pagination", () => {
     expect(verticalContainer).toBeTruthy();
   });
 
+  it("follows the application direction for horizontal dots only", () => {
+    setRTL(true);
+    const horizontal = render(<InteractivePagination />);
+    const vertical = render(<InteractivePagination orientation="vertical" />);
+    const horizontalContainer = horizontal.UNSAFE_root.findAllByType(View).find(
+      (node) => StyleSheet.flatten(node.props.style)?.flexDirection === "row"
+    );
+    const verticalContainer = vertical.UNSAFE_root.findAllByType(View).find(
+      (node) => StyleSheet.flatten(node.props.style)?.flexDirection === "column"
+    );
+
+    expect(StyleSheet.flatten(horizontalContainer?.props.style)).toMatchObject({
+      direction: "rtl",
+      flexDirection: "row",
+    });
+    expect(StyleSheet.flatten(verticalContainer?.props.style)?.direction).toBeUndefined();
+  });
+
   it("ignores protected container direction fields and warns once", () => {
     const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
     const screen = render(
@@ -143,10 +171,10 @@ describe("Pagination", () => {
     );
 
     expect(StyleSheet.flatten(container?.props.style)).toMatchObject({
+      direction: "ltr",
       flexDirection: "row",
       gap: 8,
     });
-    expect(StyleSheet.flatten(container?.props.style)).not.toHaveProperty("direction");
     const protectedStyleWarnings = warn.mock.calls.filter(([message]) =>
       String(message).includes("Pagination containerStyle cannot override")
     );

@@ -19,6 +19,7 @@ function createProps(
     autoplayInterval: 3000,
     autoplayDirection: "forward",
     orientation: "horizontal",
+    directionSign: 1,
     scrollEnabled: true,
     snapMode: "page",
     overscrollEnabled: true,
