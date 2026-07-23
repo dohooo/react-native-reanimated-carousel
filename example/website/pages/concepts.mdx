@@ -157,3 +157,14 @@ Only physical presentation and gesture coordinates are mapped. Vertical carousel
 Only the current slide is exposed to the accessibility tree. The application owns slide semantics through `renderItem`.
 
 Interactive Pagination dots are buttons with selected state. Without `onPress`, dots are decorative and hidden. External previous/next buttons are a good complement when screen-reader users should move through slides without swiping.
+
+## Adding an example
+
+Use [`itemAnimation`](/custom-animations) for effects not covered by the built-in layouts.
+
+1. Add a kebab-case demo route under `example/app/app/demos/<category>/<name>` by following a nearby example.
+2. When it should appear in the documentation, add a self-contained `demo.tsx` and `preview.png` in that route.
+3. Run `yarn --cwd example/website gen-pages`; do not edit generated files under `example/website/pages/Examples` directly.
+4. Run `yarn --cwd example/website build` to validate the generated page.
+5. Run `yarn gif` from the repository root when a GIF asset is needed.
+6. Put generated media under `assets` and reference it from the example source.
