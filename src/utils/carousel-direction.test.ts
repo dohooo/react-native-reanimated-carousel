@@ -5,66 +5,39 @@ import {
   toPhysicalHorizontalValue,
 } from "./carousel-direction";
 
-const sources = ["gesture", "command", "autoplay"] as const;
-const layouts = ["normal", "parallax", "stack"] as const;
+describe("carousel direction helpers", () => {
+  it.each([
+    [{ isRTL: false, orientation: "horizontal" }, 1],
+    [{ isRTL: true, orientation: "horizontal" }, -1],
+    [{ isRTL: false, orientation: "vertical" }, 1],
+    [{ isRTL: true, orientation: "vertical" }, 1],
+  ] as const)("derives the physical direction sign from %o", (options, expected) => {
+    expect(getCarouselDirectionSign(options)).toBe(expected);
+  });
 
-describe("RTL direction matrix", () => {
-  it.each([false, true])(
-    "keeps logical progress forward across every source and layout when isRTL=%s",
-    (isRTL) => {
-      for (const loop of [false, true]) {
-        for (const source of sources) {
-          for (const layout of layouts) {
-            const directionSign = getCarouselDirectionSign({
-              isRTL,
-              orientation: "horizontal",
-            });
-            const physicalForwardGesture = isRTL ? 1 : -1;
-            const logicalOffsetDelta =
-              source === "gesture"
-                ? toLogicalGestureValue(physicalForwardGesture, directionSign)
-                : -1;
-            const logicalProgressDelta = -logicalOffsetDelta;
-
-            expect({
-              isRTL,
-              loop,
-              source,
-              layout,
-              logicalOffsetDelta,
-              logicalProgressDelta,
-            }).toMatchObject({
-              logicalOffsetDelta: -1,
-              logicalProgressDelta: 1,
-            });
-          }
-        }
-      }
+  it.each([
+    [-120, 1, -120],
+    [120, 1, 120],
+    [-120, -1, 120],
+    [120, -1, -120],
+  ] as const)(
+    "maps physical gesture value %i with directionSign=%i to %i",
+    (physicalValue, directionSign, expected) => {
+      expect(toLogicalGestureValue(physicalValue, directionSign)).toBe(expected);
     }
   );
 
-  it("maps horizontal built-in transforms while leaving logical progress unchanged", () => {
-    const logicalRelativeProgress = 1;
-
-    expect(
-      toPhysicalHorizontalValue(
-        logicalRelativeProgress,
-        getCarouselDirectionSign({ isRTL: false, orientation: "horizontal" })
-      )
-    ).toBe(1);
-    expect(
-      toPhysicalHorizontalValue(
-        logicalRelativeProgress,
-        getCarouselDirectionSign({ isRTL: true, orientation: "horizontal" })
-      )
-    ).toBe(-1);
-    expect(
-      getCarouselDirectionSign({
-        isRTL: true,
-        orientation: "vertical",
-      })
-    ).toBe(1);
-  });
+  it.each([
+    [-2, 1, -2],
+    [2, 1, 2],
+    [-2, -1, 2],
+    [2, -1, -2],
+  ] as const)(
+    "maps logical horizontal value %i with directionSign=%i to %i",
+    (logicalValue, directionSign, expected) => {
+      expect(toPhysicalHorizontalValue(logicalValue, directionSign)).toBe(expected);
+    }
+  );
 
   it.each([
     ["left", 1, "positive"],
