@@ -1,15 +1,21 @@
 appId: ${APP_ID}
 ---
 
-# Ensure a clean restart so the app always opens on the home screen,
-# even if a previous test left it on the E2E page.
-- stopApp
+# Restore the app first. Expo Dev Client normally remembers the Metro server,
+# so avoid opening the same deep link again when the home screen is already
+# available.
 - launchApp:
     clearState: false
 
-# Reconnect explicitly on every flow instead of relying on Dev Client's saved
-# server state, which can be lost after repeated process restarts.
-- openLink: "exp+app://expo-development-client/?url=http%3A%2F%2F127.0.0.1%3A8081"
+- waitForAnimationToEnd:
+    timeout: 5000
+
+# Reconnect only when the saved Dev Client session did not restore the app.
+- runFlow:
+    when:
+      notVisible: "Basic Layouts"
+    commands:
+      - openLink: "exp+app://expo-development-client/?url=http%3A%2F%2F127.0.0.1%3A8081"
 
 # Wait for the app to fully load.
 - waitForAnimationToEnd:
