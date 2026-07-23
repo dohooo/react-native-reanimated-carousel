@@ -66,3 +66,16 @@ jobs:
         env:
           PACKED_EXPO_CONSUMER_DIR: ${{ runner.temp }}/packed-expo-consumer/sdk-54
         run: yarn web:packed-smoke
+
+  compatibility-gate:
+    name: Compatibility Gate
+    if: always()
+    needs: packed-expo-consumer
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Require every Expo compatibility job
+        env:
+          COMPATIBILITY_RESULT: ${{ needs.packed-expo-consumer.result }}
+        run: test "$COMPATIBILITY_RESULT" = "success"
