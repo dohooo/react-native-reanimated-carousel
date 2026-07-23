@@ -69,6 +69,7 @@
 		"e2e:comprehensive": "APP_ID=${APP_ID:-com.react-native-reanimated-carousel.example} maestro test e2e/",
 		"compat:expo": "bash scripts/test-packed-expo-consumer.sh",
 		"web:smoke": "playwright test --config=playwright.config.ts",
+		"web:packed-smoke": "playwright test --config=playwright.config.ts e2e-web/packed-package.spec.ts",
 		"package:check": "node scripts/check-package-entries.mjs",
 		"package:packed-check": "node scripts/check-packed-package.mjs",
 		"changeset:check": "node scripts/check-changeset-style.mjs"

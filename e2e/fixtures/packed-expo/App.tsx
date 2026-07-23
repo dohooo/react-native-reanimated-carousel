@@ -19,13 +19,14 @@ export default function App() {
     <GestureHandlerRootView style={styles.root}>
       <Text style={styles.title}>Packed Package Smoke</Text>
       <Text testID="status">{`Index: ${index}; Item Width: ${itemSize}`}</Text>
-      <View style={{ width: parentWidth, height: 180 }}>
+      <View testID="parent" style={{ width: parentWidth, height: 180 }}>
         <Carousel
           ref={carouselRef}
           data={DATA}
           loop
           renderWindowSize={5}
           style={styles.carousel}
+          testID="carousel"
           onSnapToItem={setIndex}
           renderItem={({ index: itemIndex, item }) => (
             <View
