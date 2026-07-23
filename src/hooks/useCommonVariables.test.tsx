@@ -123,6 +123,125 @@ describe("useCommonVariables", () => {
     expect(hook.result.current.handlerOffset.value).toBe(-700);
   });
 
+  it.each([
+    {
+      name: "insertion",
+      initial: [10, 20, 30],
+      next: [5, 10, 20, 30],
+      initialOffset: -700,
+      expectedOffset: -1400,
+    },
+    {
+      name: "deletion",
+      initial: [10, 20, 30],
+      next: [20, 30],
+      initialOffset: -1400,
+      expectedOffset: -700,
+    },
+    {
+      name: "reorder",
+      initial: [10, 20, 30],
+      next: [20, 10, 30],
+      initialOffset: -700,
+      expectedOffset: 0,
+    },
+  ])("retains the keyed item across $name", ({ initial, next, initialOffset, expectedOffset }) => {
+    const keyExtractor = (item: number) => String(item);
+    const hook = renderHook(({ props }) => useCommonVariables(props), {
+      initialProps: {
+        props: createProps({
+          data: initial,
+          rawData: initial,
+          dataLength: initial.length,
+          rawDataLength: initial.length,
+          keyExtractor,
+        }),
+      },
+    });
+    hook.result.current.handlerOffset.value = initialOffset;
+
+    act(() => {
+      hook.rerender({
+        props: createProps({
+          data: next,
+          rawData: next,
+          dataLength: next.length,
+          rawDataLength: next.length,
+          keyExtractor,
+        }),
+      });
+    });
+
+    expect(hook.result.current.handlerOffset.value).toBe(expectedOffset);
+  });
+
+  it("clamps the numeric index when the keyed current item disappears", () => {
+    const keyExtractor = (item: number) => String(item);
+    const initial = [10, 20, 30];
+    const hook = renderHook(({ props }) => useCommonVariables(props), {
+      initialProps: {
+        props: createProps({
+          data: initial,
+          rawData: initial,
+          dataLength: initial.length,
+          rawDataLength: initial.length,
+          keyExtractor,
+        }),
+      },
+    });
+    hook.result.current.handlerOffset.value = -1400;
+
+    const next = [10, 20];
+    act(() => {
+      hook.rerender({
+        props: createProps({
+          data: next,
+          rawData: next,
+          dataLength: next.length,
+          rawDataLength: next.length,
+          keyExtractor,
+        }),
+      });
+    });
+
+    expect(hook.result.current.handlerOffset.value).toBe(-700);
+  });
+
+  it("defers keyed reconciliation until active movement settles", () => {
+    const keyExtractor = (item: number) => String(item);
+    const initial = [10, 20, 30];
+    const hook = renderHook(({ props }) => useCommonVariables(props), {
+      initialProps: {
+        props: createProps({
+          data: initial,
+          rawData: initial,
+          dataLength: initial.length,
+          rawDataLength: initial.length,
+          keyExtractor,
+        }),
+      },
+    });
+    hook.result.current.handlerOffset.value = -700;
+
+    const next = [20, 10, 30];
+    act(() => {
+      hook.result.current.startMovement();
+      hook.rerender({
+        props: createProps({
+          data: next,
+          rawData: next,
+          dataLength: next.length,
+          rawDataLength: next.length,
+          keyExtractor,
+        }),
+      });
+    });
+    expect(hook.result.current.handlerOffset.value).toBe(-700);
+
+    act(() => hook.result.current.settleMovement());
+    expect(hook.result.current.handlerOffset.value).toBe(0);
+  });
+
   it("applies a deferred defaultIndex when data first becomes non-empty", () => {
     const hook = renderHook(({ props }) => useCommonVariables(props), {
       initialProps: {

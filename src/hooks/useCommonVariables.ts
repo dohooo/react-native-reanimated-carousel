@@ -6,19 +6,24 @@ import { scheduleOnRN } from "react-native-worklets";
 
 import type { InitializedCarouselProps } from "./useInitProps";
 
-import { reconcileOffsetAfterDataChange } from "../utils/carousel-math";
+import {
+  getNearestLogicalPage,
+  positiveModulo,
+  reconcileOffsetAfterDataChange,
+} from "../utils/carousel-math";
 import { computeOffsetIfSizeChanged } from "../utils/compute-offset-if-size-changed";
 
-export type TCarouselSizePhase = "pending" | "ready" | "updating";
+export type CarouselSizePhase = "pending" | "ready" | "updating";
 
 export interface CarouselCommonVariables {
   size: number;
   validLength: number;
   handlerOffset: SharedValue<number>;
   resolvedSize: SharedValue<number | null>;
-  sizePhase: SharedValue<TCarouselSizePhase>;
+  sizePhase: SharedValue<CarouselSizePhase>;
   sizeExplicit: boolean;
   isMoving: SharedValue<boolean>;
+  dataRevision: number;
   startMovement: () => void;
   cancelMovement: () => void;
   settleMovement: () => void;
@@ -27,7 +32,17 @@ export interface CarouselCommonVariables {
 export function useCommonVariables(
   props: InitializedCarouselProps<unknown>
 ): CarouselCommonVariables {
-  const { orientation, style, dataLength, defaultIndex, loop, itemSize } = props;
+  const {
+    orientation,
+    style,
+    dataLength,
+    defaultIndex,
+    keyExtractor,
+    loop,
+    itemSize,
+    rawData,
+    rawDataLength,
+  } = props;
   const isVertical = orientation === "vertical";
 
   const manualSize = React.useMemo(() => {
@@ -45,17 +60,20 @@ export function useCommonVariables(
   }, [isVertical, itemSize, style]);
 
   const resolvedSize = useSharedValue<number | null>(manualSize);
-  const sizePhase = useSharedValue<TCarouselSizePhase>(manualSize ? "ready" : "pending");
+  const sizePhase = useSharedValue<CarouselSizePhase>(manualSize ? "ready" : "pending");
 
   const defaultHandlerOffsetValue =
     manualSize && dataLength > 0 ? -Math.abs(defaultIndex * manualSize) : 0;
   const _handlerOffset = useSharedValue<number>(defaultHandlerOffsetValue);
   const handlerOffset = props.scrollOffsetValue ?? _handlerOffset;
-  const prevDataLength = useSharedValue(dataLength);
+  const prevDataLength = useSharedValue(rawDataLength);
+  const previousRawData = React.useRef(rawData);
+  const previousKeyExtractor = React.useRef(keyExtractor);
   const isMoving = useSharedValue(false);
   const pendingDataChange = useSharedValue<{
     previousLength: number;
     currentLength: number;
+    retainedIndex: number | null;
   } | null>(null);
   // Start at zero even when a synchronous item size is available. The first
   // size reaction owns initialization and must write the default-index offset
@@ -65,6 +83,7 @@ export function useCommonVariables(
   const sizeExplicit = typeof itemSize === "number" && itemSize > 0;
 
   const [size, setSize] = React.useState<number>(manualSize ?? 0);
+  const [dataRevision, setDataRevision] = React.useState(0);
 
   const syncSize = React.useCallback((next: number) => {
     setSize((current) => (current === next ? current : next));
@@ -98,8 +117,7 @@ export function useCommonVariables(
   }, [dataLength, defaultIndex, handlerOffset, hasInitializedOffset, prevSize, resolvedSize]);
 
   const reconcileDataChange = React.useCallback(
-    (previousLength: number, currentLength: number) => {
-      "worklet";
+    (previousLength: number, currentLength: number, retainedIndex?: number) => {
       const currentSize = resolvedSize.value ?? 0;
       if (currentSize <= 0) return;
 
@@ -110,24 +128,28 @@ export function useCommonVariables(
         nextCount: currentLength,
         defaultIndex,
         loop,
+        retainedIndex,
       });
+      setDataRevision((revision) => revision + 1);
     },
     [defaultIndex, handlerOffset, loop, resolvedSize]
   );
 
   const startMovement = React.useCallback(() => {
-    "worklet";
     isMoving.value = true;
   }, [isMoving]);
 
   const finishMovement = React.useCallback(() => {
-    "worklet";
     isMoving.value = false;
     const pending = pendingDataChange.value;
     if (!pending) return;
 
     pendingDataChange.value = null;
-    reconcileDataChange(pending.previousLength, pending.currentLength);
+    reconcileDataChange(
+      pending.previousLength,
+      pending.currentLength,
+      pending.retainedIndex ?? undefined
+    );
   }, [isMoving, pendingDataChange, reconcileDataChange]);
 
   /**
@@ -135,19 +157,57 @@ export function useCommonVariables(
    */
   React.useEffect(() => {
     const previousLength = prevDataLength.value;
-    if (previousLength === dataLength) return;
+    const previousItems = previousRawData.current;
+    const dataChanged =
+      previousLength !== rawDataLength ||
+      previousItems.length !== rawData.length ||
+      previousItems.some((item, index) => !Object.is(item, rawData[index]));
 
-    prevDataLength.value = dataLength;
+    previousRawData.current = rawData;
+    const extractorForPreviousData = previousKeyExtractor.current ?? keyExtractor;
+    previousKeyExtractor.current = keyExtractor;
+
+    if (!dataChanged) return;
+
+    let retainedIndex: number | undefined;
+    if (keyExtractor && extractorForPreviousData && previousLength > 0 && rawDataLength > 0) {
+      const currentSize = resolvedSize.value ?? 0;
+      const pendingIndex = pendingDataChange.value?.retainedIndex;
+      const previousIndex =
+        typeof pendingIndex === "number"
+          ? pendingIndex
+          : positiveModulo(getNearestLogicalPage(handlerOffset.value, currentSize), previousLength);
+      if (previousIndex < previousItems.length) {
+        const selectedKey = extractorForPreviousData(previousItems[previousIndex], previousIndex);
+        const matchingIndex = rawData.findIndex(
+          (item, index) => keyExtractor(item, index) === selectedKey
+        );
+        if (matchingIndex >= 0) retainedIndex = matchingIndex;
+      }
+    }
+
+    prevDataLength.value = rawDataLength;
     if (isMoving.value) {
       pendingDataChange.value = {
         previousLength: pendingDataChange.value?.previousLength ?? previousLength,
-        currentLength: dataLength,
+        currentLength: rawDataLength,
+        retainedIndex: retainedIndex ?? null,
       };
       return;
     }
 
-    reconcileDataChange(previousLength, dataLength);
-  }, [dataLength, isMoving, pendingDataChange, prevDataLength, reconcileDataChange]);
+    reconcileDataChange(previousLength, rawDataLength, retainedIndex);
+  }, [
+    handlerOffset,
+    isMoving,
+    keyExtractor,
+    pendingDataChange,
+    prevDataLength,
+    rawData,
+    rawDataLength,
+    reconcileDataChange,
+    resolvedSize,
+  ]);
 
   /**
    * When size changes, we need to compute new index for handlerOffset
@@ -193,6 +253,7 @@ export function useCommonVariables(
     sizePhase,
     sizeExplicit,
     isMoving,
+    dataRevision,
     startMovement,
     cancelMovement: finishMovement,
     settleMovement: finishMovement,

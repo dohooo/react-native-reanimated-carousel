@@ -1,178 +1,176 @@
-import { act, fireEvent, render } from "@testing-library/react-native";
-import { View } from "react-native";
+import { fireEvent, render } from "@testing-library/react-native";
+import { StyleSheet, View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 
 import { Pagination } from ".";
+import { getPaginationDotDistance, getPaginationSelectedIndex } from "./PaginationItem";
 
-jest.mock("react-native-worklets", () => ({
-  scheduleOnRN: (fn: (...args: unknown[]) => void, ...args: unknown[]) => fn(...args),
-}));
-
-// Use fake timers so the reanimated mapper's mockedRequestAnimationFrame
-// (a setTimeout-based RAF) doesn't fire outside of act().
 beforeEach(() => {
   jest.useFakeTimers();
 });
 
 afterEach(() => {
   jest.useRealTimers();
+  jest.restoreAllMocks();
 });
 
-describe("Pagination.Basic", () => {
-  it("throws when size/dot width/height are non-number", () => {
-    const Test = () => {
+function InteractivePagination(props: Partial<React.ComponentProps<typeof Pagination>> = {}) {
+  const progress = useSharedValue(0);
+  return <Pagination count={3} progress={progress} onPress={() => {}} {...props} />;
+}
+
+function getButtons(screen: ReturnType<typeof render>) {
+  const matching = screen.UNSAFE_root.findAll(
+    (node) =>
+      node.props.accessibilityRole === "button" && typeof node.props.accessibilityLabel === "string"
+  );
+  return Array.from(
+    new Map(matching.map((node) => [node.props.accessibilityLabel as string, node])).values()
+  );
+}
+
+describe("Pagination", () => {
+  it("renders nothing for count zero and rejects invalid count", () => {
+    const Empty = () => {
       const progress = useSharedValue(0);
-      return (
-        <Pagination.Basic
-          data={[1, 2]}
-          progress={progress}
-          // @ts-expect-error intentional invalid type
-          size={"12px"}
-        />
-      );
+      return <Pagination count={0} progress={progress} />;
+    };
+    const Invalid = () => {
+      const progress = useSharedValue(0);
+      return <Pagination count={1.5} progress={progress} />;
     };
 
-    expect(() => render(<Test />)).toThrow("size/width/height must be a number");
+    expect(render(<Empty />).toJSON()).toBeNull();
+    expect(() => render(<Invalid />)).toThrow("Pagination count must be a non-negative integer");
   });
 
-  it("renders dots and calls onPress", async () => {
-    const handlePress = jest.fn();
-    const Test = () => {
+  it("rejects runtime-invalid narrow dot styles", () => {
+    const Invalid = () => {
       const progress = useSharedValue(0);
-      return (
-        <Pagination.Basic
-          data={[1, 2, 3]}
-          progress={progress}
-          onPress={handlePress}
-          carouselName="Demo"
-        />
-      );
+      return <Pagination count={2} progress={progress} dotStyle={{ width: "12px" } as never} />;
     };
 
-    const { UNSAFE_root } = render(<Test />);
-    await act(async () => {
-      jest.advanceTimersByTime(100);
-    });
-
-    const buttons = UNSAFE_root.findAll(
-      (node) =>
-        node?.props?.accessibilityRole === "button" &&
-        typeof node?.props?.accessibilityLabel === "string" &&
-        node.props.accessibilityLabel.startsWith("Slide ")
-    );
-
-    const uniqueByLabel = Array.from(
-      new Map(buttons.map((b) => [b.props.accessibilityLabel, b])).values()
-    );
-
-    expect(uniqueByLabel).toHaveLength(3);
-
-    await act(async () => {
-      fireEvent.press(uniqueByLabel[1]);
-      jest.advanceTimersByTime(100);
-    });
-    expect(handlePress).toHaveBeenCalledWith(1);
+    expect(() => render(<Invalid />)).toThrow("Pagination dotStyle.width must be a finite number");
   });
 
-  it("does not include undefined in default accessibilityLabel when carouselName is omitted", async () => {
-    const Test = () => {
+  it("renders interactive dots as selected buttons and reports raw indexes", () => {
+    const onPress = jest.fn();
+    const screen = render(
+      <InteractivePagination
+        getItemAccessibilityLabel={(index, count) => `Page ${index + 1}/${count}`}
+        onPress={onPress}
+      />
+    );
+
+    const buttons = getButtons(screen);
+    expect(buttons).toHaveLength(3);
+    expect(buttons[0].props.accessibilityLabel).toBe("Page 1/3");
+    expect(buttons[0].props.accessibilityRole).toBe("button");
+    expect(buttons[0].props.accessibilityState).toEqual({ selected: true });
+    expect(buttons[1].props.accessibilityState).toEqual({ selected: false });
+
+    fireEvent.press(buttons[2]);
+    expect(onPress).toHaveBeenCalledWith(2);
+  });
+
+  it("uses default accessibility labels for interactive dots", () => {
+    const screen = render(<InteractivePagination />);
+    const buttons = getButtons(screen);
+
+    expect(buttons.map((button) => button.props.accessibilityLabel)).toEqual([
+      "Slide 1 of 3",
+      "Slide 2 of 3",
+      "Slide 3 of 3",
+    ]);
+  });
+
+  it("hides decorative dots from the accessibility tree", () => {
+    const Decorative = () => {
       const progress = useSharedValue(0);
-      return <Pagination.Basic data={[1, 2]} progress={progress} />;
+      return <Pagination count={3} progress={progress} />;
     };
+    const screen = render(<Decorative />);
 
-    const { UNSAFE_root } = render(<Test />);
-    await act(async () => {
-      jest.advanceTimersByTime(100);
+    expect(getButtons(screen)).toHaveLength(0);
+    const hiddenDots = screen.UNSAFE_root.findAllByType(View).filter(
+      (node) => node.props.importantForAccessibility === "no-hide-descendants"
+    );
+    expect(hiddenDots).toHaveLength(3);
+    expect(hiddenDots.every((node) => node.props.accessible === false)).toBe(true);
+  });
+
+  it("keeps one dot selected when count is one", () => {
+    const Single = () => {
+      const progress = useSharedValue(10_000_000.4);
+      return <Pagination count={1} progress={progress} onPress={() => {}} />;
+    };
+    const screen = render(<Single />);
+
+    expect(getButtons(screen)[0].props.accessibilityState).toEqual({ selected: true });
+  });
+
+  it("reserves the larger base and active dimensions without swapping axes", () => {
+    const screen = render(
+      <InteractivePagination
+        orientation="vertical"
+        dotStyle={{ width: 8, height: 14 }}
+        activeDotStyle={{ width: 20, height: 10 }}
+      />
+    );
+    const buttonStyle = StyleSheet.flatten(getButtons(screen)[0].props.style);
+    const verticalContainer = screen.UNSAFE_root.findAllByType(View).find(
+      (node) => StyleSheet.flatten(node.props.style)?.flexDirection === "column"
+    );
+
+    expect(buttonStyle).toMatchObject({ width: 20, height: 14 });
+    expect(verticalContainer).toBeTruthy();
+  });
+
+  it("ignores protected container direction fields and warns once", () => {
+    const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
+    const screen = render(
+      <InteractivePagination
+        containerStyle={{ direction: "rtl", flexDirection: "column", gap: 6 } as never}
+      />
+    );
+    screen.rerender(
+      <InteractivePagination
+        containerStyle={{ direction: "rtl", flexDirection: "column", gap: 8 } as never}
+      />
+    );
+    const container = screen.UNSAFE_root.findAllByType(View).find(
+      (node) => StyleSheet.flatten(node.props.style)?.flexDirection === "row"
+    );
+
+    expect(StyleSheet.flatten(container?.props.style)).toMatchObject({
+      flexDirection: "row",
+      gap: 8,
     });
-
-    const buttons = UNSAFE_root.findAll(
-      (node) =>
-        node?.props?.accessibilityRole === "button" &&
-        typeof node?.props?.accessibilityLabel === "string" &&
-        node.props.accessibilityLabel.startsWith("Slide ")
+    expect(StyleSheet.flatten(container?.props.style)).not.toHaveProperty("direction");
+    const protectedStyleWarnings = warn.mock.calls.filter(([message]) =>
+      String(message).includes("Pagination containerStyle cannot override")
     );
-
-    const uniqueByLabel = Array.from(
-      new Map(buttons.map((b) => [b.props.accessibilityLabel, b])).values()
-    );
-
-    expect(uniqueByLabel[0].props.accessibilityLabel).toBe("Slide 1 of 2");
-    expect(uniqueByLabel[0].props.accessibilityLabel).not.toContain("undefined");
+    expect(protectedStyleWarnings).toHaveLength(1);
   });
 });
 
-describe("Pagination.Custom", () => {
-  it("throws when any size-related prop is non-number", () => {
-    const Test = () => {
-      const progress = useSharedValue(0);
-      return (
-        <Pagination.Custom
-          data={[1]}
-          progress={progress}
-          // @ts-expect-error intentional invalid type
-          activeDotStyle={{ width: "10px" }}
-        />
-      );
-    };
-
-    expect(() => render(<Test />)).toThrow("size/width/height must be a number");
+describe("Pagination nearest-cycle math", () => {
+  it("activates the nearest equivalent dot across both loop seams", () => {
+    expect(getPaginationDotDistance(4.8, 0, 5)).toBeCloseTo(0.2);
+    expect(getPaginationDotDistance(-0.2, 0, 5)).toBeCloseTo(0.2);
+    expect(getPaginationDotDistance(5.2, 0, 5)).toBeCloseTo(0.2);
+    expect(getPaginationDotDistance(4.8, 4, 5)).toBeCloseTo(0.8);
   });
 
-  it("uses max item dimensions for container min sizes", async () => {
-    const Test = () => {
-      const progress = useSharedValue(0);
-      return (
-        <Pagination.Custom
-          data={[1, 2]}
-          progress={progress}
-          size={12}
-          dotStyle={{ width: 14, height: 8 }}
-          activeDotStyle={{ width: 16, height: 20 }}
-        />
-      );
-    };
-
-    const { UNSAFE_root } = render(<Test />);
-    await act(async () => {
-      jest.advanceTimersByTime(100);
-    });
-
-    // @ts-expect-error
-    const container = UNSAFE_root.findByType(View);
-    const flattened = Array.isArray(container.props.style)
-      ? Object.assign({}, ...container.props.style.filter(Boolean))
-      : container.props.style;
-
-    expect(flattened.minWidth).toBe(16);
-    expect(flattened.minHeight).toBe(20);
-  });
-
-  it("allows overriding pagination item accessibility props", async () => {
-    const Test = () => {
-      const progress = useSharedValue(0);
-      return (
-        <Pagination.Custom
-          data={[1, 2]}
-          progress={progress}
-          paginationItemAccessibility={(index: number, length: number) => ({
-            accessibilityLabel: `Page ${index + 1}/${length}`,
-            accessibilityHint: `Jump to ${index + 1}`,
-            accessibilityRole: "link",
-          })}
-        />
-      );
-    };
-
-    const { UNSAFE_root } = render(<Test />);
-    await act(async () => {
-      jest.advanceTimersByTime(100);
-    });
-
-    const item = UNSAFE_root.find(
-      (node) =>
-        node?.props?.accessibilityLabel === "Page 1/2" && node?.props?.accessibilityRole === "link"
+  it("remains finite and selects the raw index after many loop cycles", () => {
+    const progress = 10_000_000.375;
+    const count = 7;
+    const distances = Array.from({ length: count }, (_, index) =>
+      getPaginationDotDistance(progress, index, count)
     );
 
-    expect(item.props.accessibilityHint).toBe("Jump to 1");
+    expect(distances.every(Number.isFinite)).toBe(true);
+    expect(Math.min(...distances)).toBeCloseTo(0.375);
+    expect(getPaginationSelectedIndex(progress, count)).toBe(3);
   });
 });

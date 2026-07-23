@@ -2,7 +2,7 @@ import { useSharedValue } from "react-native-reanimated";
 
 import { renderHook } from "@testing-library/react-hooks";
 
-import type { IOpts } from "./useOffsetX";
+import type { OffsetOptions } from "./useOffsetX";
 import { useOffsetX } from "./useOffsetX";
 import type { VisibleRangesValue } from "./useVisibleRanges";
 
@@ -14,7 +14,7 @@ describe("useSharedValue", () => {
         positiveRange: [0, 3],
       }) as VisibleRangesValue;
       const inputs: Array<{
-        config: IOpts;
+        config: OffsetOptions;
         range: VisibleRangesValue;
       }> = Array.from({ length: 10 }).map((_, index) => ({
         config: {

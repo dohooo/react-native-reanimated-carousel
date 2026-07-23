@@ -169,6 +169,17 @@ describe("Carousel v5 integration", () => {
     expect(itemAnimation).toHaveBeenCalledWith(expect.any(Number), 0);
   });
 
+  it("hides every non-current slide from the accessibility tree", () => {
+    const screen = render(<TestCarousel defaultIndex={1} />);
+    const findSlide = (index: number) =>
+      screen.UNSAFE_root.find((node) => node.props.testID === `__CAROUSEL_ITEM_${index}__`);
+
+    expect(findSlide(1).props.importantForAccessibility).toBe("auto");
+    expect(findSlide(0).props.importantForAccessibility).toBe("no-hide-descendants");
+    expect(findSlide(0).props.accessibilityElementsHidden).toBe(true);
+    expect(findSlide(0).props["aria-hidden"]).toBe(true);
+  });
+
   it("removes protected content styles and warns once", () => {
     const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
     const screen = render(
@@ -202,6 +213,48 @@ describe("Carousel v5 integration", () => {
       ["A", 0],
       ["A", 0],
     ]);
+  });
+
+  it("reconciles keyed selection without emitting lifecycle callbacks", () => {
+    const ref = React.createRef<CarouselRef>();
+    const onScrollStart = jest.fn();
+    const onSnapToItem = jest.fn();
+    const offset = { value: 0 } as SharedValue<number>;
+    const renderItem = ({ item }: { item: { id: string } }) => <View testID={`keyed-${item.id}`} />;
+    const first = [{ id: "a" }, { id: "b" }, { id: "c" }];
+    const screen = render(
+      <Carousel
+        ref={ref}
+        data={first}
+        defaultIndex={1}
+        keyExtractor={(item) => item.id}
+        onScrollStart={onScrollStart}
+        onSnapToItem={onSnapToItem}
+        renderItem={renderItem}
+        scrollOffsetValue={offset}
+        style={{ width: 300, height: 200 }}
+      />
+    );
+
+    const reordered = [first[1], first[0], first[2]];
+    screen.rerender(
+      <Carousel
+        ref={ref}
+        data={reordered}
+        defaultIndex={1}
+        keyExtractor={(item) => item.id}
+        onScrollStart={onScrollStart}
+        onSnapToItem={onSnapToItem}
+        renderItem={renderItem}
+        scrollOffsetValue={offset}
+        style={{ width: 300, height: 200 }}
+      />
+    );
+
+    expect(offset.value).toBe(0);
+    expect(ref.current?.getCurrentIndex()).toBe(0);
+    expect(onScrollStart).not.toHaveBeenCalled();
+    expect(onSnapToItem).not.toHaveBeenCalled();
   });
 });
 

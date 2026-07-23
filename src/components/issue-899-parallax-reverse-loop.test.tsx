@@ -48,7 +48,7 @@ describe("issue #899 parallax reverse loop regression", () => {
       color: index === 29 ? "#111111" : `rgb(${index}, ${index}, ${index})`,
     }));
 
-    const { getByTestId } = render(
+    const screen = render(
       <Carousel
         data={data}
         defaultIndex={0}
@@ -70,11 +70,14 @@ describe("issue #899 parallax reverse loop regression", () => {
       />
     );
 
+    const findItem = (index: number) =>
+      screen.UNSAFE_root.find((node) => node.props.testID === `issue-899-item-${index}`);
+
     await waitFor(() => {
-      expect(getByTestId("issue-899-item-0")).toBeTruthy();
+      expect(screen.getByTestId("issue-899-item-0")).toBeTruthy();
     });
 
-    const prerenderedWrappedItem = getByTestId("issue-899-item-29");
+    const prerenderedWrappedItem = findItem(29);
     const prerenderedWrappedStyle = StyleSheet.flatten(prerenderedWrappedItem.props.style);
 
     expect(prerenderedWrappedItem.props.accessibilityLabel).toBe("issue-899-label-29");
@@ -85,7 +88,7 @@ describe("issue #899 parallax reverse loop regression", () => {
       { state: State.ACTIVE, translationX: slideWidth * 0.7, velocityX: slideWidth },
     ]);
 
-    const wrappedItem = getByTestId("issue-899-item-29");
+    const wrappedItem = findItem(29);
     const flattenedStyle = StyleSheet.flatten(wrappedItem.props.style);
 
     expect(wrappedItem.props.accessibilityLabel).toBe("issue-899-label-29");

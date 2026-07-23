@@ -18,6 +18,7 @@ export function getOffsetForLogicalPage(page: number, itemSize: number): number 
   "worklet";
 
   if (!Number.isFinite(page) || !Number.isFinite(itemSize) || itemSize <= 0) return 0;
+  if (page === 0) return 0;
   return -page * itemSize;
 }
 
@@ -126,10 +127,11 @@ export function reconcileOffsetAfterDataChange(params: {
   nextCount: number;
   defaultIndex: number;
   loop: boolean;
+  retainedIndex?: number;
 }): number {
   "worklet";
 
-  const { offset, itemSize, previousCount, nextCount, defaultIndex, loop } = params;
+  const { offset, itemSize, previousCount, nextCount, defaultIndex, loop, retainedIndex } = params;
   if (!Number.isInteger(nextCount) || nextCount <= 0 || itemSize <= 0) return 0;
 
   if (!Number.isInteger(previousCount) || previousCount <= 0) {
@@ -139,10 +141,16 @@ export function reconcileOffsetAfterDataChange(params: {
 
   const currentPage = getNearestLogicalPage(offset, itemSize);
   const previousRawIndex = positiveModulo(currentPage, previousCount);
-  const nextRawIndex = Math.min(previousRawIndex, nextCount - 1);
+  const nextRawIndex =
+    typeof retainedIndex === "number" &&
+    Number.isInteger(retainedIndex) &&
+    retainedIndex >= 0 &&
+    retainedIndex < nextCount
+      ? retainedIndex
+      : Math.min(previousRawIndex, nextCount - 1);
   const nextPage = loop
     ? getNearestLoopPosition(nextRawIndex, currentPage, nextCount)
-    : Math.max(0, Math.min(nextCount - 1, currentPage));
+    : nextRawIndex;
 
   return getOffsetForLogicalPage(nextPage, itemSize);
 }

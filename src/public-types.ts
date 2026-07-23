@@ -57,7 +57,7 @@ type PaginationBaseProps = {
   count: number;
   progress: ReadonlyProgressValue;
   orientation?: CarouselOrientation;
-  containerStyle?: StyleProp<ViewStyle>;
+  containerStyle?: StyleProp<Omit<ViewStyle, "direction" | "flexDirection">>;
   dotStyle?: PaginationDotStyle;
   activeDotStyle?: PaginationDotStyle;
 };

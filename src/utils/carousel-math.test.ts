@@ -108,6 +108,32 @@ describe("carousel logical-coordinate math", () => {
     ).toBe(-960);
   });
 
+  it("reconciles to a retained keyed item index", () => {
+    expect(
+      reconcileOffsetAfterDataChange({
+        offset: -320,
+        itemSize: 320,
+        previousCount: 3,
+        nextCount: 4,
+        defaultIndex: 0,
+        loop: false,
+        retainedIndex: 2,
+      })
+    ).toBe(-640);
+
+    expect(
+      reconcileOffsetAfterDataChange({
+        offset: getOffsetForLogicalPage(9, 320),
+        itemSize: 320,
+        previousCount: 4,
+        nextCount: 3,
+        defaultIndex: 0,
+        loop: true,
+        retainedIndex: 1,
+      })
+    ).toBe(getOffsetForLogicalPage(10, 320));
+  });
+
   it.each([
     [Number.NaN, 320],
     [Number.POSITIVE_INFINITY, 320],

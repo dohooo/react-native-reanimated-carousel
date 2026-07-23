@@ -2,6 +2,7 @@ import * as React from "react";
 import { View } from "react-native";
 import { Gesture, MouseButton, type PanGesture } from "react-native-gesture-handler";
 import { makeMutable } from "react-native-reanimated";
+import { Pagination as PaginationComponent } from "../src/components/Pagination";
 
 import type {
   CarouselAnimation,
@@ -142,6 +143,23 @@ const interactivePagination = {
 void decorativePagination;
 void interactivePagination;
 
+const interactiveSpread = {
+  onPress: (_index: number) => {},
+  getItemAccessibilityLabel: (index: number, count: number) => `Slide ${index + 1} of ${count}`,
+} satisfies Pick<
+  Extract<PaginationProps, { onPress: (index: number) => void }>,
+  "getItemAccessibilityLabel" | "onPress"
+>;
+
+const paginationElements = (
+  <>
+    <PaginationComponent {...decorativePagination} />
+    <PaginationComponent count={3} progress={progress} {...interactiveSpread} />
+  </>
+);
+
+void paginationElements;
+
 // @ts-expect-error labels are only valid for interactive Pagination
 const invalidDecorativePagination: PaginationProps = {
   count: 3,
@@ -150,6 +168,22 @@ const invalidDecorativePagination: PaginationProps = {
 };
 
 void invalidDecorativePagination;
+
+const invalidGenericPagination = (
+  // @ts-expect-error Pagination is positional and has no item generic
+  <PaginationComponent<Item> count={3} progress={progress} onPress={() => {}} />
+);
+
+void invalidGenericPagination;
+
+const invalidProtectedPaginationStyle: PaginationProps = {
+  count: 3,
+  progress,
+  // @ts-expect-error Pagination owns its direction and orientation axis
+  containerStyle: { flexDirection: "column" },
+};
+
+void invalidProtectedPaginationStyle;
 
 declare const _reactElement: React.ReactElement;
 void _reactElement;

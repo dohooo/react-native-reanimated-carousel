@@ -3,17 +3,19 @@ import type { LayoutChangeEvent, ViewStyle } from "react-native";
 import { StyleSheet } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 import Animated, {
+  useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
-import { scheduleOnUI } from "react-native-worklets";
+import { scheduleOnRN, scheduleOnUI } from "react-native-worklets";
 
 import type { OffsetOptions } from "../hooks/useOffsetX";
 import { useOffsetX } from "../hooks/useOffsetX";
 import type { VisibleRangesValue } from "../hooks/useVisibleRanges";
 import { useGlobalState } from "../store";
 import type { CarouselItemAnimation } from "../types";
+import { positiveModulo } from "../utils/carousel-math";
 import { sanitizeAnimationStyle } from "../utils/sanitize-animation-style";
 
 export type ItemAnimationStyle = CarouselItemAnimation;
@@ -115,6 +117,26 @@ export const ItemLayout: React.FC<{
   }
 
   const x = useOffsetX(offsetXConfig, visibleRanges);
+  const isCurrentForAccessibility = React.useCallback(
+    () =>
+      size > 0 &&
+      dataLength > 0 &&
+      positiveModulo(Math.round(-handlerOffset.value / size), dataLength) === index,
+    [dataLength, handlerOffset, index, size]
+  );
+  const [isAccessibilityCurrent, setIsAccessibilityCurrent] =
+    React.useState(isCurrentForAccessibility);
+
+  useAnimatedReaction(
+    isCurrentForAccessibility,
+    (isCurrent, wasCurrent) => {
+      if (isCurrent !== wasCurrent) {
+        scheduleOnRN(setIsAccessibilityCurrent, isCurrent);
+      }
+    },
+    [isCurrentForAccessibility]
+  );
+
   const relativeProgress = useDerivedValue(() => {
     if (!size) return 0;
     return x.value / size;
@@ -165,6 +187,10 @@ export const ItemLayout: React.FC<{
 
   return (
     <Animated.View
+      accessibilityElementsHidden={!isAccessibilityCurrent}
+      accessible={isAccessibilityCurrent ? undefined : false}
+      aria-hidden={!isAccessibilityCurrent}
+      importantForAccessibility={isAccessibilityCurrent ? "auto" : "no-hide-descendants"}
       style={[
         {
           position: "absolute",

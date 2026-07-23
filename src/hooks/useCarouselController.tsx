@@ -58,6 +58,7 @@ export function useCarouselController(options: CarouselControllerOptions): Carou
   const {
     common: {
       cancelMovement: cancelCommonMovement,
+      dataRevision,
       isMoving,
       resolvedSize,
       settleMovement,
@@ -138,7 +139,7 @@ export function useCarouselController(options: CarouselControllerOptions): Carou
 
   React.useEffect(() => {
     if (!isMoving.value) settle();
-  }, [isMoving, rawDataLength, settle]);
+  }, [dataRevision, isMoving, rawDataLength, settle]);
 
   const isReady = React.useCallback(() => {
     const currentSize = resolvedSize.value ?? size;
