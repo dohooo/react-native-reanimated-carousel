@@ -63,7 +63,7 @@ The codemod:
 - adds `loop={true}` wherever v4 code omitted `loop`, preserving the v4 default;
 - reports props that require a product decision instead of guessing.
 
-It is idempotent. Review its warnings and the behavioral changes below before committing.
+It is idempotent. The TypeScript printer rewrites touched files, so run the application's formatter. Review every warning and the behavioral changes below before committing.
 
 ## Import and type changes
 

@@ -87,3 +87,18 @@ const Example = () => <Carousel data={[]} renderItem={() => null} autoPlay />;
 
   assert.equal(second.code, first.code);
 });
+
+test("does not leave trailing whitespace around preserved comments", () => {
+  const source = `
+import Carousel from "react-native-reanimated-carousel";
+const value = interpolate(progress,
+  // Keep this explanation next to the interpolation input.
+  [0, 1],
+  [0, 100]
+);
+const Example = () => <Carousel data={[]} renderItem={() => null} autoPlay />;
+`;
+  const result = transformSource(source, "fixture.tsx");
+
+  assert.doesNotMatch(result.code, /[ \t]+$/m);
+});

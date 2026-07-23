@@ -405,7 +405,10 @@ export function transformSource(source, fileName = "source.tsx") {
   const result = ts.transform(sourceFile, [transformer]);
   const transformed = result.transformed[0];
   const output = didTransform
-    ? ts.createPrinter({ newLine: ts.NewLineKind.LineFeed }).printFile(transformed)
+    ? ts
+        .createPrinter({ newLine: ts.NewLineKind.LineFeed })
+        .printFile(transformed)
+        .replace(/[ \t]+$/gm, "")
     : source;
   result.dispose();
 
