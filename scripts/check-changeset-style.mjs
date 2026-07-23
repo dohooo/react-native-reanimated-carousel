@@ -9,6 +9,7 @@ const IGNORED_FILES = new Set(["README.md", "config.json", "pre.json"]);
 
 const MAX_LINES = 6;
 const MAX_LINE_LENGTH = 160;
+const AGENT_MIGRATION_HEADING = "### Migrate with your AI agent";
 const FORBIDDEN_PATTERNS = [
   /```/,
   /^\s*#/m,
@@ -17,6 +18,28 @@ const FORBIDDEN_PATTERNS = [
   /\baffected files\b/i,
   /\bmigration steps?\b/i,
 ];
+
+function splitAgentMigrationSection(body) {
+  const marker = `\n${AGENT_MIGRATION_HEADING}\n`;
+  const markerIndex = body.indexOf(marker);
+  if (markerIndex === -1) return { summary: body, errors: [] };
+
+  const summary = body.slice(0, markerIndex).trim();
+  const section = body.slice(markerIndex + 1).trim();
+  const validSection =
+    /^### Migrate with your AI agent\n\n```text\n[^\n]+\n```\n\n[^\n]+$/u.test(
+      section
+    );
+
+  return {
+    summary,
+    errors: validSection
+      ? []
+      : [
+          "agent migration section must contain one single-line text prompt and one single-line review note",
+        ],
+  };
+}
 
 export function getBody(content) {
   const match = /^---\n[\s\S]*?\n---\n?/u.exec(content);
@@ -38,14 +61,18 @@ export function checkChangeset(content) {
     return errors;
   }
 
+  const agentSection = splitAgentMigrationSection(body);
+  errors.push(...agentSection.errors);
+  const summaryBody = agentSection.summary;
+
   for (const pattern of FORBIDDEN_PATTERNS) {
-    if (pattern.test(body)) {
+    if (pattern.test(summaryBody)) {
       errors.push(`contains unsupported verbose structure (${pattern})`);
       break;
     }
   }
 
-  const lines = body
+  const lines = summaryBody
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean);

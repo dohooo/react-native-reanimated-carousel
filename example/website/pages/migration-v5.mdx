@@ -2,7 +2,7 @@
 id: migration-v5
 title: Migration Guide to v5
 sidebar_label: Migration to v5
-description: Migrate react-native-reanimated-carousel applications from v4 to v5
+description: Agent-executable guide for migrating react-native-reanimated-carousel from v4 to v5
 keywords:
   - react-native-reanimated-carousel
   - migration
@@ -13,9 +13,19 @@ slug: /migration-v5
 
 # Migration Guide to v5
 
-v5 deliberately removes compatibility aliases and narrows the public surface. This guide separates mechanical renames from changes that can alter behavior even after the project compiles.
+## Migrate with your AI agent
 
-## Requirements
+```text copy
+Read https://rn-carousel.dev/migration-v5.md and upgrade react-native-reanimated-carousel to v5 in this project, then summarize what changed for my review.
+```
+
+The agent only edits files in your working tree — nothing is committed, and it stops for your review.
+
+This document is an execution manual for an AI coding agent upgrading a project from `react-native-reanimated-carousel` v4 to v5. Follow the protocol in order, preserve the application's existing product behavior unless a human approves a change, and stop at the review boundary.
+
+## Step 1: run the codemod for mechanical changes
+
+First update the project dependency to v5 with the package manager already used by the project. Keep these peer requirements satisfied:
 
 ```json
 {
@@ -27,45 +37,35 @@ v5 deliberately removes compatibility aliases and narrows the public surface. Th
 }
 ```
 
-Expo projects should let Expo select matching peer versions:
+Expo projects should let Expo choose compatible peer versions:
 
 ```bash
-npx expo install react-native-reanimated-carousel@beta react-native-reanimated react-native-worklets react-native-gesture-handler
+npx expo install react-native-reanimated-carousel react-native-reanimated react-native-worklets react-native-gesture-handler
 ```
 
-Community CLI projects must follow the Reanimated 4 installation guide and use the Worklets Babel plugin. Rebuild native applications after changing Reanimated, Worklets, or Babel configuration.
-
-## Run the codemod first
-
-The package ships a TypeScript-aware codemod:
+Then run the v5 codemod from the project root:
 
 ```bash
-npx rnrc-v5-codemod src
+npx rnrc-v5-codemod .
 ```
 
-Preview changes without writing:
+Use `--dry` first when the working tree already contains unrelated edits:
 
 ```bash
-npx rnrc-v5-codemod --dry src
+npx rnrc-v5-codemod --dry .
 ```
 
-The codemod uses the TypeScript parser. If the project does not already install TypeScript, run it with a temporary parser dependency:
-
-```bash
-npx --package typescript@^5.5.4 rnrc-v5-codemod src
-```
-
-The codemod:
+The codemod performs deterministic changes only:
 
 - converts the default `Carousel` import to a named import;
 - renames direct Carousel props and public type imports;
-- converts `vertical`, `autoPlayReverse`, page sizing, and snap booleans;
-- adds `loop={true}` wherever v4 code omitted `loop`, preserving the v4 default;
-- reports props that require a product decision instead of guessing.
+- converts `vertical`, `autoPlayReverse`, item sizing, and snap booleans;
+- adds `loop={true}` wherever v4 code relied on the old default;
+- reports APIs that require a product decision instead of guessing.
 
-It is idempotent. The TypeScript printer rewrites touched files, so run the application's formatter. Review every warning and the behavioral changes below before committing.
+It is idempotent. Review every warning before continuing.
 
-## Import and type changes
+### Mechanical rename reference
 
 ```diff
 - import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
@@ -75,33 +75,14 @@ It is idempotent. The TypeScript printer rewrites touched files, so run the appl
 + const ref = React.useRef<CarouselRef>(null);
 ```
 
-The package root now exposes only `Carousel`, `Pagination`, and this type whitelist:
-
-```ts
-CarouselProps<Item>
-CarouselRef
-CarouselRenderItem<Item>
-CarouselRenderItemInfo<Item>
-CarouselProgressChangeHandler
-CarouselLayout
-CarouselAnimation
-CarouselItemAnimation
-CarouselPanGesture
-CarouselStepOptions
-CarouselScrollToOptions
-PaginationProps
-PaginationDotStyle
-```
-
-Default imports, compatibility aliases, and deep imports are not supported.
-
-## Complete rename and removal table
-
-### Carousel
-
 | v4 | v5 |
 |---|---|
 | default `Carousel` export | named `Carousel` |
+| `TCarouselProps` | `CarouselProps` |
+| `ICarouselInstance` | `CarouselRef` |
+| `IComputedDirectionTypes` | removed |
+| `TAnimationStyle` | `CarouselItemAnimation` |
+| `ILayoutConfig` | `CarouselLayout` |
 | `width`, `height` | `style.width`, `style.height` |
 | `vertical` | `orientation="vertical"` |
 | `itemWidth`, `itemHeight` | `itemSize` |
@@ -116,17 +97,20 @@ Default imports, compatibility aliases, and deep imports are not supported.
 | `scrollAnimationDuration` + `withAnimation` | `animation` |
 | `mode` + `modeConfig` | `layout` |
 | `defaultScrollOffsetValue` | `scrollOffsetValue` |
-| callback-form `onProgressChange(offsetPx, index)` | `onProgressChange(progress)` plus `scrollOffsetValue` for pixels |
 | SharedValue-form `onProgressChange={value}` | `progress={value}` |
 | `onScrollEnd` | removed; use settled `onSnapToItem` |
 | `scrollTo({ count })` | `next({ count })` or `prev({ count })` |
 | command `onFinished` | removed |
-| `fixedDirection` | removed; use `next` or `prev` for explicit direction |
+| `fixedDirection` | removed; use `next` or `prev` |
 | `customConfig`, `CustomConfig` | removed |
-| `autoFillData` | removed; short-loop data handling is internal |
-| `minScrollDistancePerSwipe`, `maxScrollDistancePerSwipe` | removed; use `snapMode` and gesture thresholds |
+| `autoFillData` | removed; short-loop handling is internal |
+| `minScrollDistancePerSwipe`, `maxScrollDistancePerSwipe` | gesture thresholds through `onConfigurePanGesture` |
 
-### Layout fields
+The package root exports only `Carousel`, `Pagination`, and the documented v5 type whitelist. Default imports, compatibility aliases, and deep imports are unsupported.
+
+### Manual layout migration
+
+The codemod reports `mode` and `modeConfig`; convert them together:
 
 ```diff
 - mode="parallax"
@@ -153,18 +137,22 @@ Default imports, compatibility aliases, and deep imports are not supported.
 | `rotateZDeg` | `rotation` |
 | `snapDirection` | `exitDirection` |
 
-The stack defaults follow the previous runtime behavior: physical left exit, screen-width distance, `18` spacing, `0.04` scale step, `0.1` opacity step, and `30` degrees rotation. Parallax defaults remain `100`, `0.8`, and `scale ** 2`.
+`layout` and `itemAnimation` are mutually exclusive. Preserve the old stack runtime defaults when the app depends on them: physical left exit, screen-width distance, `18` spacing, `0.04` scale step, `0.1` opacity step, and `30` degrees rotation.
 
-`layout` and `itemAnimation` are mutually exclusive:
+### Manual Pagination migration
 
-```tsx
-<Carousel layout={{ type: "parallax", offset: 80 }} />
-
-// Or:
-<Carousel itemAnimation={(relativeProgress) => ({ opacity: 1 - Math.abs(relativeProgress) })} />
+```diff
+- <Pagination.Basic
+-   data={data}
+-   progress={progress}
+-   size={8}
+- />
++ <Pagination
++   count={data.length}
++   progress={progress}
++   dotStyle={{ width: 8, height: 8 }}
++ />
 ```
-
-### Pagination
 
 | v4 | v5 |
 |---|---|
@@ -177,60 +165,9 @@ The stack defaults follow the previous runtime behavior: physical left exit, scr
 | `renderItem`, generic data | removed |
 | `customReanimatedStyle` | removed; build a custom indicator from `progress` |
 
-```tsx
-<Pagination
-  count={data.length}
-  progress={progress}
-  dotStyle={{ width: 8, height: 8 }}
-  activeDotStyle={{ width: 20, backgroundColor: "#111827" }}
-  onPress={(index) => ref.current?.scrollTo({ index })}
-  getItemAccessibilityLabel={(index, count) => `Product ${index + 1} of ${count}`}
-/>
-```
+Add `onPress` when the dots should be interactive. Without it, v5 treats the dots as decorative and hides them from the accessibility tree.
 
-Without `onPress`, dots are decorative and hidden from the accessibility tree. `getItemAccessibilityLabel` is therefore only valid when `onPress` is present.
-
-## Imperative API
-
-`scrollTo` is absolute-only. Relative movement belongs to `next` and `prev`:
-
-```ts
-ref.current?.next({ count: 2 });
-ref.current?.prev({ count: 1, animated: false });
-ref.current?.scrollTo({ index: 4 });
-```
-
-All commands default to `animated: true`. `count` must be a positive integer; `scrollTo.index` must be an in-range integer. Invalid commands warn in development and do nothing.
-
-`getCurrentIndex()` returns the last settled raw-data index. During an animation it remains the previous settled value.
-
-## Progress and offset
-
-Use a `SharedValue` for UI-thread animation and a callback for JS work:
-
-```tsx
-const progress = useSharedValue(0);
-const offset = useSharedValue(0);
-
-<Carousel
-  progress={progress}
-  scrollOffsetValue={offset}
-  onProgressChange={(value) => {
-    // JS thread; avoid expensive work on every frame.
-  }}
-/>
-```
-
-- `progress` is a fractional logical index: forward is `+1`, backward is `-1`.
-- Non-loop progress stays in `[0, count - 1]`; loop progress is continuous and unbounded.
-- `scrollOffsetValue` is signed main-axis content translation in pixels: forward one item is `-itemSize`.
-- External offset writes move content but do not commit selection or fire `onSnapToItem`. Call `scrollTo({ index })` to settle.
-- During an active gesture, gesture frames own the offset and can overwrite external writes.
-- A data-length change may rebase progress once without firing lifecycle callbacks.
-
-`relativeProgress` follows the same logical direction and is a worklet-facing `SharedValue`. A custom `itemAnimation` returns physical transforms. For horizontal RTL, mirror any direction-sensitive `translateX` yourself; built-in layouts are normalized by the library.
-
-## Data updates and empty state
+### Stable item identity
 
 Add `keyExtractor` when items have stable identities:
 
@@ -242,54 +179,267 @@ Add `keyExtractor` when items have stable identities:
 />
 ```
 
-When data changes, the carousel keeps the selected key if possible. Without `keyExtractor`, or when the key disappears, it clamps the previous numeric index. Reconciliation waits for active movement to settle and emits no lifecycle event.
+When data changes, v5 keeps the selected key when possible. Without `keyExtractor`, or when the key disappears, it clamps the previous numeric index after active movement settles.
 
-An empty array is valid: index, progress, and offset are `0`, and navigation, autoplay, and callbacks are no-ops. An invalid `defaultIndex` throws when mounting with non-empty data. If data starts empty, the index is validated against the first non-empty data set; an invalid value warns and falls back to `0`.
+## Step 2: review all 12 behavioral changes
 
-## Behavioral changes that renames do not reveal
+Do not treat a successful typecheck as proof that the migration is complete. Check every item below against the product's intended behavior and record the answer to every **Human confirmation required** line.
 
-These twelve changes can affect an application even after TypeScript passes:
+### 1. Loop now defaults to false
 
-1. **Loop default:** `loop` changes from `true` to `false`. The codemod inserts `loop={true}` where v4 relied on the default.
-2. **Autoplay dwell:** the default changes from `1000ms` to `3000ms`. The interval still starts after a transition settles.
-3. **Command animation:** `next`, `prev`, and `scrollTo` now default to `animated: true`; v4 `scrollTo` defaulted to false.
-4. **Loop route:** `scrollTo` uses the shortest loop path and chooses logical forward on an exact tie, rather than reusing the previous travel direction.
-5. **Current index:** `getCurrentIndex()` is the last settled index instead of a rounded in-flight index.
-6. **Progress range:** loop progress is continuous and unbounded instead of normalized to `[0, count)`.
-7. **Progress callback:** `onProgressChange` receives one fractional logical index. Read pixel translation from `scrollOffsetValue`.
-8. **Pagination semantics:** non-interactive dots are no longer focusable buttons, and the old `Basic` sliding-bar visual is replaced by per-dot interpolation.
-9. **Slide accessibility:** only the current slide remains in the accessibility tree. Provide external controls or an interactive Pagination for navigation.
-10. **Gesture settle timing:** the hidden extra `100ms` is removed; declared animation duration is used directly.
-11. **Non-animated lifecycle:** an accepted non-animated command fires `onScrollStart` and then immediately fires `onSnapToItem`.
-12. **`scrollEnabled`:** this is a rename of `enabled`; it disables user gestures only, not autoplay or ref commands.
-
-Also note that `onScrollStart` fires for gestures, commands, and autoplay. To detect a user's touch specifically, register an `onBegin` worklet with `onConfigurePanGesture`; do not toggle `autoplay` from `onScrollStart`, which can create a feedback loop.
-
-## Animation configuration
+Before, omitting `loop` enabled wrapping:
 
 ```tsx
-<Carousel animation={{ type: "timing", duration: 350 }} />
+<Carousel data={data} renderItem={renderItem} />
+```
 
+After, preserve the v4 behavior explicitly or choose the new finite behavior:
+
+```tsx
+<Carousel data={data} renderItem={renderItem} loop={true} />
+```
+
+**Human confirmation required:** Should this carousel wrap forever? The codemod inserts `loop={true}` to preserve v4 behavior, but a human must confirm the product intent.
+
+### 2. The default autoplay dwell changes from 1000ms to 3000ms
+
+Before:
+
+```tsx
+<Carousel autoPlay data={data} renderItem={renderItem} />
+```
+
+After, preserve the old cadence explicitly when required:
+
+```tsx
+<Carousel autoplay autoplayInterval={1000} data={data} renderItem={renderItem} />
+```
+
+The interval still begins after the previous transition settles.
+
+**Human confirmation required:** Should the product keep a `1000ms` dwell or adopt the new `3000ms` default?
+
+### 3. Every ref command now defaults to animated
+
+Before, v4 `scrollTo` was immediate unless `animated` was set:
+
+```ts
+ref.current?.scrollTo({ index: 2 });
+```
+
+After, preserve an immediate jump explicitly:
+
+```ts
+ref.current?.scrollTo({ index: 2, animated: false });
+```
+
+`next`, `prev`, and `scrollTo` all default to `animated: true`.
+
+**Human confirmation required:** For each `scrollTo` call that omitted `animated`, should it jump immediately or animate?
+
+### 4. Looping `scrollTo` uses the shortest route
+
+Before, route choice could reuse the previous travel direction:
+
+```ts
+ref.current?.scrollTo({ index: 0 });
+```
+
+After, the same call chooses the shortest loop route and chooses logical forward on an exact tie:
+
+```ts
+ref.current?.scrollTo({ index: 0 });
+```
+
+Use `next` or `prev` when direction is the product requirement.
+
+**Human confirmation required:** Does any animation, onboarding sequence, or analytics flow depend on a specific travel direction?
+
+### 5. `getCurrentIndex()` returns the last settled index
+
+Before, an in-flight read could return a rounded visual index:
+
+```ts
+const inFlightIndex = ref.current?.getCurrentIndex();
+```
+
+After, use progress for live visual position and keep `getCurrentIndex()` for settled state:
+
+```tsx
 <Carousel
-  animation={{
-    type: "spring",
-    damping: 18,
-    stiffness: 180,
+  progress={progress}
+  onSnapToItem={(index) => setSelectedIndex(index)}
+/>
+```
+
+**Human confirmation required:** Does any caller need the in-flight visual index rather than the last settled selection?
+
+### 6. Loop progress is continuous and unbounded
+
+Before, loop progress was normalized to one data cycle:
+
+```tsx
+<Pagination.Basic data={data} progress={progress} />
+```
+
+After, the same logical position can be `-1`, `count + 1`, or many cycles away:
+
+```tsx
+<Carousel progress={progress} data={data} renderItem={renderItem} loop />
+<Pagination count={data.length} progress={progress} />
+```
+
+The v5 Pagination handles nearest-cycle interpolation internally. Normalize only custom consumers that truly require `[0, count)`.
+
+**Human confirmation required:** Does any custom progress consumer assume a bounded range?
+
+### 7. `onProgressChange` receives one logical progress value
+
+Before:
+
+```tsx
+<Carousel
+  onProgressChange={(offsetPx, absoluteProgress) => {
+    update(offsetPx, absoluteProgress);
   }}
 />
 ```
 
-`animation` controls gesture snapping, imperative navigation, and autoplay transitions. Free decay under `snapMode="none"` and overscroll rebound remain internal physics. Reanimated's system reduce-motion behavior remains active; there is no separate Carousel reduced-motion prop.
+After:
 
-## Horizontal RTL
+```tsx
+const offset = useSharedValue(0);
 
-Horizontal RTL is detected from `I18nManager.isRTL`. Logical order does not change:
+<Carousel
+  scrollOffsetValue={offset}
+  onProgressChange={(progress) => {
+    updateProgress(progress);
+  }}
+/>
+```
 
-- `next()` and `autoplayDirection="forward"` still follow raw-data order;
-- progress and offset signs are identical in LTR and RTL;
-- a rightward physical swipe moves logically forward in RTL;
-- vertical carousels are unchanged;
-- stack `exitDirection="left" | "right"` remains a physical direction;
-- gesture observers receive raw physical RNGH coordinates.
+The callback runs on the JS thread every frame; use `progress` or `scrollOffsetValue` SharedValues for UI-thread work.
 
-Do not reverse your data and do not mirror the entire carousel with `scaleX`.
+**Human confirmation required:** Which consumers need logical progress, and which still need signed pixel translation?
+
+### 8. Pagination visuals and accessibility semantics change
+
+Before:
+
+```tsx
+<Pagination.Basic data={data} progress={progress} />
+```
+
+After, non-interactive dots are decorative:
+
+```tsx
+<Pagination count={data.length} progress={progress} />
+```
+
+To keep them interactive, wire explicit navigation:
+
+```tsx
+<Pagination
+  count={data.length}
+  progress={progress}
+  onPress={(index) => ref.current?.scrollTo({ index })}
+/>
+```
+
+**Human confirmation required:** Are the dots navigation controls or decorative status, and must a custom v4 visual be recreated?
+
+### 9. Only the current slide is exposed to accessibility services
+
+Before, off-screen slide content could remain in the accessibility tree:
+
+```tsx
+<Carousel data={data} renderItem={renderItem} />
+```
+
+After, v5 hides non-current slides. Add explicit external navigation when users need to move between slides without swiping:
+
+```tsx
+<Button title="Previous" onPress={() => ref.current?.prev()} />
+<Button title="Next" onPress={() => ref.current?.next()} />
+```
+
+**Human confirmation required:** Is the current slide understandable on its own, and does the screen need accessible previous/next controls?
+
+### 10. Animation duration no longer includes a hidden extra 100ms
+
+Before, this declaration settled in roughly `500ms`:
+
+```tsx
+<Carousel scrollAnimationDuration={400} />
+```
+
+After, preserve the old perceived duration explicitly or adopt the exact duration:
+
+```tsx
+<Carousel animation={{ type: "timing", duration: 500 }} />
+```
+
+**Human confirmation required:** Should the interaction preserve the old perceived timing or use the exact declared duration?
+
+### 11. Accepted non-animated commands emit a complete lifecycle
+
+Before, an immediate command did not emit a settled `onScrollEnd` event:
+
+```tsx
+<Carousel onScrollEnd={handleSettled} />
+ref.current?.scrollTo({ index: 2, animated: false });
+```
+
+After, it fires `onScrollStart` and then immediately fires `onSnapToItem`:
+
+```tsx
+<Carousel onScrollStart={handleStart} onSnapToItem={handleSettled} />
+ref.current?.scrollTo({ index: 2, animated: false });
+```
+
+**Human confirmation required:** Will analytics, state synchronization, or side effects double-count immediate navigation?
+
+### 12. `scrollEnabled` disables gestures only
+
+Before:
+
+```tsx
+<Carousel enabled={false} autoPlay />
+```
+
+After:
+
+```tsx
+<Carousel scrollEnabled={false} autoplay />
+```
+
+Autoplay and ref commands still work. Disable `autoplay` separately when the whole carousel must pause.
+
+**Human confirmation required:** Should disabling user gestures also pause autoplay or external controls in this screen?
+
+Also review `onScrollStart`: v5 fires it for gestures, ref commands, and autoplay. Do not toggle `autoplay` from this callback because that can create a feedback loop. Use an `onBegin` worklet through `onConfigurePanGesture` when user contact specifically matters.
+
+## Step 3: run the allowed validation
+
+Inspect the project's existing scripts and run only:
+
+1. its typecheck;
+2. its production build;
+3. its existing unit tests, if they can be run directly in the current environment.
+
+Fix migration-caused failures and rerun the relevant command. If a command is unavailable or blocked by an existing environment requirement, report that limitation instead of expanding the scope.
+
+**Do NOT run end-to-end tests. Do NOT launch simulators, emulators, or devices. Do NOT start the app.**
+
+## Finish: summarize and stop
+
+Return:
+
+1. a concise summary of changed files and API migrations;
+2. the result of the typecheck, build, and existing unit tests;
+3. a checklist of every item that still needs human confirmation;
+4. any codemod warnings or validation limitations.
+
+Then stop and wait for the user to review the working tree.
+
+**Do NOT commit or push — leave all changes uncommitted for the user to review.**

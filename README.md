@@ -15,6 +15,10 @@ A performant, customizable carousel for React Native, powered by Reanimated and 
 - [Examples](https://rn-carousel.dev/Examples/summary)
 - [Migrating from v4](https://rn-carousel.dev/migration-v5)
 
+## Migrating from v4
+
+Read https://rn-carousel.dev/migration-v5.md and upgrade react-native-reanimated-carousel to v5 in this project, then summarize what changed for my review.
+
 ## v5 highlights
 
 - A smaller, named-only API with descriptive TypeScript types.

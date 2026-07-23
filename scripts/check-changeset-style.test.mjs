@@ -23,6 +23,44 @@ test("accepts optional follow-up bullets", () => {
   );
 });
 
+test("accepts the constrained agent migration release section", () => {
+  assert.deepEqual(
+    checkChangeset(
+      wrap(`Prepare the next major release.
+- Link the complete migration guide.
+
+### Migrate with your AI agent
+
+\`\`\`text
+Read the migration guide and upgrade this project.
+\`\`\`
+
+The agent leaves all changes ready for review.`)
+    ),
+    []
+  );
+});
+
+test("rejects a malformed agent migration release section", () => {
+  assert.deepEqual(
+    checkChangeset(
+      wrap(`Prepare the next major release.
+
+### Migrate with your AI agent
+
+\`\`\`text
+This prompt
+wraps onto two lines.
+\`\`\`
+
+Review the result.`)
+    ),
+    [
+      "agent migration section must contain one single-line text prompt and one single-line review note",
+    ]
+  );
+});
+
 test("rejects a list marker on the summary line", () => {
   assert.deepEqual(checkChangeset(wrap("- Fix carousel sizing.")), [
     'summary line must not start with a list marker: "- Fix carousel sizing."',
