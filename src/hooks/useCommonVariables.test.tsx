@@ -58,7 +58,7 @@ describe("useCommonVariables", () => {
     expect(result.current.handlerOffset.value).toBe(-1400);
   });
 
-  it("respects custom defaultScrollOffsetValue", () => {
+  it("initializes the deprecated custom offset at the default index", () => {
     let shared!: SharedValue<number>;
     const { result } = renderHook(() => {
       shared = useSharedValue(-500);
@@ -67,7 +67,22 @@ describe("useCommonVariables", () => {
     });
 
     expect(result.current.handlerOffset).toBe(shared);
-    expect(result.current.handlerOffset.value).toBe(-500);
+    expect(result.current.handlerOffset.value).toBeCloseTo(0);
+  });
+
+  it("initializes a consumer scrollOffsetValue from defaultIndex when size is ready", () => {
+    let shared!: SharedValue<number>;
+    const { result } = renderHook(() => {
+      shared = useSharedValue(-500);
+      const props = createBaseProps({
+        defaultIndex: 2,
+        scrollOffsetValue: shared,
+      });
+      return useCommonVariables(props);
+    });
+
+    expect(result.current.handlerOffset).toBe(shared);
+    expect(result.current.handlerOffset.value).toBe(-1400);
   });
 
   it("sets validLength to 0 when dataLength is 1", () => {
@@ -88,7 +103,7 @@ describe("useCommonVariables", () => {
     const props = createBaseProps({ defaultIndex: -1 });
     const { result } = renderHook(() => useCommonVariables(props));
 
-    expect(result.current.handlerOffset.value).toBe(-700);
+    expect(result.current.handlerOffset.value).toBe(700);
   });
 
   it("keeps size calculation when loop is disabled", () => {

@@ -65,7 +65,11 @@ export function useCommonVariables(props: TInitializeCarouselProps<any>): ICommo
   // Prefer the newer `scrollOffsetValue` name, but keep the legacy prop for compatibility.
   const handlerOffset = props.scrollOffsetValue ?? defaultScrollOffsetValue ?? _handlerOffset;
   const prevDataLength = useSharedValue(dataLength);
-  const prevSize = useSharedValue(manualSize ?? 0);
+  // Start at zero even when a synchronous item size is available. The first
+  // size reaction owns initialization and must write the default-index offset
+  // into consumer-provided SharedValues as well as the internal value.
+  const prevSize = useSharedValue(0);
+  const hasInitializedOffset = useSharedValue(false);
   const sizeExplicit = React.useMemo(() => {
     const explicitPageSize = vertical ? explicitItemHeight : explicitItemWidth;
     return typeof explicitPageSize === "number" && explicitPageSize > 0;
@@ -94,6 +98,15 @@ export function useCommonVariables(props: TInitializeCarouselProps<any>): ICommo
       sizePhase.value = "ready";
     }
   }, [manualSize, resolvedSize, sizePhase]);
+
+  React.useEffect(() => {
+    const currentSize = resolvedSize.value ?? 0;
+    if (currentSize <= 0 || hasInitializedOffset.value) return;
+
+    handlerOffset.value = -(defaultIndex * currentSize);
+    prevSize.value = currentSize;
+    hasInitializedOffset.value = true;
+  }, [defaultIndex, handlerOffset, hasInitializedOffset, prevSize, resolvedSize]);
 
   /**
    * When data changes, we need to compute new index for handlerOffset
@@ -146,8 +159,9 @@ export function useCommonVariables(props: TInitializeCarouselProps<any>): ICommo
 
       sizePhase.value = previousSize > 0 ? "updating" : sizePhase.value;
 
-      if (previousSize <= 0) {
-        handlerOffset.value = -Math.abs(defaultIndex * currentSize);
+      if (previousSize <= 0 || !hasInitializedOffset.value) {
+        handlerOffset.value = -(defaultIndex * currentSize);
+        hasInitializedOffset.value = true;
       } else {
         handlerOffset.value = computeOffsetIfSizeChanged({
           handlerOffset: handlerOffset.value,
@@ -159,7 +173,7 @@ export function useCommonVariables(props: TInitializeCarouselProps<any>): ICommo
       prevSize.value = currentSize;
       sizePhase.value = "ready";
     },
-    [defaultIndex, resolvedSize, sizePhase]
+    [defaultIndex, hasInitializedOffset, resolvedSize, sizePhase]
   );
 
   return {

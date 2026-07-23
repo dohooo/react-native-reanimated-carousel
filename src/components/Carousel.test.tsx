@@ -480,7 +480,7 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
     await waitFor(() => expect(progress.current).toBe(2));
   });
 
-  it("`defaultScrollOffsetValue` prop: should render the correct progress value with the defaultScrollOffsetValue props", async () => {
+  it("initializes a consumer offset at defaultIndex when size is ready", async () => {
     const progress = { current: 0 };
     const Wrapper = createCarousel(progress);
     const WrapperWithCustomProps = () => {
@@ -496,7 +496,7 @@ describe("Test the real swipe behavior of Carousel to ensure it's working as exp
 
     render(<WrapperWithCustomProps />);
 
-    await waitFor(() => expect(progress.current).toBe(1));
+    await waitFor(() => expect(progress.current).toBe(0));
   });
 
   it("`ref` prop: should handle the ref props", async () => {
