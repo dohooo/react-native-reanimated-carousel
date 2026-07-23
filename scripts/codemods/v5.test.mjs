@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { transformSource } from "./v5.mjs";
+import { completionOutput, transformSource } from "./v5.mjs";
 
 test("migrates default imports, direct prop renames, orientation, item size, and loop", () => {
   const source = `
@@ -101,4 +101,24 @@ const Example = () => <Carousel data={[]} renderItem={() => null} autoPlay />;
   const result = transformSource(source, "fixture.tsx");
 
   assert.doesNotMatch(result.code, /[ \t]+$/m);
+});
+
+test("prints the agent handoff after mechanical migration", () => {
+  const expectedPrompt = [
+    "Read https://rn-carousel.dev/migration-v5.md and upgrade",
+    "react-native-reanimated-carousel to v5 in this project, then summarize",
+    "what changed for my review.",
+  ].join(" ");
+  const output = completionOutput(false);
+
+  assert.match(output, /^Mechanical migration complete\./u);
+  assert.match(output, /Behavioral migration review is still required/u);
+  assert.equal(output.split("\n").at(-1), expectedPrompt);
+});
+
+test("labels dry runs as previews", () => {
+  const output = completionOutput(true);
+
+  assert.match(output, /^Mechanical migration preview complete/u);
+  assert.match(output, /no files were written/u);
 });

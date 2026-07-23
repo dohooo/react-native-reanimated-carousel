@@ -7,6 +7,11 @@ import { fileURLToPath } from "node:url";
 import ts from "typescript";
 
 const packageName = "react-native-reanimated-carousel";
+const migrationPrompt = [
+  "Read https://rn-carousel.dev/migration-v5.md and upgrade",
+  "react-native-reanimated-carousel to v5 in this project, then summarize",
+  "what changed for my review.",
+].join(" ");
 const supportedExtensions = new Set([".js", ".jsx", ".ts", ".tsx"]);
 const directPropRenames = new Map([
   ["autoPlay", "autoplay"],
@@ -433,6 +438,16 @@ async function collectFiles(inputPath) {
   return files;
 }
 
+export function completionOutput(dryRun) {
+  return [
+    dryRun
+      ? "Mechanical migration preview complete; no files were written."
+      : "Mechanical migration complete.",
+    "Behavioral migration review is still required. Give this prompt to your AI agent:",
+    migrationPrompt,
+  ].join("\n");
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const dryRun = args.includes("--dry");
@@ -473,6 +488,7 @@ async function main() {
   }
 
   console.log(`${dryRun ? "would update" : "updated"} ${changed} file(s)`);
+  console.log(completionOutput(dryRun));
 }
 
 if (
