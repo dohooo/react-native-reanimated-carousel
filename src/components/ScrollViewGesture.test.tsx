@@ -7,7 +7,7 @@ import type {
 } from "react-native-gesture-handler";
 import type { SharedValue } from "react-native-reanimated";
 
-import { act, render } from "@testing-library/react-native";
+import { act, fireEvent, render } from "@testing-library/react-native";
 
 import { ScrollViewGesture } from "./ScrollViewGesture";
 
@@ -45,6 +45,8 @@ type RenderGestureOptions = {
   size?: number;
   dataLength?: number;
   containerSize?: { width: number; height: number };
+  onTouchBegin?: () => void;
+  onTouchEnd?: () => void;
 };
 
 function renderGesture({
@@ -53,6 +55,8 @@ function renderGesture({
   size = 300,
   dataLength = 3,
   containerSize = { width: 300, height: 200 },
+  onTouchBegin,
+  onTouchEnd,
 }: RenderGestureOptions = {}) {
   const translation = { value: 0 } as SharedValue<number>;
   const contextValue = {
@@ -87,9 +91,16 @@ function renderGesture({
     },
   } as unknown as CarouselContext;
 
-  render(
+  const screen = render(
     <GlobalStateContext.Provider value={contextValue}>
-      <ScrollViewGesture size={size} translation={translation} style={containerSize}>
+      <ScrollViewGesture
+        size={size}
+        translation={translation}
+        style={containerSize}
+        testID="gesture-view"
+        onTouchBegin={onTouchBegin}
+        onTouchEnd={onTouchEnd}
+      >
         <View testID="content" />
       </ScrollViewGesture>
     </GlobalStateContext.Provider>
@@ -102,7 +113,7 @@ function renderGesture({
     throw new Error("Expected ScrollViewGesture to configure the pan gesture");
   }
 
-  return { gestureCallbacks, translation };
+  return { gestureCallbacks, screen, translation };
 }
 
 describe("issue #857 web regression", () => {
@@ -181,5 +192,18 @@ describe("issue #857 web regression", () => {
     });
 
     expect(translation.value).toBe(-180);
+  });
+
+  it("treats a cancelled touch as the end of an autoplay pause", () => {
+    const onTouchBegin = jest.fn();
+    const onTouchEnd = jest.fn();
+    const { screen } = renderGesture({ onTouchBegin, onTouchEnd });
+    const gestureView = screen.getByTestId("gesture-view");
+
+    fireEvent(gestureView, "touchStart");
+    fireEvent(gestureView, "touchCancel");
+
+    expect(onTouchBegin).toHaveBeenCalledTimes(1);
+    expect(onTouchEnd).toHaveBeenCalledTimes(1);
   });
 });

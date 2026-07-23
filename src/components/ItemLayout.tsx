@@ -118,13 +118,15 @@ export const ItemLayout: React.FC<{
   }
 
   const x = useOffsetX(offsetXConfig, visibleRanges);
-  const isCurrentForAccessibility = React.useCallback(
-    () =>
+  const isCurrentForAccessibility = React.useCallback(() => {
+    "worklet";
+
+    return (
       size > 0 &&
       dataLength > 0 &&
-      positiveModulo(Math.round(-handlerOffset.value / size), dataLength) === index,
-    [dataLength, handlerOffset, index, size]
-  );
+      positiveModulo(Math.round(-handlerOffset.value / size), dataLength) === index
+    );
+  }, [dataLength, handlerOffset, index, size]);
   const [isAccessibilityCurrent, setIsAccessibilityCurrent] =
     React.useState(isCurrentForAccessibility);
 

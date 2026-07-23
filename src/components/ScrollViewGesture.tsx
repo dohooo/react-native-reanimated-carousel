@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
 import React, { useCallback } from "react";
-import type { LayoutChangeEvent, StyleProp, ViewStyle } from "react-native";
+import type { LayoutChangeEvent, ViewProps } from "react-native";
 import type {
   GestureStateChangeEvent,
   PanGestureHandlerEventPayload,
@@ -13,7 +13,7 @@ import Animated, {
   useSharedValue,
   withDecay,
 } from "react-native-reanimated";
-import type { SharedValue } from "react-native-reanimated";
+import type { AnimatedProps, SharedValue } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 
 import { usePanGestureProxy } from "../hooks/usePanGestureProxy";
@@ -26,7 +26,7 @@ interface Props {
   size: number;
   infinite?: boolean;
   testID?: string;
-  style?: StyleProp<ViewStyle>;
+  style?: AnimatedProps<ViewProps>["style"];
   translation: SharedValue<number>;
   onScrollStart?: () => void;
   onScrollEnd?: () => void;
@@ -431,6 +431,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
         style={style}
         onTouchStart={onTouchBegin}
         onTouchEnd={onTouchEnd}
+        onTouchCancel={onTouchEnd}
         onLayout={onLayout}
       >
         {props.children}
