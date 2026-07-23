@@ -56,19 +56,26 @@ test("generates twins and llms files for every documentation page", async () => 
 
   const pages = await generateAgentDocs({ pagesDir, outputDir });
 
-  assert.ok(pages.length > 20);
+  assert.ok(pages.length >= 33);
   assert.ok(pages.some(({ route }) => route === "/migration-v5"));
+  assert.ok(pages.some(({ route }) => route === "/works-with-expo"));
   assert.ok(pages.some(({ route }) => route === "/Examples/basic-layouts/normal"));
 
   const llms = await readFile(path.join(outputDir, "llms.txt"), "utf8");
   const llmsFull = await readFile(path.join(outputDir, "llms-full.txt"), "utf8");
   const migration = await readFile(path.join(outputDir, "migration-v5.md"), "utf8");
+  const expo = await readFile(path.join(outputDir, "works-with-expo.md"), "utf8");
 
   assert.match(llms, /^# React Native Reanimated Carousel/mu);
   assert.match(llms, /## Instructions for AI coding agents/u);
   assert.match(llms, /https:\/\/rn-carousel\.dev\/migration-v5\.md/u);
+  assert.match(llms, /https:\/\/rn-carousel\.dev\/works-with-expo\.md/u);
   assert.match(llmsFull, /# Migration Guide to v5/u);
+  assert.match(llmsFull, /# Works with Expo/u);
   assert.match(migration, /canonical_url: "https:\/\/rn-carousel\.dev\/migration-v5"/u);
+  assert.match(expo, /canonical_url: "https:\/\/rn-carousel\.dev\/works-with-expo"/u);
+  assert.match(expo, /npx expo install react-native-reanimated-carousel/u);
+  assert.equal(hasMdxResidue(expo), false);
 
   for (const page of pages) {
     const outputPath =

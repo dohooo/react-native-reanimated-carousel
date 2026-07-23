@@ -1,0 +1,75 @@
+---
+id: works-with-expo
+title: Works with Expo
+sidebar_label: Works with Expo
+description: Install react-native-reanimated-carousel v5 with Expo and understand its Expo Go, development build, CI, and Snack compatibility.
+keywords:
+  - react-native-reanimated-carousel
+  - expo
+  - expo go
+  - development build
+  - snack
+slug: /works-with-expo
+---
+
+# Works with Expo
+
+React Native Reanimated Carousel v5 is a JavaScript library with no native module and no config plugin. The carousel itself does not require `prebuild`.
+
+## Install
+
+Let Expo install the package:
+
+```bash
+npx expo install react-native-reanimated-carousel
+```
+
+If the project does not already have the three peer libraries, install them through Expo too so the versions match the project's Expo SDK:
+
+```bash
+npx expo install react-native-gesture-handler react-native-reanimated react-native-worklets
+```
+
+Expo resolves `react-native-reanimated-carousel` from npm and selects SDK-compatible versions of its native peer libraries when known.
+
+## Expo Go
+
+The App Store build of Expo Go currently remains on SDK 54. That is a supported v5 configuration: SDK 54 bundles Reanimated `~4.1.1`, React Native Gesture Handler `~2.28.0`, and React Native Worklets `0.5.1`, which meet the v5 peer minimums.
+
+| Expo SDK | How to run | v5 compatibility |
+| --- | --- | --- |
+| 54 | App Store version of Expo Go | Verified |
+| 55 | Development build or `eas go` | Verified |
+| 56 | Development build or `eas go` | Verified |
+| 57 | Development build or `eas go` | Verified |
+
+For SDK 55–57, use a [development build](https://docs.expo.dev/develop/development-builds/introduction/) or install the matching Expo Go build with [`eas go`](https://docs.expo.dev/eas/go/). Expo CLI can also install supported simulator or emulator builds.
+
+## What our compatibility matrix verifies
+
+The repository tests SDK 54, 55, 56, and 57 using the package created by `npm pack`, rather than importing workspace source. For every SDK, CI:
+
+1. creates a clean Expo app;
+2. installs the packed carousel and SDK-compatible peers;
+3. runs TypeScript, `expo install --check`, and Expo Doctor;
+4. exports the web app;
+5. prebuilds Android and assembles a debug APK.
+
+SDK 54 also runs the packed-package Playwright web smoke test. See the [Packed Package Compatibility workflow](https://github.com/dohooo/react-native-reanimated-carousel/blob/main/.github/workflows/compatibility.yml).
+
+## Native setup
+
+The carousel adds no native code, so it has no config plugin and does not require `prebuild` on its own. Expo Go already contains compatible native builds of Reanimated, Worklets, and Gesture Handler. A development build includes the versions selected by Expo for the app.
+
+## Expo Snack status
+
+We verified the published `5.0.0-beta.8` package in an SDK 54 Snack web player as a proxy for v5 runtime compatibility. Snackager resolved the package, the carousel rendered, and the app console reported no Reanimated or Worklets errors when `react-native-worklets@0.5.1` was declared explicitly.
+
+React Native Worklets is not currently one of Snack's runtime-bundled modules, so custom Snacks must list it as a dependency. Native Snack preview still needs a manual device check; we are not claiming native Snack support until that check is complete.
+
+## Expo references
+
+- [Install third-party libraries with Expo](https://docs.expo.dev/workflow/using-libraries/)
+- [Expo Go and the App Store, May 2026](https://expo.dev/changelog/expo-go-and-app-store-may-2026)
+- [Expo SDK 57](https://expo.dev/changelog/sdk-57)
+- [SDK 54 bundled native module versions](https://github.com/expo/expo/blob/sdk-54/packages/expo/bundledNativeModules.json)
