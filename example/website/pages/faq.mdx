@@ -25,7 +25,7 @@ slug: /faq
 
 ## Optimizing
 
-When rendering a large number of elements, you can use the 'windowSize' property to control how many items of the current element are rendered. The default is full rendering. After testing without this property, frames will drop when rendering 200 empty views. After setting this property, rendering 1000 empty views is still smooth. (The specific number depends on the phone model tested)
+Use `renderWindowSize` to limit how many slides are mounted around the current item. Omit it to mount all slides. Choose a value from measurements on your target devices: a smaller window reduces React work, while a larger one gives complex neighboring animations more room.
 
 ## Used in `ScrollView/FlatList`
 
@@ -41,7 +41,8 @@ When rendering a large number of elements, you can use the 'windowSize' property
 ```
 
 ## RTL
-Support to RTL mode with no more configuration needed. But in RTL mode, need to manually set the autoPlayReverse props for autoplay to control scrolling direction.
+
+Horizontal RTL is detected from `I18nManager.isRTL`. Keep data in logical order: `next()`, `autoplayDirection="forward"`, progress, and signed offset retain the same meaning as LTR. A physical right swipe advances in RTL. Custom `itemAnimation` callbacks receive logical progress, so direction-sensitive `translateX` output must be mirrored by the application.
 
 ## Expo
 

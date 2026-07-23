@@ -1,161 +1,159 @@
 ---
 id: concepts
-title: How it works?
-sidebar_label: How it works?
-description: The react-native-reanimated-carousel concept and how it works.
+title: Concepts
+sidebar_label: Concepts
+description: Understand sizing, logical coordinates, looping, and selection in v5
 keywords:
   - react-native-reanimated-carousel
-  - reanimated-carousel
-  - reanimated carousel
-  - react-native
-  - snap-carousel
-  - react native
-  - snap carousel
-  - ios
-  - android
-  - carousel
-  - snap
-  - reanimated
-image: 
+  - progress
+  - offset
+  - loop
+  - rtl
 slug: /concepts
 ---
 
-# How it works?
----
+# Concepts
 
-About the internal implementation of RNRC(react-native-reanimated-carousel).
+v5 separates four ideas that older APIs often mixed together: viewport size, page size, visual position, and settled selection.
 
-### Working principle
-This is what we expect to see in the execution of RNRC.
+## Viewport and page size
 
-1. First we have three images by default and have slid to the second image in the middle
-
-![steps-1](/steps-1.png)
-2. When we drag the image to the right
-
-![steps-2](/steps-2.png)
-
-![steps-3](/steps-3.png)
-
-3. When the first image is partially in the viewport, we move the last image to the front
-
-![steps-4](/steps-4.png)
-
-4. So we've done a circular scroll to one side and the other way around. It works by sliding and appending, and relies on reanimated, so the whole processing logic is still done in the UI thread, and moving images doesn't cause animation to freeze.
-
-![steps-5](/steps-5.png)
-
-This is how it works in code.
-
-> I don't think I have explained this logic clearly, but this is a version that has been revised many times, it is a complicated process, if any partners have their own understanding, welcome to submit PR, we will make this explanation more clear.  
-> In my opinion, this part is undoubtedly very important for the initial stage of project development, but it is no longer so "important" at present, because the underlying content of this part will no longer change significantly. If you are interested in it, you can understand it, otherwise I don't think it is necessary to understand it.  
-
-1. First we need a unit `size` to help us calculate the scroll distance. This `size` is the **page size**:
-   - If `itemWidth` / `itemHeight` is provided, `size` uses that.
-   - Otherwise, `size` falls back to the **container axis size** (prefer `style.width` / `style.height`, or legacy `width` / `height`, or layout measurement).
-
-2. Then we need a value `handlerOffset`, which is the current scroll distance, and it's a total value, if we scroll two, `handlerOffset` is equal to `size` * 2, if we scroll ten, `handlerOffset` is equal to `size` * 10.
-
-3. Followed by dealing with how to get at the end of the element at the right time to move to the front, this part of logic in `./src/hooks/useOffsetX.ts`. First we need to know the current window size (the total number of elements rendered on one side). The window size defaults to half the total number of elements, i.e. full render.
-
-![steps-6](/steps-6.png)
-
-From the value of the window size we can calculate the position of the end of the forward or reverse element.
-
-![steps-7](/steps-7.png)
-
-Then we need to find the boundary (see if the image moves to the front). Currently we set this position to the total length of the side plus half the size of the element. This position is affected by the `windowSize` and can be changed using `windowSize` prop. For example, if `windowSize` is not set and the data length is 5, then one side length is size * (5-1)/2 = size * 2, then the boundary is size * 2 + size * 0.5, if `windowSize` is set to 3, then the boundary is size * 2 + size * 0.5. Size * (3-1)/2 = size * 1, size * 1 + size * 0.5
-
-![steps-8](/steps-8.png)
-
-In order to control the position of the elements more intuitively, we place the elements at the origin, and they all overlap at the origin, `translateX:0`. In this case, we need to calculate the base position of each element `startPos` based on the index of the element, for example, the base position of the first image is 0, the base position of the second image is SIZE, the base position of the third image is size * 2, and so on. Then, keeping the position of each element relative to each other, we subtract each element from its base position `startPos` and add the minimum boundary value `number.min_value`, so that we have the logic to change position immediately if we cross the `boundary`. It will be converted automatically by `outputRange`.
-
-The above logic is translated into code as follows:
+The root `style` defines the viewport. Its measured main-axis size is also the default page distance:
 
 ```tsx
-    const inputRange = [
-        -TOTAL_WIDTH,
-        MIN - HALF_WIDTH - startPos - Number.MIN_VALUE,
-        MIN - HALF_WIDTH - startPos,
-        0,
-        MAX + HALF_WIDTH - startPos,
-        MAX + HALF_WIDTH - startPos + Number.MIN_VALUE,
-        TOTAL_WIDTH,
-    ];
-    const outputRange = [
-        startPos,
-        MAX + HALF_WIDTH - Number.MIN_VALUE,
-        MIN - HALF_WIDTH,
-        startPos,
-        MAX + HALF_WIDTH,
-        MIN - HALF_WIDTH + Number.MIN_VALUE,
-        startPos,
-    ];
-    return interpolate(
-        handlerOffset.value,
-        inputRange,
-        outputRange,
-        Extrapolate.CLAMP
-    );
+<Carousel
+  style={{ width: 360, height: 200 }}
+  data={data}
+  renderItem={renderItem}
+/>
 ```
 
-4. Now we have a nice x value that behaves differently for different indexes. For example, when we want the second element to come after the first, we can do something like this
+Set `itemSize` only when the page distance differs from the viewport:
 
 ```tsx
-const inputRange = [-1, 0 ,1]
-const outputRange = [-size, 0 ,size]
-return {
-    transform: [
-        { translateX: interpolate(handlerOffset.value, inputRange, outputRange) },
-    ],
-}
-```
-So when the first one is at the origin `translateX:0`, the next one is at the origin `translateX:size`, because the first one receives an X value of 0 and the second one receives an X value of 1. And if we continue to drag to the left, then -1 approaches -1.5, which, according to our logic, exceeds `-1.50000...00001`, the left most image receives an X value of `1.49999... 00001`, which triggers the logic to change position.
-
-### Directory
-```
-./src
-├── components
-│   ├── Carousel.tsx # Public component facade
-│   ├── CarouselLayout.tsx # Layout, progress, controller, and autoplay wiring
-│   ├── ItemLayout.tsx # Per-item animated layout
-│   ├── ItemRenderer.tsx # Visible-item rendering
-│   ├── LazyView.tsx # Conditional item rendering
-│   ├── Pagination # Basic and custom pagination
-│   └── ScrollViewGesture.tsx # Pan gesture and boundary handling
-├── hooks
-│   ├── useAutoPlay.ts # Autoplay timer lifecycle
-│   ├── useCarouselController.tsx # prev, next, scrollTo, and current index
-│   ├── useCommonVariables.ts # Shared size and offset state
-│   ├── useLayoutConfig.ts # Selects normal, parallax, or stack animations
-│   ├── useOffsetX.ts # Loop-aware item positioning
-│   ├── useOnProgressChange.ts # Progress callbacks and shared values
-│   ├── usePanGestureProxy.ts # Gesture configuration
-│   └── useVisibleRanges.tsx # Render-window calculation
-├── layouts
-│   ├── index.tsx
-│   ├── normal.ts
-│   ├── parallax.ts
-│   └── stack.ts
-├── store
-│   └── index.tsx # Context for props, shared state, and measurements
-├── utils # Pure offset, gesture, animation, and data helpers
-├── index.tsx # Package exports
-└── types.ts # Public prop and ref types
+<Carousel
+  style={{ width: 360, height: 200 }}
+  itemSize={240}
+  data={data}
+  renderItem={renderItem}
+/>
 ```
 
-### Development
-1. Run `yarn install` and `yarn dev` in the repository root.
-2. Run `yarn install` in `example/app` once.
-3. Start the example with `yarn ios`, `yarn android`, or `yarn web` from `example/app`.
-4. Modify files under `src`; the root watch task rebuilds the linked package.
+The same `itemSize` prop applies to both orientations. In horizontal mode it is a width; in vertical mode it is a height.
 
-### Tips
-How to add a new animation effect?
+## Raw indices
 
-Use the [`customAnimation`](/custom-animations) prop for animation effects that are not covered by the built-in layouts.
+Every public index refers to the original `data` array:
 
-1. Add a kebab-case demo route under `example/app/app/demos/<category>/<name>` by following a nearby example.
-2. Add or update the matching page under `example/website/pages/Examples` when the demo should appear in the documentation.
-3. Record the demo and run `yarn gif` from the repository root when a GIF asset is needed.
-4. Put generated media under `assets` and reference it from the example page.
+- `renderItem.index`;
+- `defaultIndex`;
+- `scrollTo({ index })`;
+- `getCurrentIndex()`;
+- `onSnapToItem(index)`;
+- Pagination press indices.
+
+Loop mode may create internal copies for short arrays, but copy indices never escape the component.
+
+Use `keyExtractor` when identity must survive insertion or reordering. If the selected key disappears, the old numeric index is clamped.
+
+## Logical progress
+
+`progress` is a fractional logical index:
+
+```text
+backward  ←  -1   0   1   2  →  forward
+```
+
+- item `0` is progress `0`;
+- forward movement adds `1` per item;
+- backward movement subtracts `1`;
+- fractions represent in-flight movement;
+- non-loop progress is bounded;
+- loop progress is continuous and unbounded.
+
+For loop progress, the settled raw index is the positive modulo of rounded progress by `data.length`. Pagination applies the same nearest-cycle model, so it does not need a `loop` prop or a seam special case.
+
+Progress continuity is guaranteed while data length is stable. A data-length change can rebase the coordinate once without emitting lifecycle events.
+
+## Signed offset
+
+`scrollOffsetValue` exposes the main-axis content translation in pixels:
+
+```text
+item 0       item 1         item 2
+offset 0  →  -itemSize  →  -2 * itemSize
+```
+
+The sign is invariant across horizontal, vertical, LTR, and RTL. Loop offset is continuous and unbounded.
+
+This SharedValue is two-way: an external write moves content. It does not commit selection or fire `onSnapToItem`; use `scrollTo({ index })` to finish at a semantic item. During an active gesture, gesture frames own the offset and may overwrite external writes.
+
+## Relative item progress
+
+Each `renderItem` receives `relativeProgress`:
+
+```text
+backward item     selected item     forward item
+      -1                0                +1
+```
+
+It is a `SharedValue<number>` for animated styles. `itemAnimation` receives the same value as a number on the UI thread.
+
+The coordinate is logical. A custom horizontal `translateX`, however, is a physical React Native transform and must be mirrored by the application for RTL when the effect is directional.
+
+## Live position and settled selection
+
+Visual position changes continuously, while public selection changes only on settle:
+
+- `progress` and `scrollOffsetValue` update during motion;
+- `getCurrentIndex()` stays at the previous settled index;
+- `onSnapToItem` announces the new settled raw index.
+
+This prevents application state from oscillating between rounded indices during a swipe.
+
+`onScrollStart` marks the start of an accepted movement from gestures, commands, or autoplay. Rejected/no-op commands, direct offset writes, relayout, and data reconciliation do not emit lifecycle events.
+
+## Looping
+
+`loop` defaults to `false`. With `loop`:
+
+- `next` and `prev` preserve their requested logical direction;
+- `scrollTo` takes the shortest path and chooses logical forward on a tie;
+- progress and offset remain unbounded rather than resetting at cycle boundaries;
+- built-in rendering uses bounded derived transforms to avoid precision problems in native view styles.
+
+Autoplay follows the same logical raw-data order. In non-loop mode it stops at the requested direction's boundary.
+
+## Snapping
+
+`snapMode` describes release behavior:
+
+- `"page"`: move at most one logical page per gesture;
+- `"nearest"`: settle on the nearest logical page after free movement;
+- `"none"`: use free decay, then publish the nearest raw index when motion stops.
+
+`animation` controls page/nearest settle, commands, and autoplay. Free decay and overscroll rebound remain internal physics.
+
+## Render window
+
+`renderWindowSize` limits how many slides are mounted around the current position. Omit it to mount all raw slides.
+
+This is a rendering optimization only. It does not change data, indices, progress, looping, or navigation.
+
+## RTL
+
+Horizontal RTL is detected from `I18nManager.isRTL`. Public APIs stay logical:
+
+- data order is unchanged;
+- `next` is still forward;
+- progress still increases forward;
+- offset still decreases forward;
+- a physical right swipe advances in RTL.
+
+Only physical presentation and gesture coordinates are mapped. Vertical carousels are unaffected. Gesture observers receive the original physical RNGH event values.
+
+## Accessibility
+
+Only the current slide is exposed to the accessibility tree. The application owns slide semantics through `renderItem`.
+
+Interactive Pagination dots are buttons with selected state. Without `onPress`, dots are decorative and hidden. External previous/next buttons are a good complement when screen-reader users should move through slides without swiping.

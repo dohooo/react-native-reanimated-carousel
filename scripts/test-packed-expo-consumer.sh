@@ -22,6 +22,7 @@ mkdir -p "$TARBALL_DIR"
 
 cd "$REPOSITORY_ROOT"
 npm pack --pack-destination "$TARBALL_DIR"
+yarn package:check
 TARBALL_PATH="$(find "$TARBALL_DIR" -maxdepth 1 -type f -name '*.tgz' -print -quit)"
 
 if [[ -z "$TARBALL_PATH" ]]; then

@@ -2,137 +2,77 @@
 id: usage
 title: Usage
 sidebar_label: Getting Started
-description: The react-native-reanimated-carousel usage guide. 📖
+description: Get started with react-native-reanimated-carousel v5
 keywords:
   - react-native-reanimated-carousel
-  - reanimated-carousel
-  - reanimated carousel
-  - react-native
-  - snap-carousel
-  - react native
-  - snap carousel
-  - ios
-  - android
   - carousel
-  - snap
+  - react-native
   - reanimated
-image: 
 slug: /usage
 ---
 
 # Usage
----
 
-Here is a simple usage of the **React Native Reanimated Carousel**. For more scrollable usage please read [Scrollables](./faq#used-in-scrollviewflatlist).
-
-<video  width="320" height="240" autoPlay loop style={{border:'1px solid gray', margin:"0 auto",borderRadius:10,marginTop:10}}>
-  <source src="/parallax-pagination.mov" type="video/mp4"/>
-</video>
+Wrap your application in Gesture Handler's root view, then render the named `Carousel` export:
 
 ```tsx
 import * as React from "react";
-import { Dimensions, Text, View } from "react-native";
+import { Text, useWindowDimensions, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useSharedValue } from "react-native-reanimated";
-import Carousel, {
-  ICarouselInstance,
-  Pagination,
-} from "react-native-reanimated-carousel";
+import { Carousel } from "react-native-reanimated-carousel";
 
-const data = [...new Array(6).keys()];
-const width = Dimensions.get("window").width;
+const data = ["One", "Two", "Three"];
 
-function App() {
-  const ref = React.useRef<ICarouselInstance>(null);
-  const progress = useSharedValue<number>(0);
-  
-  const onPressPagination = (index: number) => {
-    ref.current?.scrollTo({
-      /**
-       * Calculate the difference between the current index and the target index
-       * to ensure that the carousel scrolls to the nearest index
-       */
-      count: index - progress.value,
-      animated: true,
-    });
-  };
+export default function App() {
+  const { width } = useWindowDimensions();
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Carousel
-        ref={ref}
-        style={{ width, height: width / 2 }}
-        data={data}
-        onProgressChange={progress}
-        renderItem={({ index }) => (
-          <View
-            style={{
-              flex: 1,
-              borderWidth: 1,
-              justifyContent: "center",
-            }}
-          >
-            <Text style={{ textAlign: "center", fontSize: 30 }}>{index}</Text>
-          </View>
-        )}
-      />
-
-      <Pagination.Basic
-        progress={progress}
-        data={data}
-        dotStyle={{ backgroundColor: "rgba(0,0,0,0.2)", borderRadius: 50 }}
-        containerStyle={{ gap: 5, marginTop: 10 }}
-        onPress={onPressPagination}
-        carouselName="Main carousel"
-      />
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <Carousel
+          data={data}
+          style={{ width, height: 220 }}
+          renderItem={({ item, index }) => (
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: index % 2 ? "#DCE7F7" : "#F5E7D3",
+              }}
+            >
+              <Text>{item}</Text>
+            </View>
+          )}
+        />
+      </View>
     </GestureHandlerRootView>
   );
 }
-
-export default App;
 ```
 
-### Accessible Pagination
+`loop` defaults to `false`. Add `loop` explicitly for infinite wrapping.
 
-`Pagination.Basic` and `Pagination.Custom` announce each item as a button by default. Set `carouselName` to add context to the default label, or use `paginationItemAccessibility` when you need custom or localized announcements:
+## Sizing
 
-```tsx
-<Pagination.Basic
-  progress={progress}
-  data={data}
-  onPress={onPressPagination}
-  carouselName="Featured products"
-  paginationItemAccessibility={(index, length) => ({
-    accessibilityLabel: `Product ${index + 1} of ${length}`,
-    accessibilityHint: `Go to product ${index + 1}`,
-  })}
-/>
-```
+`style` controls the viewport. If `itemSize` is omitted, the page distance is the measured main-axis size.
 
-## Sizing Your Carousel
-
-The Carousel component supports multiple ways to define its size. Understanding these options helps you achieve the layout you need.
-
-### 1. Explicit Dimensions (Recommended)
-
-The most straightforward approach is setting explicit `width` and `height` via the `style` prop:
+### Fixed size
 
 ```tsx
 <Carousel
-  style={{ width: 300, height: 200 }}
+  style={{ width: 320, height: 180 }}
   data={data}
   renderItem={renderItem}
 />
 ```
 
-This gives you full control over the carousel's dimensions and is the most predictable approach.
+### Responsive size
 
-### 2. Flex-based Sizing
-
-You can use flex layout to have the carousel fill its parent container:
+The parent must provide enough constraints for the viewport to measure:
 
 ```tsx
-<View style={{ flex: 1 }}>
+<View style={{ height: 220 }}>
   <Carousel
     style={{ flex: 1 }}
     data={data}
@@ -141,58 +81,163 @@ You can use flex layout to have the carousel fill its parent container:
 </View>
 ```
 
-The carousel will measure its container and adapt automatically. This is useful when you want the carousel to respond to its parent's layout.
+### Multiple visible items
 
-### 3. Custom Snap Distance with `itemWidth` / `itemHeight`
-
-When you want items smaller than the container with custom snapping behavior, use `itemWidth` (horizontal) or `itemHeight` (vertical):
+Set `itemSize` when the snap distance should be smaller than the viewport:
 
 ```tsx
-// Container is 400px wide, but snaps every 200px (showing ~2 items)
 <Carousel
-  style={{ width: 400, height: 200 }}
-  itemWidth={200}
+  style={{ width: 360, height: 180 }}
+  itemSize={240}
   data={data}
   renderItem={renderItem}
 />
 ```
 
-This is particularly useful for:
-- Showing multiple items at once
-- Implementing "peek" effects where adjacent items are partially visible
-- Custom snap intervals independent of container size
-
-### 4. Legacy Props (Deprecated)
-
-The `width` and `height` props are deprecated but still supported for backward compatibility:
+For a vertical carousel, use the same prop names:
 
 ```tsx
-// Deprecated - use style={{ width, height }} instead
 <Carousel
-  width={300}
-  height={200}
+  orientation="vertical"
+  style={{ width: 240, height: 480 }}
+  itemSize={180}
   data={data}
   renderItem={renderItem}
 />
 ```
 
-We recommend migrating to the `style` prop for new code.
+## Pagination
 
-### Sizing Summary
+Create one logical progress SharedValue and give it to both components:
 
-| Scenario | Props to Use | Example |
-|----------|-------------|---------|
-| Fixed size | `style={{ width, height }}` | `style={{ width: 300, height: 200 }}` |
-| Fill parent | `style={{ flex: 1 }}` | Parent must have defined size |
-| Custom snap | `style` + `itemWidth`/`itemHeight` | `style={{ width: 400 }} itemWidth={200}` |
-| Vertical | `style` + `vertical` | `style={{ height: 400 }} vertical` |
+```tsx
+import * as React from "react";
+import { View } from "react-native";
+import { useSharedValue } from "react-native-reanimated";
+import {
+  Carousel,
+  Pagination,
+  type CarouselRef,
+} from "react-native-reanimated-carousel";
 
-### Important Notes
+function CarouselWithPagination() {
+  const ref = React.useRef<CarouselRef>(null);
+  const progress = useSharedValue(0);
+  const data = ["One", "Two", "Three"];
 
-1. **At least one dimension is required**: The carousel needs to know its size either through explicit dimensions, flex layout, or legacy props.
+  return (
+    <View>
+      <Carousel
+        ref={ref}
+        data={data}
+        progress={progress}
+        style={{ height: 220 }}
+        renderItem={renderItem}
+      />
 
-2. **For horizontal carousels**: Width is the primary dimension that controls snapping.
+      <Pagination
+        count={data.length}
+        progress={progress}
+        containerStyle={{ gap: 8, justifyContent: "center", marginTop: 12 }}
+        dotStyle={{ width: 8, height: 8, backgroundColor: "#CBD5E1" }}
+        activeDotStyle={{ width: 20, backgroundColor: "#0F172A" }}
+        onPress={(index) => ref.current?.scrollTo({ index })}
+        getItemAccessibilityLabel={(index, count) =>
+          `Featured item ${index + 1} of ${count}`
+        }
+      />
+    </View>
+  );
+}
+```
 
-3. **For vertical carousels**: Height is the primary dimension that controls snapping.
+With `onPress`, Pagination dots are accessible buttons. Without `onPress`, they are decorative and removed from the accessibility tree.
 
-4. **Performance**: The carousel waits for layout measurement before rendering items. With `style={{ flex: 1 }}`, there may be a brief moment before items appear as the component measures its container.
+## Progress
+
+`progress` is the UI-thread option. It is a fractional logical index:
+
+- item `0` is progress `0`;
+- moving forward increases progress;
+- non-loop progress is bounded;
+- loop progress is continuous and can cross multiple cycles.
+
+Use `onProgressChange` only when JS needs each frame:
+
+```tsx
+<Carousel
+  data={data}
+  renderItem={renderItem}
+  onProgressChange={(progress) => {
+    // Runs on JS. Keep this work small.
+  }}
+/>
+```
+
+Pixel translation is a separate advanced surface:
+
+```tsx
+const offset = useSharedValue(0);
+
+<Carousel
+  data={data}
+  renderItem={renderItem}
+  scrollOffsetValue={offset}
+/>
+```
+
+Forward one page is `-itemSize` pixels. External writes move the content but do not commit selection; call `scrollTo({ index })` to settle on an item.
+
+## Layouts
+
+Built-in layouts use one flat discriminated object:
+
+```tsx
+<Carousel
+  data={data}
+  renderItem={renderItem}
+  layout={{
+    type: "parallax",
+    offset: 100,
+    scale: 0.8,
+  }}
+/>
+```
+
+Stack:
+
+```tsx
+<Carousel
+  data={data}
+  renderItem={renderItem}
+  layout={{
+    type: "horizontal-stack",
+    visibleCount: 4,
+    spacing: 18,
+    exitDirection: "left",
+  }}
+/>
+```
+
+For custom effects, use `itemAnimation` instead of `layout`; TypeScript prevents passing both.
+
+## Autoplay
+
+```tsx
+<Carousel
+  data={data}
+  renderItem={renderItem}
+  loop
+  autoplay
+  autoplayInterval={3000}
+  autoplayDirection="forward"
+/>
+```
+
+`autoplayInterval` is settled dwell time: animation duration is not part of the interval. When `loop={false}`, autoplay stops at the boundary.
+
+`scrollEnabled={false}` disables user gestures only. Autoplay and ref commands remain available.
+
+## Accessibility
+
+Only the current slide is exposed to accessibility services. Provide meaningful slide content inside `renderItem` and compose external headings, navigation buttons, or an interactive Pagination where appropriate.
