@@ -13,7 +13,9 @@
   "scripts": {
     "dev": "next dev",
     "gen-pages": "node scripts/gen-pages.mjs",
-    "build": "npm run gen-pages && next build && next-sitemap",
+    "gen-agent-docs": "node scripts/gen-agent-docs.mjs",
+    "test:agent-docs": "node --test scripts/gen-agent-docs.test.mjs",
+    "build": "npm run gen-pages && npm run test:agent-docs && next build && npm run gen-agent-docs && next-sitemap",
     "start": "next start"
   },
   "resolutions": {
