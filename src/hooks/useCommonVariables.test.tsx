@@ -140,6 +140,85 @@ describe("useCommonVariables", () => {
     expect(hook.result.current.validLength).toBe(5);
   });
 
+  it("clamps a non-loop offset immediately when data shrinks while idle", () => {
+    const hook = renderHook(({ p }) => useCommonVariables(p), {
+      initialProps: { p: createBaseProps({ loop: false }) },
+    });
+    hook.result.current.handlerOffset.value = -2100;
+
+    act(() => {
+      hook.rerender({
+        p: createBaseProps({
+          loop: false,
+          dataLength: 2,
+          data: [0, 1],
+          rawData: [0, 1],
+          rawDataLength: 2,
+        }),
+      });
+    });
+
+    expect(hook.result.current.handlerOffset.value).toBe(-700);
+  });
+
+  it("defers data reconciliation until active movement settles", () => {
+    const hook = renderHook(({ p }) => useCommonVariables(p), {
+      initialProps: { p: createBaseProps({ loop: false }) },
+    });
+    hook.result.current.handlerOffset.value = -2100;
+
+    act(() => {
+      hook.result.current.startMovement();
+      hook.rerender({
+        p: createBaseProps({
+          loop: false,
+          dataLength: 2,
+          data: [0, 1],
+          rawData: [0, 1],
+          rawDataLength: 2,
+        }),
+      });
+    });
+
+    expect(hook.result.current.handlerOffset.value).toBe(-2100);
+
+    act(() => {
+      hook.result.current.settleMovement();
+    });
+
+    expect(hook.result.current.handlerOffset.value).toBe(-700);
+  });
+
+  it("applies a deferred defaultIndex when data first becomes non-empty", () => {
+    const hook = renderHook(({ p }) => useCommonVariables(p), {
+      initialProps: {
+        p: createBaseProps({
+          data: [],
+          dataLength: 0,
+          rawData: [],
+          rawDataLength: 0,
+          defaultIndex: 2,
+        }),
+      },
+    });
+
+    expect(hook.result.current.handlerOffset.value).toBe(0);
+
+    act(() => {
+      hook.rerender({
+        p: createBaseProps({
+          data: [0, 1, 2],
+          dataLength: 3,
+          rawData: [0, 1, 2],
+          rawDataLength: 3,
+          defaultIndex: 2,
+        }),
+      });
+    });
+
+    expect(hook.result.current.handlerOffset.value).toBe(-1400);
+  });
+
   it("remains pending when style lacks numeric size", () => {
     const props = createBaseProps({ style: { width: "100%" } });
     const { result } = renderHook(() => useCommonVariables(props));

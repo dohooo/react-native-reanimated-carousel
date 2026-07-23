@@ -8,7 +8,6 @@ import { useLayoutConfig } from "../hooks/useLayoutConfig";
 import { useOnProgressChange } from "../hooks/useOnProgressChange";
 import { useGlobalState } from "../store";
 import { ICarouselInstance } from "../types";
-import { computedRealIndexWithAutoFillData } from "../utils/computed-with-auto-fill-data";
 import { ItemRenderer } from "./ItemRenderer";
 import { ScrollViewGesture } from "./ScrollViewGesture";
 
@@ -109,40 +108,30 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
     onProgressChange,
   });
 
+  const _onScrollEnd = React.useCallback(
+    (realIndex: number) => {
+      if (onSnapToItem) onSnapToItem(realIndex);
+
+      if (onScrollEnd) onScrollEnd(realIndex);
+    },
+    [onSnapToItem, onScrollEnd]
+  );
+
   const carouselController = useCarouselController({
     ref,
     loop,
     size,
     dataLength,
+    rawDataLength,
     autoFillData,
     handlerOffset,
     withAnimation,
     defaultIndex,
     fixedDirection,
     duration: scrollAnimationDuration,
-    onScrollEnd: () => scheduleOnRN(_onScrollEnd),
+    onScrollEnd: (index) => scheduleOnRN(_onScrollEnd, index),
     onScrollStart: () => !!onScrollStart && scheduleOnRN(onScrollStart),
   });
-
-  const {
-    getSharedIndex,
-    // index, // Animated index. Could be used for dynamic dimension
-  } = carouselController;
-
-  const _onScrollEnd = React.useCallback(() => {
-    const _sharedIndex = Math.round(getSharedIndex());
-
-    const realIndex = computedRealIndexWithAutoFillData({
-      index: _sharedIndex,
-      dataLength: rawDataLength,
-      loop,
-      autoFillData,
-    });
-
-    if (onSnapToItem) onSnapToItem(realIndex);
-
-    if (onScrollEnd) onScrollEnd(realIndex);
-  }, [loop, autoFillData, rawDataLength, getSharedIndex, onSnapToItem, onScrollEnd]);
 
   const {
     start: startAutoPlay,
@@ -168,14 +157,16 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
   );
 
   const scrollViewGestureOnScrollStart = React.useCallback(() => {
+    carouselController.startMovement();
     pauseAutoPlay();
     onScrollStart?.();
-  }, [onScrollStart, pauseAutoPlay]);
+  }, [carouselController, onScrollStart, pauseAutoPlay]);
 
   const scrollViewGestureOnScrollEnd = React.useCallback(() => {
+    const settledIndex = carouselController.settle();
     startAutoPlay();
-    _onScrollEnd();
-  }, [_onScrollEnd, startAutoPlay]);
+    _onScrollEnd(settledIndex);
+  }, [_onScrollEnd, carouselController, startAutoPlay]);
 
   const scrollViewGestureOnTouchBegin = React.useCallback(pauseAutoPlay, [pauseAutoPlay]);
 

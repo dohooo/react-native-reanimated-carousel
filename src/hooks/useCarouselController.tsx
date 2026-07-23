@@ -11,10 +11,8 @@ import type {
   TCarouselProps,
   WithTimingAnimation,
 } from "../types";
-import {
-  computedRealIndexWithAutoFillData,
-  convertToSharedIndex,
-} from "../utils/computed-with-auto-fill-data";
+import { getLogicalProgress, getSettledRawIndex, positiveModulo } from "../utils/carousel-math";
+import { convertToSharedIndex } from "../utils/computed-with-auto-fill-data";
 import { dealWithAnimation } from "../utils/deal-with-animation";
 import { handlerOffsetDirection } from "../utils/handleroffset-direction";
 import { round } from "../utils/log";
@@ -24,6 +22,7 @@ interface IOpts {
   loop: boolean;
   size: number;
   dataLength: number;
+  rawDataLength?: number;
   handlerOffset: SharedValue<number>;
   autoFillData: TCarouselProps["autoFillData"];
   withAnimation?: TCarouselProps["withAnimation"];
@@ -31,7 +30,7 @@ interface IOpts {
   duration?: number;
   defaultIndex?: number;
   onScrollStart?: () => void;
-  onScrollEnd?: () => void;
+  onScrollEnd?: (index: number) => void;
 }
 
 export interface ICarouselController {
@@ -41,6 +40,9 @@ export interface ICarouselController {
   getCurrentIndex: () => number;
   scrollTo: (opts?: TCarouselActionOptions) => void;
   index: SharedValue<number>;
+  startMovement: () => void;
+  cancelMovement: () => void;
+  settle: () => number;
 }
 
 export function useCarouselController(options: IOpts): ICarouselController {
@@ -49,6 +51,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
     size,
     loop,
     dataLength,
+    rawDataLength = dataLength,
     handlerOffset,
     withAnimation,
     defaultIndex = 0,
@@ -62,22 +65,30 @@ export function useCarouselController(options: IOpts): ICarouselController {
   const {
     props: { overscrollEnabled, vertical, style, width, height },
     layout: { containerSize },
-    common: { sizePhase, resolvedSize },
+    common: {
+      sizePhase,
+      resolvedSize,
+      isMoving,
+      startMovement: startCommonMovement,
+      cancelMovement: cancelCommonMovement,
+      settleMovement,
+    },
   } = globalState;
 
   const dataInfo = React.useMemo(
     () => ({
       length: dataLength,
-      disable: !dataLength,
-      originalLength: dataLength,
+      disable: rawDataLength <= 1,
+      originalLength: rawDataLength,
     }),
-    [dataLength]
+    [dataLength, rawDataLength]
   );
 
   const index = useSharedValue<number>(defaultIndex);
   // The Index displayed to the user
   const sharedIndex = useRef<number>(defaultIndex);
   const sharedPreIndex = useRef<number>(defaultIndex);
+  const settledIndex = useRef<number>(rawDataLength > 0 ? defaultIndex : 0);
 
   const currentFixedPage = React.useCallback(() => {
     if (size <= 0) return 0;
@@ -98,7 +109,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
 
   useAnimatedReaction(
     () => {
-      if (size <= 0) {
+      if (size <= 0 || dataInfo.length <= 0 || dataInfo.originalLength <= 0) {
         return {
           i: 0,
           newSharedIndexValue: 0,
@@ -129,16 +140,47 @@ export function useCarouselController(options: IOpts): ICarouselController {
     [sharedPreIndex, sharedIndex, size, dataInfo, index, loop, autoFillData, handlerOffset]
   );
 
-  const getCurrentIndex = React.useCallback(() => {
-    const realIndex = computedRealIndexWithAutoFillData({
-      index: index.value,
-      dataLength: dataInfo.originalLength,
-      loop,
-      autoFillData: autoFillData!,
-    });
+  const settle = React.useCallback(
+    (targetIndex?: number) => {
+      settleMovement?.();
 
-    return realIndex;
-  }, [index, autoFillData, dataInfo, loop]);
+      const nextSettledIndex =
+        typeof targetIndex === "number" && dataInfo.originalLength > 0
+          ? positiveModulo(Math.round(targetIndex), dataInfo.originalLength)
+          : getSettledRawIndex(
+              loop
+                ? getLogicalProgress(handlerOffset.value, size)
+                : Math.max(
+                    0,
+                    Math.min(
+                      dataInfo.originalLength - 1,
+                      getLogicalProgress(handlerOffset.value, size)
+                    )
+                  ),
+              dataInfo.originalLength
+            );
+
+      settledIndex.current = nextSettledIndex;
+      return nextSettledIndex;
+    },
+    [dataInfo.originalLength, handlerOffset, loop, settleMovement, size]
+  );
+
+  const getCurrentIndex = React.useCallback(() => settledIndex.current, []);
+
+  const startMovement = React.useCallback(() => {
+    startCommonMovement?.();
+  }, [startCommonMovement]);
+
+  const cancelMovement = React.useCallback(() => {
+    cancelCommonMovement?.();
+  }, [cancelCommonMovement]);
+
+  React.useEffect(() => {
+    if (!isMoving?.value) {
+      settle();
+    }
+  }, [dataInfo.originalLength, isMoving, settle]);
 
   const canSliding = React.useCallback(() => {
     const currentSize = resolvedSize.value ?? size;
@@ -147,22 +189,29 @@ export function useCarouselController(options: IOpts): ICarouselController {
     return !dataInfo.disable && ready;
   }, [dataInfo, resolvedSize, sizePhase, size]);
 
-  const onScrollEnd = React.useCallback(() => {
-    options.onScrollEnd?.();
-  }, [options]);
+  const onScrollEnd = React.useCallback(
+    (targetIndex?: number) => {
+      const nextSettledIndex = settle(targetIndex);
+      options.onScrollEnd?.(nextSettledIndex);
+    },
+    [options, settle]
+  );
 
   const onScrollStart = React.useCallback(() => {
+    startMovement();
     options.onScrollStart?.();
-  }, [options]);
+  }, [options, startMovement]);
 
   const scrollWithTiming = React.useCallback(
-    (toValue: number, onFinished?: () => void) => {
+    (toValue: number, targetIndex: number, onFinished?: () => void) => {
       "worklet";
       const callback = (isFinished: boolean) => {
         "worklet";
         if (isFinished) {
-          scheduleOnRN(onScrollEnd);
+          scheduleOnRN(onScrollEnd, targetIndex);
           onFinished && scheduleOnRN(onFinished);
+        } else {
+          scheduleOnRN(cancelMovement);
         }
       };
 
@@ -173,7 +222,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
 
       return dealWithAnimation(withAnimation ?? defaultWithAnimation)(toValue, callback);
     },
-    [duration, withAnimation, onScrollEnd]
+    [cancelMovement, duration, withAnimation, onScrollEnd]
   );
 
   const flattenedStyle = StyleSheet.flatten(style) || {};
@@ -287,9 +336,10 @@ export function useCarouselController(options: IOpts): ICarouselController {
       index.value = nextPage;
 
       if (animated) {
-        handlerOffset.value = scrollWithTiming(-nextPage * size, onFinished) as any;
+        handlerOffset.value = scrollWithTiming(-nextPage * size, nextPage, onFinished) as any;
       } else {
         handlerOffset.value = -nextPage * size;
+        onScrollEnd(nextPage);
         onFinished?.();
       }
     },
@@ -309,6 +359,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
       flattenedStyle,
       width,
       height,
+      onScrollEnd,
     ]
   );
 
@@ -325,9 +376,10 @@ export function useCarouselController(options: IOpts): ICarouselController {
       index.value = prevPage;
 
       if (animated) {
-        handlerOffset.value = scrollWithTiming(-prevPage * size, onFinished);
+        handlerOffset.value = scrollWithTiming(-prevPage * size, prevPage, onFinished);
       } else {
         handlerOffset.value = -prevPage * size;
+        onScrollEnd(prevPage);
         onFinished?.();
       }
     },
@@ -340,6 +392,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
       size,
       scrollWithTiming,
       currentFixedPage,
+      onScrollEnd,
     ]
   );
 
@@ -380,10 +433,11 @@ export function useCarouselController(options: IOpts): ICarouselController {
 
       if (animated) {
         index.value = i;
-        handlerOffset.value = scrollWithTiming(finalOffset, onFinished);
+        handlerOffset.value = scrollWithTiming(finalOffset, i, onFinished);
       } else {
         handlerOffset.value = finalOffset;
         index.value = i;
+        onScrollEnd(i);
         onFinished?.();
       }
     },
@@ -397,6 +451,7 @@ export function useCarouselController(options: IOpts): ICarouselController {
       canSliding,
       onScrollStart,
       scrollWithTiming,
+      onScrollEnd,
     ]
   );
 
@@ -437,5 +492,8 @@ export function useCarouselController(options: IOpts): ICarouselController {
     getCurrentIndex,
     getSharedIndex: () => sharedIndex.current,
     index,
+    startMovement,
+    cancelMovement,
+    settle,
   };
 }

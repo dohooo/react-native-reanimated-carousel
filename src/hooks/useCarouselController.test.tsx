@@ -17,6 +17,8 @@ jest.mock("react-native-reanimated", () => {
     cb(depsResult);
     return () => {};
   });
+  const mockAnimationCallbacks: Array<(finished: boolean) => void> = [];
+  const mockAnimationState = { finishImmediately: true };
 
   return {
     useSharedValue: jest.fn((initialValue) => ({
@@ -27,11 +29,16 @@ jest.mock("react-native-reanimated", () => {
     })),
     useAnimatedReaction: mockAnimatedReaction,
     withTiming: jest.fn((toValue, config, callback) => {
-      if (callback) callback(true);
+      if (callback) {
+        mockAnimationCallbacks.push(callback);
+        if (mockAnimationState.finishImmediately) callback(true);
+      }
 
       return toValue;
     }),
     mockAnimatedReaction,
+    mockAnimationCallbacks,
+    mockAnimationState,
     Easing: {
       bezier: () => ({
         factory: () => 0,
@@ -49,7 +56,8 @@ jest.mock("react-native-worklets", () => {
 });
 
 // Get mock functions for testing
-const { mockAnimatedReaction } = jest.requireMock("react-native-reanimated");
+const { mockAnimatedReaction, mockAnimationCallbacks, mockAnimationState } =
+  jest.requireMock("react-native-reanimated");
 
 const { mockScheduleOnRN } = jest.requireMock("react-native-worklets");
 // Update the React mock to include useRef
@@ -90,6 +98,10 @@ const mockGlobalState: IContext = {
     handlerOffset: useSharedValue(0),
     resolvedSize: useSharedValue<number | null>(300),
     sizePhase: useSharedValue<TCarouselSizePhase>("ready"),
+    isMoving: useSharedValue(false),
+    startMovement: jest.fn(),
+    cancelMovement: jest.fn(),
+    settleMovement: jest.fn(),
   },
   layout: {
     // @ts-ignore
@@ -126,6 +138,8 @@ describe("useCarouselController", () => {
     };
 
     mockHandlerOffset.value = 0;
+    mockAnimationCallbacks.length = 0;
+    mockAnimationState.finishImmediately = true;
     mockAnimatedReaction.mockImplementation((deps: () => any, cb: (depsResult: any) => void) => {
       const depsResult = deps();
       cb(depsResult);
@@ -1053,6 +1067,42 @@ describe("useCarouselController edge cases and uncovered lines", () => {
     });
 
     expect(mockHandlerOffset.value).toBe(0); // Should not move
+    expect(Number.isFinite(result.current.index.value)).toBe(true);
+    expect(result.current.getCurrentIndex()).toBe(0);
+  });
+
+  it("keeps getCurrentIndex latched until an animated movement settles", () => {
+    mockAnimationState.finishImmediately = false;
+    const { result } = renderHook(() => useCarouselController(defaultProps), { wrapper });
+
+    act(() => {
+      result.current.next();
+    });
+
+    expect(result.current.getCurrentIndex()).toBe(0);
+
+    act(() => {
+      mockAnimationCallbacks.at(-1)?.(true);
+    });
+
+    expect(result.current.getCurrentIndex()).toBe(1);
+  });
+
+  it("does not settle or emit onScrollEnd when an animation is cancelled", () => {
+    mockAnimationState.finishImmediately = false;
+    const onScrollEnd = jest.fn();
+    const { result } = renderHook(() => useCarouselController({ ...defaultProps, onScrollEnd }), {
+      wrapper,
+    });
+
+    act(() => {
+      result.current.next();
+      mockAnimationCallbacks.at(-1)?.(false);
+    });
+
+    expect(result.current.getCurrentIndex()).toBe(0);
+    expect(onScrollEnd).not.toHaveBeenCalled();
+    expect(mockGlobalState.common.cancelMovement).toHaveBeenCalled();
   });
 
   it("should handle autoFillData with computedRealIndexWithAutoFillData", () => {

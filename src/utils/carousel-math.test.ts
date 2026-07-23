@@ -8,6 +8,7 @@ import {
   getSettledRawIndex,
   getShortestLoopTargetPage,
   positiveModulo,
+  reconcileOffsetAfterDataChange,
 } from "./carousel-math";
 
 describe("carousel logical-coordinate math", () => {
@@ -59,6 +60,52 @@ describe("carousel logical-coordinate math", () => {
     );
     expect(Math.min(...distances)).toBeCloseTo(0.375);
     expect(distances.every(Number.isFinite)).toBe(true);
+  });
+
+  it("reconciles empty, shrinking, and looped data without invalid offsets", () => {
+    expect(
+      reconcileOffsetAfterDataChange({
+        offset: -640,
+        itemSize: 320,
+        previousCount: 4,
+        nextCount: 0,
+        defaultIndex: 0,
+        loop: false,
+      })
+    ).toBe(0);
+
+    expect(
+      reconcileOffsetAfterDataChange({
+        offset: -960,
+        itemSize: 320,
+        previousCount: 5,
+        nextCount: 2,
+        defaultIndex: 0,
+        loop: false,
+      })
+    ).toBe(-320);
+
+    expect(
+      reconcileOffsetAfterDataChange({
+        offset: getOffsetForLogicalPage(9, 320),
+        itemSize: 320,
+        previousCount: 5,
+        nextCount: 3,
+        defaultIndex: 0,
+        loop: true,
+      })
+    ).toBe(getOffsetForLogicalPage(8, 320));
+
+    expect(
+      reconcileOffsetAfterDataChange({
+        offset: 0,
+        itemSize: 320,
+        previousCount: 0,
+        nextCount: 5,
+        defaultIndex: 3,
+        loop: false,
+      })
+    ).toBe(-960);
   });
 
   it.each([

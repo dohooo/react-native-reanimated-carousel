@@ -118,3 +118,31 @@ export function getShortestLoopTargetPage(params: {
 
   return currentPage + distance;
 }
+
+export function reconcileOffsetAfterDataChange(params: {
+  offset: number;
+  itemSize: number;
+  previousCount: number;
+  nextCount: number;
+  defaultIndex: number;
+  loop: boolean;
+}): number {
+  "worklet";
+
+  const { offset, itemSize, previousCount, nextCount, defaultIndex, loop } = params;
+  if (!Number.isInteger(nextCount) || nextCount <= 0 || itemSize <= 0) return 0;
+
+  if (!Number.isInteger(previousCount) || previousCount <= 0) {
+    const initialIndex = Math.max(0, Math.min(nextCount - 1, defaultIndex));
+    return getOffsetForLogicalPage(initialIndex, itemSize);
+  }
+
+  const currentPage = getNearestLogicalPage(offset, itemSize);
+  const previousRawIndex = positiveModulo(currentPage, previousCount);
+  const nextRawIndex = Math.min(previousRawIndex, nextCount - 1);
+  const nextPage = loop
+    ? getNearestLoopPosition(nextRawIndex, currentPage, nextCount)
+    : Math.max(0, Math.min(nextCount - 1, currentPage));
+
+  return getOffsetForLogicalPage(nextPage, itemSize);
+}

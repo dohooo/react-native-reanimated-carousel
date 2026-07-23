@@ -6,9 +6,8 @@ import { scheduleOnRN } from "react-native-worklets";
 
 import type { TInitializeCarouselProps } from "./useInitProps";
 
-import { computeOffsetIfDataChanged } from "../utils/compute-offset-if-data-changed";
+import { reconcileOffsetAfterDataChange } from "../utils/carousel-math";
 import { computeOffsetIfSizeChanged } from "../utils/compute-offset-if-size-changed";
-import { handlerOffsetDirection } from "../utils/handleroffset-direction";
 
 export type TCarouselSizePhase = "pending" | "ready" | "updating";
 
@@ -19,6 +18,10 @@ export interface ICommonVariables {
   resolvedSize: SharedValue<number | null>;
   sizePhase: SharedValue<TCarouselSizePhase>;
   sizeExplicit: boolean;
+  isMoving: SharedValue<boolean>;
+  startMovement: () => void;
+  cancelMovement: () => void;
+  settleMovement: () => void;
 }
 
 export function useCommonVariables(props: TInitializeCarouselProps<any>): ICommonVariables {
@@ -60,11 +63,17 @@ export function useCommonVariables(props: TInitializeCarouselProps<any>): ICommo
   const resolvedSize = useSharedValue<number | null>(manualSize);
   const sizePhase = useSharedValue<TCarouselSizePhase>(manualSize ? "ready" : "pending");
 
-  const defaultHandlerOffsetValue = manualSize ? -Math.abs(defaultIndex * manualSize) : 0;
+  const defaultHandlerOffsetValue =
+    manualSize && dataLength > 0 ? -Math.abs(defaultIndex * manualSize) : 0;
   const _handlerOffset = useSharedValue<number>(defaultHandlerOffsetValue);
   // Prefer the newer `scrollOffsetValue` name, but keep the legacy prop for compatibility.
   const handlerOffset = props.scrollOffsetValue ?? defaultScrollOffsetValue ?? _handlerOffset;
   const prevDataLength = useSharedValue(dataLength);
+  const isMoving = useSharedValue(false);
+  const pendingDataChange = useSharedValue<{
+    previousLength: number;
+    currentLength: number;
+  } | null>(null);
   // Start at zero even when a synchronous item size is available. The first
   // size reaction owns initialization and must write the default-index offset
   // into consumer-provided SharedValues as well as the internal value.
@@ -101,50 +110,64 @@ export function useCommonVariables(props: TInitializeCarouselProps<any>): ICommo
 
   React.useEffect(() => {
     const currentSize = resolvedSize.value ?? 0;
-    if (currentSize <= 0 || hasInitializedOffset.value) return;
+    if (currentSize <= 0 || dataLength <= 0 || hasInitializedOffset.value) return;
 
     handlerOffset.value = -(defaultIndex * currentSize);
     prevSize.value = currentSize;
     hasInitializedOffset.value = true;
-  }, [defaultIndex, handlerOffset, hasInitializedOffset, prevSize, resolvedSize]);
+  }, [dataLength, defaultIndex, handlerOffset, hasInitializedOffset, prevSize, resolvedSize]);
+
+  const reconcileDataChange = React.useCallback(
+    (previousLength: number, currentLength: number) => {
+      "worklet";
+      const currentSize = resolvedSize.value ?? 0;
+      if (currentSize <= 0) return;
+
+      handlerOffset.value = reconcileOffsetAfterDataChange({
+        offset: handlerOffset.value,
+        itemSize: currentSize,
+        previousCount: previousLength,
+        nextCount: currentLength,
+        defaultIndex,
+        loop,
+      });
+    },
+    [defaultIndex, handlerOffset, loop, resolvedSize]
+  );
+
+  const startMovement = React.useCallback(() => {
+    "worklet";
+    isMoving.value = true;
+  }, [isMoving]);
+
+  const finishMovement = React.useCallback(() => {
+    "worklet";
+    isMoving.value = false;
+    const pending = pendingDataChange.value;
+    if (!pending) return;
+
+    pendingDataChange.value = null;
+    reconcileDataChange(pending.previousLength, pending.currentLength);
+  }, [isMoving, pendingDataChange, reconcileDataChange]);
 
   /**
    * When data changes, we need to compute new index for handlerOffset
    */
-  useAnimatedReaction(
-    () => {
-      const previousLength = prevDataLength.value;
-      const currentLength = dataLength;
-      const isLengthChanged = previousLength !== currentLength;
-      const shouldComputed = isLengthChanged && loop;
+  React.useEffect(() => {
+    const previousLength = prevDataLength.value;
+    if (previousLength === dataLength) return;
 
-      if (shouldComputed) prevDataLength.value = dataLength;
-
-      return {
-        shouldComputed,
-        previousLength,
-        currentLength,
+    prevDataLength.value = dataLength;
+    if (isMoving.value) {
+      pendingDataChange.value = {
+        previousLength: pendingDataChange.value?.previousLength ?? previousLength,
+        currentLength: dataLength,
       };
-    },
-    ({ shouldComputed, previousLength, currentLength }) => {
-      if (shouldComputed) {
-        // direction -> 1 | -1
-        const direction = handlerOffsetDirection(handlerOffset);
+      return;
+    }
 
-        const _size = resolvedSize.value ?? 0;
-        if (_size <= 0) return;
-
-        handlerOffset.value = computeOffsetIfDataChanged({
-          direction,
-          previousLength,
-          currentLength,
-          size: _size,
-          handlerOffset: handlerOffset.value,
-        });
-      }
-    },
-    [dataLength, loop, resolvedSize]
-  );
+    reconcileDataChange(previousLength, dataLength);
+  }, [dataLength, isMoving, pendingDataChange, prevDataLength, reconcileDataChange]);
 
   /**
    * When size changes, we need to compute new index for handlerOffset
@@ -158,6 +181,12 @@ export function useCommonVariables(props: TInitializeCarouselProps<any>): ICommo
       if (previousSize === currentSize) return;
 
       sizePhase.value = previousSize > 0 ? "updating" : sizePhase.value;
+
+      if (dataLength <= 0) {
+        prevSize.value = currentSize;
+        sizePhase.value = "ready";
+        return;
+      }
 
       if (previousSize <= 0 || !hasInitializedOffset.value) {
         handlerOffset.value = -(defaultIndex * currentSize);
@@ -173,7 +202,7 @@ export function useCommonVariables(props: TInitializeCarouselProps<any>): ICommo
       prevSize.value = currentSize;
       sizePhase.value = "ready";
     },
-    [defaultIndex, hasInitializedOffset, resolvedSize, sizePhase]
+    [dataLength, defaultIndex, hasInitializedOffset, resolvedSize, sizePhase]
   );
 
   return {
@@ -183,5 +212,9 @@ export function useCommonVariables(props: TInitializeCarouselProps<any>): ICommo
     resolvedSize,
     sizePhase,
     sizeExplicit,
+    isMoving,
+    startMovement,
+    cancelMovement: finishMovement,
+    settleMovement: finishMovement,
   };
 }

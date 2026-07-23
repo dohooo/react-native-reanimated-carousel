@@ -17,7 +17,7 @@ export type TInitializeCarouselProps<T> = TCarouselProps<T> &
 
 export function useInitProps<T>(props: TCarouselProps<T>): TInitializeCarouselProps<T> {
   const {
-    defaultIndex = 0,
+    defaultIndex: requestedDefaultIndex = 0,
     data: rawData = [],
     loop = true,
     autoPlayInterval: _autoPlayInterval = 1000,
@@ -34,6 +34,43 @@ export function useInitProps<T>(props: TCarouselProps<T>): TInitializeCarouselPr
     itemWidth: _itemWidth,
     itemHeight: _itemHeight,
   } = props;
+
+  const defaultIndexState = React.useRef<{
+    consumed: boolean;
+    requested: number;
+    resolved: number;
+    warned: boolean;
+  } | null>(null);
+
+  if (!defaultIndexState.current) {
+    if (rawData.length > 0) {
+      assertValidDefaultIndex(requestedDefaultIndex, rawData.length);
+    }
+
+    defaultIndexState.current = {
+      consumed: rawData.length > 0,
+      requested: requestedDefaultIndex,
+      resolved: rawData.length > 0 ? requestedDefaultIndex : 0,
+      warned: false,
+    };
+  } else if (!defaultIndexState.current.consumed && rawData.length > 0) {
+    const pendingIndex = defaultIndexState.current.requested;
+    defaultIndexState.current.consumed = true;
+
+    if (isValidDefaultIndex(pendingIndex, rawData.length)) {
+      defaultIndexState.current.resolved = pendingIndex;
+    } else {
+      defaultIndexState.current.resolved = 0;
+      if (__DEV__ && !defaultIndexState.current.warned) {
+        console.warn(
+          `[react-native-reanimated-carousel] Ignored defaultIndex ${pendingIndex} because it is outside the first non-empty data set.`
+        );
+        defaultIndexState.current.warned = true;
+      }
+    }
+  }
+
+  const defaultIndex = defaultIndexState.current.resolved;
 
   const width = typeof _width === "number" ? Math.round(_width) : undefined;
   const height = typeof _height === "number" ? Math.round(_height) : undefined;
@@ -84,4 +121,16 @@ export function useInitProps<T>(props: TCarouselProps<T>): TInitializeCarouselPr
     itemWidth,
     itemHeight,
   };
+}
+
+function isValidDefaultIndex(defaultIndex: number, dataLength: number) {
+  return Number.isInteger(defaultIndex) && defaultIndex >= 0 && defaultIndex < dataLength;
+}
+
+function assertValidDefaultIndex(defaultIndex: number, dataLength: number) {
+  if (!isValidDefaultIndex(defaultIndex, dataLength)) {
+    throw new Error(
+      `[react-native-reanimated-carousel] defaultIndex must be an integer between 0 and ${dataLength - 1}.`
+    );
+  }
 }

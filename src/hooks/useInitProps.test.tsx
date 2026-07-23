@@ -1,7 +1,7 @@
 import React from "react";
 import { Text } from "react-native";
 
-import { renderHook } from "@testing-library/react-hooks";
+import { act, renderHook } from "@testing-library/react-hooks";
 
 import { useInitProps } from "./useInitProps";
 
@@ -92,6 +92,68 @@ describe("useInitProps", () => {
 
     expect(result.current.dataLength).toBe(0);
     expect(result.current.rawDataLength).toBe(0);
+  });
+
+  it.each([-1, 4, 1.5])(
+    "throws synchronously for invalid defaultIndex %s with non-empty data",
+    (defaultIndex) => {
+      const error = jest.spyOn(console, "error").mockImplementation(() => {});
+      const hook = renderHook(() =>
+        useInitProps({
+          ...defaultProps,
+          defaultIndex,
+        })
+      );
+
+      expect(hook.result.error).toEqual(
+        new Error(
+          "[react-native-reanimated-carousel] defaultIndex must be an integer between 0 and 3."
+        )
+      );
+      error.mockRestore();
+    }
+  );
+
+  it("defers a valid defaultIndex until data first becomes non-empty", () => {
+    const hook = renderHook(
+      ({ data }) =>
+        useInitProps({
+          ...defaultProps,
+          data,
+          defaultIndex: 2,
+        }),
+      { initialProps: { data: [] as number[] } }
+    );
+
+    expect(hook.result.current.defaultIndex).toBe(0);
+
+    act(() => {
+      hook.rerender({ data: [1, 2, 3] });
+    });
+
+    expect(hook.result.current.defaultIndex).toBe(2);
+  });
+
+  it("warns and falls back to zero when a deferred defaultIndex is invalid", () => {
+    const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
+    const hook = renderHook(
+      ({ data }) =>
+        useInitProps({
+          ...defaultProps,
+          data,
+          defaultIndex: 5,
+        }),
+      { initialProps: { data: [] as number[] } }
+    );
+
+    act(() => {
+      hook.rerender({ data: [1, 2, 3] });
+    });
+
+    expect(hook.result.current.defaultIndex).toBe(0);
+    expect(warn).toHaveBeenCalledTimes(1);
+
+    warn.mockRestore();
   });
 
   it("should round width and height values", () => {
