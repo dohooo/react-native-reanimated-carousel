@@ -54,6 +54,10 @@ yarn install
 yarn build
 ```
 
+Example pages under `example/website/pages/Examples` are generated. Update the matching
+`example/app/app/demos/<category>/<name>/demo.tsx` and `preview.png`, then run
+`yarn --cwd example/website gen-pages` from the repository root instead of editing generated MDX.
+
 ### Commit message convention
 
 We follow the [conventional commits specification](https://www.conventionalcommits.org/en) for our commit messages:

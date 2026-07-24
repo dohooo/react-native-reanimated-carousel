@@ -1,2302 +1,399 @@
-# React Native Reanimated Carousel: Complete Architecture Design Documentation
+# Architecture
 
-## 📖 Documentation Objective
+This document describes the v5 architecture and its public-contract invariants. Public API details belong in `example/website/pages/props.mdx`; migration behavior belongs in `example/website/pages/migration-v5.mdx`.
 
-This document provides a comprehensive technical architecture analysis for the `react-native-reanimated-carousel` component library, using a funnel structure that goes from top-level design to bottom-level implementation details. It aims to help developers, contributors, and maintainers deeply understand the component library's operational mechanisms, providing technical guidance for subsequent development and testing.
+## Goals
 
----
+The implementation is organized around a small set of invariants:
 
-## 🏗️ Top-Level Architecture Overview
+1. Public indices always refer to the raw `data` array.
+2. Forward navigation has one logical sign across orientation and RTL.
+3. Visual position is continuous; public selection changes only on settle.
+4. Loop copies, physical direction, and rendering-window indices never leak through the API.
+5. UI-thread state stays in SharedValues; JS callbacks cross threads explicitly.
+6. Only stable root exports are published.
 
-### Core Design Philosophy
+## Public boundary
 
-React Native Reanimated Carousel is a high-performance carousel component built on **React Native Reanimated 4** and **React Native Worklets**, adopting the following core design principles:
+`src/index.tsx` exports two runtime values:
 
-1. **Performance First**: All animation calculations execute on the UI thread, ensuring 60fps smooth experience
-2. **Math-Driven**: Based on precise interpolation algorithms and mathematical transformations to achieve complex animation effects
-3. **Modular Design**: Separation of concerns, component decoupling, extensible architecture
-4. **Type Safety**: Complete TypeScript support with strict type checking
-
-### Technology Stack
-
-- **React Native**: Cross-platform mobile application framework
-- **React Native Reanimated 4**: High-performance animation engine
-- **React Native Worklets**: Worklet scheduling and UI/JS runtime interop
-- **React Native Gesture Handler**: Gesture recognition and handling
-- **TypeScript**: Type safety and development experience
-
----
-
-## 🎯 Architecture Layering
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    🎨 Presentation Layer                     │
-├─────────────────────────────────────────────────────────────┤
-│ • Carousel (Entry Component)                                │
-│ • CarouselLayout (Layout Container)                         │
-│ • ItemRenderer (Item Renderer)                              │
-│ • ItemLayout (Single Item Layout)                           │
-│ • Pagination (Page Indicator)                               │
-└─────────────────────────────────────────────────────────────┘
-                                ↓
-┌─────────────────────────────────────────────────────────────┐
-│                       🔄 Logic Layer                         │
-├─────────────────────────────────────────────────────────────┤
-│ • 12 Core Hooks (State Management, Control Logic, Gestures) │
-│ • Global State Management (GlobalStateProvider)             │
-│ • Layout Strategies (Layout Strategies)                     │
-└─────────────────────────────────────────────────────────────┘
-                                ↓
-┌─────────────────────────────────────────────────────────────┐
-│                   ⚙️ Computation Layer                       │
-├─────────────────────────────────────────────────────────────┤
-│ • Math Utility Functions (Offset Calc, Data Transform, Anim)│
-│ • Interpolation Algorithms                                   │
-│ • Boundary Management                                        │
-└─────────────────────────────────────────────────────────────┘
-                                ↓
-┌─────────────────────────────────────────────────────────────┐
-│                  🛠️ Foundation Layer                         │
-├─────────────────────────────────────────────────────────────┤
-│ • Reanimated 4 + React Native Worklets                     │
-│ • React Native Gesture Handler (PanGesture)                │
-│ • React Native Core (View, StyleSheet, Dimensions)         │
-└─────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 🎨 Presentation Layer Deep Dive
-
-### 1. Carousel Component - Entry Facade
-
-**Location**: `src/components/Carousel.tsx`
-
-```typescript
-const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>((_props, ref) => {
-  const props = useInitProps(_props);
-  const { dataLength } = props;
-  const commonVariables = useCommonVariables(props);
-  usePropsErrorBoundary({ ...props, dataLength });
-
-  return (
-    <GlobalStateProvider value={{ props, common: commonVariables }}>
-      <CarouselLayout ref={ref} />
-    </GlobalStateProvider>
-  );
-});
-```
-
-**Responsibilities**:
-- **Props Initialization**: Standardizes and validates input parameters through `useInitProps`
-- **State Provision**: Creates global state context, providing shared state for child components
-- **Error Boundary**: Runtime validation through `usePropsErrorBoundary`
-- **Generic Support**: Supports type-safe passing of arbitrary data types
-
-### 2. CarouselLayout Component - Core Layout Container
-
-**Location**: `src/components/CarouselLayout.tsx`
-
-**Key Features**:
-- **Multi-Hook Integration**: Integrates 8+ functional Hooks
-- **Gesture Management**: Integrates ScrollViewGesture to handle user interactions
-- **Auto Play**: Manages auto-play state and user interaction conflicts
-- **Animation Configuration**: Selects layout strategy through useLayoutConfig
-
-**Data Flow**:
-```
-Props → useCommonVariables → offsetX → useOnProgressChange → External Callbacks
-     → useCarouselController → Programmatic Control API
-     → useAutoPlay → Auto Play Control
-```
-
-### 3. ItemRenderer Component - High-Performance Rendering Engine
-
-**Location**: `src/components/ItemRenderer.tsx`
-
-**Core Algorithm**:
-```typescript
-const visibleRanges = useVisibleRanges({
-  total: dataLength,
-  viewSize: size,
-  translation: handlerOffset,
-  windowSize,
-  loop,
-});
-
-// Only render items within visible range
-const shouldRender =
-  (index >= negativeRange[0] && index <= negativeRange[1]) ||
-  (index >= positiveRange[0] && index <= positiveRange[1]);
-```
-
-**Performance Optimizations**:
-- **Viewport Optimization**: Only renders visible items + buffer zone
-- **Dynamic Range**: Dynamically calculates render range based on scroll position
-- **Memory Management**: Avoids performance issues with large datasets
-
-### 4. ItemLayout Component - Single Item Animation Container
-
-**Location**: `src/components/ItemLayout.tsx`
-
-**Animation Calculation Chain**:
-```
-handlerOffset → useOffsetX → x value → animationValue → animatedStyle → Visual Effect
-```
-
-**Key Code**:
-```typescript
-const x = useOffsetX(offsetXConfig, visibleRanges);
-const animationValue = useDerivedValue(() => x.value / size, [x, size]);
-const animatedStyle = useAnimatedStyle<ViewStyle>(
-  () => animationStyle(x.value / size, index),
-  [animationStyle, index, x, size]
-);
-```
-
----
-
-## 🔄 Logic Layer Deep Analysis
-
-### Hooks Ecosystem Architecture
-
-React Native Reanimated Carousel's core logic is implemented through 12 specialized Hooks, forming a complete state management and control system.
-
-#### 1. Core State Management Hooks
-
-##### useInitProps - Parameter Standardization Center
-
-**Location**: `src/hooks/useInitProps.ts`
-
-**Function Matrix**:
-```typescript
-Input Props → Default Value Filling → Size Standardization → Data Processing → Mode Configuration → Standardized Props
+```ts
+export { Carousel } from "./components/Carousel";
+export { Pagination } from "./components/Pagination";
 ```
 
-**Key Processing**:
-- **Default Value Strategy**: Provides reasonable defaults for 50+ optional parameters
-- **Data Preprocessing**: Processes loop data through `computedFillDataWithAutoFillData`
-- **Size Normalization**: `Math.round()` handles floating-point sizes, avoiding rendering issues
-- **Mode Configuration**: Provides special configuration handling for stack mode
-
-##### useCommonVariables - State Management Core
-
-**Location**: `src/hooks/useCommonVariables.ts`
-
-**Core SharedValues**:
-```typescript
-const handlerOffset = scrollOffsetValue ?? defaultScrollOffsetValue ?? useSharedValue(0);
-// `size` is the "page size" used for snapping & animations:
-// itemWidth/itemHeight (preferred) -> style axis size -> deprecated width/height -> measurement
-const size = /* resolved page size */;
-const validLength = dataLength - 1;
-```
-
-**Reactive Updates**:
-```typescript
-useAnimatedReaction(
-  () => ({ data: dataLength, size }),
-  ({ data, size: newSize }, previous) => {
-    if (previous) {
-      // Recalculate offset when data changes
-      if (data !== previous.data) {
-        handlerOffset.value = computeOffsetIfDataChanged(...);
-      }
-      // Proportional scaling when size changes
-      if (newSize !== previous.size) {
-        handlerOffset.value = computeOffsetIfSizeChanged(...);
-      }
-    }
-  },
-  [dataLength, size]
-);
-```
-
-**Design Significance**: `handlerOffset` is the "heart" of the entire component, all animations and interactions are driven by this value.
-
-#### 2. Visual Optimization Hooks
-
-##### useVisibleRanges - Performance Optimization Engine
-
-**Location**: `src/hooks/useVisibleRanges.tsx`
-
-**Algorithm Core**:
-```typescript
-const getVisibleRanges = (offset: number): IVisibleRanges => {
-  "worklet";
-  
-  // Basic visible range calculation
-  const startIndex = Math.floor(offset / viewSize);
-  const endIndex = Math.ceil((offset + viewSize) / viewSize);
-  
-  // Buffer zone expansion
-  const buffer = windowSize > 0 ? Math.floor(windowSize / 2) : DEFAULT_COUNT;
-  
-  return {
-    negativeRange: [startIndex - buffer, startIndex + buffer],
-    positiveRange: [endIndex - buffer, endIndex + buffer],
-  };
-};
-```
-
-**Performance Impact**: Optimizes large datasets (1000+ items) rendering to visible items + buffer zone, performance improvement 90%+.
-
-##### useOffsetX - Precision Position Calculator
-
-**Location**: `src/hooks/useOffsetX.ts`
-
-**Complexity Sources**:
-1. **Infinite Loop Handling**: 7-segment interpolation intervals handle loop boundaries
-2. **Multiple Positioning Modes**: positive/negative type support
-3. **Viewport Optimization**: Only calculates positions for items within visible range
-
-**Key Algorithm**:
-```typescript
-const x = useDerivedValue(() => {
-  if (loop) {
-    const inputRange = [
-      -TOTAL_WIDTH,
-      MIN - HALF_WIDTH - startPos - Number.MIN_VALUE,
-      MIN - HALF_WIDTH - startPos,
-      0,
-      MAX + HALF_WIDTH - startPos,
-      MAX + HALF_WIDTH - startPos + Number.MIN_VALUE,
-      TOTAL_WIDTH,
-    ];
-    
-    return interpolate(handlerOffset.value, inputRange, outputRange, Extrapolation.CLAMP);
-  }
-  
-  return handlerOffset.value + size * index;
-}, [loop, dataLength, viewCount, type, size, visibleRanges, handlerOffset]);
-```
-
-#### 3. Control Logic Hooks
-
-##### useCarouselController - Programmatic Control Center
-
-**Location**: `src/hooks/useCarouselController.tsx`
-
-**API Design**:
-```typescript
-interface ICarouselInstance {
-  prev: (opts?: TCarouselActionOptions) => void;
-  next: (opts?: TCarouselActionOptions) => void;
-  getCurrentIndex: () => number;
-  scrollTo: (opts?: TCarouselActionOptions) => void;
-}
-```
-
-**Core Control Algorithm**:
-```typescript
-const scrollWithTiming = useCallback((toValue: number, onFinished?: () => void) => {
-  const { type = "spring", config = DEFAULT_SPRING_CONFIG } = withAnimation;
-  
-  if (type === "spring") {
-    handlerOffset.value = withSpring(toValue, config, onFinished);
-  } else {
-    handlerOffset.value = withTiming(toValue, config, onFinished);
-  }
-}, [withAnimation, handlerOffset]);
-```
-
-**Boundary Handling**:
-- **Loop Mode**: No boundary restrictions, supports infinite scrolling
-- **Non-Loop Mode**: Strict boundary checking, prevents out-of-bounds scrolling
-- **Overscroll**: Configurable elastic effects
-
-##### useAutoPlay - Auto Play Manager
-
-**Location**: `src/hooks/useAutoPlay.ts`
-
-**State Machine Design**:
-```typescript
-States: STOPPED ←→ RUNNING
-Triggers: start() / pause()
-Conditions: autoPlay configuration + user interaction detection
-```
+It also exports the types defined in `src/public-types.ts`:
 
-**Implementation Mechanism**:
-```typescript
-const _start = React.useCallback(() => {
-  if (!autoPlay || !carouselController) return;
-  
-  const run = () => {
-    const next = autoPlayReverse ? carouselController.prev : carouselController.next;
-    next({ onFinished: () => setTimeout(run, autoPlayInterval) });
-  };
-  
-  run();
-}, [autoPlay, autoPlayReverse, autoPlayInterval, carouselController]);
+```text
+CarouselProps<Item>
+CarouselRef
+CarouselRenderItem<Item>
+CarouselRenderItemInfo<Item>
+CarouselProgressChangeHandler
+CarouselLayout
+CarouselAnimation
+CarouselItemAnimation
+CarouselPanGesture
+CarouselStepOptions
+CarouselScrollToOptions
+PaginationProps
+PaginationDotStyle
 ```
 
-#### 4. Gesture Handling Hooks
-
-##### usePanGestureProxy - Gesture Proxy Pattern
-
-**Location**: `src/hooks/usePanGestureProxy.ts`
-
-**Proxy Pattern Implementation**:
-```typescript
-const proxyPanGesture = useMemo(() => {
-  const newPanGesture = Gesture.Pan();
-  
-  // Save original callbacks
-  const savedCallbacks = {
-    onBegin: newPanGesture._handlers.onBegin,
-    onStart: newPanGesture._handlers.onStart,
-    onUpdate: newPanGesture._handlers.onUpdate,
-    onEnd: newPanGesture._handlers.onEnd,
-  };
-  
-  // Apply user configuration
-  if (onConfigurePanGesture) {
-    onConfigurePanGesture(newPanGesture);
-  }
-  
-  // Merge internal logic
-  return newPanGesture
-    .onBegin((e) => {
-      savedCallbacks.onBegin?.(e);
-      // Internal logic
-    })
-    .onUpdate((e) => {
-      savedCallbacks.onUpdate?.(e);
-      // Internal logic
-    });
-}, [onConfigurePanGesture]);
-```
-
-**Design Value**: Allows users to customize gesture behavior while ensuring component internal logic remains intact.
-
-#### 5. Monitoring and Utility Hooks
-
-##### useOnProgressChange - Progress Monitor
-
-**Location**: `src/hooks/useOnProgressChange.ts`
+The package has no default runtime export. `package.json#exports` exposes only `.` and `./package.json`; deep imports are unsupported.
 
-**Dual Mode Support**:
-```typescript
-// Callback function mode
-onProgressChange?: (offsetProgress: number, absoluteProgress: number) => void
+## Component tree
 
-// SharedValue mode  
-onProgressChange?: SharedValue<number>
+```text
+Carousel
+└── GlobalStateProvider
+    └── CarouselLayout
+        └── ScrollViewGesture
+            └── ItemRenderer
+                └── ItemLayout × mounted item
+                    └── renderItem result
 ```
 
-**Calculation Precision**:
-```typescript
-useAnimatedReaction(
-  () => {
-    const offsetProgress = offsetX.value;
-    const absoluteProgress = computedRealIndexWithAutoFillData({
-      index: Math.round(Math.abs(offsetX.value) / size),
-      dataLength: rawDataLength,
-      loop,
-      autoFillData,
-    }) + Math.sign(offsetX.value) * ((Math.abs(offsetX.value) % size) / size);
-    
-    return { offsetProgress, absoluteProgress };
-  },
-  ({ offsetProgress, absoluteProgress }) => {
-    if (typeof onProgressChange === "function") {
-      scheduleOnRN(onProgressChange, offsetProgress, absoluteProgress);
-    } else if (onProgressChange) {
-      onProgressChange.value = absoluteProgress;
-    }
-  }
-);
-```
-
-### Global State Management
-
-#### GlobalStateProvider Architecture
-
-**Location**: `src/store/index.tsx`
-
-**State Structure**:
-```typescript
-interface IContext {
-  props: TInitializeCarouselProps<any>;      // Standardized props
-  common: {                                  // Common computed values
-    size: number;                           // Current size
-    validLength: number;                    // Valid length
-  };
-  layout: {                                // Layout-related state
-    containerSize: SharedValue<{width: number; height: number}>;
-    updateContainerSize: (dimensions) => void;
-    itemDimensions: SharedValue<ItemDimensions>;
-    updateItemDimensions: (index, dimensions) => void;
-  };
-}
-```
+- `Carousel` initializes public props and supplies internal stores.
+- `CarouselLayout` coordinates progress, controller, autoplay, measurement, and lifecycle.
+- `ScrollViewGesture` owns pan and settle physics.
+- `ItemRenderer` maps internal copies back to raw items and applies the render window.
+- `ItemLayout` computes bounded per-item relative progress, animated style, size, and accessibility state.
 
-**Worklet Support**:
-```typescript
-const updateItemDimensions = (index: number, dimensions: {width: number; height: number}) => {
-  "worklet";
-  itemDimensions.value = { ...itemDimensions.value, [index]: dimensions };
-};
-```
+`Pagination` is independent. It consumes the same logical `progress` SharedValue but owns no Carousel state or ref.
 
----
-
-## ⚙️ Computation Layer Deep Analysis
-
-### Mathematical Utility Functions Architecture
-
-The mathematical computation layer of React Native Reanimated Carousel contains 6 core utility functions, each solving specific computational problems.
-
-#### 1. Offset Calculation Tools
-
-##### compute-offset-if-data-changed.ts - Data Change Adapter
-
-**Core Algorithm**:
-```typescript
-export const computeOffsetIfDataChanged = (opts: IOpts): number => {
-  "worklet";
-  
-  const { handlerOffset, dataLength, size, previousLength } = opts;
-  const currentHandlerOffset = Math.abs(handlerOffset);
-  const direction = omitZero(handlerOffsetDirection(handlerOffset));
-  
-  let positionIndex: number;
-  
-  if (direction < 0) {
-    positionIndex = (currentHandlerOffset - size) / size;
-  } else {
-    positionIndex = currentHandlerOffset / size;
-  }
-  
-  const changedIndex = Math.round(positionIndex % previousLength);
-  const changedOffset = dataLength * size * direction;
-  
-  return changedOffset + changedIndex * size * direction;
-};
-```
+## Initialization and measurement
 
-**Mathematical Model**:
-- **Position Index Calculation**: Uses different index formulas based on direction
-- **Modular Operation Mapping**: `positionIndex % previousLength` maps old position to new data
-- **Offset Reconstruction**: `dataLength * size * direction + changedIndex * size * direction`
-
-**Use Case**: Maintains visual continuity during dynamic data updates
-
-##### compute-offset-if-size-changed.ts - Size Change Scaler
-
-**Concise Algorithm**:
-```typescript
-export const computeOffsetIfSizeChanged = (opts: IOpts): number => {
-  "worklet";
-  const { handlerOffset, size, prevSize } = opts;
-  return (handlerOffset / prevSize) * size;
-};
-```
+`useInitProps` resolves stable defaults:
 
-**Mathematical Principle**: Linear proportional scaling, maintains relative position unchanged
-**Use Case**: Screen rotation, window size adjustment
-
-#### 2. Data Transformation Tools
-
-##### computed-with-auto-fill-data.ts - Loop Data Generator
-
-**Data Expansion Strategy**:
-```typescript
-export const computedFillDataWithAutoFillData = <T>(options: {
-  data: T[];
-  loop: boolean;
-  autoFillData: boolean;
-}): T[] => {
-  const { data, loop, autoFillData } = options;
-  
-  if (!loop || !autoFillData) return data;
-  
-  const dataLength = data.length;
-  
-  if (dataLength === DATA_LENGTH.SINGLE_ITEM) {
-    // Single item: [A] -> [A, A, A]
-    const item = data[0];
-    return [item, item, item];
-  }
-  
-  if (dataLength === DATA_LENGTH.DOUBLE_ITEM) {
-    // Double item: [A, B] -> [A, B, A, B]
-    return [...data, ...data];
-  }
-  
-  return data;
-};
+```text
+defaultIndex       0
+loop               false
+autoplay           false
+autoplayInterval   3000ms
+autoplayDirection  forward
+orientation        horizontal
+scrollEnabled      true
+snapMode           page
+overscrollEnabled  true
+animation          timing / 500ms / easeOutQuart
 ```
 
-**Design Goals**:
-- **Minimum Loop Unit**: Ensures minimum dataset for seamless looping
-- **Performance Optimization**: Avoids excessive copying of large datasets
-- **Visual Continuity**: Eliminates visual jumps at loop boundaries
-
-**Index Converter**:
-```typescript
-export const computedRealIndexWithAutoFillData = (opts: {
-  index: number;
-  dataLength: number;
-  loop: boolean;
-  autoFillData: boolean;
-}): number => {
-  "worklet";
-  
-  if (!loop || !autoFillData) return index;
-  
-  if (dataLength === DATA_LENGTH.SINGLE_ITEM) {
-    return 0;  // Single item always returns index 0
-  }
-  
-  if (dataLength === DATA_LENGTH.DOUBLE_ITEM) {
-    return index % 2;  // Double item cycles between 0,1
-  }
-  
-  return index % dataLength;
-};
-```
+The root `style` controls viewport dimensions. `itemSize` optionally overrides the main-axis page distance; otherwise the measured viewport main axis is used.
 
-#### 3. Animation Integration Tools
-
-##### deal-with-animation.ts - Animation Factory
-
-**Factory Pattern Implementation**:
-```typescript
-export const dealWithAnimation = (
-  animationConfigs: WithAnimation = DEFAULT_ANIMATION_OPTIONS
-) => {
-  "worklet";
-  
-  return (toValue: number, onFinished?: () => void) => {
-    "worklet";
-    
-    switch (animationConfigs.type) {
-      case "spring":
-        return withSpring(toValue, animationConfigs.config, onFinished);
-      case "timing":
-        return withTiming(toValue, animationConfigs.config, onFinished);
-      default:
-        return withSpring(toValue, DEFAULT_SPRING_CONFIG, onFinished);
-    }
-  };
-};
-```
+The size state has explicit readiness. Commands, gestures, autoplay, progress, and transforms stay neutral until a finite positive size is available.
 
-**Default Configuration**:
-```typescript
-const DEFAULT_ANIMATION_OPTIONS: WithAnimation = {
-  type: "spring",
-  config: {
-    damping: 20,
-    mass: 0.2,
-    stiffness: 300,
-    overshootClamping: false,
-    restSpeedThreshold: 0.2,
-    restDisplacementThreshold: 0.2,
-  },
-};
-```
+At first size readiness, Carousel initializes translation to:
 
-#### 4. Direction and Boundary Tools
-
-##### handleroffset-direction.ts - Direction Detector
-
-**Direction Algorithm**:
-```typescript
-export const handlerOffsetDirection = (handlerOffset: number): number => {
-  "worklet";
-  
-  if (handlerOffset > 0) return 1;
-  if (handlerOffset < 0) return -1;
-  return 0;  // Zero value handling
-};
+```ts
+-defaultIndex * itemSize
 ```
 
-**Supporting Tools**:
-```typescript
-export const omitZero = (value: number): number => {
-  "worklet";
-  return value === 0 ? 1 : value;  // Avoid division by zero errors
-};
-```
+This write occurs even when the consumer supplied `scrollOffsetValue`.
 
-#### 5. Offset Calculation Core
-
-##### computed-offset-x-value-with-auto-fill-data.ts - Position Interpolator
-
-**Complex Interpolation Logic**:
-```typescript
-export const computedOffsetXValueWithAutoFillData = (opts: IOpts): number => {
-  "worklet";
-  
-  const { handlerOffset, index, size, dataLength } = opts;
-  
-  if (dataLength === DATA_LENGTH.SINGLE_ITEM) {
-    const x = handlerOffset % size;
-    return Number.isNaN(x) ? 0 : x;
-  }
-  
-  if (dataLength === DATA_LENGTH.DOUBLE_ITEM) {
-    const x = (handlerOffset % (size * 2)) + (index % 2) * size;
-    return Number.isNaN(x) ? 0 : x;
-  }
-  
-  return handlerOffset + size * index;
-};
-```
+### `defaultIndex`
 
-**NaN Protection**: All calculations include `Number.isNaN()` checks to ensure numerical stability.
+- Mount with non-empty data: an invalid index throws synchronously.
+- Mount with empty data: validation is deferred to the first non-empty data commit.
+- Deferred invalid index: warn in development and use `0`; never throw from the update path.
 
-### Utility Function Collaboration Mode
+## Data model and identity
 
-#### Data Flow Diagram
+`rawData` is the consumer array. Loop mode may fill arrays with one or two items so rendering has enough physical copies:
 
-```
-User Props → computedFillDataWithAutoFillData → Expanded Data Array
-                                                      ↓
-handlerOffset → computeOffsetIfDataChanged → Adjusted Offset → computedOffsetXValueWithAutoFillData → Final Position
-                computeOffsetIfSizeChanged              ↓
-                                                   dealWithAnimation → Animation Execution
-                                                       ↓
-                                               handlerOffsetDirection → Direction Control
+```text
+[A]    -> [A, A, A]
+[A,B]  -> [A, B, A, B]
 ```
-
-#### Performance Optimization Strategies
-
-1. **Worklet Priority**: All computation functions are marked as worklets, execute on UI thread
-2. **Mathematical Optimization**: Uses bitwise operations, lookup tables, and other techniques to optimize computational performance
-3. **Boundary Conditions**: Preprocesses boundary cases to avoid runtime exceptions
-4. **Memory Friendly**: Avoids temporary object creation, reduces GC pressure
-
----
 
-## 🎨 Layout System Deep Analysis
+These copies are internal. `computedRealIndexWithAutoFillData` maps every render and callback back to a raw-data index.
 
-### Layout Strategy Architecture
+`keyExtractor` produces stable raw identity. Internal copies append a library-owned copy suffix, preserving React key uniqueness without exposing copy indices.
 
-React Native Reanimated Carousel supports 4 main layout modes, each with unique mathematical models and visual effects.
+### Reconciliation
 
-#### 1. Normal Layout - Linear Layout
+Data changes are reconciled by `useCommonVariables`:
 
-**Location**: `src/layouts/normal.ts`
+1. If `keyExtractor` identifies the previous selected item in new data, keep it.
+2. Otherwise clamp the previous numeric index.
+3. If movement is active, defer the correction until settle.
+4. Apply offset and selection correction without lifecycle callbacks.
+5. A length change may rebase public loop progress once.
 
-**Mathematical Model**:
-```typescript
-export function normalLayout(opts: { size: number; vertical: boolean }) {
-  const { size, vertical } = opts;
-  
-  return (value: number) => {
-    "worklet";
-    const translate = interpolate(value, [-1, 0, 1], [-size, 0, size]);
-    
-    return {
-      transform: [
-        vertical ? { translateY: translate } : { translateX: translate },
-      ],
-    };
-  };
-}
-```
-
-**Feature Analysis**:
-- **Linear Mapping**: `-1 → -size, 0 → 0, 1 → size`
-- **Simple and Efficient**: Minimal computational overhead
-- **Smooth Scrolling**: Directly follows gesture movement
-
-#### 2. Parallax Layout - Parallax Scrolling Layout
-
-**Location**: `src/layouts/parallax.ts`
-
-**Core Algorithm**:
-```typescript
-export function parallaxLayout(
-  baseConfig: TBaseConfig,
-  modeConfig: ILayoutConfig = {}
-): TAnimationStyle {
-  const { size, vertical } = baseConfig;
-  const {
-    parallaxScrollingOffset = 100,
-    parallaxScrollingScale = 0.8,
-    parallaxAdjacentItemScale = parallaxScrollingScale ** 2,
-  } = modeConfig;
-
-  return (value: number) => {
-    "worklet";
-    
-    // Translation calculation - reduce movement distance to create parallax
-    const translate = interpolate(
-      value,
-      [-1, 0, 1],
-      [-size + parallaxScrollingOffset, 0, size - parallaxScrollingOffset]
-    );
-    
-    // Layer management - dynamic Z-index changes
-    const zIndex = Math.round(
-      interpolate(value, [-1, 0, 1], [0, size, 0], Extrapolation.CLAMP)
-    );
-    
-    // Scaling effect - creates depth perception
-    const scale = interpolate(
-      value,
-      [-1, 0, 1],
-      [parallaxAdjacentItemScale, parallaxScrollingScale, parallaxAdjacentItemScale],
-      Extrapolation.CLAMP
-    );
-
-    return {
-      transform: [
-        vertical ? { translateY: translate } : { translateX: translate },
-        { scale },
-      ],
-      zIndex,
-    };
-  };
-}
-```
-
-**Visual Effect Analysis**:
-- **Decelerated Movement**: `size - parallaxScrollingOffset` creates parallax sensation
-- **Layer Scaling**: Center item at 0.8x, adjacent items at 0.64x (0.8²)
-- **Dynamic Layering**: Z-index changes with position, ensures correct occlusion relationships
-
-#### 3. Stack Layout - Card Stacking Layout
-
-**Location**: `src/layouts/stack.ts`
-
-**Complex Mathematical Model**:
-```typescript
-function getCommonVariables(opts: {
-  index: number;
-  size: number;
-  value: number;
-  outputIndex: number;
-}) {
-  const { value: _value, size, outputIndex } = opts;
-  
-  // Cubic Bezier easing function
-  function easeInOutCubic(v: number): number {
-    return v < 0.5 ? 4 * v * v * v : 1 - (-2 * v + 2) ** 3 / 2;
-  }
-  
-  // Pagination handling
-  const page = Math.floor(Math.abs(_value));
-  const diff = Math.abs(_value) % 1;
-  
-  // Apply easing function
-  const value = _value < 0 
-    ? -(page + easeInOutCubic(diff)) 
-    : page + easeInOutCubic(diff);
-    
-  const interpolatedIndex = outputIndex - value;
-  
-  return { interpolatedIndex };
-}
-```
-
-**Stacking Effect Implementation**:
-```typescript
-export function stackLayout(modeConfig: ILayoutConfig): TAnimationStyle {
-  const {
-    showLength = 3,
-    stackInterval = 18,
-    scaleInterval = 0.04,
-    opacityInterval = 0.1,
-    rotateZDeg = 135,
-    snapDirection = "left",
-  } = modeConfig;
-
-  return (value: number, index: number) => {
-    "worklet";
-    
-    const { interpolatedIndex } = getCommonVariables({
-      index,
-      value,
-      size: 1,
-      outputIndex: 0,
-    });
-    
-    let translateX = interpolate(
-      interpolatedIndex,
-      [-1, 0, showLength - 1],
-      [-moveSize, 0, (showLength - 1) * stackInterval],
-      Extrapolation.CLAMP
-    );
-    
-    const scale = interpolate(
-      interpolatedIndex,
-      [-1, 0, showLength - 1],
-      [1, 1, 1 - (showLength - 1) * scaleInterval],
-      Extrapolation.CLAMP
-    );
-    
-    const opacity = interpolate(
-      interpolatedIndex,
-      [-1, 0, showLength - 1],
-      [0, 1, 1 - (showLength - 1) * opacityInterval],
-      Extrapolation.CLAMP
-    );
-    
-    // Directional rotation
-    const rotateZ = interpolate(
-      interpolatedIndex,
-      [-1, 0, 1],
-      [snapDirection === "right" ? rotateZDeg : -rotateZDeg, 0, 0],
-      Extrapolation.CLAMP
-    );
-
-    return {
-      transform: [
-        { translateX },
-        { scale },
-        { rotateZ: `${rotateZ}deg` },
-      ],
-      opacity,
-      zIndex: -interpolatedIndex,
-    };
-  };
-}
-```
+Empty data stays neutral:
 
-**Stacking Parameter Analysis**:
-- **showLength**: Number of visible cards
-- **stackInterval**: Card spacing (px)
-- **scaleInterval**: Scale reduction value per layer
-- **opacityInterval**: Opacity reduction value per layer
-- **rotateZDeg**: Rotation angle
-
-### Layout Selection and Configuration
-
-#### useLayoutConfig Hook
-
-**Location**: `src/hooks/useLayoutConfig.ts`
-
-```typescript
-export function useLayoutConfig<T>(opts: TLayoutConfigOpts<T>): TAnimationStyle {
-  return React.useMemo(() => {
-    const baseConfig = { size, vertical };
-    
-    switch (opts.mode) {
-      case "parallax":
-        return Layouts.parallax(baseConfig, opts.modeConfig);
-      case "horizontal-stack":
-        return Layouts.horizontalStack(opts.modeConfig);
-      case "vertical-stack":
-        return Layouts.verticalStack(opts.modeConfig);
-      default:
-        return Layouts.normal(baseConfig);
-    }
-  }, [opts.mode, opts.modeConfig, size, vertical]);
-}
+```text
+index = 0
+progress = 0
+offset = 0
+navigation/autoplay/callbacks = no-op
 ```
-
-**Design Pattern**: Strategy pattern + Factory pattern, supports runtime layout switching.
-
----
 
-## 🎮 Gesture Handling System
+## Coordinate systems
 
-### ScrollViewGesture Core Architecture
+### Content translation
 
-**Location**: `src/components/ScrollViewGesture.tsx`
+`handlerOffset` is the canonical motion SharedValue and is expressed in signed main-axis pixels:
 
-#### Gesture State Management
-
-```typescript
-const panOffset = useSharedValue<number | undefined>(undefined);
-const touching = useSharedValue(false);
-const validStart = useSharedValue(false);
-const scrollEndTranslation = useSharedValue(0);
-const scrollEndVelocity = useSharedValue(0);
-```
-
-**State Transition Diagram**:
+```text
+item 0:  0
+item 1: -itemSize
+item 2: -2 * itemSize
 ```
-IDLE → onGestureBegin → TOUCHING → onGestureStart → ACTIVE
-                                     ↓
-                               onGestureUpdate → DRAGGING
-                                     ↓
-                                onGestureEnd → SETTLING → IDLE
-```
 
-#### Gesture Handling Core Logic
-
-##### Gesture Begin Handling
-```typescript
-const onGestureBegin = useCallback((e: PanGestureHandlerEventPayload) => {
-  "worklet";
-  
-  touching.value = true;
-  validStart.value = false;
-  panOffset.value = translation.value;
-  
-  onTouchBegin?.();
-}, [translation, onTouchBegin]);
-```
+Loop translation is intentionally unbounded. Rendering paths derive bounded modulo values before passing transforms to native views.
 
-##### Gesture Update Handling
-```typescript
-const onGestureUpdate = useCallback((e: PanGestureHandlerEventPayload) => {
-  "worklet";
-  
-  if (!validStart.value) {
-    // Validate gesture direction
-    validStart.value = Math.abs(translationX) >= Math.abs(translationY) === !vertical;
-  }
-  
-  if (!validStart.value) return;
-  
-  const panTranslation = panOffset.value + translationValue;
-  const newTranslation = withProcessTranslation(panTranslation);
-  
-  translation.value = newTranslation;
-}, [translation, panOffset, vertical]);
-```
+If supplied, `scrollOffsetValue` is the same SharedValue as `handlerOffset`. It is two-way:
 
-##### Boundary Processing Function
-```typescript
-function withProcessTranslation(translation: number): number {
-  "worklet";
-  
-  if (!loop && !overscrollEnabled) {
-    const limit = getLimit();
-    // Keep translation in [-limit, 0] when non-loop overscroll is disabled.
-    return Math.min(0, Math.max(-limit, translation));
-  }
-  
-  return translation;
-}
-```
+- the library writes during gestures and animations;
+- an external write moves content;
+- a direct write cancels an in-flight animation;
+- a canceled command does not settle and does not fire `onSnapToItem`;
+- a direct write does not commit selection;
+- active gesture frames own the value and can overwrite external writes.
 
-#### Advanced Gesture Features
-
-##### Paging and Snapping
-```typescript
-const scrollWithSpring = useCallback((toValue: number, onFinished?: () => void) => {
-  const finalValue = pagingEnabled 
-    ? Math.round(toValue / size) * size 
-    : snapEnabled 
-      ? Math.round(toValue / size) * size 
-      : toValue;
-      
-  translation.value = withSpring(finalValue, SCROLL_END_SPRING_CONFIG, onFinished);
-}, [translation, size, pagingEnabled, snapEnabled]);
-```
+### Logical progress
 
-##### Velocity Calculation and Inertial Scrolling
-```typescript
-const onGestureEnd = useCallback((e: PanGestureHandlerEventPayload) => {
-  "worklet";
-  
-  const velocity = velocityValue;
-  const translation = translationValue;
-  
-  // Velocity-based page jumping
-  if (Math.abs(velocity) > VELOCITY_THRESHOLD) {
-    const direction = Math.sign(velocity);
-    const pages = Math.min(Math.abs(velocity) / 1000, MAX_PAGE_JUMP);
-    const targetIndex = getCurrentIndex() + direction * Math.ceil(pages);
-    
-    scrollTo(targetIndex * size);
-  } else {
-    // Normal snapping
-    scrollWithSpring(translation);
-  }
-}, [getCurrentIndex, scrollTo, scrollWithSpring]);
-```
+`getLogicalProgress(offset, itemSize)` converts translation into fractional logical index:
 
-### Gesture Proxy System
-
-#### usePanGestureProxy Design
-
-**Core Idea**: Allow external gesture configuration while maintaining internal logic integrity.
-
-```typescript
-export function usePanGestureProxy(onConfigurePanGesture?: (panGesture: PanGesture) => void) {
-  const savedCallbacks = React.useRef<GestureCallbacks>({});
-  
-  const proxyPanGesture = React.useMemo(() => {
-    const panGesture = Gesture.Pan();
-    
-    // Save original callbacks
-    const saveCallback = (name: keyof GestureCallbacks, callback: any) => {
-      savedCallbacks.current[name] = callback;
-    };
-    
-    // Apply user configuration
-    if (onConfigurePanGesture) {
-      onConfigurePanGesture(panGesture);
-      
-      // Save user-set callbacks
-      saveCallback('onBegin', panGesture._handlers.onBegin);
-      saveCallback('onStart', panGesture._handlers.onStart);
-      // ... other callbacks
-    }
-    
-    return panGesture;
-  }, [onConfigurePanGesture]);
-  
-  const applyInternalLogic = (gesture: PanGesture, internalHandlers: GestureCallbacks) => {
-    return gesture
-      .onBegin((e) => {
-        savedCallbacks.current.onBegin?.(e);
-        internalHandlers.onBegin?.(e);
-      })
-      .onUpdate((e) => {
-        savedCallbacks.current.onUpdate?.(e);
-        internalHandlers.onUpdate?.(e);
-      });
-      // ... other handlers
-  };
-  
-  return { proxyPanGesture, applyInternalLogic };
-}
+```ts
+progress = -offset / itemSize
 ```
-
-**Proxy Pattern Advantages**:
-1. **User Customization**: Supports gesture configuration extensions
-2. **Internal Logic Protection**: Core functionality remains unaffected
-3. **Callback Merging**: Automatically merges user and internal callbacks
 
----
+Forward is positive. Non-loop progress is clamped; loop progress stays continuous and unbounded.
 
-## 🧮 Pagination System Architecture
+`useOnProgressChange` writes the `progress` SharedValue on the UI thread and optionally schedules the same number to the JS `onProgressChange` callback.
 
-### Pagination Component Design
+### Relative item progress
 
-React Native Reanimated Carousel's pagination system adopts the **Composite Pattern**, providing Basic and Custom implementations.
+`useOffsetX` computes the nearest physical copy for an item and `ItemLayout` divides that bounded distance by item size:
 
-#### Pagination System Structure
-
-**Location**: `src/components/Pagination/`
-
-```
-Pagination/
-├── index.tsx          # Export interface
-├── Basic/
-│   ├── index.tsx      # Basic paginator
-│   └── PaginationItem.tsx  # Pagination item component
-└── Custom/
-    ├── index.tsx      # Custom paginator  
-    └── PaginationItem.tsx  # Custom pagination item
-```
-
-#### Basic Pagination - Standard Paginator
-
-**Location**: `src/components/Pagination/Basic/index.tsx`
-
-**Core Implementation**:
-```typescript
-export const Basic = <T extends {}>(props: BasicProps<T>) => {
-  const {
-    activeDotStyle,
-    dotStyle,
-    progress,
-    horizontal = true,
-    data,
-    size,
-    containerStyle,
-    renderItem,
-    onPress,
-    carouselName,
-    paginationItemAccessibility,
-  } = props;
-
-  return (
-    <View style={[containerStyle, { 
-      flexDirection: horizontal ? "row" : "column",
-      justifyContent: "space-between",
-      alignSelf: "center"
-    }]}>
-      {data.map((item, index) => {
-        const defaultAccessibilityLabel = carouselName
-          ? `Slide ${index + 1} of ${data.length} - ${carouselName}`
-          : `Slide ${index + 1} of ${data.length}`;
-        const accessibilityOverrides = paginationItemAccessibility?.(index, data.length) ?? {};
-
-        return (
-          <PaginationItem
-            key={index}
-            index={index}
-            size={size}
-            count={data.length}
-            dotStyle={dotStyle}
-            animValue={progress}
-            horizontal={!horizontal}
-            activeDotStyle={activeDotStyle}
-            onPress={() => onPress?.(index)}
-            accessibilityLabel={
-              accessibilityOverrides.accessibilityLabel ?? defaultAccessibilityLabel
-            }
-            accessibilityHint={accessibilityOverrides.accessibilityHint}
-            accessibilityRole={accessibilityOverrides.accessibilityRole}
-            accessibilityState={accessibilityOverrides.accessibilityState}
-          >
-            {renderItem?.(item, index)}
-          </PaginationItem>
-        );
-      })}
-    </View>
-  );
-};
-```
-
-**Design Features**:
-- **Generic Support**: `<T extends {}>` supports arbitrary data types
-- **Flexible Layout**: Supports horizontal and vertical layouts
-- **Click Navigation**: Supports click-to-jump through `onPress`
-- **Custom Rendering**: `renderItem` supports fully custom items
-
-#### Custom Pagination - Advanced Paginator
-
-**Location**: `src/components/Pagination/Custom/index.tsx`
-
-**Enhanced Features**:
-```typescript
-export interface ShapeProps<T extends {}> extends BasicProps<T> {
-  customReanimatedStyle?: (progress: number, index: number, length: number) => DefaultStyle;
-  paginationItemAccessibility?: (
-    index: number,
-    length: number
-  ) => {
-    accessibilityLabel?: string;
-    accessibilityHint?: string;
-    accessibilityRole?: AccessibilityRole;
-    accessibilityState?: AccessibilityState;
-  };
-}
-```
-
-**Dynamic Size Calculation**:
-```typescript
-const maxItemWidth = Math.max(size ?? 0, dotStyle?.width ?? 0, activeDotStyle?.width ?? 0);
-const maxItemHeight = Math.max(size ?? 0, dotStyle?.height ?? 0, activeDotStyle?.height ?? 0);
-
-const containerStyle = {
-  minWidth: maxItemWidth,
-  minHeight: maxItemHeight,
-  // ...other styles
-};
+```text
+backward item  -1
+selected item   0
+forward item   +1
 ```
 
-#### PaginationItem Core Logic
-
-**Animation Calculation**:
-```typescript
-const PaginationItem: React.FC<Props> = (props) => {
-  const {
-    animValue,
-    index,
-    count,
-    customReanimatedStyle,
-    accessibilityLabel,
-    accessibilityHint,
-    accessibilityRole,
-    accessibilityState,
-  } = props;
-  const [isSelected, setIsSelected] = useState(false);
-  const resolvedAccessibilityLabel = accessibilityLabel ?? `Slide ${index + 1} of ${count}`;
-  const resolvedAccessibilityHint =
-    accessibilityHint ?? (isSelected ? "" : `Go to ${resolvedAccessibilityLabel}`);
-  const resolvedAccessibilityRole = accessibilityRole ?? "button";
-  const resolvedAccessibilityState = accessibilityState ?? { selected: isSelected };
-  
-  const animatedStyle = useAnimatedStyle(() => {
-    const progress = animValue.value;
-    
-    if (customReanimatedStyle) {
-      return customReanimatedStyle(progress, index, count);
-    }
-    
-    // Default animation: scaling and opacity based on progress
-    const distance = Math.abs(progress - index);
-    const scale = interpolate(distance, [0, 1], [1, 0.6], Extrapolation.CLAMP);
-    const opacity = interpolate(distance, [0, 1], [1, 0.3], Extrapolation.CLAMP);
-    
-    return { transform: [{ scale }], opacity };
-  }, [animValue, index, count, customReanimatedStyle]);
-  
-  return (
-    <Pressable
-      accessibilityLabel={resolvedAccessibilityLabel}
-      accessibilityHint={resolvedAccessibilityHint}
-      accessibilityRole={resolvedAccessibilityRole}
-      accessibilityState={resolvedAccessibilityState}
-    >
-      <Animated.View style={[baseStyle, animatedStyle]}>
-        {/* Pagination item content */}
-      </Animated.View>
-    </Pressable>
-  );
-};
-```
+The resulting `relativeProgress` drives both the outer `itemAnimation` and the SharedValue passed to `renderItem`.
 
-### Pagination System Integration
+## Selection and controller
 
-#### Connection with Main Carousel
+`useCarouselController` keeps separate state for:
 
-The pagination system synchronizes with the main carousel through `SharedValue<number>`:
+- live visual page/index, used by rendering and command baselines;
+- settled raw index, exposed by `getCurrentIndex()`.
 
-```typescript
-// In Carousel component
-const progress = useSharedValue(0);
+The public index remains latched throughout an in-flight gesture or animation.
 
-// Update progress through useOnProgressChange
-useOnProgressChange({
-  onProgressChange: progress, // Pass SharedValue directly
-  // ...other parameters
-});
+### Commands
 
-// Use in pagination component
-<Pagination.Basic
-  progress={progress}
-  data={data}
-  onPress={(index) => carouselRef.current?.scrollTo({ index })}
-/>
-```
+- `next` and `prev` accept positive-integer counts.
+- `scrollTo` accepts one absolute in-range raw index.
+- commands default to animated.
+- non-loop commands clamp movement at the logical boundary.
+- loop `next`/`prev` preserve their requested direction.
+- loop `scrollTo` chooses the shortest route and logical forward on a tie.
+- rejected and no-op commands emit no lifecycle callbacks.
+- accepted non-animated commands emit start and settle immediately.
 
-**Data Flow**:
-```
-handlerOffset → useOnProgressChange → progress SharedValue → PaginationItem → Animation Update
-```
+The command baseline is the nearest current visual page, not the settled index. This preserves intuitive behavior after external offset writes.
 
----
-
-## 🔄 Data Flow Architecture Deep Analysis
-
-### Overall Data Flow Diagram
-
-```mermaid
-graph TB
-    A[User Props] --> B[useInitProps]
-    B --> C[Standardized Props]
-    C --> D[useCommonVariables]
-    D --> E[handlerOffset SharedValue]
-    
-    E --> F[useVisibleRanges]
-    F --> G[Visible Item Range]
-    
-    E --> H[useOffsetX]
-    G --> H
-    H --> I[Single Item Position Value]
-    
-    I --> J[useLayoutConfig]
-    J --> K[Animation Function]
-    K --> L[Final Style]
-    
-    E --> M[useOnProgressChange]
-    M --> N[Progress Callback]
-    
-    E --> O[useCarouselController]
-    O --> P[Control API]
-    
-    Q[User Gesture] --> R[ScrollViewGesture]
-    R --> E
-    
-    S[Auto Play Timer] --> T[useAutoPlay]
-    T --> O
-```
+## Movement lifecycle
 
-### Core Data Structures
+The internal movement state prevents duplicate start/settle transitions.
 
-#### 1. SharedValue Ecosystem
+`onScrollStart` is scheduled on JS once for an accepted movement from:
 
-```typescript
-// Core state - drives all animations
-const handlerOffset: SharedValue<number>
+- pan gesture;
+- `next`;
+- `prev`;
+- `scrollTo`;
+- autoplay.
 
-// Container size - responsive layout
-const containerSize: SharedValue<{width: number; height: number}>
+When motion stops, the nearest raw index becomes settled and `onSnapToItem` is scheduled on JS. With `snapMode="none"`, the callback name still means “movement settled at the nearest logical item,” not necessarily that a snap animation ran.
 
-// Item dimensions collection - supports dynamic sizing (future feature)
-const itemDimensions: SharedValue<Record<number, {width: number; height: number}>>
+Relayout, data reconciliation, direct offset writes, and rejected commands do not emit lifecycle events.
 
-// Visible range - performance optimization
-const visibleRanges: SharedValue<{
-  negativeRange: [number, number];
-  positiveRange: [number, number];
-}>
+## Gesture architecture
 
-// Gesture state
-const touching: SharedValue<boolean>
-const panOffset: SharedValue<number | undefined>
-```
+`usePanGestureProxy` creates a real RNGH `PanGesture`. It temporarily captures consumer lifecycle observers, restores the real builder methods, and installs one composed handler per event.
 
-#### 2. Props Data Flow
-
-```typescript
-// Original Props
-interface TCarouselProps<T> {
-  data: T[];
-  renderItem: CarouselRenderItem<T>;
-  // ...50+ other configurations
-}
-
-// After useInitProps processing
-interface TInitializeCarouselProps<T> extends TCarouselProps<T> {
-  dataLength: number;        // Processed data length
-  rawDataLength: number;     // Original data length  
-  data: T[];                // Possibly autoFill processed data
-  size: number;             // Standardized size
-  // ...standardized other properties
-}
-```
+Order:
 
-#### 3. Animation Value Calculation Chain
-
-```typescript
-// Calculation chain
-handlerOffset.value                    // -240 (example value)
-    ↓ useOffsetX
-individualOffset.value                 // -240 + index * size  
-    ↓ useDerivedValue  
-animationValue.value                   // (-240 + index * size) / size
-    ↓ useAnimatedStyle
-animatedStyle                          // { transform: [{ translateX: ... }] }
-    ↓ Rendering Engine
-Final Visual Effect                    // Animation on screen
+```text
+Carousel-owned worklet handler
+consumer worklet observer
 ```
 
-### Performance-Optimized Data Flow Design
+Other supported builder calls configure the real gesture directly.
 
-#### 1. Worklet-Priority Computation
-
-All mathematical calculations execute on the UI thread:
-
-```typescript
-const animationValue = useDerivedValue(() => {
-  "worklet";  // Key marker
-  
-  // Complex computation executes on UI thread, avoiding bridge overhead
-  const complexCalculation = someComplexMath(handlerOffset.value);
-  return complexCalculation;
-}, [dependency]);
-```
+The public `CarouselPanGesture` interface is handwritten. Chained methods return the narrow facade, preventing polymorphic `this` from re-exposing ownership-changing RNGH methods. It intentionally excludes:
 
-#### 2. Viewport-Optimized Data Flow
-
-```typescript
-// Only calculate animation values for visible items
-const shouldCalculate = useDerivedValue(() => {
-  "worklet";
-  
-  const ranges = visibleRanges.value;
-  const isVisible = (
-    (index >= ranges.negativeRange[0] && index <= ranges.negativeRange[1]) ||
-    (index >= ranges.positiveRange[0] && index <= ranges.positiveRange[1])
-  );
-  
-  return isVisible;
-}, [visibleRanges, index]);
-```
+- `enabled` — owned by reactive `scrollEnabled`;
+- `runOnJS` — observers use worklets and explicit `scheduleOnRN`;
+- `manualActivation` — would bypass Carousel's state machine.
 
-#### 3. Caching and Memoization
-
-```typescript
-// Layout configuration caching
-const layoutConfig = React.useMemo(() => {
-  const baseConfig = { size, vertical };
-  return selectLayout(mode, baseConfig, modeConfig);
-}, [mode, size, vertical, modeConfig]);  // Precise dependencies, avoid meaningless recalculation
-
-// Callback function stabilization
-const stableCallback = React.useCallback((value: number) => {
-  // Processing logic
-}, [dependency]);  // Minimal dependency set
-```
+## Snap and animation
 
-### State Synchronization Mechanism
-
-#### 1. Reactive Data Updates
-
-```typescript
-// Auto-adaptation when data changes
-useAnimatedReaction(
-  () => ({ data: dataLength, size }),
-  ({ data, size: newSize }, previous) => {
-    if (previous) {
-      if (data !== previous.data) {
-        // Data change -> recalculate offset
-        handlerOffset.value = computeOffsetIfDataChanged({
-          handlerOffset: handlerOffset.value,
-          dataLength: data,  
-          previousLength: previous.data,
-          size: newSize,
-        });
-      }
-      
-      if (newSize !== previous.size) {
-        // Size change -> proportional scaling
-        handlerOffset.value = computeOffsetIfSizeChanged({
-          handlerOffset: handlerOffset.value,
-          size: newSize,
-          prevSize: previous.size,
-        });
-      }
-    }
-  },
-  [dataLength, size]
-);
-```
+`snapMode` selects gesture release behavior:
 
-#### 2. Multi-Layer State Broadcasting
-
-```typescript
-// handlerOffset change -> multiple subscribers respond simultaneously
-handlerOffset.value = newValue;
-
-// Simultaneously triggers:
-// 1. useOffsetX recalculates item positions
-// 2. useOnProgressChange updates progress
-// 3. useCarouselController updates current index
-// 4. useVisibleRanges recalculates visible range
-// 5. Various ItemLayout re-render
-```
+- `page`: one-page movement;
+- `nearest`: nearest logical page;
+- `none`: free decay, then nearest-index settle.
 
----
-
-## ⚡ Performance Optimization Strategy Deep Analysis
-
-### 1. Rendering Level Optimization
-
-#### Viewport Rendering (Windowing)
-
-**Core Idea**: Only render visible items + buffer zone, significantly reducing rendering pressure for large datasets.
-
-```typescript
-// useVisibleRanges core algorithm
-const getVisibleRanges = useCallback((offset: number): IVisibleRanges => {
-  "worklet";
-  if (!Number.isFinite(viewSize) || viewSize <= 0) {
-    return {
-      negativeRange: [0, 0],
-      positiveRange: [0, Math.min(total - 1, windowSize - 1)],
-    };
-  }
-  
-  const startIndex = Math.floor(offset / viewSize);
-  const endIndex = Math.ceil((offset + viewSize) / viewSize);
-  
-  // Dynamic buffer calculation
-  const buffer = windowSize > 0 ? Math.floor(windowSize / 2) : DEFAULT_COUNT;
-  
-  return {
-    negativeRange: [startIndex - buffer, startIndex + buffer],
-    positiveRange: [endIndex - buffer, endIndex + buffer],
-  };
-}, [viewSize, windowSize]);
-
-// Rendering decision in ItemRenderer
-const shouldRender = (index >= negativeRange[0] && index <= negativeRange[1]) ||
-                    (index >= positiveRange[0] && index <= positiveRange[1]);
-
-if (!shouldRender) return null;  // Skip rendering
-```
+`dealWithAnimation` maps the flat `CarouselAnimation` union to Reanimated timing or spring configuration. The same animation config controls gesture snapping, commands, and autoplay. Free decay and overscroll rebound remain internal.
 
-**Performance Gain**: 1000-item dataset from full rendering down to ~10 item rendering, performance improvement 90%+
-
-#### Animation Calculation Optimization
-
-```typescript
-// Conditional calculation in useOffsetX
-const x = useDerivedValue(() => {
-  "worklet";
-  
-  // Only perform complex calculations for visible items
-  const ranges = visibleRanges.value;
-  const isInRange = checkVisibility(index, ranges);
-  
-  if (!isInRange) {
-    return 0;  // Return default value for invisible items
-  }
-  
-  // Complex interpolation calculation only executed for visible items
-  return complexInterpolationCalculation(handlerOffset.value, index);
-}, [handlerOffset, visibleRanges, index]);
-```
+No hidden duration is added. Reanimated supplies system-aware reduced-motion behavior.
 
-### 2. Computation Level Optimization
-
-#### Worklet Priority Strategy
-
-```typescript
-// ✅ Correct: UI thread execution, 60fps guarantee
-const animatedValue = useDerivedValue(() => {
-  "worklet";
-  return heavyCalculation(sharedValue.value);
-}, [sharedValue]);
-
-// ❌ Incorrect: JS thread execution, prone to stuttering  
-const [state, setState] = useState(0);
-useEffect(() => {
-  const result = heavyCalculation(props.value);
-  setState(result);
-}, [props.value]);
-```
+## Autoplay
 
-#### Interpolation Algorithm Optimization
-
-```typescript
-// Pre-compute interpolation table, avoid repeated calculations
-const interpolationCache = React.useMemo(() => {
-  const cache = new Map();
-  for (let i = 0; i <= PRECISION; i++) {
-    const input = i / PRECISION;
-    cache.set(input, expensiveInterpolation(input));
-  }
-  return cache;
-}, []);
-
-// Use cached interpolation
-const optimizedInterpolate = (input: number) => {
-  "worklet";
-  const key = Math.round(input * PRECISION) / PRECISION;
-  return interpolationCache.get(key) || input;
-};
-```
+`useAutoPlay` is a small controlled scheduler:
 
-### 3. Memory Management Optimization
-
-#### Avoid Temporary Object Creation
-
-```typescript
-// ❌ Poor implementation: creates new objects every time
-const badAnimatedStyle = useAnimatedStyle(() => {
-  return {
-    transform: [{ translateX: offset.value }],  // New object
-    opacity: opacity.value,                     // New object
-  };
-}, [offset, opacity]);
-
-// ✅ Optimized implementation: reuse style objects
-const reusableStyle = { transform: [{ translateX: 0 }], opacity: 1 };
-const goodAnimatedStyle = useAnimatedStyle(() => {
-  reusableStyle.transform[0].translateX = offset.value;
-  reusableStyle.opacity = opacity.value;
-  return reusableStyle;
-}, [offset, opacity]);
-```
+1. Wait `autoplayInterval` after the previous settle.
+2. Call `next` or `prev`.
+3. Wait for movement to finish.
+4. Arm the next dwell.
 
-#### SharedValue Minimization
-
-```typescript
-// Merge related state into single SharedValue
-const gestureState = useSharedValue({
-  offset: 0,
-  velocity: 0,
-  touching: false,
-});
-
-// Instead of creating separately
-// const offset = useSharedValue(0);
-// const velocity = useSharedValue(0);  
-// const touching = useSharedValue(false);
-```
+The interval is settled dwell, not a wall-clock period including animation.
 
-### 4. Data Structure Optimization
-
-#### Efficient Data Transformation
-
-```typescript
-// Optimization strategy for computedFillDataWithAutoFillData
-export const computedFillDataWithAutoFillData = <T>(options: {
-  data: T[];  
-  loop: boolean;
-  autoFillData: boolean; 
-}): T[] => {
-  const { data, loop, autoFillData } = options;
-  
-  // Early exit, avoid unnecessary processing
-  if (!loop || !autoFillData) return data;
-  
-  const dataLength = data.length;
-  
-  // Predefined processing strategies, avoid runtime judgment
-  if (dataLength === DATA_LENGTH.SINGLE_ITEM) {
-    const item = data[0];
-    return SINGLE_ITEM_CACHE || (SINGLE_ITEM_CACHE = [item, item, item]);
-  }
-  
-  if (dataLength === DATA_LENGTH.DOUBLE_ITEM) {
-    return DOUBLE_ITEM_CACHE || (DOUBLE_ITEM_CACHE = [...data, ...data]);
-  }
-  
-  return data;
-};
-```
+Autoplay pauses during user interaction or any in-flight transition. With `loop={false}`, a rejected boundary command ends the chain. A relevant prop or data update can arm it again.
 
-### 5. Responsive Optimization
+`scrollEnabled` affects pan input only and does not stop autoplay or commands.
 
-#### Precise Dependency Management
+## Layouts and animation styles
 
-```typescript
-// ❌ Excessive dependencies: causes unnecessary recalculation
-const style = useAnimatedStyle(() => {
-  return { transform: [{ translateX: offset.value }] };
-}, [offset, props, config, data]);  // Too many dependencies
+`useLayoutConfig` resolves one `CarouselItemAnimation`:
 
-// ✅ Precise dependencies: only truly affecting values
-const style = useAnimatedStyle(() => {
-  return { transform: [{ translateX: offset.value }] };
-}, [offset]);  // Minimal dependency set
-```
+- normal layout when neither `layout` nor `itemAnimation` is provided;
+- `parallax`, `horizontal-stack`, or `vertical-stack` from `layout`;
+- consumer `itemAnimation` when provided.
 
-#### Intelligent Caching Strategy
-
-```typescript
-// Caching strategy for useLayoutConfig
-export function useLayoutConfig<T>(opts: TLayoutConfigOpts<T>): TAnimationStyle {
-  return React.useMemo(() => {
-    // Complex layout configuration calculation
-    const layoutFunction = createLayoutFunction(opts);
-    
-    // Return stable function reference
-    return React.useCallback(layoutFunction, [opts.mode, opts.modeConfig]);
-  }, [opts.mode, opts.modeConfig, opts.size, opts.vertical]);
-}
-```
+The public XOR rejects `layout` plus `itemAnimation`. Runtime validation protects untyped JavaScript.
 
-### 6. Gesture Handling Optimization
-
-#### Debouncing and Throttling
-
-```typescript
-const onGestureUpdate = useCallback((e: PanGestureHandlerEventPayload) => {
-  "worklet";
-  
-  // Gesture debouncing: ignore minor changes
-  if (Math.abs(e.translationX) < GESTURE_THRESHOLD) return;
-  
-  // Calculation throttling: limit update frequency
-  const now = Date.now();
-  if (now - lastUpdateTime.value < UPDATE_INTERVAL) return;
-  
-  lastUpdateTime.value = now;
-  
-  // Execute actual update
-  updateOffset(e.translationX);
-}, []);
-```
+Current built-in defaults:
 
-### 7. Animation Performance Optimization
-
-#### Animation Configuration Optimization
-
-```typescript
-// High-performance spring configuration
-const OPTIMIZED_SPRING_CONFIG: WithSpringConfig = {
-  damping: 20,        // Higher damping, reduce oscillation
-  mass: 0.2,          // Smaller mass, quick response
-  stiffness: 300,     // Moderate stiffness, balance speed and smoothness
-  overshootClamping: true,  // Prevent overshoot, improve stability
-  restSpeedThreshold: 0.2,  // Smaller threshold, precise stopping
-  restDisplacementThreshold: 0.2,
-};
-
-// Timing animation optimization
-const OPTIMIZED_TIMING_CONFIG: WithTimingConfig = {
-  duration: 300,      // Short duration, quick response
-  easing: Easing.out(Easing.cubic),  // Ease-out effect, natural feel
-};
-```
+```text
+parallax:
+  offset        100
+  scale         0.8
+  adjacentScale scale²
 
----
-
-## 🔧 Type System Architecture
-
-### Core Type Definitions
-
-#### TCarouselProps - Main Configuration Interface
-
-**Location**: `src/types.ts`
-
-```typescript
-export type TCarouselProps<T = any> = {
-  // Data related
-  data: T[];
-  renderItem: CarouselRenderItem<T>;
-  defaultIndex?: number;
-  
-  // Layout related  
-  width?: number;
-  height?: number;
-  vertical?: boolean;
-  
-  // Behavior related
-  loop?: boolean;
-  autoFillData?: boolean;
-  autoPlay?: boolean;
-  pagingEnabled?: boolean;
-  
-  // Gesture related
-  enabled?: boolean;
-  onConfigurePanGesture?: (panGesture: PanGesture) => void;
-  
-  // Animation related
-  withAnimation?: WithAnimation;
-  customAnimation?: (value: number, index: number) => ViewStyle;
-  
-  // Callback related
-  onSnapToItem?: (index: number) => void;
-  onScrollStart?: () => void;
-  onScrollEnd?: (index: number) => void;
-  onProgressChange?: 
-    | ((offsetProgress: number, absoluteProgress: number) => void)
-    | SharedValue<number>;
-} & (TParallaxModeProps | TStackModeProps);
+stack:
+  visibleCount  rawDataLength - 1
+  exitDistance  screen width
+  spacing       18
+  scaleStep     0.04
+  opacityStep   0.1
+  rotation      30
+  exitDirection left
 ```
 
-#### Directional Type System
-
-```typescript
-export type IComputedDirectionTypes<T, VP = {}, HP = {}> =
-  | (T & VP & {
-      vertical: true;
-      width?: number;
-      height: number;  // Vertical mode must specify height
-    })
-  | (T & HP & {
-      vertical?: false;
-      width: number;   // Horizontal mode must specify width
-      height?: number;
-    });
-```
+`sanitizeAnimationStyle` removes unsafe animation output and normalizes `zIndex`.
 
-**Design Advantage**: Ensures necessary size parameters through conditional types, catches configuration errors at compile time.
-
-#### Layout Mode Types
-
-```typescript
-// Parallax mode specific types
-export type TParallaxModeProps = IComputedDirectionTypes<
-  { 
-    mode?: "parallax";
-    modeConfig?: IParallaxConfig;
-  },
-  IVerticalParallaxModeProps,
-  IHorizontalParallaxModeProps
->;
-
-// Stack mode specific types  
-export type TStackModeProps = IComputedDirectionTypes<
-  {
-    mode?: "horizontal-stack" | "vertical-stack";
-    modeConfig?: ILayoutConfig;
-  },
-  IVerticalStackModeProps,
-  IHorizontalStackModeProps
->;
-```
+## RTL
 
-### Advanced Type Features
-
-#### Generic Constraints and Type Inference
-
-```typescript
-// Component-level generics
-const Carousel = <T>(props: TCarouselProps<T>) => {
-  // T type automatically inferred, ensures data, renderItem type consistency
-};
-
-// Usage example - complete type safety
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-}
-
-<Carousel<Product>
-  data={products}  // Product[]
-  renderItem={({item, index}) => {
-    // item automatically inferred as Product type
-    return <ProductCard product={item} />;
-  }}
-/>
-```
+`getCarouselDirectionSign` is the only logical-to-physical direction source:
 
-#### Worklet Type Support
-
-```typescript
-// Worklet type annotation for utility functions
-export const computeOffsetIfDataChanged = (opts: IOpts): number => {
-  "worklet";  // Compiler directive
-  // Function implementation
-};
-
-// Animation style function type
-export type TAnimationStyle = (value: number, index?: number) => ViewStyle;
-
-// Ensure animation functions support Worklet
-const customAnimation: TAnimationStyle = (value: number) => {
-  "worklet";
-  const zIndex = Math.round(interpolate(value, [-1, 0, 1], [10, 20, 10]));
-  return {
-    transform: [{ scale: interpolate(value, [-1, 0, 1], [0.8, 1, 0.8]) }],
-    zIndex, // Keep zIndex as finite integer to avoid native crashes.
-  };
-};
+```text
+horizontal LTR  +1
+horizontal RTL  -1
+vertical        +1
 ```
-
----
 
-## 🎯 Testing Strategy and Coverage Analysis
+Public coordinates never change. Horizontal physical pan translation and velocity are normalized before entering motion math. Normal, parallax, and horizontal-stack layouts map logical output back to physical x values.
 
-### Current Test Coverage Status
+The matrix is covered as pure functions before UI integration:
 
-#### Coverage Status (Baseline Data)
-- **Overall Coverage**: 78.61% (581/739 statements)
-- **Branch Coverage**: 58.26% (303/520 branches) 
-- **Function Coverage**: 84.5% (120/142 functions)
-- **Line Coverage**: 79.82% (546/684 lines)
-
-#### Test File Distribution
-```
-src/
-├── components/
-│   ├── Carousel.test.tsx ✅
-│   └── rnr-demo.test.tsx ✅
-├── hooks/ (12 hooks, 11 have tests) 
-│   ├── useAutoPlay.test.ts ✅
-│   ├── useCarouselController.test.tsx ✅  
-│   ├── useCheckMounted.test.ts ✅
-│   ├── useCommonVariables.test.tsx ✅
-│   ├── useInitProps.test.tsx ✅
-│   ├── useLayoutConfig.test.tsx ✅
-│   ├── useOffsetX.test.ts ✅
-│   ├── useOnProgressChange.test.tsx ✅
-│   ├── usePanGestureProxy.test.tsx ✅
-│   ├── useUpdateGestureConfig.test.ts ✅
-│   ├── useVisibleRanges.test.tsx ✅
-│   └── usePropsErrorBoundary.ts ❌ (No tests)
-├── layouts/
-│   └── stack.test.ts ✅ (Only stack layout has tests)
-└── utils/ (Full coverage)
-    ├── compute-offset-if-data-changed.test.ts ✅
-    ├── compute-offset-if-size-changed.test.ts ✅
-    ├── computed-with-auto-fill-data.test.ts ✅
-    ├── deal-with-animation.test.ts ✅
-    ├── handleroffset-direction.test.ts ✅
-    ├── index.test.ts ✅
-    └── log.test.ts ✅
+```text
+LTR/RTL
+× loop/non-loop
+× gesture/command/autoplay
+× normal/parallax/stack
 ```
 
-#### Test Coverage Gaps
-
-**🔴 Zero Coverage Modules**:
-1. **LazyView.tsx**: 0% - Lazy loading component completely untested
-2. **All Pagination Components**: 0% - Pagination system has no test coverage
-   - `Basic/index.tsx` 
-   - `Basic/PaginationItem.tsx`
-   - `Custom/index.tsx`
-   - `Custom/PaginationItem.tsx`
-
-**🟡 Low Coverage Modules**:
-1. **ScrollViewGesture.tsx**: 66.43% - Gesture handling logic incomplete
-2. **usePropsErrorBoundary.ts**: 70% - Error boundary handling testing insufficient
-3. **layouts/parallax.ts, normal.ts**: No dedicated tests
-
-### Test Architecture Design Principles
-
-#### 1. Layered Testing Strategy
-
-```typescript
-// Unit tests - Utility function layer
-describe('computeOffsetIfDataChanged', () => {
-  it('should handle data length increase', () => {
-    const result = computeOffsetIfDataChanged({
-      handlerOffset: 100,
-      dataLength: 5,
-      previousLength: 3,
-      size: 50,
-    });
-    expect(result).toBe(expectedValue);
-  });
-});
-
-// Integration tests - Hook layer
-describe('useCarouselController', () => {
-  it('should navigate to next item correctly', async () => {
-    const { result } = renderHook(() => useCarouselController(mockProps));
-    
-    act(() => {
-      result.current.next();
-    });
-    
-    await waitFor(() => {
-      expect(mockHandlerOffset.value).toBe(expectedOffset);
-    });
-  });
-});
-
-// Component tests - UI layer  
-describe('Carousel', () => {
-  it('should render items correctly', () => {
-    render(
-      <Carousel
-        data={mockData}
-        renderItem={mockRenderItem}
-        width={300}
-        height={200}
-      />
-    );
-    
-    expect(screen.getByTestId('__CAROUSEL_ITEM_0__')).toBeInTheDocument();
-  });
-});
-```
+Consumer gesture observers still receive raw physical RNGH events. `exitDirection` is always physical. Consumer `itemAnimation` receives logical progress but returns physical React Native transforms, so custom horizontal x-direction effects own RTL mirroring.
 
-#### 2. Reanimated Testing Mode
-
-```typescript
-// Reanimated mock configuration in jest-setup.js
-import 'react-native-reanimated/lib/reanimated2/jestUtils';
-
-// SharedValue assertions in tests
-it('should update shared value correctly', () => {
-  const sharedValue = useSharedValue(0);
-  
-  // Use scheduleOnRN for async assertions
-  const expectation = jest.fn();
-  
-  scheduleOnRN(expectation, sharedValue.value);
-  
-  expect(expectation).toHaveBeenCalledWith(expectedValue);
-});
-```
+## Render window
 
----
-
-## 🚀 Extensibility and Future Planning
-
-### Component Architecture Extension Points
-
-#### 1. Custom Layout Strategies
-
-Currently supports 4 layouts, architecture design supports unlimited extension:
-
-```typescript
-// Example of adding 3D flip layout
-export function flip3DLayout(baseConfig: TBaseConfig): TAnimationStyle {
-  const { size, vertical } = baseConfig;
-  
-  return (value: number) => {
-    "worklet";
-    
-    const rotateY = interpolate(
-      value,
-      [-1, 0, 1],
-      [90, 0, -90],
-      Extrapolation.CLAMP
-    );
-    
-    return {
-      transform: [
-        { perspective: 1000 },
-        vertical ? { rotateX: `${rotateY}deg` } : { rotateY: `${rotateY}deg` },
-      ],
-    };
-  };
-}
-
-// Register in useLayoutConfig
-switch (opts.mode) {
-  case "flip3d":
-    return Layouts.flip3D(baseConfig, opts.modeConfig);
-  // ...existing cases
-}
-```
+`useVisibleRanges` derives mounted ranges from live translation. `renderWindowSize` is normalized to a positive count and clamped to raw data length; omission mounts all raw slides.
 
-#### 2. Dynamic Size Support
-
-Reserved dynamic size interface:
-
-```typescript
-// Reserved interface in store/index.tsx
-interface IContext {
-  layout: {
-    itemDimensions: SharedValue<ItemDimensions>;
-    updateItemDimensions: (index: number, dimensions: {width: number; height: number}) => void;
-  };
-}
-
-// Reserved implementation in ItemLayout.tsx
-// TODO: For dynamic dimension in the future
-// function handleLayout(e: LayoutChangeEvent) {
-//   const { width, height } = e.nativeEvent.layout;
-//   updateItemDimensions(index, { width, height });
-// }
-```
+`ItemRenderer` returns `null` outside current ranges. The optimization does not affect navigation, coordinates, identity, or lifecycle.
 
-#### 3. Plugin System Design
-
-```typescript
-// Future plugin interface design
-interface CarouselPlugin {
-  name: string;
-  version: string;
-  
-  // Lifecycle hooks
-  onInit?: (carousel: ICarouselInstance) => void;
-  onItemChange?: (index: number) => void;
-  onDispose?: () => void;
-  
-  // Custom Hook injection
-  usePluginHook?: () => any;
-  
-  // Style enhancement
-  enhanceItemStyle?: (baseStyle: ViewStyle, index: number) => ViewStyle;
-}
-
-// Plugin usage
-<Carousel
-  plugins={[thumbnailPlugin, analyticsPlugin]}
-  // ...other props
-/>
-```
+## Accessibility
 
-### Performance Optimization Development Direction
-
-#### 1. Web Assembly Integration
-
-```typescript
-// Potential WASM integration for complex mathematical calculations
-import { heavyMathCalculation } from './carousel-math.wasm';
-
-const optimizedOffsetCalculation = useDerivedValue(() => {
-  "worklet";
-  
-  // Move complex interpolation calculations to WASM
-  return heavyMathCalculation(
-    handlerOffset.value,
-    size,
-    dataLength,
-    // ...other params
-  );
-}, [dependencies]);
-```
+`ItemLayout` marks only the current physical slide visible to accessibility services:
 
-#### 2. Smarter Pre-rendering
-
-```typescript
-// Predictive rendering system
-const usePredictiveRendering = (velocity: SharedValue<number>) => {
-  const predictedRange = useDerivedValue(() => {
-    "worklet";
-    
-    // Predict user scroll direction and distance based on velocity
-    const prediction = velocity.value * PREDICTION_MULTIPLIER;
-    const futureOffset = handlerOffset.value + prediction;
-    
-    return calculateVisibleRange(futureOffset);
-  }, [velocity, handlerOffset]);
-  
-  return predictedRange;
-};
+```text
+accessibilityElementsHidden
+aria-hidden
+importantForAccessibility
 ```
 
-### Ecosystem Integration
-
-#### React Native New Feature Adaptation
-
-```typescript
-// Fabric new architecture adaptation
-const CarouselFabric = React.forwardRef<ICarouselInstance, TCarouselProps>((props, ref) => {
-  // Utilize Fabric's new features
-  const nativeComponent = useNativeComponent('RNCCarousel');
-  
-  return (
-    <nativeComponent
-      {...props}
-      ref={ref}
-    />
-  );
-});
-
-// Hermes engine optimization
-// Utilize Hermes's new JIT features to optimize Worklet execution
-```
+The application owns semantic labels and controls inside `renderItem`.
 
----
+Pagination behavior is conditional:
 
-## 📚 Developer Guide
+- with `onPress`: `Pressable` buttons, selected state, default or custom label;
+- without `onPress`: decorative views hidden from the accessibility tree.
 
-### Code Contribution Process
+## Pagination math
 
-#### 1. Development Environment Setup
+Pagination receives raw `count` and read-only logical `progress`.
 
-```bash
-# Clone project
-git clone https://github.com/dohooo/react-native-reanimated-carousel.git
+For each dot, `getNearestLoopPosition` chooses the equivalent `index + k * count` nearest to current progress. Distance then drives numeric size, border, color, and opacity interpolation.
 
-# Install dependencies
-yarn install
+This model supports forward, backward, and arbitrarily many cycles without a `loop` prop or a first-dot seam branch.
 
-# Run tests
-yarn test
+## Thread boundaries
 
-# Run type checking
-yarn types
+UI thread / worklets:
 
-# Run lint
-yarn lint
+- `handlerOffset`, `progress`, `relativeProgress`;
+- motion, visible ranges, layout transforms, item animation;
+- gesture handlers and consumer gesture observers;
+- Pagination interpolation.
 
-# Build project
-yarn prepare
-```
+JS thread:
 
-#### 2. Code Standards
-
-**TypeScript Coding Standards**:
-```typescript
-// ✅ Recommended function definition
-export const useCustomHook = (opts: {
-  param1: number;
-  param2: string;
-}): ReturnType => {
-  "worklet";  // Worklet functions must be marked
-  
-  // Implementation logic
-  return result;
-};
-
-// ✅ Recommended component definition
-export const CustomComponent: React.FC<Props> = (props) => {
-  const { prop1, prop2 } = props;
-  
-  // Component logic
-  return <View>{/* JSX */}</View>;
-};
-```
+- React rendering, `renderItem`, `keyExtractor`;
+- `onConfigurePanGesture` configuration call;
+- refs and public lifecycle/progress callbacks;
+- `onLayout`, Pagination presses, accessibility label factory.
 
-**Naming Conventions**:
-- Hook functions: `useXxxxXxxx`
-- Utility functions: `computedXxxxXxxx` or `xxxWithXxxx`
-- Type definitions: `TXxxxXxxx` (types) or `IXxxxXxxx` (interfaces)
-- Constants: `UPPER_SNAKE_CASE`
-
-#### 3. Test Writing Guide
-
-```typescript
-// Unit test template
-describe('utilityFunction', () => {
-  it('should handle normal case', () => {
-    const result = utilityFunction(normalInput);
-    expect(result).toBe(expectedOutput);
-  });
-  
-  it('should handle edge case', () => {
-    const result = utilityFunction(edgeInput);
-    expect(result).toBe(expectedEdgeOutput);
-  });
-  
-  it('should handle error case', () => {
-    expect(() => utilityFunction(invalidInput)).toThrow();
-  });
-});
-
-// Hook test template
-describe('useCustomHook', () => {
-  it('should return expected result', () => {
-    const { result } = renderHook(() => useCustomHook(mockProps));
-    
-    expect(result.current.value).toBe(expectedValue);
-  });
-  
-  it('should update when dependencies change', () => {
-    const { result, rerender } = renderHook(
-      (props) => useCustomHook(props),
-      { initialProps: initialMockProps }
-    );
-    
-    rerender(updatedMockProps);
-    
-    expect(result.current.value).toBe(updatedExpectedValue);
-  });
-});
-```
+Cross-thread calls use `scheduleOnRN` or `scheduleOnUI` explicitly.
 
-### Common Issues and Solutions
-
-#### 1. Performance Issue Troubleshooting
-
-```typescript
-// Issue: Large dataset scrolling lag
-// Solution: Check windowSize configuration
-<Carousel
-  windowSize={20}  // Limit active item count
-  data={largeDataSet}
-/>
-
-// Issue: Custom animation lag
-// Solution: Ensure animation functions use worklet
-const customAnimation = (value: number) => {
-  "worklet";  // Must add
-  return {
-    transform: [{ scale: value }],
-  };
-};
-```
+## Packaging
 
-#### 2. Type Error Resolution
-
-```typescript
-// Issue: Generic type inference failure
-// Solution: Explicitly specify generic type
-<Carousel<YourDataType>
-  data={yourData}
-  renderItem={({item}) => {
-    // item now has correct type
-    return <YourComponent data={item} />;
-  }}
-/>
-```
+Bob builds:
 
-#### 3. Layout Issue Debugging
-
-```typescript
-// Issue: Carousel items display abnormally
-// Solution: Check container size settings
-<Carousel
-  width={Dimensions.get('window').width}  // Ensure correct width
-  height={200}  // Ensure correct height
-  data={data}
-/>
+```text
+lib/commonjs
+lib/module
+lib/typescript/commonjs
+lib/typescript/module
 ```
-
----
-
-## 🎖️ Summary
-
-React Native Reanimated Carousel is an architecturally sound, performance-excellent carousel component library. Its design embodies the following core values:
-
-### Architectural Advantages
-
-1. **Clear Layering**: Presentation layer, logic layer, computation layer, foundation layer with clear responsibilities
-2. **Performance Priority**: Worklet + viewport optimization + precise dependency management
-3. **Type Safety**: Complete TypeScript support, compile-time error catching
-4. **Highly Extensible**: Plugin-based layout strategies, compositional component design
-5. **Math-Driven**: Precise interpolation algorithms and boundary handling
-
-### Technical Innovation
 
-1. **SharedValue Ecosystem**: Reactive state management centered on `handlerOffset`
-2. **Proxy Pattern**: `usePanGestureProxy` balances customization and stability
-3. **Viewport Optimization**: Breakthrough in large dataset rendering performance
-4. **Worklet Priority**: UI thread computation ensures smooth animations
+Top-level `main`, `module`, `types`, and `react-native` fields remain for older resolvers. Conditional `exports` route ESM, CommonJS, React Native source, and their declaration files.
 
-### Future Development
+Packaging checks run against built and packed artifacts:
 
-The component library has good extensibility, reserving sufficient space for future development:
-- Support for more layout modes
-- Dynamic sizing feature improvement  
-- Plugin ecosystem construction
-- New platform adaptation (Web, Desktop)
+- runtime export and exact type whitelist;
+- no default export;
+- CommonJS and ESM resolution;
+- TypeScript Node-style and bundler resolution;
+- Jest resolution;
+- deep-import rejection;
+- tarball content allowlist;
+- Expo packed consumers and Web smoke tests.
 
-This architecture document provides a complete technical foundation for subsequent test coverage improvement, feature extension, and performance optimization. Through deep understanding of the component library's operational mechanisms, developers can more effectively perform secondary development, bug fixes, and performance tuning.
+## Validation strategy
 
----
+The contract is protected at several levels:
 
-**Document Version**: v1.0  
-**Last Updated**: 2025  
-**Applicable Version**: react-native-reanimated-carousel v4.0.2+
+- TypeScript project checks plus compile-time positive/negative fixtures;
+- Jest behavior, lifecycle, data reconciliation, gesture, RTL, accessibility, and numeric-soak tests;
+- example application type checking;
+- packed package entry and consumer checks;
+- Playwright Web smoke tests;
+- Expo compatibility builds;
+- Maestro native E2E where simulator/emulator infrastructure is available.

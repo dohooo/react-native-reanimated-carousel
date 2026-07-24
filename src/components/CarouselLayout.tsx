@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, type ViewStyle } from "react-native";
+import { type StyleProp, StyleSheet, View, type ViewStyle } from "react-native";
 import { useAnimatedReaction, useAnimatedStyle, useDerivedValue } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 import { useAutoPlay } from "../hooks/useAutoPlay";
@@ -7,42 +7,29 @@ import { useCarouselController } from "../hooks/useCarouselController";
 import { useLayoutConfig } from "../hooks/useLayoutConfig";
 import { useOnProgressChange } from "../hooks/useOnProgressChange";
 import { useGlobalState } from "../store";
-import { ICarouselInstance } from "../types";
-import { computedRealIndexWithAutoFillData } from "../utils/computed-with-auto-fill-data";
+import type { CarouselRef } from "../types";
 import { ItemRenderer } from "./ItemRenderer";
 import { ScrollViewGesture } from "./ScrollViewGesture";
 
-export type TAnimationStyle = (value: number) => ViewStyle;
-
 export function resolveCarouselLayoutStyle(params: {
   flattenedStyle: Partial<ViewStyle>;
-  vertical: boolean;
+  isVertical: boolean;
   measuredSize: number;
   sizeExplicit: boolean;
-  legacyWidth?: number;
-  legacyHeight?: number;
 }) {
   "worklet";
 
-  const { flattenedStyle, vertical, measuredSize, sizeExplicit, legacyWidth, legacyHeight } =
-    params;
+  const { flattenedStyle, isVertical, measuredSize, sizeExplicit } = params;
   const { width, height } = flattenedStyle;
-  const hasLegacyMainAxisSize = vertical
-    ? typeof legacyHeight === "number" && legacyHeight > 0
-    : typeof legacyWidth === "number" && legacyWidth > 0;
-  const shouldUseMeasuredMainAxisSize = sizeExplicit || hasLegacyMainAxisSize;
   const resolvedMainAxisSize = measuredSize || "100%";
 
   return {
-    width:
-      width ?? (vertical ? "100%" : shouldUseMeasuredMainAxisSize ? resolvedMainAxisSize : "100%"),
-    height:
-      height ??
-      (vertical ? (shouldUseMeasuredMainAxisSize ? resolvedMainAxisSize : "100%") : "100%"),
+    width: width ?? (isVertical ? "100%" : sizeExplicit ? resolvedMainAxisSize : "100%"),
+    height: height ?? (isVertical ? (sizeExplicit ? resolvedMainAxisSize : "100%") : "100%"),
   };
 }
 
-export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) => {
+export const CarouselLayout = React.forwardRef<CarouselRef>((_props, ref) => {
   const { props, common } = useGlobalState();
 
   const {
@@ -51,31 +38,30 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
     autoFillData,
     // Fill data with autoFillData
     data,
+    rawData,
     // Length of fill data
     dataLength,
     // Length of raw data
     rawDataLength,
-    mode,
+    layout,
     style,
     contentContainerStyle,
-    vertical,
-    autoPlay,
-    windowSize,
-    autoPlayReverse,
-    autoPlayInterval,
-    scrollAnimationDuration,
-    withAnimation,
-    fixedDirection,
+    orientation,
+    autoplay,
+    renderWindowSize,
+    autoplayDirection,
+    autoplayInterval,
+    animation,
     renderItem,
-    onScrollEnd,
     onSnapToItem,
     onScrollStart,
     onProgressChange,
-    customAnimation,
+    progress,
+    itemAnimation,
     defaultIndex,
-    width: legacyWidth,
-    height: legacyHeight,
+    keyExtractor,
   } = props;
+  const isVertical = orientation === "vertical";
 
   const { size, handlerOffset, resolvedSize, sizePhase, sizeExplicit } = common;
   const layoutConfig = useLayoutConfig({ ...props, size });
@@ -100,100 +86,85 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
   }, [loop, dataLength, handlerOffset, resolvedSize]);
 
   useOnProgressChange({
-    autoFillData,
     loop,
+    offset: handlerOffset,
+    progress,
     size,
     sizeReady: isSizeReady,
-    offsetX,
     rawDataLength,
     onProgressChange,
   });
+
+  const _onScrollEnd = React.useCallback(
+    (realIndex: number) => {
+      if (onSnapToItem) onSnapToItem(realIndex);
+    },
+    [onSnapToItem]
+  );
 
   const carouselController = useCarouselController({
     ref,
     loop,
     size,
     dataLength,
-    autoFillData,
+    rawDataLength,
     handlerOffset,
-    withAnimation,
+    animation,
     defaultIndex,
-    fixedDirection,
-    duration: scrollAnimationDuration,
-    onScrollEnd: () => scheduleOnRN(_onScrollEnd),
-    onScrollStart: () => !!onScrollStart && scheduleOnRN(onScrollStart),
+    onMovementEnd: _onScrollEnd,
+    onScrollStart,
   });
-
-  const {
-    getSharedIndex,
-    // index, // Animated index. Could be used for dynamic dimension
-  } = carouselController;
-
-  const _onScrollEnd = React.useCallback(() => {
-    const _sharedIndex = Math.round(getSharedIndex());
-
-    const realIndex = computedRealIndexWithAutoFillData({
-      index: _sharedIndex,
-      dataLength: rawDataLength,
-      loop,
-      autoFillData,
-    });
-
-    if (onSnapToItem) onSnapToItem(realIndex);
-
-    if (onScrollEnd) onScrollEnd(realIndex);
-  }, [loop, autoFillData, rawDataLength, getSharedIndex, onSnapToItem, onScrollEnd]);
 
   const {
     start: startAutoPlay,
     pause: pauseAutoPlay,
     trigger: triggerAutoPlay,
   } = useAutoPlay({
-    autoPlay,
-    autoPlayInterval,
-    autoPlayReverse,
+    autoplay,
+    autoplayDirection,
+    autoplayInterval,
     carouselController,
   });
 
   useAnimatedReaction(
     () => ({ ready: isSizeReady.value }),
     (state, previous) => {
-      if (!autoPlay) return;
+      if (!autoplay) return;
       if (state.ready === previous?.ready) return;
 
       if (state.ready) scheduleOnRN(triggerAutoPlay);
       else scheduleOnRN(pauseAutoPlay);
     },
-    [autoPlay]
+    [autoplay]
   );
 
   const scrollViewGestureOnScrollStart = React.useCallback(() => {
+    carouselController.startMovement();
     pauseAutoPlay();
     onScrollStart?.();
-  }, [onScrollStart, pauseAutoPlay]);
+  }, [carouselController, onScrollStart, pauseAutoPlay]);
 
   const scrollViewGestureOnScrollEnd = React.useCallback(() => {
+    const settledIndex = carouselController.settle();
     startAutoPlay();
-    _onScrollEnd();
-  }, [_onScrollEnd, startAutoPlay]);
+    _onScrollEnd(settledIndex);
+  }, [_onScrollEnd, carouselController, startAutoPlay]);
 
   const scrollViewGestureOnTouchBegin = React.useCallback(pauseAutoPlay, [pauseAutoPlay]);
 
   const scrollViewGestureOnTouchEnd = React.useCallback(startAutoPlay, [startAutoPlay]);
 
   const { opacity, transform, ...restContentContainerStyle } =
-    StyleSheet.flatten(contentContainerStyle) || {};
+    StyleSheet.flatten(contentContainerStyle as StyleProp<ViewStyle>) || {};
   const flattenedStyle = StyleSheet.flatten(style) || {};
 
   const layoutStyle = useAnimatedStyle(() => {
     const measuredSize = resolvedSize.value ?? 0;
     const { width, height } = resolveCarouselLayoutStyle({
       flattenedStyle,
-      vertical: !!vertical,
+      isVertical,
       measuredSize,
       sizeExplicit,
-      legacyWidth,
-      legacyHeight,
     });
 
     return {
@@ -201,31 +172,21 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
       height,
       opacity: isSizeReady.value ? 1 : 0,
     };
-  }, [
-    flattenedStyle,
-    isSizeReady,
-    vertical,
-    resolvedSize,
-    sizePhase,
-    sizeExplicit,
-    legacyWidth,
-    legacyHeight,
-  ]);
+  }, [flattenedStyle, isSizeReady, isVertical, resolvedSize, sizePhase, sizeExplicit]);
 
   return (
-    <View testID={testID} style={[styles.layoutContainer, style]}>
+    <View testID={testID} style={[styles.layoutContainer, style]} onLayout={props.onLayout}>
       <ScrollViewGesture
         size={size}
-        key={mode}
+        key={layout?.type}
         translation={handlerOffset}
         style={[
           styles.contentContainer,
           layoutStyle,
           restContentContainerStyle,
-          vertical ? styles.itemsVertical : styles.itemsHorizontal,
+          isVertical ? styles.itemsVertical : styles.itemsHorizontal,
         ]}
         testID="carousel-content-container"
-        onLayout={props.onLayout}
         onScrollStart={scrollViewGestureOnScrollStart}
         onScrollEnd={scrollViewGestureOnScrollEnd}
         onTouchBegin={scrollViewGestureOnTouchBegin}
@@ -233,18 +194,20 @@ export const CarouselLayout = React.forwardRef<ICarouselInstance>((_props, ref) 
       >
         <ItemRenderer
           data={data}
+          rawData={rawData}
           dataLength={dataLength}
           rawDataLength={rawDataLength}
           loop={loop}
           size={size}
-          windowSize={windowSize}
+          renderWindowSize={renderWindowSize}
           defaultIndex={defaultIndex}
           autoFillData={autoFillData}
           offsetX={offsetX}
           handlerOffset={handlerOffset}
           layoutConfig={layoutConfig}
           renderItem={renderItem}
-          customAnimation={customAnimation}
+          itemAnimation={itemAnimation}
+          keyExtractor={keyExtractor}
         />
       </ScrollViewGesture>
     </View>

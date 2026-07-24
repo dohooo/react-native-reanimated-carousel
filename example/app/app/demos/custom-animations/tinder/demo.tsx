@@ -6,7 +6,7 @@ import Animated, {
   interpolate,
   useSharedValue,
 } from "react-native-reanimated";
-import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
+import { Carousel, CarouselItemAnimation } from "react-native-reanimated-carousel";
 
 import { window } from "@/constants/sizes";
 import { CaptureWrapper } from "@/store/CaptureProvider";
@@ -21,7 +21,7 @@ function Index() {
 
   const directionAnimVal = useSharedValue(0);
 
-  const animationStyle: TAnimationStyle = React.useCallback(
+  const animationStyle: CarouselItemAnimation = React.useCallback(
     (value: number, index: number) => {
       "worklet";
       const translateY = interpolate(value, [0, 1], [0, -18]);
@@ -65,7 +65,6 @@ function Index() {
           height: PAGE_HEIGHT,
         }}
         defaultIndex={0}
-        vertical={false}
         data={data}
         onConfigurePanGesture={(g) => {
           g.onChange((e) => {
@@ -73,10 +72,9 @@ function Index() {
             directionAnimVal.value = Math.sign(e.translationX);
           });
         }}
-        fixedDirection="negative"
         renderItem={({ index, item }) => <Item key={index} img={item} />}
-        customAnimation={animationStyle}
-        windowSize={5}
+        itemAnimation={animationStyle}
+        renderWindowSize={5}
       />
     </View>
   );

@@ -57,6 +57,19 @@ async function expectVisibleSlideAxisLayout(
     .toEqual({ position: 0, size: expected });
 }
 
+async function dragHorizontally(page: Page, carousel: Locator, from: number, to: number) {
+  await carousel.scrollIntoViewIfNeeded();
+  const box = await carousel.boundingBox();
+  expect(box).not.toBeNull();
+  if (!box) return;
+
+  const y = box.y + box.height / 2;
+  await page.mouse.move(box.x + box.width * from, y);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * to, y, { steps: 12 });
+  await page.mouse.up();
+}
+
 function failOnBrowserErrors(page: Page) {
   const errors: string[] = [];
 
@@ -114,6 +127,23 @@ test("horizontal auto-size follows its parent without losing the active item", a
     "width",
     520
   );
+  assertNoBrowserErrors();
+});
+
+test("horizontal carousel responds to real pointer drags", async ({ page }) => {
+  const assertNoBrowserErrors = failOnBrowserErrors(page);
+  await page.goto(ROUTE, { waitUntil: "commit" });
+
+  const carousel = page.getByTestId("horizontal-carousel");
+  await expect(page.getByText("Horizontal Item Width: 320", { exact: true })).toBeVisible({
+    timeout: PAGE_READY_TIMEOUT,
+  });
+
+  await dragHorizontally(page, carousel, 0.8, 0.2);
+  await expect(page.getByTestId("horizontal-index")).toHaveText("Horizontal Index: 1");
+
+  await dragHorizontally(page, carousel, 0.2, 0.8);
+  await expect(page.getByTestId("horizontal-index")).toHaveText("Horizontal Index: 0");
   assertNoBrowserErrors();
 });
 

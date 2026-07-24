@@ -48,7 +48,7 @@ import Demo from '@/components/Demo'
 import * as React from "react";
 import { View } from "react-native";
 import { Extrapolation, interpolate } from "react-native-reanimated";
-import Carousel from "react-native-reanimated-carousel";
+import { Carousel } from "react-native-reanimated-carousel";
 
 import { SBItem } from "@/components/SBItem";
 import { window } from "@/constants/sizes";
@@ -79,7 +79,7 @@ function Index() {
 		>
 			<Carousel
 				loop
-				pagingEnabled={false}
+				snapMode="nearest"
 				style={{
 					width: window.width,
 					height: PAGE_WIDTH * 0.6,
@@ -91,9 +91,9 @@ function Index() {
 					width: PAGE_WIDTH,
 					overflow: "visible",
 				}}
-				autoPlayInterval={150}
-				scrollAnimationDuration={600}
-				customAnimation={(value: number) => {
+				autoplayInterval={150}
+				animation={{ type: "timing", duration: 600 }}
+				itemAnimation={(value: number) => {
 					"worklet";
 					const size = PAGE_WIDTH;
 					const scale = interpolate(
@@ -132,10 +132,6 @@ function Index() {
 							},
 						),
 					};
-				}}
-				modeConfig={{
-					parallaxScrollingScale: 0.9,
-					parallaxScrollingOffset: 50,
 				}}
 				data={colors}
 				renderItem={({ index }) => <SBItem index={index} />}

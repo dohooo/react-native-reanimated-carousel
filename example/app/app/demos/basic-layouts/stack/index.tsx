@@ -1,7 +1,7 @@
 import * as React from "react";
 import { View } from "react-native";
 import type { StyleProp, ViewStyle } from "react-native";
-import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
+import { Carousel, CarouselRef } from "react-native-reanimated-carousel";
 
 import { CustomSelectActionItem } from "@/components/ActionItems";
 import { CarouselAdvancedSettingsPanel } from "@/components/CarouselAdvancedSettingsPanel";
@@ -13,24 +13,28 @@ import { renderItem } from "@/utils/render-item";
 
 function Index() {
   const viewCount = 5;
-  const [mode, setMode] = React.useState<any>("horizontal-stack");
+  const [mode, setMode] = React.useState<"horizontal-stack" | "vertical-stack">("horizontal-stack");
   const [snapDirection, setSnapDirection] = React.useState<"left" | "right">("left");
-  const ref = React.useRef<ICarouselInstance>(null);
+  const ref = React.useRef<CarouselRef>(null);
   const { advancedSettings, onAdvancedSettingsChange } = useAdvancedSettings({
     // These values will be passed in the Carousel Component as default props
     defaultSettings: {
-      autoPlay: false,
-      autoPlayInterval: 2000,
-      autoPlayReverse: false,
+      autoplay: false,
+      autoplayInterval: 2000,
+      autoplayDirection: "forward",
       data: defaultDataWith6Colors,
       loop: true,
-      pagingEnabled: true,
-      snapEnabled: true,
-      vertical: false,
+      orientation: "horizontal",
+      snapMode: "page",
     },
   });
 
-  const { style: advancedStyle, ...restSettings } = advancedSettings;
+  const {
+    style: advancedStyle,
+    itemAnimation: _itemAnimation,
+    layout: _layout,
+    ...restSettings
+  } = advancedSettings;
 
   const mergedStyle = React.useMemo<StyleProp<ViewStyle>>(
     () =>
@@ -49,12 +53,12 @@ function Index() {
           ref={ref}
           {...restSettings}
           style={mergedStyle}
-          mode={mode}
-          modeConfig={{
-            snapDirection,
-            stackInterval: mode === "vertical-stack" ? 8 : 18,
+          layout={{
+            type: mode,
+            exitDirection: snapDirection,
+            spacing: mode === "vertical-stack" ? 8 : 18,
+            visibleCount: viewCount,
           }}
-          customConfig={() => ({ type: "positive", viewCount })}
           renderItem={renderItem({ rounded: true })}
         />
       </CaptureWrapper>
@@ -69,7 +73,7 @@ function Index() {
             label="Change mode"
             value={mode}
             onValueChange={(value) => {
-              setMode(value);
+              setMode(value as "horizontal-stack" | "vertical-stack");
             }}
             options={[
               { label: "Horizontal Stack", value: "horizontal-stack" },

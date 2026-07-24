@@ -7,7 +7,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import type { SharedValue } from "react-native-reanimated";
-import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
+import { Carousel, CarouselItemAnimation } from "react-native-reanimated-carousel";
 
 import SButton from "@/components/SButton";
 import { SlideItem } from "@/components/SlideItem";
@@ -20,7 +20,7 @@ const PAGE_WIDTH = window.width;
 function Index() {
   const [isAutoPlay, setIsAutoPlay] = React.useState(false);
   const pressAnim = useSharedValue<number>(0);
-  const animationStyle: TAnimationStyle = React.useCallback((value: number) => {
+  const animationStyle: CarouselItemAnimation = React.useCallback((value: number) => {
     "worklet";
 
     const zIndex = interpolate(value, [-1, 0, 1], [-1000, 0, 1000]);
@@ -37,20 +37,20 @@ function Index() {
       <CaptureWrapper>
         <Carousel
           loop={true}
-          autoPlay={isAutoPlay}
+          autoplay={isAutoPlay}
           style={{ width: PAGE_WIDTH, height: 240 }}
           data={PURPLE_IMAGES}
           onScrollStart={() => {
             pressAnim.value = withTiming(1);
           }}
-          onScrollEnd={() => {
+          onSnapToItem={() => {
             pressAnim.value = withTiming(0);
           }}
           renderItem={({ index }) => {
             return <CustomItem index={index} key={index} pressAnim={pressAnim} />;
           }}
-          customAnimation={animationStyle}
-          scrollAnimationDuration={1200}
+          itemAnimation={animationStyle}
+          animation={{ type: "timing", duration: 1200 }}
         />
       </CaptureWrapper>
       <SButton

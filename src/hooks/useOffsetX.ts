@@ -1,9 +1,9 @@
 import type { SharedValue } from "react-native-reanimated";
 import { Extrapolation, interpolate, useDerivedValue } from "react-native-reanimated";
 
-import type { IVisibleRanges } from "./useVisibleRanges";
+import type { VisibleRangesValue } from "./useVisibleRanges";
 
-export interface IOpts {
+export interface OffsetOptions {
   index: number;
   size: number;
   handlerOffset: SharedValue<number>;
@@ -13,7 +13,7 @@ export interface IOpts {
   loop?: boolean;
 }
 
-export const useOffsetX = (opts: IOpts, visibleRanges: IVisibleRanges) => {
+export const useOffsetX = (opts: OffsetOptions, visibleRanges: VisibleRangesValue) => {
   const {
     handlerOffset,
     index,

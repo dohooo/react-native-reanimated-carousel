@@ -1,114 +1,445 @@
 ---
 id: migration-v5
-title: Migration Guide to v5 beta
-sidebar_label: Migration to v5 beta
-description: Guide for migrating to the react-native-reanimated-carousel v5 beta
+title: Migration Guide to v5
+sidebar_label: Migration to v5
+description: Agent-executable guide for migrating react-native-reanimated-carousel from v4 to v5
 keywords:
   - react-native-reanimated-carousel
-  - reanimated-carousel
   - migration
   - v5
-  - expo 54
-  - dynamic sizing
-  - react-native
-  - reanimated
-image:
+  - breaking changes
 slug: /migration-v5
 ---
 
-# Migration Guide to v5 beta
+# Migration Guide to v5
 
-This guide will help you migrate your application from react-native-reanimated-carousel v4.x to the v5 beta.
+## Migrate with your AI agent
 
-## 🎯 What's New in v5 beta
+```text copy
+Read https://rn-carousel.dev/migration-v5.md and upgrade react-native-reanimated-carousel to v5 in this project, then summarize what changed for my review.
+```
 
-### Dynamic Sizing (Auto-sizing)
-The carousel can now measure the main-axis size provided by its parent layout and respond when that size changes. The parent must still provide enough layout constraints for the carousel to be visible.
+The agent only edits files in your working tree — nothing is committed, and it stops for your review.
 
-### Current Expo Support
-The release matrix validates Expo SDK 54, 55, 56, and 57 with React Native 0.81, 0.83, 0.85, and 0.86 respectively. It type-checks a packed consumer, exports Web, and builds Android; native iOS and Android E2E currently run on Expo 54.
+This document is an execution manual for an AI coding agent upgrading a project from `react-native-reanimated-carousel` v4 to v5. Follow the protocol in order, preserve the application's existing product behavior unless a human approves a change, and stop at the review boundary.
 
-## 📦 Version Requirements
+## Step 1: run the codemod for mechanical changes
 
-Before upgrading, ensure your project meets these version requirements:
+First update the project dependency to v5 with the package manager already used by the project. Keep these peer requirements satisfied:
 
 ```json
 {
   "react": ">=18.0.0",
   "react-native": ">=0.80.0",
-  "react-native-gesture-handler": ">=2.9.0",
+  "react-native-gesture-handler": ">=2.9.0 <3.0.0",
   "react-native-reanimated": ">=4.1.0",
   "react-native-worklets": ">=0.5.0"
 }
 ```
 
-## 💥 Breaking Changes
+Expo projects should let Expo choose compatible peer versions:
 
-### 1. Container and content styles
+```bash
+npx expo install react-native-reanimated-carousel react-native-reanimated react-native-worklets react-native-gesture-handler
+```
 
-The v4 style props map to v5 as follows:
+Then run the v5 codemod from the project root:
+
+```bash
+npx rnrc-v5-codemod .
+```
+
+Use `--dry` first when the working tree already contains unrelated edits:
+
+```bash
+npx rnrc-v5-codemod --dry .
+```
+
+The codemod performs deterministic changes only:
+
+- converts the default `Carousel` import to a named import;
+- renames direct Carousel props and public type imports;
+- converts `vertical`, `autoPlayReverse`, item sizing, and snap booleans;
+- adds `loop={true}` wherever v4 code relied on the old default;
+- reports APIs that require a product decision instead of guessing.
+
+It is idempotent. Review every warning before continuing.
+
+### Mechanical rename reference
+
+```diff
+- import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
++ import { Carousel, type CarouselRef } from "react-native-reanimated-carousel";
+
+- const ref = React.useRef<ICarouselInstance>(null);
++ const ref = React.useRef<CarouselRef>(null);
+```
 
 | v4 | v5 |
-|----|----|
-| `containerStyle` | `style` |
-| `style` | `contentContainerStyle` |
-| `width` / `height` | `style.width` / `style.height` |
+|---|---|
+| default `Carousel` export | named `Carousel` |
+| `TCarouselProps` | `CarouselProps` |
+| `ICarouselInstance` | `CarouselRef` |
+| `IComputedDirectionTypes` | removed |
+| `TAnimationStyle` | `CarouselItemAnimation` |
+| `ILayoutConfig` | `CarouselLayout` |
+| `width`, `height` | `style.width`, `style.height` |
+| `vertical` | `orientation="vertical"` |
+| `itemWidth`, `itemHeight` | `itemSize` |
+| `enabled` | `scrollEnabled` |
+| `pagingEnabled` + `snapEnabled` / `enableSnap` | `snapMode="page" \| "nearest" \| "none"` |
+| `windowSize` | `renderWindowSize` |
+| `autoPlay` | `autoplay` |
+| `autoPlayInterval` | `autoplayInterval` |
+| `autoPlayReverse` | `autoplayDirection="backward"` |
+| `customAnimation` | `itemAnimation` |
+| render-item `animationValue` | `relativeProgress` |
+| `scrollAnimationDuration` + `withAnimation` | `animation` |
+| `mode` + `modeConfig` | `layout` |
+| `defaultScrollOffsetValue` | `scrollOffsetValue` |
+| SharedValue-form `onProgressChange={value}` | `progress={value}` |
+| `onScrollEnd` | removed; use settled `onSnapToItem` |
+| `scrollTo({ count })` | `next({ count })` or `prev({ count })` |
+| command `onFinished` | removed |
+| `fixedDirection` | removed; use `next` or `prev` |
+| `customConfig`, `CustomConfig` | removed |
+| `autoFillData` | removed; short-loop handling is internal |
+| `minScrollDistancePerSwipe`, `maxScrollDistancePerSwipe` | gesture thresholds through `onConfigurePanGesture` |
 
-`style` now describes the outer carousel container. Use `contentContainerStyle` for styles that previously targeted the inner carousel content.
+The package root exports only `Carousel`, `Pagination`, and the documented v5 type whitelist. Default imports, compatibility aliases, and deep imports are unsupported.
 
-### 2. React Native Reanimated v4
+### Manual layout migration
 
-**Required:** Upgrade to Reanimated 4.1 or newer and install a compatible Worklets version.
+The codemod reports `mode` and `modeConfig`; convert them together:
 
-Expo projects should let Expo choose the matching versions:
-
-```bash
-npx expo install react-native-reanimated-carousel@beta react-native-reanimated react-native-worklets react-native-gesture-handler
+```diff
+- mode="parallax"
+- modeConfig={{
+-   parallaxScrollingOffset: 100,
+-   parallaxScrollingScale: 0.8,
+-   parallaxAdjacentItemScale: 0.64,
+- }}
++ layout={{
++   type: "parallax",
++   offset: 100,
++   scale: 0.8,
++   adjacentScale: 0.64,
++ }}
 ```
 
-React Native Community CLI projects can install the packages with their package manager:
+| v4 stack field | v5 stack field |
+|---|---|
+| `showLength` | `visibleCount` |
+| `moveSize` | `exitDistance` |
+| `stackInterval` | `spacing` |
+| `scaleInterval` | `scaleStep` |
+| `opacityInterval` | `opacityStep` |
+| `rotateZDeg` | `rotation` |
+| `snapDirection` | `exitDirection` |
 
-```bash
-npm install react-native-reanimated-carousel@beta react-native-reanimated react-native-worklets react-native-gesture-handler
+`layout` and `itemAnimation` are mutually exclusive. Preserve the old stack runtime defaults when the app depends on them: physical left exit, screen-width distance, `18` spacing, `0.04` scale step, `0.1` opacity step, and `30` degrees rotation.
+
+### Manual Pagination migration
+
+```diff
+- <Pagination.Basic
+-   data={data}
+-   progress={progress}
+-   size={8}
+- />
++ <Pagination
++   count={data.length}
++   progress={progress}
++   dotStyle={{ width: 8, height: 8 }}
++ />
 ```
 
-Follow the [Reanimated installation guide](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started) and [compatibility table](https://docs.swmansion.com/react-native-reanimated/docs/guides/compatibility). Community CLI projects must replace `react-native-reanimated/plugin` with `react-native-worklets/plugin` in their Babel configuration.
+| v4 | v5 |
+|---|---|
+| `Pagination.Basic`, `Pagination.Custom` | `Pagination` |
+| `data` | `count` |
+| `horizontal` | `orientation` |
+| `size` | `dotStyle.width` / `dotStyle.height` |
+| `carouselName` | removed |
+| `paginationItemAccessibility` | `getItemAccessibilityLabel` |
+| `renderItem`, generic data | removed |
+| `customReanimatedStyle` | removed; build a custom indicator from `progress` |
 
-Reanimated 4 requires React Native's New Architecture. After changing Reanimated, Worklets, or Babel configuration, rebuild the native application (and reinstall iOS pods when applicable).
+Add `onPress` when the dots should be interactive. Without it, v5 treats the dots as decorative and hides them from the accessibility tree.
 
-### 3. React Native Worklets (New Dependency)
+### Stable item identity
 
-Worklet-specific APIs moved to `react-native-worklets`. Reanimated still re-exports older APIs such as `runOnJS` for compatibility, but those imports are deprecated; new code should use APIs such as `scheduleOnRN` from `react-native-worklets`.
-
-## ✨ New Features
-
-### Dynamic Sizing
-
-The carousel measures dimensions assigned by its parent layout. For example, a horizontal carousel can fill a parent with a responsive width and a defined height:
+Add `keyExtractor` when items have stable identities:
 
 ```tsx
-// ✅ v5 beta - Auto-sizing
-<View style={{ height: 200 }}>
-  <Carousel
-    style={{ flex: 1 }}
-    data={data}
-    renderItem={renderItem}
-  />
-</View>
-
-// ✅ v5 beta - Still works (explicit sizing via style prop)
 <Carousel
-  style={{ width: 300, height: 200 }}
-  data={data}
-  renderItem={renderItem}
+  data={products}
+  keyExtractor={(product) => product.id}
+  renderItem={renderProduct}
 />
 ```
 
-#### Notes on sizing vs page size
+When data changes, v5 keeps the selected key when possible. Without `keyExtractor`, or when the key disappears, it clamps the previous numeric index after active movement settles.
 
-- `style.width` / `style.height` describe the **container size** (recommended).
-- `itemWidth` / `itemHeight` describe the **page size** (snap distance & animation progress per page). They are not the same as container size.
+## Step 2: review all 12 behavioral changes
 
-#### New naming in v5 beta
+Do not treat a successful typecheck as proof that the migration is complete. Check every item below against the product's intended behavior and record the answer to every **Human confirmation required** line.
 
-`defaultScrollOffsetValue` is deprecated in favor of `scrollOffsetValue` (same behavior, clearer name).
+### 1. Loop now defaults to false
+
+Before, omitting `loop` enabled wrapping:
+
+```tsx
+<Carousel data={data} renderItem={renderItem} />
+```
+
+After, preserve the v4 behavior explicitly or choose the new finite behavior:
+
+```tsx
+<Carousel data={data} renderItem={renderItem} loop={true} />
+```
+
+**Human confirmation required:** Should this carousel wrap forever? The codemod inserts `loop={true}` to preserve v4 behavior, but a human must confirm the product intent.
+
+### 2. The default autoplay dwell changes from 1000ms to 3000ms
+
+Before:
+
+```tsx
+<Carousel autoPlay data={data} renderItem={renderItem} />
+```
+
+After, preserve the old cadence explicitly when required:
+
+```tsx
+<Carousel autoplay autoplayInterval={1000} data={data} renderItem={renderItem} />
+```
+
+The interval still begins after the previous transition settles.
+
+**Human confirmation required:** Should the product keep a `1000ms` dwell or adopt the new `3000ms` default?
+
+### 3. Every ref command now defaults to animated
+
+Before, v4 `scrollTo` was immediate unless `animated` was set:
+
+```ts
+ref.current?.scrollTo({ index: 2 });
+```
+
+After, preserve an immediate jump explicitly:
+
+```ts
+ref.current?.scrollTo({ index: 2, animated: false });
+```
+
+`next`, `prev`, and `scrollTo` all default to `animated: true`.
+
+**Human confirmation required:** For each `scrollTo` call that omitted `animated`, should it jump immediately or animate?
+
+### 4. Looping `scrollTo` uses the shortest route
+
+Before, route choice could reuse the previous travel direction:
+
+```ts
+ref.current?.scrollTo({ index: 0 });
+```
+
+After, the same call chooses the shortest loop route and chooses logical forward on an exact tie:
+
+```ts
+ref.current?.scrollTo({ index: 0 });
+```
+
+Use `next` or `prev` when direction is the product requirement.
+
+**Human confirmation required:** Does any animation, onboarding sequence, or analytics flow depend on a specific travel direction?
+
+### 5. `getCurrentIndex()` returns the last settled index
+
+Before, an in-flight read could return a rounded visual index:
+
+```ts
+const inFlightIndex = ref.current?.getCurrentIndex();
+```
+
+After, use progress for live visual position and keep `getCurrentIndex()` for settled state:
+
+```tsx
+<Carousel
+  progress={progress}
+  onSnapToItem={(index) => setSelectedIndex(index)}
+/>
+```
+
+**Human confirmation required:** Does any caller need the in-flight visual index rather than the last settled selection?
+
+### 6. Loop progress is continuous and unbounded
+
+Before, loop progress was normalized to one data cycle:
+
+```tsx
+<Pagination.Basic data={data} progress={progress} />
+```
+
+After, the same logical position can be `-1`, `count + 1`, or many cycles away:
+
+```tsx
+<Carousel progress={progress} data={data} renderItem={renderItem} loop />
+<Pagination count={data.length} progress={progress} />
+```
+
+The v5 Pagination handles nearest-cycle interpolation internally. Normalize only custom consumers that truly require `[0, count)`.
+
+**Human confirmation required:** Does any custom progress consumer assume a bounded range?
+
+### 7. `onProgressChange` receives one logical progress value
+
+Before:
+
+```tsx
+<Carousel
+  onProgressChange={(offsetPx, absoluteProgress) => {
+    update(offsetPx, absoluteProgress);
+  }}
+/>
+```
+
+After:
+
+```tsx
+const offset = useSharedValue(0);
+
+<Carousel
+  scrollOffsetValue={offset}
+  onProgressChange={(progress) => {
+    updateProgress(progress);
+  }}
+/>
+```
+
+The callback runs on the JS thread every frame; use `progress` or `scrollOffsetValue` SharedValues for UI-thread work.
+
+**Human confirmation required:** Which consumers need logical progress, and which still need signed pixel translation?
+
+### 8. Pagination visuals and accessibility semantics change
+
+Before:
+
+```tsx
+<Pagination.Basic data={data} progress={progress} />
+```
+
+After, non-interactive dots are decorative:
+
+```tsx
+<Pagination count={data.length} progress={progress} />
+```
+
+To keep them interactive, wire explicit navigation:
+
+```tsx
+<Pagination
+  count={data.length}
+  progress={progress}
+  onPress={(index) => ref.current?.scrollTo({ index })}
+/>
+```
+
+**Human confirmation required:** Are the dots navigation controls or decorative status, and must a custom v4 visual be recreated?
+
+### 9. Only the current slide is exposed to accessibility services
+
+Before, off-screen slide content could remain in the accessibility tree:
+
+```tsx
+<Carousel data={data} renderItem={renderItem} />
+```
+
+After, v5 hides non-current slides. Add explicit external navigation when users need to move between slides without swiping:
+
+```tsx
+<Button title="Previous" onPress={() => ref.current?.prev()} />
+<Button title="Next" onPress={() => ref.current?.next()} />
+```
+
+**Human confirmation required:** Is the current slide understandable on its own, and does the screen need accessible previous/next controls?
+
+### 10. Animation duration no longer includes a hidden extra 100ms
+
+Before, this declaration settled in roughly `500ms`:
+
+```tsx
+<Carousel scrollAnimationDuration={400} />
+```
+
+After, preserve the old perceived duration explicitly or adopt the exact duration:
+
+```tsx
+<Carousel animation={{ type: "timing", duration: 500 }} />
+```
+
+**Human confirmation required:** Should the interaction preserve the old perceived timing or use the exact declared duration?
+
+### 11. Accepted non-animated commands emit a complete lifecycle
+
+Before, an immediate command did not emit a settled `onScrollEnd` event:
+
+```tsx
+<Carousel onScrollEnd={handleSettled} />
+ref.current?.scrollTo({ index: 2, animated: false });
+```
+
+After, it fires `onScrollStart` and then immediately fires `onSnapToItem`:
+
+```tsx
+<Carousel onScrollStart={handleStart} onSnapToItem={handleSettled} />
+ref.current?.scrollTo({ index: 2, animated: false });
+```
+
+**Human confirmation required:** Will analytics, state synchronization, or side effects double-count immediate navigation?
+
+### 12. `scrollEnabled` disables gestures only
+
+Before:
+
+```tsx
+<Carousel enabled={false} autoPlay />
+```
+
+After:
+
+```tsx
+<Carousel scrollEnabled={false} autoplay />
+```
+
+Autoplay and ref commands still work. Disable `autoplay` separately when the whole carousel must pause.
+
+**Human confirmation required:** Should disabling user gestures also pause autoplay or external controls in this screen?
+
+Also review `onScrollStart`: v5 fires it for gestures, ref commands, and autoplay. Do not toggle `autoplay` from this callback because that can create a feedback loop. Use an `onBegin` worklet through `onConfigurePanGesture` when user contact specifically matters.
+
+## Step 3: run the allowed validation
+
+Inspect the project's existing scripts and run only:
+
+1. its typecheck;
+2. its production build;
+3. its existing unit tests, if they can be run directly in the current environment.
+
+Fix migration-caused failures and rerun the relevant command. If a command is unavailable or blocked by an existing environment requirement, report that limitation instead of expanding the scope.
+
+**Do NOT run end-to-end tests. Do NOT launch simulators, emulators, or devices. Do NOT start the app.**
+
+## Finish: summarize and stop
+
+Return:
+
+1. a concise summary of changed files and API migrations;
+2. the result of the typecheck, build, and existing unit tests;
+3. a checklist of every item that still needs human confirmation;
+4. any codemod warnings or validation limitations.
+
+Then stop and wait for the user to review the working tree.
+
+**Do NOT commit or push — leave all changes uncommitted for the user to review.**

@@ -1,15 +1,25 @@
 import { interpolate } from "react-native-reanimated";
 
-export function normalLayout(opts: { size: number; vertical: boolean }) {
-  const { size, vertical } = opts;
+import type { CarouselDirectionSign } from "../utils/carousel-direction";
+import { toPhysicalHorizontalValue } from "../utils/carousel-direction";
+
+export function normalLayout(opts: {
+  size: number;
+  isVertical: boolean;
+  directionSign: CarouselDirectionSign;
+}) {
+  const { size, isVertical, directionSign } = opts;
 
   return (value: number) => {
     "worklet";
-    const translate = interpolate(value, [-1, 0, 1], [-size, 0, size]);
+    const logicalTranslate = interpolate(value, [-1, 0, 1], [-size, 0, size]);
+    const translate = isVertical
+      ? logicalTranslate
+      : toPhysicalHorizontalValue(logicalTranslate, directionSign);
 
     return {
       transform: [
-        vertical
+        isVertical
           ? {
               translateY: translate,
             }

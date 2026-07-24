@@ -1,7 +1,6 @@
 import * as React from "react";
-import { View } from "react-native";
-import { Extrapolation, interpolate, useSharedValue } from "react-native-reanimated";
-import Carousel, { ICarouselInstance, Pagination } from "react-native-reanimated-carousel";
+import { useSharedValue } from "react-native-reanimated";
+import { Carousel, CarouselRef, Pagination } from "react-native-reanimated-carousel";
 
 import { defaultDataWith6Colors } from "@/components/CarouselBasicSettingsPanel";
 import { window } from "@/constants/sizes";
@@ -14,18 +13,14 @@ const PAGE_WIDTH = window.width;
 function Index() {
   const progress = useSharedValue<number>(0);
   const baseOptions = {
-    vertical: false,
+    orientation: "horizontal",
   } as const;
 
-  const ref = React.useRef<ICarouselInstance>(null);
+  const ref = React.useRef<CarouselRef>(null);
 
   const onPressPagination = (index: number) => {
     ref.current?.scrollTo({
-      /**
-       * Calculate the difference between the current index and the target index
-       * to ensure that the carousel scrolls to the nearest index
-       */
-      count: index - progress.value,
+      index,
       animated: true,
     });
   };
@@ -37,9 +32,7 @@ function Index() {
           ref={ref}
           {...baseOptions}
           loop
-          onProgressChange={(offsetProgress, absoluteProgress) => {
-            progress.value = absoluteProgress;
-          }}
+          progress={progress}
           contentContainerStyle={{ width: PAGE_WIDTH }}
           style={{ width: PAGE_WIDTH, height: PAGE_WIDTH * 0.6 }}
           data={defaultDataWith6Colors}
@@ -48,51 +41,46 @@ function Index() {
       </Stack>
 
       <CaptureWrapper>
-        <Pagination.Basic
+        <Pagination
+          count={defaultDataWith6Colors.length}
           progress={progress}
-          data={defaultDataWith6Colors}
           dotStyle={{ backgroundColor: "#262626" }}
           activeDotStyle={{ backgroundColor: "#f1f1f1" }}
           containerStyle={{ gap: 5, marginBottom: 10 }}
           onPress={onPressPagination}
-          carouselName="Color carousel"
+          getItemAccessibilityLabel={(index, count) => `Color slide ${index + 1} of ${count}`}
         />
 
-        <Pagination.Basic<{ color: string }>
+        <Pagination
+          count={defaultDataWith6Colors.length}
           progress={progress}
-          data={defaultDataWith6Colors.map((color) => ({ color }))}
           dotStyle={{
             width: 25,
             height: 4,
             backgroundColor: "#262626",
           }}
           activeDotStyle={{
-            overflow: "hidden",
             backgroundColor: "#f1f1f1",
           }}
           containerStyle={{
             gap: 10,
             marginBottom: 10,
           }}
-          horizontal
           onPress={onPressPagination}
-          paginationItemAccessibility={(index, length) => ({
-            accessibilityLabel: `Color ${index + 1} of ${length}`,
-            accessibilityHint: `Go to color ${index + 1}`,
-          })}
+          getItemAccessibilityLabel={(index, count) => `Color ${index + 1} of ${count}`}
         />
 
-        <Pagination.Basic<{ color: string }>
+        <Pagination
+          count={defaultDataWith6Colors.length}
           progress={progress}
-          data={defaultDataWith6Colors.map((color) => ({ color }))}
-          size={20}
           dotStyle={{
+            width: 20,
+            height: 20,
             borderRadius: 100,
             backgroundColor: "#262626",
           }}
           activeDotStyle={{
             borderRadius: 100,
-            overflow: "hidden",
             backgroundColor: "#f1f1f1",
           }}
           containerStyle={[
@@ -101,15 +89,14 @@ function Index() {
               marginBottom: 10,
             },
           ]}
-          horizontal
-          onPress={onPressPagination}
         />
 
-        <Pagination.Custom<{ color: string }>
+        <Pagination
+          count={defaultDataWith6Colors.length}
           progress={progress}
-          data={defaultDataWith6Colors.map((color) => ({ color }))}
-          size={20}
           dotStyle={{
+            width: 20,
+            height: 20,
             borderRadius: 16,
             backgroundColor: "#262626",
           }}
@@ -117,77 +104,15 @@ function Index() {
             borderRadius: 8,
             width: 40,
             height: 30,
-            overflow: "hidden",
             backgroundColor: "#f1f1f1",
           }}
           containerStyle={{
             gap: 5,
             marginBottom: 10,
             alignItems: "center",
-            height: 10,
+            minHeight: 30,
           }}
-          horizontal
           onPress={onPressPagination}
-          customReanimatedStyle={(progress, index, length) => {
-            let val = Math.abs(progress - index);
-            if (index === 0 && progress > length - 1) {
-              val = Math.abs(progress - length);
-            }
-
-            return {
-              transform: [
-                {
-                  translateY: interpolate(val, [0, 1], [0, 0], Extrapolation.CLAMP),
-                },
-              ],
-            };
-          }}
-        />
-
-        <Pagination.Custom<{ color: string }>
-          progress={progress}
-          data={defaultDataWith6Colors.map((color) => ({ color }))}
-          size={20}
-          dotStyle={{
-            borderRadius: 16,
-            backgroundColor: "#262626",
-          }}
-          activeDotStyle={{
-            borderRadius: 8,
-            width: 40,
-            height: 30,
-            overflow: "hidden",
-            backgroundColor: "#f1f1f1",
-          }}
-          containerStyle={{
-            gap: 5,
-            alignItems: "center",
-            height: 10,
-          }}
-          horizontal
-          onPress={onPressPagination}
-          customReanimatedStyle={(progress, index, length) => {
-            let val = Math.abs(progress - index);
-            if (index === 0 && progress > length - 1) {
-              val = Math.abs(progress - length);
-            }
-
-            return {
-              transform: [
-                {
-                  translateY: interpolate(val, [0, 1], [0, 0], Extrapolation.CLAMP),
-                },
-              ],
-            };
-          }}
-          renderItem={(item) => (
-            <View
-              style={{
-                backgroundColor: item.color,
-                flex: 1,
-              }}
-            />
-          )}
         />
       </CaptureWrapper>
     </YStack>

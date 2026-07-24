@@ -7,7 +7,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import type { SharedValue } from "react-native-reanimated";
-import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
+import { Carousel, CarouselItemAnimation } from "react-native-reanimated-carousel";
 
 import { SlideItem } from "@/components/SlideItem";
 import { PURPLE_IMAGES } from "@/constants/purple-images";
@@ -17,7 +17,7 @@ const PAGE_WIDTH = window.width;
 
 function Index() {
   const pressAnim = useSharedValue<number>(0);
-  const animationStyle: TAnimationStyle = React.useCallback((value: number) => {
+  const animationStyle: CarouselItemAnimation = React.useCallback((value: number) => {
     "worklet";
 
     const zIndex = interpolate(value, [-1, 0, 1], [-1000, 0, 1000]);
@@ -38,14 +38,14 @@ function Index() {
         onScrollStart={() => {
           pressAnim.value = withTiming(1);
         }}
-        onScrollEnd={() => {
+        onSnapToItem={() => {
           pressAnim.value = withTiming(0);
         }}
         renderItem={({ index }) => {
           return <CustomItem index={index} key={index} pressAnim={pressAnim} />;
         }}
-        customAnimation={animationStyle}
-        scrollAnimationDuration={1200}
+        itemAnimation={animationStyle}
+        animation={{ type: "timing", duration: 1200 }}
       />
     </View>
   );

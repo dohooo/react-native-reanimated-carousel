@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ICarouselInstance } from "react-native-reanimated-carousel";
+import { CarouselRef } from "react-native-reanimated-carousel";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ScrollView, YStack } from "tamagui";
 import { CustomButtonActionItem, CustomSelectActionItem } from "./ActionItems";
@@ -17,7 +17,7 @@ export function CarouselAdvancedSettingsPanel({
   extraSettings,
   extraButtons,
 }: {
-  carouselRef: React.RefObject<ICarouselInstance | null>;
+  carouselRef: React.RefObject<CarouselRef | null>;
   advancedSettings: Partial<AdvancedSettings>;
   onAdvancedSettingsChange: (settings: Partial<AdvancedSettings>) => void;
   extraSettings?: React.ReactNode[];
@@ -78,12 +78,12 @@ export function CarouselAdvancedSettingsPanel({
 
         <CustomButtonActionItem
           label="Swipe to prev"
-          action={() => carouselRef.current?.scrollTo({ count: -1, animated: true })}
+          action={() => carouselRef.current?.prev({ animated: true })}
         />
 
         <CustomButtonActionItem
           label="Swipe to next"
-          action={() => carouselRef.current?.scrollTo({ count: 1, animated: true })}
+          action={() => carouselRef.current?.next({ animated: true })}
         />
 
         {extraButtons?.map((button, index) => (

@@ -22,6 +22,7 @@ mkdir -p "$TARBALL_DIR"
 
 cd "$REPOSITORY_ROOT"
 npm pack --pack-destination "$TARBALL_DIR"
+yarn package:check
 TARBALL_PATH="$(find "$TARBALL_DIR" -maxdepth 1 -type f -name '*.tgz' -print -quit)"
 
 if [[ -z "$TARBALL_PATH" ]]; then
@@ -36,6 +37,14 @@ CI=1 npx --yes create-expo-app@4.0.0 "$CONSUMER_DIR" \
   --no-agents-md
 
 cd "$CONSUMER_DIR"
+
+if [[ "$SDK_VERSION" == "56" ]]; then
+  # expo-modules-autolinking@56.0.21 currently requires an unpublished
+  # @expo/require-utils@^56.1.6. Keep this compatibility fixture on the last
+  # complete SDK 56 dependency set until the upstream package is available.
+  npm pkg set overrides.expo-modules-autolinking=56.0.20
+fi
+
 npm install
 npx expo install \
   react-native-gesture-handler \

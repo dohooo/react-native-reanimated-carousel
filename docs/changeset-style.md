@@ -12,6 +12,11 @@ Goal: keep GitHub Releases short, scannable, and user-facing.
 
 This matches `@changesets/changelog-github`, which adds the top-level release bullet itself.
 
+For a major release migration only, the summary may end with one
+`### Migrate with your AI agent` section containing a single-line `text` code
+block and one single-line review note. The release action carries that block
+unchanged into the changelog and GitHub Release body.
+
 ## Allowed
 
 ```md
@@ -25,6 +30,9 @@ Fix gesture blocking when `style={{ flex: 1 }}` is used.
 - Markdown headings (`#`, `##`) in summary body.
 - Code blocks in summary body.
 - A list marker on the first summary line, because it renders as `- - ...` in the changelog.
+
+The constrained `### Migrate with your AI agent` release section described
+above is the only heading and code-block exception.
 
 ## Validation
 
