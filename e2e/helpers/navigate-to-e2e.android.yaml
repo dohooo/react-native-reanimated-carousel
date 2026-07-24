@@ -42,10 +42,11 @@ appId: ${APP_ID}
     text: "Wait"
     optional: true
 
-# Expo onboarding modal on first launch.
+# Expo onboarding modal only appears on the first cold launch. Keep the
+# probe short so every later flow does not burn the full timeout.
 - extendedWaitUntil:
     visible: "Continue"
-    timeout: 30000
+    timeout: 8000
     optional: true
 
 - tapOn:
