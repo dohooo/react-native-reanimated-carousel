@@ -1,6 +1,6 @@
 import * as React from "react";
 import { View } from "react-native";
-import { Gesture, MouseButton, type PanGesture } from "react-native-gesture-handler";
+import { Gesture, MouseButton } from "react-native-gesture-handler";
 import { makeMutable } from "react-native-reanimated";
 import { Pagination as PaginationComponent } from "../src/components/Pagination";
 
@@ -86,7 +86,7 @@ const legacyProps: CarouselProps<Item> = {
 
 void legacyProps;
 
-declare const realPanGesture: PanGesture;
+declare const realPanGesture: ReturnType<typeof Gesture.Pan>;
 
 const facadeFromRngh: CarouselPanGesture = realPanGesture;
 const chainedFacade = facadeFromRngh

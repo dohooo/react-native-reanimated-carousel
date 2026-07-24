@@ -1,10 +1,9 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import type { PanGesture } from "react-native-gesture-handler";
-import { Gesture, State } from "react-native-gesture-handler";
+import { Gesture, GestureHandlerRootView, State } from "react-native-gesture-handler";
 import Animated from "react-native-reanimated";
 
-import { act, render, waitFor } from "@testing-library/react-native";
+import { act, render as renderNative, waitFor } from "@testing-library/react-native";
 import { fireGestureHandler, getByGestureTestId } from "react-native-gesture-handler/jest-utils";
 
 import { Carousel } from "./Carousel";
@@ -26,6 +25,11 @@ const slideWidth = 300;
 const slideHeight = 200;
 const gestureTestId = "rnrc-gesture-handler";
 const realPan = Gesture.Pan();
+type LegacyPanGesture = ReturnType<typeof Gesture.Pan>;
+
+function render(ui: React.ReactElement) {
+  return renderNative(ui, { wrapper: GestureHandlerRootView });
+}
 
 jest.spyOn(Gesture, "Pan").mockImplementation(() => realPan.withTestId(gestureTestId));
 
@@ -83,7 +87,7 @@ describe("issue #899 parallax reverse loop regression", () => {
     expect(prerenderedWrappedItem.props.accessibilityLabel).toBe("issue-899-label-29");
     expect(prerenderedWrappedStyle.backgroundColor).toBe("#111111");
 
-    fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
+    fireGestureHandler<LegacyPanGesture>(getByGestureTestId(gestureTestId), [
       { state: State.BEGAN, translationX: 0, velocityX: slideWidth },
       { state: State.ACTIVE, translationX: slideWidth * 0.7, velocityX: slideWidth },
     ]);

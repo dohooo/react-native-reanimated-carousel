@@ -1,11 +1,10 @@
 import React from "react";
 import { I18nManager, View } from "react-native";
-import type { PanGesture } from "react-native-gesture-handler";
-import { Gesture, State } from "react-native-gesture-handler";
+import { Gesture, GestureHandlerRootView, State } from "react-native-gesture-handler";
 import type { SharedValue } from "react-native-reanimated";
 import { useSharedValue } from "react-native-reanimated";
 
-import { act, fireEvent, render, waitFor } from "@testing-library/react-native";
+import { act, fireEvent, render as renderNative, waitFor } from "@testing-library/react-native";
 import { fireGestureHandler, getByGestureTestId } from "react-native-gesture-handler/jest-utils";
 
 import { Carousel } from "./Carousel";
@@ -33,7 +32,12 @@ import type { CarouselProps, CarouselRef } from "../types";
 
 const gestureTestId = "rnrc-gesture-handler";
 const realPan = Gesture.Pan();
+type LegacyPanGesture = ReturnType<typeof Gesture.Pan>;
 const originalIsRTL = I18nManager.isRTL;
+
+function render(ui: React.ReactElement) {
+  return renderNative(ui, { wrapper: GestureHandlerRootView });
+}
 
 function setRTL(isRTL: boolean) {
   Object.defineProperty(I18nManager, "isRTL", {
@@ -141,7 +145,7 @@ describe("Carousel v5 integration", () => {
     const onSnapToItem = jest.fn();
     render(<TestCarousel onScrollStart={onScrollStart} onSnapToItem={onSnapToItem} />);
 
-    fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
+    fireGestureHandler<LegacyPanGesture>(getByGestureTestId(gestureTestId), [
       { state: State.BEGAN, translationX: 0, velocityX: 0 },
       { state: State.ACTIVE, translationX: 0, velocityX: 0 },
       { state: State.ACTIVE, translationX: -180, velocityX: -300 },
@@ -168,7 +172,7 @@ describe("Carousel v5 integration", () => {
       />
     );
 
-    fireGestureHandler<PanGesture>(getByGestureTestId(gestureTestId), [
+    fireGestureHandler<LegacyPanGesture>(getByGestureTestId(gestureTestId), [
       { state: State.BEGAN, translationX: 0, velocityX: 0 },
       { state: State.ACTIVE, translationX: 0, velocityX: 0 },
       { state: State.ACTIVE, translationX: 180, velocityX: 300 },

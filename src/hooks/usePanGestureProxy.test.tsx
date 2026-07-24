@@ -1,6 +1,6 @@
 import React from "react";
 import { Text } from "react-native";
-import type { PanGesture, PanGestureHandler, TapGesture } from "react-native-gesture-handler";
+import type { PanGestureHandler } from "react-native-gesture-handler";
 import {
   Gesture,
   GestureDetector,
@@ -14,6 +14,9 @@ import { fireGestureHandler, getByGestureTestId } from "react-native-gesture-han
 import { usePanGestureProxy } from "./usePanGestureProxy";
 
 beforeEach(cleanup);
+
+type LegacyPanGesture = ReturnType<typeof Gesture.Pan>;
+type LegacyTapGesture = ReturnType<typeof Gesture.Tap>;
 
 const mockedEventHandlers = () => {
   return {
@@ -48,7 +51,7 @@ describe("Using RNGH v2 gesture API", () => {
 
   function SingleHandler({ handlers, handlersFromUser, treatStartAsUpdate }: SingleHandlerProps) {
     const pan = usePanGestureProxy({
-      onConfigurePanGesture: (gesture: PanGesture) => {
+      onConfigurePanGesture: (gesture) => {
         // This is user's customizations
         gesture
           .onBegin(handlersFromUser.begin)
@@ -81,7 +84,7 @@ describe("Using RNGH v2 gesture API", () => {
     const tap = Gesture.Tap().onBegin(tapHandlers.begin).onEnd(tapHandlers.end).withTestId("tap");
 
     const pan = usePanGestureProxy({
-      onConfigurePanGesture: (_: PanGesture) => {
+      onConfigurePanGesture: (_) => {
         _.onBegin(panHandlers.begin).onFinalize(panHandlers.finish).withTestId("pan");
       },
       onGestureStart: panHandlers.start,
@@ -104,7 +107,7 @@ describe("Using RNGH v2 gesture API", () => {
     const panHandlers = mockedEventHandlers();
     render(<RacingHandlers tapHandlers={tapHandlers} panHandlers={panHandlers} />);
 
-    fireGestureHandler<PanGesture>(getByGestureTestId("pan"), [
+    fireGestureHandler<LegacyPanGesture>(getByGestureTestId("pan"), [
       { state: State.BEGAN },
       { state: State.ACTIVE },
       { state: State.END },
@@ -124,7 +127,7 @@ describe("Using RNGH v2 gesture API", () => {
         treatStartAsUpdate
       />
     );
-    fireGestureHandler<PanGesture>(getByGestureTestId("pan"), [
+    fireGestureHandler<LegacyPanGesture>(getByGestureTestId("pan"), [
       { state: State.BEGAN, translationX: 0 },
       { state: State.ACTIVE, translationX: 10 },
       { translationX: 20 },
@@ -162,7 +165,7 @@ describe("Using RNGH v2 gesture API", () => {
         treatStartAsUpdate
       />
     );
-    fireGestureHandler<PanGesture>(getByGestureTestId("pan"), [
+    fireGestureHandler<LegacyPanGesture>(getByGestureTestId("pan"), [
       { state: State.BEGAN },
       { state: State.ACTIVE },
       { state: State.END },
@@ -181,7 +184,7 @@ describe("Event list validation", () => {
 
   function SingleHandler({ handlers, handlersFromUser, treatStartAsUpdate }: SingleHandlerProps) {
     const pan = usePanGestureProxy({
-      onConfigurePanGesture: (_: PanGesture) => {
+      onConfigurePanGesture: (_) => {
         _.onBegin(handlersFromUser.begin)
           .onUpdate(handlersFromUser.active)
           .onEnd(handlersFromUser.end)
@@ -209,7 +212,7 @@ describe("Event list validation", () => {
     render(<SingleHandler handlers={panHandlers} handlersFromUser={panHandlersFromUser} />);
 
     expect(() => {
-      fireGestureHandler<PanGesture>(getByGestureTestId("pan"), [
+      fireGestureHandler<LegacyPanGesture>(getByGestureTestId("pan"), [
         { oldState: State.UNDETERMINED, state: State.BEGAN, x: 0, y: 10 },
         { oldState: State.UNDETERMINED, state: State.ACTIVE, x: 1, y: 11 },
       ]);
@@ -222,7 +225,7 @@ describe("Event list validation", () => {
       const panHandlers = mockedEventHandlers();
       const panHandlersFromUser = mockedEventHandlersFromUser();
       render(<SingleHandler handlers={panHandlers} handlersFromUser={panHandlersFromUser} />);
-      fireGestureHandler<PanGesture>(getByGestureTestId("pan"), [
+      fireGestureHandler<LegacyPanGesture>(getByGestureTestId("pan"), [
         { state: State.BEGAN },
         { state: State.ACTIVE },
         { state: lastState },
@@ -248,7 +251,7 @@ describe("Filling event list with defaults", () => {
     const tap = Gesture.Tap().onBegin(handlers.begin).onEnd(handlers.end).withTestId("tap");
 
     const pan = usePanGestureProxy({
-      onConfigurePanGesture: (_: PanGesture) => {
+      onConfigurePanGesture: (_) => {
         _.onBegin(handlers.begin).onFinalize(handlers.finish).withTestId("pan");
       },
       onGestureStart: treatStartAsUpdate ? handlers.active : handlers.start,
@@ -290,7 +293,7 @@ describe("Filling event list with defaults", () => {
   it("fills missing ACTIVE states", () => {
     const panHandlers = mockedEventHandlers();
     render(<RacingTapAndPan handlers={panHandlers} treatStartAsUpdate />);
-    fireGestureHandler<PanGesture>(getByGestureTestId("pan"), [
+    fireGestureHandler<LegacyPanGesture>(getByGestureTestId("pan"), [
       { state: State.BEGAN, x: 0, y: 10 },
       { state: State.ACTIVE, x: 1, y: 11 },
       { x: 2, y: 12 },
@@ -305,7 +308,7 @@ describe("Filling event list with defaults", () => {
   it("fills BEGIN and END events for discrete handlers", () => {
     const handlers = mockedEventHandlers();
     render(<RacingTapAndPan handlers={handlers} treatStartAsUpdate />);
-    fireGestureHandler<TapGesture>(getByGestureTestId("tap"), [{ x: 5 }]);
+    fireGestureHandler<LegacyTapGesture>(getByGestureTestId("tap"), [{ x: 5 }]);
     expect(handlers.begin).toBeCalledTimes(1);
     expect(handlers.end).toBeCalledTimes(1);
   });
@@ -313,7 +316,7 @@ describe("Filling event list with defaults", () => {
   it("with FAILED event, fills BEGIN event for discrete handlers", () => {
     const handlers = mockedEventHandlers();
     render(<RacingTapAndPan handlers={handlers} treatStartAsUpdate />);
-    fireGestureHandler<TapGesture>(getByGestureTestId("tap"), [{ state: State.FAILED }]);
+    fireGestureHandler<LegacyTapGesture>(getByGestureTestId("tap"), [{ state: State.FAILED }]);
     expect(handlers.begin).toBeCalledTimes(1);
     expect(handlers.end).toBeCalledTimes(1);
     expect(handlers.end).toBeCalledWith(expect.anything(), false);
@@ -322,7 +325,7 @@ describe("Filling event list with defaults", () => {
   it("uses event data from first event in filled BEGIN, ACTIVE events", () => {
     const handlers = mockedEventHandlers();
     render(<RacingTapAndPan handlers={handlers} treatStartAsUpdate />);
-    fireGestureHandler<PanGesture>(getByGestureTestId("pan"), [{ x: 120 }]);
+    fireGestureHandler<LegacyPanGesture>(getByGestureTestId("pan"), [{ x: 120 }]);
     expect(handlers.begin).toBeCalledWith(expect.objectContaining({ x: 120 }));
     expect(handlers.active).toHaveBeenNthCalledWith(1, expect.objectContaining({ x: 120 }));
   });
@@ -330,7 +333,9 @@ describe("Filling event list with defaults", () => {
   it("uses event data from last event in filled END events", () => {
     const handlers = mockedEventHandlers();
     render(<RacingTapAndPan handlers={handlers} treatStartAsUpdate />);
-    fireGestureHandler<PanGesture>(getByGestureTestId("pan"), [{ x: 120, state: State.FAILED }]);
+    fireGestureHandler<LegacyPanGesture>(getByGestureTestId("pan"), [
+      { x: 120, state: State.FAILED },
+    ]);
     expect(handlers.begin).toBeCalledTimes(1);
     expect(handlers.active).toBeCalledTimes(1);
     expect(handlers.end).toBeCalledWith(expect.objectContaining({ x: 120 }), false);
@@ -339,7 +344,7 @@ describe("Filling event list with defaults", () => {
   it("uses event data filled events", () => {
     const handlers = mockedEventHandlers();
     render(<RacingTapAndPan handlers={handlers} treatStartAsUpdate />);
-    fireGestureHandler<PanGesture>(getByGestureTestId("pan"), [
+    fireGestureHandler<LegacyPanGesture>(getByGestureTestId("pan"), [
       { x: 5, y: 15 },
       { x: 6, y: 16 },
       { x: 7, y: 17 },
@@ -352,7 +357,7 @@ describe("Filling event list with defaults", () => {
   it("fills BEGIN and END events when they're not present, for discrete handlers", () => {
     const handlers = mockedEventHandlers();
     render(<RacingTapAndPan handlers={handlers} treatStartAsUpdate />);
-    fireGestureHandler<TapGesture>(getByGestureTestId("tap"));
+    fireGestureHandler<LegacyTapGesture>(getByGestureTestId("tap"));
     expect(handlers.begin).toBeCalledTimes(1);
     expect(handlers.end).toHaveBeenCalledTimes(1);
   });
@@ -360,7 +365,7 @@ describe("Filling event list with defaults", () => {
   it("fills BEGIN, ACTIVE and END events when they're not present, for continuous handlers", () => {
     const handlers = mockedEventHandlers();
     render(<RacingTapAndPan handlers={handlers} treatStartAsUpdate />);
-    fireGestureHandler<PanGesture>(getByGestureTestId("pan"));
+    fireGestureHandler<LegacyPanGesture>(getByGestureTestId("pan"));
     expect(handlers.begin).toBeCalledTimes(1);
     expect(handlers.active).toBeCalledTimes(1);
     expect(handlers.end).toHaveBeenCalledTimes(1);
