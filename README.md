@@ -83,7 +83,7 @@ export default function App() {
 
 | Carousel | Expo SDK | React Native | Reanimated | Gesture Handler | Worklets |
 |---|---|---|---|---|---|
-| **v5 beta** | **54–57 validated** | **0.80+** | **4.1.0+** | **2.9.0+** | **0.5.0+** |
+| **v5 beta** | **54–57 validated** | **0.80+** | **4.1.0+** | **>=2.9.0 <3.0.0** | **0.5.0+** |
 | v4.x (EOL) | 50–53 | 0.70.3+ | 3.0.0+ | 2.9.0+ | — |
 | v3.x (EOL) | 47–49 | 0.66.0+ | 2.0.0+ | 2.0.0+ | — |
 
