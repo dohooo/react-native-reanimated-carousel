@@ -73,10 +73,36 @@ appId: ${APP_ID}
     text: "Close"
     optional: true
 
-# Wait until app home is visible.
+# Recover from transient dev-client failures before requiring the home
+# screen. A slow CI reload can land on the developer red screen
+# ("[runtime not ready]"), whose RELOAD button restarts the bundle.
+- repeat:
+    times: 3
+    while:
+      notVisible: "Basic Layouts"
+    commands:
+      - tapOn:
+          text: "RELOAD.*"
+          optional: true
+      - tapOn:
+          text: "Wait"
+          optional: true
+      - waitForAnimationToEnd:
+          timeout: 10000
+      - runFlow:
+          when:
+            notVisible: "Basic Layouts"
+          commands:
+            - openLink: "exp+app://expo-development-client/?url=http%3A%2F%2F127.0.0.1%3A8081"
+      - extendedWaitUntil:
+          visible: "Basic Layouts"
+          timeout: 45000
+          optional: true
+
+# Hard requirement after the bounded recovery attempts.
 - extendedWaitUntil:
     visible: "Basic Layouts"
-    timeout: 180000
+    timeout: 60000
 
 # Android selector path: text is more stable than id for this entry.
 - tapOn:
