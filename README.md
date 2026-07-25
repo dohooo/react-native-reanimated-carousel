@@ -3,7 +3,7 @@
 <img src="assets/home-banner.png" width="100%"/>
 
 ![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS%20%7C%20Web-brightgreen.svg?style=flat-square&colorB=191A17)
-[![npm beta](https://img.shields.io/npm/v/react-native-reanimated-carousel/beta.svg?style=flat-square&label=beta)](https://www.npmjs.com/package/react-native-reanimated-carousel)
+[![npm](https://img.shields.io/npm/v/react-native-reanimated-carousel.svg?style=flat-square)](https://www.npmjs.com/package/react-native-reanimated-carousel)
 [![npm](https://img.shields.io/npm/dm/react-native-reanimated-carousel.svg?style=flat-square&colorB=007ec6)](https://www.npmjs.com/package/react-native-reanimated-carousel)
 [![github issues](https://img.shields.io/github/issues/dohooo/react-native-reanimated-carousel.svg?style=flat-square)](https://github.com/dohooo/react-native-reanimated-carousel/issues)
 [![discord chat](https://img.shields.io/badge/chat-discord-blue?style=flat&logo=discord)](https://discord.gg/KsXRuDs43y)
@@ -30,18 +30,16 @@ Read https://rn-carousel.dev/migration-v5.md and upgrade react-native-reanimated
 
 ## Installation
 
-v5 is currently available under the npm `beta` tag.
-
 Expo projects should let Expo select compatible Reanimated and Worklets versions:
 
 ```bash
-npx expo install react-native-reanimated-carousel@beta react-native-reanimated react-native-worklets react-native-gesture-handler
+npx expo install react-native-reanimated-carousel react-native-reanimated react-native-worklets react-native-gesture-handler
 ```
 
 React Native Community CLI projects can use their package manager:
 
 ```bash
-yarn add react-native-reanimated-carousel@beta react-native-reanimated react-native-worklets react-native-gesture-handler
+yarn add react-native-reanimated-carousel react-native-reanimated react-native-worklets react-native-gesture-handler
 ```
 
 Follow the official setup instructions for [Reanimated](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started) and [Gesture Handler](https://docs.swmansion.com/react-native-gesture-handler/docs/fundamentals/installation).
@@ -83,7 +81,7 @@ export default function App() {
 
 | Carousel | Expo SDK | React Native | Reanimated | Gesture Handler | Worklets |
 |---|---|---|---|---|---|
-| **v5 beta** | **54–57 validated** | **0.80+** | **4.1.0+** | **>=2.9.0 <3.0.0** | **0.5.0+** |
+| **v5** | **54–57 validated** | **0.80+** | **4.1.0+** | **>=2.9.0 <3.0.0** | **0.5.0+** |
 | v4.x (EOL) | 50–53 | 0.70.3+ | 3.0.0+ | 2.9.0+ | — |
 | v3.x (EOL) | 47–49 | 0.66.0+ | 2.0.0+ | 2.0.0+ | — |
 

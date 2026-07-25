@@ -1,5 +1,98 @@
 # react-native-reanimated-carousel
 
+## 5.0.0
+
+### Major Changes
+
+- [#850](https://github.com/dohooo/react-native-reanimated-carousel/pull/850) [`9b388e6`](https://github.com/dohooo/react-native-reanimated-carousel/commit/9b388e6f6237126c4ed25c2442c4b788aad7adf6) Thanks [@dohooo](https://github.com/dohooo)! - Add v5 support for Expo 54 and dynamic sizing with optional `width`/`height` and layout-based measurement (PR #850).
+
+  - Upgrade peer requirements to `react-native-reanimated >=4.1.0`, `react-native-worklets >=0.5.0`, and `react-native-gesture-handler >=2.9.0` (PR #850).
+  - Replace deprecated `runOnJS` usage with `scheduleOnRN`, plus expanded tests and migration docs for v4 to v5 (PR #850).
+
+- [#938](https://github.com/dohooo/react-native-reanimated-carousel/pull/938) [`ff552ac`](https://github.com/dohooo/react-native-reanimated-carousel/commit/ff552ac58ef3c8d877766962e6c55e216240a94a) Thanks [@dohooo](https://github.com/dohooo)! - Redesign the v5 API around named exports, logical progress, and explicit navigation behavior.
+
+  - Add unified Pagination, stable item identity, horizontal RTL normalization, and package exports.
+  - See the v5 migration guide for required prop, ref, layout, and behavior changes.
+  - Cap the gesture-handler peer at >=2.9.0 <3.0.0 while keeping types compatible with the RNGH 3 legacy builder for a 5.0.x range expansion.
+
+  ### Migrate with your AI agent
+
+  ```text
+  Read https://rn-carousel.dev/migration-v5.md and upgrade react-native-reanimated-carousel to v5 in this project, then summarize what changed for my review.
+  ```
+
+  The agent only edits files in your working tree — nothing is committed, and it stops for your review.
+
+### Minor Changes
+
+- [#853](https://github.com/dohooo/react-native-reanimated-carousel/pull/853) [`c595958`](https://github.com/dohooo/react-native-reanimated-carousel/commit/c59595896381c36cc395f95b8631aee503cfd927) Thanks [@dohooo](https://github.com/dohooo)! - Add `itemWidth`/`itemHeight` to define snap step explicitly (for example, multi-card pages) (PR #853).
+
+  - Keep backward compatibility by falling back to container size or legacy `width`/`height` (PR #853).
+
+- [#853](https://github.com/dohooo/react-native-reanimated-carousel/pull/853) [`c595958`](https://github.com/dohooo/react-native-reanimated-carousel/commit/c59595896381c36cc395f95b8631aee503cfd927) Thanks [@dohooo](https://github.com/dohooo)! - Refresh style API so `style` controls outer container sizing/positioning (PR #853).
+
+  - Replace `containerStyle` with `contentContainerStyle` for scroll content styling (PR #853).
+  - Deprecate `width` and `height` props in favor of style-based sizing while keeping backward compatibility (PR #853).
+
+- [#873](https://github.com/dohooo/react-native-reanimated-carousel/pull/873) [`ffb59aa`](https://github.com/dohooo/react-native-reanimated-carousel/commit/ffb59aac4154350d67ccfea55cb86e8be24c6b08) Thanks [@dohooo](https://github.com/dohooo)! - Deprecate `width` and `height`; prefer `style={{ width, height }}` sizing (PR #873).
+  - Deprecate `defaultScrollOffsetValue`; prefer `scrollOffsetValue` (PR #873).
+  - Prioritize `style` dimensions when both new and legacy props are provided (PR #873).
+  - Keep legacy props functional in v5 with migration warnings (PR #873).
+
+### Patch Changes
+
+- [#933](https://github.com/dohooo/react-native-reanimated-carousel/pull/933) [`4561a8b`](https://github.com/dohooo/react-native-reanimated-carousel/commit/4561a8bcdbcf804179344f233f77e6e96e96bec1) Thanks [@dohooo](https://github.com/dohooo)! - Exclude test files from published package tarballs while keeping the React Native source entry intact.
+
+- [#927](https://github.com/dohooo/react-native-reanimated-carousel/pull/927) [`0763d35`](https://github.com/dohooo/react-native-reanimated-carousel/commit/0763d35aae00e4b9f4ad04dd71d8b250db3b6dfc) Thanks [@dohooo](https://github.com/dohooo)! - Recognize percentage and flex container styles in development sizing warnings.
+
+- [#878](https://github.com/dohooo/react-native-reanimated-carousel/pull/878) [`79ae0e6`](https://github.com/dohooo/react-native-reanimated-carousel/commit/79ae0e615edf78fd455a72a726024b6d08ca10c8) Thanks [@dohooo](https://github.com/dohooo)! - Fix gesture blocking with `style={{ flex: 1 }}` by reading `resolvedSize.value` on the UI thread (PR #878).
+
+  - Fix `itemWidth`/`itemHeight` precedence over `style.width` in `ItemLayout` (PR #878).
+
+- [#924](https://github.com/dohooo/react-native-reanimated-carousel/pull/924) [`e4fa56f`](https://github.com/dohooo/react-native-reanimated-carousel/commit/e4fa56f6160eb22cfb1f46bf314eadc29f0c74f3) Thanks [@dohooo](https://github.com/dohooo)! - Keep every item rendered in loop mode when `windowSize` is equal to or greater than the data length (Issue #918).
+
+  - Add unit and Maestro regression coverage for small looped data sets.
+
+- [#931](https://github.com/dohooo/react-native-reanimated-carousel/pull/931) [`a5f22a6`](https://github.com/dohooo/react-native-reanimated-carousel/commit/a5f22a6c05f22020d9f45c7eb19c0f7943907b88) Thanks [@dohooo](https://github.com/dohooo)! - Remove the nested `GestureHandlerRootView` so correctly configured apps no longer log the Android parent-root warning (Issue #921).
+
+  - Preserve carousel navigation and gestures by relying on the application-level Gesture Handler root required during installation.
+
+- [#872](https://github.com/dohooo/react-native-reanimated-carousel/pull/872) [`12c1a63`](https://github.com/dohooo/react-native-reanimated-carousel/commit/12c1a636185e476ba71698f6fe507217c6326d50) Thanks [@dohooo](https://github.com/dohooo)! - Clamp visible ranges during non-loop overdrag so the first item stays visible when dragging right at page start (PR #872).
+
+  - Add regression test coverage for non-loop overdrag boundary behavior (PR #872).
+
+- [#871](https://github.com/dohooo/react-native-reanimated-carousel/pull/871) [`bc7daaf`](https://github.com/dohooo/react-native-reanimated-carousel/commit/bc7daafbe9c927b54fe0b57c7c137382da7f382f) Thanks [@dohooo](https://github.com/dohooo)! - Fix non-loop overscroll direction so tiny positive offsets at the first page no longer wrap to the last page (PR #871).
+
+  - Add integration tests for `next()` and `scrollTo()` boundary behavior (PR #871).
+
+- [#891](https://github.com/dohooo/react-native-reanimated-carousel/pull/891) [`73d066d`](https://github.com/dohooo/react-native-reanimated-carousel/commit/73d066dae6595b918c1bcf30c76bc40a7e27a6ad) Thanks [@notsuhas](https://github.com/notsuhas)! - Fix non-loop `scrollTo()` so backward jumps keep the correct negative offset instead of briefly rendering a blank frame.
+
+  - Add regression tests for non-loop backward `scrollTo()` and returning to index `0`.
+
+- [#866](https://github.com/dohooo/react-native-reanimated-carousel/pull/866) [`566bf52`](https://github.com/dohooo/react-native-reanimated-carousel/commit/566bf52ef775b861febc74dc602d3f5e7289004c) Thanks [@hennessyevan](https://github.com/hennessyevan)! - Fix pagination selected-state syncing via `scheduleOnRN` instead of render-time reads from reanimated values (PR #866).
+
+  - Add tests to prevent accessibility regressions and warning noise (PR #866).
+
+- [#926](https://github.com/dohooo/react-native-reanimated-carousel/pull/926) [`578a4be`](https://github.com/dohooo/react-native-reanimated-carousel/commit/578a4be46ddeb0bd9100b5568bb7144ca19fc72b) Thanks [@dohooo](https://github.com/dohooo)! - Refresh progress reactions when the offset or size-readiness shared value instance changes (Issue #923).
+
+- [#911](https://github.com/dohooo/react-native-reanimated-carousel/pull/911) [`da3b11b`](https://github.com/dohooo/react-native-reanimated-carousel/commit/da3b11bd6664a91994287cc0644ff6a4cfb837cb) Thanks [@dohooo](https://github.com/dohooo)! - Avoid the React 19 `element.ref` warning on web by removing the internal gesture child ref (Issue #857).
+
+  - Preserve horizontal and vertical non-loop boundaries with layout-derived container dimensions.
+
+- [#924](https://github.com/dohooo/react-native-reanimated-carousel/pull/924) [`e4fa56f`](https://github.com/dohooo/react-native-reanimated-carousel/commit/e4fa56f6160eb22cfb1f46bf314eadc29f0c74f3) Thanks [@dohooo](https://github.com/dohooo)! - Keep automatically measured carousels responsive when their window or parent container changes size (Issue #890).
+
+  - Preserve explicit style, item size, and legacy `width`/`height` sizing behavior.
+
+- [#913](https://github.com/dohooo/react-native-reanimated-carousel/pull/913) [`b68c803`](https://github.com/dohooo/react-native-reanimated-carousel/commit/b68c80329c60a51ff58cf9363ea98ac244bc56bf) Thanks [@dohooo](https://github.com/dohooo)! - Mount the reverse visible range on the first render so looped parallax items preserve their styles and props when swiping backward (Issue #899).
+
+- [#883](https://github.com/dohooo/react-native-reanimated-carousel/pull/883) [`dd4e867`](https://github.com/dohooo/react-native-reanimated-carousel/commit/dd4e86788bfaf7cce949f5e95c1eba4d2ea1e263) Thanks [@dohooo](https://github.com/dohooo)! - Fix non-loop clamping, invalid-size visible-range fallback, pagination accessibility defaults, and `customAnimation` style sanitization (PR #883).
+
+  - Add focused regression tests for clamping, visibility fallback, accessibility labels, and animation style normalization (PR #883).
+
+- [#875](https://github.com/dohooo/react-native-reanimated-carousel/pull/875) [`13861ac`](https://github.com/dohooo/react-native-reanimated-carousel/commit/13861acb21925709569e9f5e39a188e1d03df858) Thanks [@dohooo](https://github.com/dohooo)! - Upgrade `react-native-worklets` from `0.5.1` to `0.5.2` to fix web docs crash in JSWorklets serialization (PR #875).
+
+- [#924](https://github.com/dohooo/react-native-reanimated-carousel/pull/924) [`e4fa56f`](https://github.com/dohooo/react-native-reanimated-carousel/commit/e4fa56f6160eb22cfb1f46bf314eadc29f0c74f3) Thanks [@dohooo](https://github.com/dohooo)! - Require React Native Reanimated 4.1 or newer to avoid incompatible Reanimated 4.0 and React Native Worklets 0.5 combinations.
+
 ## 5.0.0-beta.8
 
 ### Patch Changes

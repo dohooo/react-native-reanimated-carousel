@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
 import { mkdtemp, mkdir, readFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -102,21 +103,35 @@ test("keeps the migration handoff contract exact in every published source", asy
     "utf8"
   );
   const readme = await readFile(path.join(repositoryDir, "README.md"), "utf8");
-  const changeset = await readFile(
-    path.join(repositoryDir, ".changeset/modernize-v5-api.md"),
-    "utf8"
+
+  // `changeset version` consumes the changeset file and moves its content
+  // into CHANGELOG.md, so the release-notes copy of the contract lives in
+  // exactly one of the two locations depending on the release lifecycle.
+  const changesetPath = path.join(
+    repositoryDir,
+    ".changeset/modernize-v5-api.md"
   );
+  const releaseNotes = existsSync(changesetPath)
+    ? { name: "changeset", content: await readFile(changesetPath, "utf8") }
+    : {
+        name: "CHANGELOG",
+        content: await readFile(path.join(repositoryDir, "CHANGELOG.md"), "utf8"),
+      };
 
   for (const [name, source] of [
     ["migration", migration],
     ["README", readme],
-    ["changeset", changeset],
+    [releaseNotes.name, releaseNotes.content],
   ]) {
     assert.equal(source.split(prompt).length - 1, 1, name);
   }
 
   assert.equal(migration.split(reviewNote).length - 1, 1);
-  assert.equal(changeset.split(reviewNote).length - 1, 1);
+  assert.equal(
+    releaseNotes.content.split(reviewNote).length - 1,
+    1,
+    releaseNotes.name
+  );
   assert.equal(
     migration.match(/\*\*Human confirmation required:\*\*/gu)?.length,
     12
