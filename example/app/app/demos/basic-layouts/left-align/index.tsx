@@ -6,40 +6,32 @@ import { CaptureWrapper } from "@/store/CaptureProvider";
 import { renderItem } from "@/utils/render-item";
 import * as React from "react";
 import { View } from "react-native";
-import type { StyleProp, ViewStyle } from "react-native";
-import type { ICarouselInstance, TCarouselProps } from "react-native-reanimated-carousel";
-import Carousel from "react-native-reanimated-carousel";
+import type { CarouselRef } from "react-native-reanimated-carousel";
+import { Carousel } from "react-native-reanimated-carousel";
 
 function Index() {
-  const ref = React.useRef<ICarouselInstance>(null);
+  const ref = React.useRef<CarouselRef>(null);
   const { constants, advancedSettings, onAdvancedSettingsChange } = useAdvancedSettings({
     // These values will be passed in the Carousel Component as default props
     defaultSettings: {
-      autoPlay: false,
-      autoPlayInterval: 2000,
-      autoPlayReverse: false,
+      autoplay: false,
+      autoplayInterval: 2000,
+      autoplayDirection: "forward",
       data: defaultDataWith6Colors,
       loop: true,
-      pagingEnabled: true,
-      snapEnabled: true,
-      vertical: false,
+      orientation: "horizontal",
+      snapMode: "page",
     },
   });
-
-  const {
-    width: _ignoredWidth,
-    height: _ignoredHeight,
-    ...restSettings
-  } = advancedSettings as TCarouselProps;
 
   return (
     <View style={{ flex: 1 }}>
       <CaptureWrapper>
         <Carousel
-          {...restSettings}
+          {...advancedSettings}
           ref={ref}
           style={{ width: window.width, height: 258, overflow: "visible" }}
-          itemWidth={window.width / 2}
+          itemSize={window.width / 2}
           onSnapToItem={(index) => console.log("current index:", index)}
           renderItem={renderItem({ rounded: true, style: { marginRight: 8 } })}
         />

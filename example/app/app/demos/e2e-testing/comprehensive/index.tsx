@@ -3,7 +3,8 @@ import { window } from "@/constants/sizes";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
-import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
+import type { CarouselLayout } from "react-native-reanimated-carousel";
+import { Carousel, CarouselRef } from "react-native-reanimated-carousel";
 
 const SCREEN_WIDTH = window.width;
 const CAROUSEL_HEIGHT = 200;
@@ -50,13 +51,13 @@ const carouselRenderItem = ({
 }) => <SlideItem index={index} rounded />;
 
 export default function ComprehensiveE2E() {
-  const carouselRef = useRef<ICarouselInstance>(null);
+  const carouselRef = useRef<CarouselRef>(null);
   const progress = useSharedValue(0);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const [mode, setMode] = useState<LayoutMode>("normal");
   const [loop, setLoop] = useState(true);
-  const [autoPlay, setAutoPlay] = useState(false);
+  const [autoplay, setAutoPlay] = useState(false);
   const [autoPlayReverse, setAutoPlayReverse] = useState(false);
   const [vertical, setVertical] = useState(false);
   const [enabled, setEnabled] = useState(true);
@@ -70,18 +71,21 @@ export default function ComprehensiveE2E() {
     [dataCount]
   );
 
-  const modeConfig = useMemo(() => {
+  const layout = useMemo<CarouselLayout | undefined>(() => {
     switch (mode) {
       case "parallax":
         return {
-          parallaxScrollingScale: 0.9,
-          parallaxScrollingOffset: 50,
+          type: "parallax",
+          scale: 0.9,
+          offset: 50,
         };
       case "horizontal-stack":
       case "vertical-stack":
         return {
-          snapDirection: "left" as const,
-          stackInterval: 18,
+          type: mode,
+          exitDirection: "left",
+          spacing: 18,
+          visibleCount: 5,
         };
       default:
         return undefined;
@@ -89,6 +93,7 @@ export default function ComprehensiveE2E() {
   }, [mode]);
 
   const isStackMode = mode === "horizontal-stack" || mode === "vertical-stack";
+  const snapMode = !snapEnabled ? "none" : pagingEnabled ? "page" : "nearest";
 
   const carouselStyle = useMemo(() => {
     if (isStackMode) {
@@ -99,7 +104,7 @@ export default function ComprehensiveE2E() {
 
   const navigateTo = useCallback((index: number) => {
     carouselRef.current?.scrollTo({
-      count: index - Math.round(progress.value),
+      index,
       animated: true,
     });
   }, []);
@@ -153,30 +158,20 @@ export default function ComprehensiveE2E() {
             data={data}
             renderItem={carouselRenderItem}
             style={carouselStyle}
-            windowSize={5}
-            mode={mode === "normal" ? undefined : mode}
-            modeConfig={modeConfig}
+            renderWindowSize={5}
+            layout={layout}
             loop={loop}
-            autoPlay={autoPlay}
-            autoPlayReverse={autoPlayReverse}
-            autoPlayInterval={2000}
-            vertical={vertical}
-            enabled={enabled}
-            pagingEnabled={pagingEnabled}
-            snapEnabled={snapEnabled}
-            onProgressChange={(_offsetProgress: number, absoluteProgress: number) => {
-              progress.value = absoluteProgress;
-              const nextIndex = normalizeIndex(absoluteProgress, data.length);
+            autoplay={autoplay}
+            autoplayDirection={autoPlayReverse ? "backward" : "forward"}
+            autoplayInterval={2000}
+            orientation={vertical ? "vertical" : "horizontal"}
+            scrollEnabled={enabled}
+            snapMode={snapMode}
+            onProgressChange={(nextProgress) => {
+              progress.value = nextProgress;
+              const nextIndex = normalizeIndex(nextProgress, data.length);
               setCurrentIndex((prev) => (prev === nextIndex ? prev : nextIndex));
             }}
-            {...(isStackMode
-              ? {
-                  customConfig: () => ({
-                    type: "positive" as const,
-                    viewCount: 5,
-                  }),
-                }
-              : {})}
           />
         </View>
       </View>
@@ -282,8 +277,8 @@ export default function ComprehensiveE2E() {
           <ToggleButton
             testID="btn-autoplay"
             label="Auto"
-            value={autoPlay}
-            onPress={() => setAutoPlay(!autoPlay)}
+            value={autoplay}
+            onPress={() => setAutoPlay(!autoplay)}
           />
         </View>
         <View style={styles.row}>

@@ -1,13 +1,18 @@
-import Carousel from "./components/Carousel";
+export { Carousel } from "./components/Carousel";
 export { Pagination } from "./components/Pagination";
 
 export type {
-  TCarouselProps,
-  ICarouselInstance,
-  IComputedDirectionTypes,
+  CarouselAnimation,
+  CarouselItemAnimation,
+  CarouselLayout,
+  CarouselPanGesture,
+  CarouselProgressChangeHandler,
+  CarouselProps,
+  CarouselRef,
   CarouselRenderItem,
-} from "./types";
-export type { TAnimationStyle } from "./components/ItemLayout";
-export type { ILayoutConfig } from "./layouts/stack";
-
-export default Carousel;
+  CarouselRenderItemInfo,
+  CarouselScrollToOptions,
+  CarouselStepOptions,
+  PaginationDotStyle,
+  PaginationProps,
+} from "./public-types";

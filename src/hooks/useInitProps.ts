@@ -1,87 +1,177 @@
 import React from "react";
+import { I18nManager } from "react-native";
 
-import type { TCarouselProps } from "../types";
+import { Easing } from "../constants";
+import type { CarouselAnimation, CarouselProps } from "../types";
+import { type CarouselDirectionSign, getCarouselDirectionSign } from "../utils/carousel-direction";
 import { computedFillDataWithAutoFillData } from "../utils/computed-with-auto-fill-data";
 
-type TGetRequiredProps<P extends keyof TCarouselProps> = Record<P, Required<TCarouselProps>[P]>;
+type CarouselSnapMode = NonNullable<CarouselProps<unknown>["snapMode"]>;
 
-export type TInitializeCarouselProps<T> = TCarouselProps<T> &
-  TGetRequiredProps<
-    "defaultIndex" | "loop" | "scrollAnimationDuration" | "autoPlayInterval" | "autoFillData"
-  > & {
-    // Raw data that has not been processed
-    rawData: T[];
-    dataLength: number;
-    rawDataLength: number;
+export type InitializedCarouselProps<Item> = Omit<
+  CarouselProps<Item>,
+  | "autoplay"
+  | "autoplayDirection"
+  | "autoplayInterval"
+  | "data"
+  | "defaultIndex"
+  | "loop"
+  | "orientation"
+  | "overscrollEnabled"
+  | "scrollEnabled"
+  | "snapMode"
+  | "style"
+> & {
+  autoplay: boolean;
+  autoplayDirection: "forward" | "backward";
+  autoplayInterval: number;
+  data: Item[];
+  defaultIndex: number;
+  loop: boolean;
+  orientation: "horizontal" | "vertical";
+  overscrollEnabled: boolean;
+  scrollEnabled: boolean;
+  snapMode: CarouselSnapMode;
+  style: NonNullable<CarouselProps<Item>["style"]>;
+  animation: CarouselAnimation;
+  rawData: Item[];
+  dataLength: number;
+  rawDataLength: number;
+  autoFillData: true;
+  directionSign: CarouselDirectionSign;
+};
+
+export function useInitProps<Item>(props: CarouselProps<Item>): InitializedCarouselProps<Item> {
+  validateStaticProps(props);
+
+  const rawData = props.data ?? [];
+  const requestedDefaultIndex = props.defaultIndex ?? 0;
+  const loop = props.loop ?? false;
+  const autoplay = props.autoplay ?? false;
+  const autoplayInterval = props.autoplayInterval ?? 3000;
+  const autoplayDirection = props.autoplayDirection ?? "forward";
+  const orientation = props.orientation ?? "horizontal";
+  const directionSign = getCarouselDirectionSign({
+    isRTL: I18nManager.isRTL,
+    orientation,
+  });
+  const scrollEnabled = props.scrollEnabled ?? true;
+  const snapMode = props.snapMode ?? "page";
+  const overscrollEnabled = props.overscrollEnabled ?? true;
+  const style = props.style ?? {};
+  const animation: CarouselAnimation = props.animation ?? {
+    type: "timing",
+    duration: 500,
+    easing: Easing.easeOutQuart,
   };
 
-export function useInitProps<T>(props: TCarouselProps<T>): TInitializeCarouselProps<T> {
-  const {
-    defaultIndex = 0,
-    data: rawData = [],
-    loop = true,
-    autoPlayInterval: _autoPlayInterval = 1000,
-    scrollAnimationDuration = 500,
-    style = {},
-    autoFillData = true,
-    // switchers
-    enabled = true,
-    pagingEnabled = true,
-    overscrollEnabled = true,
-    snapEnabled = props.enableSnap ?? true,
-    width: _width,
-    height: _height,
-    itemWidth: _itemWidth,
-    itemHeight: _itemHeight,
-  } = props;
+  const defaultIndexState = React.useRef<{
+    consumed: boolean;
+    requested: number;
+    resolved: number;
+    warned: boolean;
+  } | null>(null);
 
-  const width = typeof _width === "number" ? Math.round(_width) : undefined;
-  const height = typeof _height === "number" ? Math.round(_height) : undefined;
-  const itemWidth = typeof _itemWidth === "number" && _itemWidth > 0 ? _itemWidth : undefined;
-  const itemHeight = typeof _itemHeight === "number" && _itemHeight > 0 ? _itemHeight : undefined;
-  const autoPlayInterval = Math.max(_autoPlayInterval, 0);
+  if (!defaultIndexState.current) {
+    if (rawData.length > 0) {
+      assertValidDefaultIndex(requestedDefaultIndex, rawData.length);
+    }
 
-  const data = React.useMemo<T[]>(() => {
-    return computedFillDataWithAutoFillData<T>({
-      loop,
-      autoFillData,
-      data: rawData,
-      dataLength: rawData.length,
-    });
-  }, [rawData, loop, autoFillData]);
+    defaultIndexState.current = {
+      consumed: rawData.length > 0,
+      requested: requestedDefaultIndex,
+      resolved: rawData.length > 0 ? requestedDefaultIndex : 0,
+      warned: false,
+    };
+  } else if (!defaultIndexState.current.consumed && rawData.length > 0) {
+    const pendingIndex = defaultIndexState.current.requested;
+    defaultIndexState.current.consumed = true;
 
-  const dataLength = data.length;
-  const rawDataLength = rawData.length;
-
-  if (props.mode === "vertical-stack" || props.mode === "horizontal-stack") {
-    if (!props.modeConfig) props.modeConfig = {};
-
-    props.modeConfig.showLength = props.modeConfig?.showLength ?? dataLength - 1;
+    if (isValidDefaultIndex(pendingIndex, rawData.length)) {
+      defaultIndexState.current.resolved = pendingIndex;
+    } else {
+      defaultIndexState.current.resolved = 0;
+      if (__DEV__ && !defaultIndexState.current.warned) {
+        console.warn(
+          `[react-native-reanimated-carousel] Ignored defaultIndex ${pendingIndex} because it is outside the first non-empty data set.`
+        );
+        defaultIndexState.current.warned = true;
+      }
+    }
   }
+
+  const defaultIndex = defaultIndexState.current.resolved;
+  const data = React.useMemo(
+    () =>
+      computedFillDataWithAutoFillData({
+        loop,
+        autoFillData: true,
+        data: rawData,
+        dataLength: rawData.length,
+      }),
+    [loop, rawData]
+  );
 
   return {
     ...props,
+    autoplay,
+    autoplayDirection,
+    autoplayInterval,
     defaultIndex,
-    autoFillData,
-    // Fill data with autoFillData
-    data,
-    // Length of fill data
-    dataLength,
-    // Raw data that has not been processed
-    rawData,
-    // Length of raw data
-    rawDataLength,
     loop,
-    enabled,
-    autoPlayInterval,
-    scrollAnimationDuration,
-    style,
-    pagingEnabled,
-    snapEnabled,
+    orientation,
     overscrollEnabled,
-    width,
-    height,
-    itemWidth,
-    itemHeight,
+    scrollEnabled,
+    snapMode,
+    style,
+    animation,
+    data,
+    rawData,
+    dataLength: data.length,
+    rawDataLength: rawData.length,
+    autoFillData: true,
+    directionSign,
   };
+}
+
+function validateStaticProps<Item>(props: CarouselProps<Item>) {
+  if (props.layout && props.itemAnimation) {
+    throw new Error(
+      "[react-native-reanimated-carousel] `layout` and `itemAnimation` are mutually exclusive."
+    );
+  }
+
+  if (props.itemSize !== undefined && (!Number.isFinite(props.itemSize) || props.itemSize <= 0)) {
+    throw new Error("[react-native-reanimated-carousel] itemSize must be a positive number.");
+  }
+
+  if (
+    props.autoplayInterval !== undefined &&
+    (!Number.isFinite(props.autoplayInterval) || props.autoplayInterval < 0)
+  ) {
+    throw new Error(
+      "[react-native-reanimated-carousel] autoplayInterval must be a non-negative number."
+    );
+  }
+
+  if (
+    props.renderWindowSize !== undefined &&
+    (!Number.isInteger(props.renderWindowSize) || props.renderWindowSize <= 0)
+  ) {
+    throw new Error(
+      "[react-native-reanimated-carousel] renderWindowSize must be a positive integer."
+    );
+  }
+}
+
+function isValidDefaultIndex(defaultIndex: number, dataLength: number) {
+  return Number.isInteger(defaultIndex) && defaultIndex >= 0 && defaultIndex < dataLength;
+}
+
+function assertValidDefaultIndex(defaultIndex: number, dataLength: number) {
+  if (!isValidDefaultIndex(defaultIndex, dataLength)) {
+    throw new Error(
+      `[react-native-reanimated-carousel] defaultIndex must be an integer between 0 and ${dataLength - 1}.`
+    );
+  }
 }

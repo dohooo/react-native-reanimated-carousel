@@ -3,21 +3,23 @@ import type { LayoutChangeEvent, ViewStyle } from "react-native";
 import { StyleSheet } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 import Animated, {
+  useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
-import { scheduleOnUI } from "react-native-worklets";
+import { scheduleOnRN, scheduleOnUI } from "react-native-worklets";
 
-import type { IOpts } from "../hooks/useOffsetX";
+import type { OffsetOptions } from "../hooks/useOffsetX";
 import { useOffsetX } from "../hooks/useOffsetX";
-import type { IVisibleRanges } from "../hooks/useVisibleRanges";
-import type { ILayoutConfig } from "../layouts/stack";
+import type { VisibleRangesValue } from "../hooks/useVisibleRanges";
 import { useGlobalState } from "../store";
-import type { TCarouselProps } from "../types";
+import type { CarouselItemAnimation } from "../types";
+import { getHorizontalStackOffsetType } from "../utils/carousel-direction";
+import { positiveModulo } from "../utils/carousel-math";
 import { sanitizeAnimationStyle } from "../utils/sanitize-animation-style";
 
-export type TAnimationStyle = NonNullable<TCarouselProps["customAnimation"]>;
+export type ItemAnimationStyle = CarouselItemAnimation;
 
 export function resolveItemMainAxisSize(params: {
   explicitSize?: number;
@@ -35,29 +37,18 @@ export function resolveItemMainAxisSize(params: {
 
 export const ItemLayout: React.FC<{
   index: number;
+  rawIndex: number;
   handlerOffset: SharedValue<number>;
-  visibleRanges: IVisibleRanges;
-  animationStyle: TAnimationStyle;
+  visibleRanges: VisibleRangesValue;
+  animationStyle: ItemAnimationStyle;
   children: (ctx: {
-    animationValue: SharedValue<number>;
+    relativeProgress: SharedValue<number>;
   }) => React.ReactElement;
 }> = (props) => {
-  const { handlerOffset, index, children, visibleRanges, animationStyle } = props;
+  const { handlerOffset, index, rawIndex, children, visibleRanges, animationStyle } = props;
 
   const {
-    props: {
-      loop,
-      dataLength,
-      width,
-      height,
-      vertical,
-      customConfig,
-      mode,
-      modeConfig,
-      style,
-      itemWidth,
-      itemHeight,
-    },
+    props: { loop, dataLength, directionSign, orientation, layout, style, itemSize },
     common,
     layout: { updateItemDimensions },
   } = useGlobalState();
@@ -68,24 +59,19 @@ export const ItemLayout: React.FC<{
   });
 
   const fallbackSize = common.size;
-  // Prefer size from `style` (v5), then fallback to deprecated `width`/`height` for v4 compatibility.
+  const isVertical = orientation === "vertical";
   const { width: styleWidth, height: styleHeight } = StyleSheet.flatten(style) || {};
   const styleWidthNumber = typeof styleWidth === "number" ? styleWidth : undefined;
   const styleHeightNumber = typeof styleHeight === "number" ? styleHeight : undefined;
 
-  // When itemWidth/itemHeight is provided, use it for item dimensions (not container style)
-  const explicitItemSize = vertical ? itemHeight : itemWidth;
-  const explicitAxisSize = vertical ? (styleHeightNumber ?? height) : (styleWidthNumber ?? width);
-  // Use itemWidth/itemHeight if provided, otherwise fall back to container size
-  const size = (explicitItemSize ?? explicitAxisSize ?? fallbackSize) || 0;
+  const size = (itemSize ?? fallbackSize) || 0;
   const effectivePageSize = size > 0 ? size : undefined;
 
   const dimensionsStyle = useAnimatedStyle<ViewStyle>(() => {
-    // When itemWidth/itemHeight is provided, use it for item width/height
-    const widthCandidate = vertical ? width : (explicitItemSize ?? explicitAxisSize);
-    const heightCandidate = vertical ? (explicitItemSize ?? explicitAxisSize) : height;
+    const widthCandidate = isVertical ? styleWidthNumber : itemSize;
+    const heightCandidate = isVertical ? itemSize : styleHeightNumber;
 
-    const computedWidth = vertical
+    const computedWidth = isVertical
       ? typeof widthCandidate === "number"
         ? widthCandidate
         : (measuredSize.value.width ?? "100%")
@@ -95,7 +81,7 @@ export const ItemLayout: React.FC<{
           measuredSize: measuredSize.value.width,
         });
 
-    const computedHeight = vertical
+    const computedHeight = isVertical
       ? resolveItemMainAxisSize({
           explicitSize: heightCandidate,
           effectivePageSize,
@@ -109,40 +95,59 @@ export const ItemLayout: React.FC<{
       width: computedWidth,
       height: computedHeight,
     };
-  }, [vertical, width, height, explicitAxisSize, explicitItemSize, effectivePageSize]);
+  }, [effectivePageSize, isVertical, itemSize, styleHeightNumber, styleWidthNumber]);
 
-  let offsetXConfig: IOpts = {
+  let offsetXConfig: OffsetOptions = {
     handlerOffset,
     index,
     size,
     dataLength,
     loop,
-    ...(typeof customConfig === "function" ? customConfig() : {}),
   };
 
-  if (mode === "horizontal-stack") {
-    const { snapDirection, showLength } = modeConfig as ILayoutConfig;
-
+  if (layout?.type === "horizontal-stack") {
     offsetXConfig = {
       handlerOffset,
       index,
       size,
       dataLength,
       loop,
-      type: snapDirection === "right" ? "negative" : "positive",
-      viewCount: showLength,
+      type: getHorizontalStackOffsetType(layout.exitDirection ?? "left", directionSign),
+      viewCount: layout.visibleCount,
     };
   }
 
   const x = useOffsetX(offsetXConfig, visibleRanges);
-  const animationValue = useDerivedValue(() => {
+  const isCurrentForAccessibility = React.useCallback(() => {
+    "worklet";
+
+    return (
+      size > 0 &&
+      dataLength > 0 &&
+      positiveModulo(Math.round(-handlerOffset.value / size), dataLength) === index
+    );
+  }, [dataLength, handlerOffset, index, size]);
+  const [isAccessibilityCurrent, setIsAccessibilityCurrent] =
+    React.useState(isCurrentForAccessibility);
+
+  useAnimatedReaction(
+    isCurrentForAccessibility,
+    (isCurrent, wasCurrent) => {
+      if (isCurrent !== wasCurrent) {
+        scheduleOnRN(setIsAccessibilityCurrent, isCurrent);
+      }
+    },
+    [isCurrentForAccessibility]
+  );
+
+  const relativeProgress = useDerivedValue(() => {
     if (!size) return 0;
     return x.value / size;
   }, [x, size]);
   const animatedStyle = useAnimatedStyle<ViewStyle>(() => {
     const safeSize = size || 1;
-    return sanitizeAnimationStyle(animationStyle(x.value / safeSize, index));
-  }, [animationStyle, index, x, size]);
+    return sanitizeAnimationStyle(animationStyle(x.value / safeSize, rawIndex));
+  }, [animationStyle, rawIndex, x, size]);
 
   // TODO: For dynamic dimension in the future
   // function handleLayout(e: LayoutChangeEvent) {
@@ -150,7 +155,7 @@ export const ItemLayout: React.FC<{
   //   updateItemDimensions(index, { width, height });
   // }
 
-  const child = children({ animationValue });
+  const child = children({ relativeProgress });
 
   type LayoutableProps = {
     collapsable?: boolean;
@@ -185,6 +190,10 @@ export const ItemLayout: React.FC<{
 
   return (
     <Animated.View
+      accessibilityElementsHidden={!isAccessibilityCurrent}
+      accessible={isAccessibilityCurrent ? undefined : false}
+      aria-hidden={!isAccessibilityCurrent}
+      importantForAccessibility={isAccessibilityCurrent ? "auto" : "no-hide-descendants"}
       style={[
         {
           position: "absolute",

@@ -11467,9 +11467,11 @@ __metadata:
   peerDependencies:
     react: ">=18.0.0"
     react-native: ">=0.80.0"
-    react-native-gesture-handler: ">=2.9.0"
+    react-native-gesture-handler: ">=2.9.0 <3.0.0"
     react-native-reanimated: ">=4.1.0"
     react-native-worklets: ">=0.5.0"
+  bin:
+    rnrc-v5-codemod: scripts/codemods/v5.mjs
   languageName: unknown
   linkType: soft
 

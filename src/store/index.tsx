@@ -1,14 +1,14 @@
 import React from "react";
 
 import { SharedValue, useSharedValue } from "react-native-reanimated";
-import type { ICommonVariables } from "../hooks/useCommonVariables";
-import type { TInitializeCarouselProps } from "../hooks/useInitProps";
+import type { CarouselCommonVariables } from "../hooks/useCommonVariables";
+import type { InitializedCarouselProps } from "../hooks/useInitProps";
 
 type ItemDimensions = Record<number, { width: number; height: number }>;
 
-export interface IContext {
-  props: TInitializeCarouselProps<any>;
-  common: ICommonVariables;
+export interface CarouselContext {
+  props: InitializedCarouselProps<unknown>;
+  common: CarouselCommonVariables;
   layout: {
     containerSize: SharedValue<{ width: number; height: number }>;
     updateContainerSize: (dimensions: { width: number; height: number }) => void;
@@ -17,14 +17,14 @@ export interface IContext {
   };
 }
 
-export const GlobalStateContext = React.createContext<IContext>({} as IContext);
+export const GlobalStateContext = React.createContext<CarouselContext>({} as CarouselContext);
 
 export const GlobalStateProvider = ({
   children,
   value,
 }: {
   children: React.ReactNode;
-  value: Pick<IContext, "props" | "common">;
+  value: Pick<CarouselContext, "props" | "common">;
 }) => {
   const containerSize = useSharedValue<{ width: number; height: number }>({ width: 0, height: 0 });
   const itemDimensions = useSharedValue<ItemDimensions>({});

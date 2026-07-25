@@ -1,6 +1,6 @@
 import * as React from "react";
 import { View } from "react-native";
-import Carousel from "react-native-reanimated-carousel";
+import { Carousel } from "react-native-reanimated-carousel";
 
 import { SBItem } from "@/components/SBItem";
 import SButton from "@/components/SButton";
@@ -22,10 +22,9 @@ function Index() {
             width: PAGE_WIDTH,
             height: PAGE_WIDTH / 2,
           }}
-          itemWidth={PAGE_WIDTH / 6}
-          itemHeight={PAGE_WIDTH / 2}
-          autoPlay={isAutoPlay}
-          autoPlayInterval={isFast ? 100 : 2000}
+          itemSize={PAGE_WIDTH / 6}
+          autoplay={isAutoPlay}
+          autoplayInterval={isFast ? 100 : 2000}
           data={[...new Array(12).keys()]}
           renderItem={({ index }) => (
             <View

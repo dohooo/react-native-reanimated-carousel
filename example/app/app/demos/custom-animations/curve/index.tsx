@@ -7,7 +7,7 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import type { SharedValue } from "react-native-reanimated";
-import Carousel from "react-native-reanimated-carousel";
+import { Carousel } from "react-native-reanimated-carousel";
 
 import { SBItem } from "@/components/SBItem";
 import SButton from "@/components/SButton";
@@ -19,7 +19,7 @@ const PAGE_WIDTH = window.width / 5;
 const colors = ["#26292E", "#899F9C", "#B3C680", "#5C6265", "#F5D399", "#F1F1F1"];
 
 function Index() {
-  const [autoPlay, setAutoPlay] = React.useState(false);
+  const [autoplay, setAutoPlay] = React.useState(false);
   const progressValue = useSharedValue<number>(0);
   const containerHeight = window.width / 2;
 
@@ -39,7 +39,7 @@ function Index() {
       >
         <Carousel
           loop
-          pagingEnabled={false}
+          snapMode="nearest"
           style={{
             width: window.width,
             height: PAGE_WIDTH * 0.6,
@@ -51,13 +51,13 @@ function Index() {
             width: PAGE_WIDTH,
             overflow: "visible",
           }}
-          autoPlay={autoPlay}
-          autoPlayInterval={150}
-          scrollAnimationDuration={600}
+          autoplay={autoplay}
+          autoplayInterval={150}
+          animation={{ type: "timing", duration: 600 }}
           onProgressChange={(absoluteProgress) => {
             progressValue.value = absoluteProgress;
           }}
-          customAnimation={(value: number) => {
+          itemAnimation={(value: number) => {
             "worklet";
             const size = PAGE_WIDTH;
             const scale = interpolate(
@@ -102,10 +102,6 @@ function Index() {
               ),
             };
           }}
-          modeConfig={{
-            parallaxScrollingScale: 0.9,
-            parallaxScrollingOffset: 50,
-          }}
           data={colors}
           renderItem={({ index }) => <SBItem index={index} />}
         />
@@ -134,8 +130,8 @@ function Index() {
         </View>
       )}
       <SButton
-        onPress={() => setAutoPlay(!autoPlay)}
-      >{`${ElementsText.AUTOPLAY}:${autoPlay}`}</SButton>
+        onPress={() => setAutoPlay(!autoplay)}
+      >{`${ElementsText.AUTOPLAY}:${autoplay}`}</SButton>
     </View>
   );
 }

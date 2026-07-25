@@ -2,351 +2,207 @@
 id: programmatic-control
 title: Programmatic Control
 sidebar_label: Programmatic Control
-description: Learn how to control the carousel programmatically using refs and methods
+description: Control react-native-reanimated-carousel v5 with its ref API
 keywords:
   - react-native-reanimated-carousel
-  - programmatic control
-  - carousel control
   - scrollTo
   - next
   - prev
-  - imperative API
-  - controlled component
+  - CarouselRef
 slug: /programmatic-control
 ---
 
 # Programmatic Control
 
-import { Callout } from 'nextra/components'
+import { Callout } from "nextra/components"
 
----
+Carousel remains uncontrolled: there is no controlled `index` prop. Use `defaultIndex` for the mount position and `CarouselRef` for later navigation.
 
-Learn how to control the carousel programmatically using imperative methods via refs.
-
-<Callout type="info">
-  **Note:** This library doesn't support React-style controlled components (with an `index` prop). Instead, it uses an imperative API via refs for programmatic control.
-</Callout>
-
-## Overview
-
-The carousel provides several methods to control its behavior programmatically:
-
-- **`scrollTo`** - Scroll to a specific index or relative position
-- **`next`** - Move to the next item(s)
-- **`prev`** - Move to the previous item(s)
-- **`getCurrentIndex`** - Get the current active index
-
-## Basic Setup
-
-First, create a ref and attach it to the carousel:
+## Setup
 
 ```tsx
-import React, { useRef } from 'react';
-import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
+import * as React from "react";
+import {
+  Carousel,
+  type CarouselRef,
+} from "react-native-reanimated-carousel";
 
-function MyCarousel() {
-  const carouselRef = useRef<ICarouselInstance>(null);
-  
+function ProductCarousel() {
+  const ref = React.useRef<CarouselRef>(null);
+
   return (
     <Carousel
-      ref={carouselRef}
-      // ... other props
+      ref={ref}
+      data={products}
+      keyExtractor={(product) => product.id}
+      renderItem={({ item }) => <ProductCard product={item} />}
     />
   );
 }
 ```
 
-## Methods
+## `next` and `prev`
 
-### scrollTo
-
-The most versatile method for controlling carousel navigation.
-
-#### Scroll to specific index
+Use these methods for relative movement:
 
 ```tsx
-// Jump to index 3 with animation
-carouselRef.current?.scrollTo({ 
-  index: 3, 
-  animated: true 
-});
-
-// Jump to index 0 without animation
-carouselRef.current?.scrollTo({ 
-  index: 0, 
-  animated: false 
-});
+ref.current?.next();
+ref.current?.next({ count: 3 });
+ref.current?.prev({ animated: false });
+ref.current?.prev({ count: 2, animated: true });
 ```
 
-#### Scroll relative to current position
+```ts
+interface CarouselStepOptions {
+  count?: number;    // positive integer, default 1
+  animated?: boolean; // default true
+}
+```
+
+`count={0}` is a no-op. Other invalid counts warn once per Carousel instance in development and are ignored.
+
+With `loop={false}`, a movement that would cross a boundary stops at that boundary. With `loop`, `next` and `prev` continue in the requested logical raw-data direction across cycles.
+
+## `scrollTo`
+
+`scrollTo` performs absolute raw-data index navigation:
 
 ```tsx
-// Move 2 items forward (equivalent to calling next twice)
-carouselRef.current?.scrollTo({ 
-  count: 2, 
-  animated: true 
-});
-
-// Move 1 item backward (equivalent to calling prev once)
-carouselRef.current?.scrollTo({ 
-  count: -1, 
-  animated: true 
-});
+ref.current?.scrollTo({ index: 3 });
+ref.current?.scrollTo({ index: 0, animated: false });
 ```
 
-#### With callback
+```ts
+interface CarouselScrollToOptions {
+  index: number;      // required in-range raw-data index
+  animated?: boolean; // default true
+}
+```
+
+An invalid index warns once per Carousel instance in development and does nothing. In loop mode, the command chooses the shortest route; an exact distance tie chooses logical forward.
+
+Relative `scrollTo({ count })` and command `onFinished` callbacks were removed in v5. Use `next`/`prev` for relative movement and `onSnapToItem` for settled selection.
+
+## `getCurrentIndex`
 
 ```tsx
-carouselRef.current?.scrollTo({
-  index: 2,
-  animated: true,
-  onFinished: () => {
-    console.log('Scroll completed!');
-  }
-});
+const index = ref.current?.getCurrentIndex();
 ```
 
-### next & prev
+The result is the last settled raw-data index:
 
-Simplified methods for moving forward or backward:
-
-```tsx
-// Move to next item
-carouselRef.current?.next({ animated: true });
-
-// Move 3 items forward
-carouselRef.current?.next({ 
-  count: 3, 
-  animated: true 
-});
-
-// Move to previous item
-carouselRef.current?.prev({ animated: true });
-
-// Move 2 items backward
-carouselRef.current?.prev({ 
-  count: 2, 
-  animated: false 
-});
-```
-
-### getCurrentIndex
-
-Get the current active index:
-
-```tsx
-const currentIndex = carouselRef.current?.getCurrentIndex();
-console.log('Current index:', currentIndex);
-```
+- during a gesture or animation, it remains the previous settled index;
+- an accepted non-animated command updates it immediately;
+- after settle, it matches the argument passed to `onSnapToItem`;
+- for empty data, it returns the neutral value `0`.
 
 <Callout type="warning">
-  Do not call `getCurrentIndex()` during render. It reads live animation state; call it from an event handler or an effect instead.
+  Read `getCurrentIndex()` from an event handler or effect, not during render. The ref is an imperative snapshot and does not trigger React rendering.
 </Callout>
 
-## Practical Examples
-
-### Pagination Control
+## Lifecycle
 
 ```tsx
-import React, { useRef } from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
-import { useSharedValue } from 'react-native-reanimated';
-import Carousel, { ICarouselInstance, Pagination } from 'react-native-reanimated-carousel';
+<Carousel
+  ref={ref}
+  data={products}
+  renderItem={renderProduct}
+  onScrollStart={() => {
+    console.log("movement started");
+  }}
+  onSnapToItem={(index) => {
+    console.log("settled on", index);
+  }}
+/>
+```
+
+An accepted gesture, command, or autoplay transition fires `onScrollStart` once. Settle fires `onSnapToItem`, including when a gesture returns to the same index. An accepted non-animated command emits both synchronously in that order.
+
+Rejected/no-op commands, relayout, data reconciliation, and direct `scrollOffsetValue` writes do not fire these callbacks.
+
+Because autoplay also fires `onScrollStart`, do not use it as a touch detector. Observe `onBegin` through `onConfigurePanGesture` when user contact matters.
+
+## Pagination control
+
+```tsx
+import * as React from "react";
+import { View } from "react-native";
+import { useSharedValue } from "react-native-reanimated";
+import {
+  Carousel,
+  Pagination,
+  type CarouselRef,
+} from "react-native-reanimated-carousel";
 
 function CarouselWithPagination() {
-  const carouselRef = useRef<ICarouselInstance>(null);
-  const progress = useSharedValue<number>(0);
-  const data = [...new Array(5).keys()];
-
-  const onPressPagination = (index: number) => {
-    carouselRef.current?.scrollTo({
-      count: index - progress.value,
-      animated: true,
-    });
-  };
+  const ref = React.useRef<CarouselRef>(null);
+  const progress = useSharedValue(0);
+  const data = ["One", "Two", "Three"];
 
   return (
     <View>
       <Carousel
-        ref={carouselRef}
+        ref={ref}
         data={data}
-        onProgressChange={progress}
-        // ... other props
-      />
-      
-      <Pagination.Basic
         progress={progress}
-        data={data}
-        onPress={onPressPagination}
+        renderItem={({ item }) => <Slide title={item} />}
+      />
+      <Pagination
+        count={data.length}
+        progress={progress}
+        onPress={(index) => ref.current?.scrollTo({ index })}
       />
     </View>
   );
 }
 ```
 
-### Navigation Buttons
+Pagination receives raw-data indices and never owns the ref or writes progress.
+
+## Data updates
+
+Use `keyExtractor` when the current item should survive insertions and reordering:
 
 ```tsx
-function CarouselWithButtons() {
-  const carouselRef = useRef<ICarouselInstance>(null);
-
-  return (
-    <View>
-      <Carousel
-        ref={carouselRef}
-        // ... props
-      />
-      
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <TouchableOpacity 
-          onPress={() => carouselRef.current?.prev({ animated: true })}
-        >
-          <Text>Previous</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity 
-          onPress={() => carouselRef.current?.next({ animated: true })}
-        >
-          <Text>Next</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-}
+<Carousel
+  ref={ref}
+  data={products}
+  keyExtractor={(product) => product.id}
+  renderItem={renderProduct}
+/>
 ```
 
-### Dynamic Content Updates
+If the selected key still exists, it remains selected. If it disappears—or no `keyExtractor` is provided—the old numeric index is clamped into the new range. A data update during movement is reconciled after settle without lifecycle callbacks.
 
-When updating data and needing to scroll to new items:
+If your application adds an item and wants to select it, navigate after React commits the new data:
 
 ```tsx
-function DynamicCarousel() {
-  const carouselRef = useRef<ICarouselInstance>(null);
-  const [items, setItems] = useState(initialItems);
-  const [pendingIndex, setPendingIndex] = useState<number | null>(null);
+const [pendingIndex, setPendingIndex] = React.useState<number | null>(null);
 
-  const addItemAndNavigate = (newItem) => {
-    setPendingIndex(items.length);
-    setItems((currentItems) => [...currentItems, newItem]);
-  };
-
-  useEffect(() => {
-    if (pendingIndex === null || pendingIndex >= items.length) return;
-
-    carouselRef.current?.scrollTo({
-      index: pendingIndex,
-      animated: true
-    });
-    setPendingIndex(null);
-  }, [items.length, pendingIndex]);
-
-  return (
-    <Carousel
-      ref={carouselRef}
-      data={items}
-      // ... other props
-    />
-  );
+function addProduct(product: Product) {
+  setProducts((current) => {
+    setPendingIndex(current.length);
+    return [...current, product];
+  });
 }
+
+React.useEffect(() => {
+  if (pendingIndex === null || pendingIndex >= products.length) return;
+  ref.current?.scrollTo({ index: pendingIndex });
+  setPendingIndex(null);
+}, [pendingIndex, products.length]);
 ```
 
-## Common Patterns
+## Choosing the right control surface
 
-### Auto-advance Carousel
+| Goal | API |
+|---|---|
+| Start on an item | `defaultIndex` |
+| Move relatively | `next` / `prev` |
+| Select an absolute item | `scrollTo({ index })` |
+| Read settled selection | `getCurrentIndex()` |
+| React to settled selection | `onSnapToItem` |
+| Drive UI-thread indicators | `progress` |
+| Move content continuously at pixel level | `scrollOffsetValue` |
 
-```tsx
-function AutoAdvanceCarousel() {
-  const carouselRef = useRef<ICarouselInstance>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const data = [...new Array(5).keys()];
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      const nextIndex = (currentIndex + 1) % data.length;
-      carouselRef.current?.scrollTo({
-        index: nextIndex,
-        animated: true
-      });
-      setCurrentIndex(nextIndex);
-    }, 3000);
-
-    return () => clearInterval(timer);
-  }, [currentIndex, data.length]);
-
-  return (
-    <Carousel
-      ref={carouselRef}
-      data={data}
-      // ... other props
-    />
-  );
-}
-```
-
-### Jump to Item by ID
-
-```tsx
-function SearchableCarousel() {
-  const carouselRef = useRef<ICarouselInstance>(null);
-  const data = [
-    { id: 'item1', title: 'Item 1' },
-    { id: 'item2', title: 'Item 2' },
-    { id: 'item3', title: 'Item 3' },
-  ];
-
-  const jumpToItemById = (itemId: string) => {
-    const index = data.findIndex(item => item.id === itemId);
-    if (index !== -1) {
-      carouselRef.current?.scrollTo({
-        index,
-        animated: true
-      });
-    }
-  };
-
-  return (
-    <View>
-      <Carousel
-        ref={carouselRef}
-        data={data}
-        // ... other props
-      />
-      
-      <TouchableOpacity onPress={() => jumpToItemById('item2')}>
-        <Text>Jump to Item 2</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-```
-
-## Important Notes
-
-<Callout type="warning">
-  **Data update timing:** Do not update `data` and call a scroll method in the same render path. Wait for the updated data to render, for example by issuing the scroll from an effect.
-</Callout>
-
-<Callout type="info">
-  **No Controlled Component Pattern:** Unlike typical React components, this carousel doesn't support controlled mode via props (like `currentIndex={index}`). All programmatic control must be done through the imperative ref API.
-</Callout>
-
-## API Reference
-
-### scrollTo Options
-
-| Property | Type | Default | Description |
-| --- | --- | --- | --- |
-| `index` | `number` | - | Target index to scroll to |
-| `count` | `number` | - | Relative position change (positive = forward, negative = backward) |
-| `animated` | `boolean` | `true` | Whether to animate the scroll |
-| `onFinished` | `() => void` | - | Callback when scroll completes |
-
-### next/prev Options
-
-| Property | Type | Default | Description |
-| --- | --- | --- | --- |
-| `count` | `number` | `1` | Number of items to advance |
-| `animated` | `boolean` | `true` | Whether to animate the scroll |
-| `onFinished` | `() => void` | - | Callback when scroll completes |
-
-This imperative approach gives you full control over the carousel's navigation while maintaining smooth animations and proper state management.
+Directly writing `scrollOffsetValue` is advanced two-way control. It moves content but does not commit selection; finish with `scrollTo({ index })` when a semantic selected item is required.

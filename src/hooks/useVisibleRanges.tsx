@@ -9,7 +9,7 @@ export interface VisibleRanges {
   positiveRange: Range;
 }
 
-export type IVisibleRanges = SharedValue<VisibleRanges>;
+export type VisibleRangesValue = SharedValue<VisibleRanges>;
 
 function normalizeWindowSize(total: number, windowSize?: number) {
   "worklet";
@@ -94,7 +94,7 @@ export function useVisibleRanges(options: {
   windowSize?: number;
   translation: SharedValue<number>;
   loop?: boolean;
-}): IVisibleRanges {
+}): VisibleRangesValue {
   const { total = 0, viewSize, translation, windowSize: _windowSize, loop } = options;
 
   const windowSize = normalizeWindowSize(total, _windowSize);

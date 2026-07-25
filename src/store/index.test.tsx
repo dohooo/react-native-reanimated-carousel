@@ -2,8 +2,8 @@ import { act, render } from "@testing-library/react-native";
 import React from "react";
 import { Text } from "react-native";
 
-import { ICommonVariables } from "../hooks/useCommonVariables";
-import { GlobalStateContext, GlobalStateProvider, IContext, useGlobalState } from "./index";
+import { CarouselCommonVariables } from "../hooks/useCommonVariables";
+import { CarouselContext, GlobalStateContext, GlobalStateProvider, useGlobalState } from "./index";
 
 const createSharedValue = <T,>(initial: T) => ({ value: initial });
 
@@ -21,9 +21,9 @@ describe("GlobalStateProvider", () => {
     handlerOffset: createSharedValue(0),
     resolvedSize: createSharedValue<number | null>(300),
     sizePhase: createSharedValue("ready" as const),
-  } as ICommonVariables;
+  } as CarouselCommonVariables;
 
-  const mockValue: Pick<IContext, "props" | "common"> = {
+  const mockValue: Pick<CarouselContext, "props" | "common"> = {
     props: mockProps,
     common: mockCommon,
   };
@@ -202,7 +202,7 @@ describe("GlobalStateProvider", () => {
 });
 
 describe("useGlobalState", () => {
-  const mockValue: Pick<IContext, "props" | "common"> = {
+  const mockValue: Pick<CarouselContext, "props" | "common"> = {
     props: { width: 300, data: [1, 2, 3], renderItem: () => <Text>Item</Text> } as any,
     common: {
       size: 300,
@@ -210,7 +210,7 @@ describe("useGlobalState", () => {
       handlerOffset: createSharedValue(0),
       resolvedSize: createSharedValue<number | null>(300),
       sizePhase: createSharedValue("ready" as const),
-    } as ICommonVariables,
+    } as CarouselCommonVariables,
   };
 
   it("should return context value when used within provider", () => {
@@ -240,9 +240,9 @@ describe("useGlobalState", () => {
       return <Text>Test</Text>;
     };
 
-    const mockValue: Pick<IContext, "props" | "common"> = {
+    const mockValue: Pick<CarouselContext, "props" | "common"> = {
       props: { width: 300, data: [1, 2, 3], renderItem: () => <Text>Item</Text> } as any,
-      common: { size: 300, validLength: 3 } as ICommonVariables,
+      common: { size: 300, validLength: 3 } as CarouselCommonVariables,
     };
 
     render(

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Text, View } from "react-native";
 import { Extrapolation, interpolate } from "react-native-reanimated";
-import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
+import { Carousel, CarouselItemAnimation } from "react-native-reanimated-carousel";
 
 import { faker } from "@faker-js/faker";
 
@@ -20,7 +20,7 @@ function Index() {
   const PAGE_HEIGHT = window.height - headerHeight;
   const PAGE_WIDTH = window.width;
 
-  const animationStyle: TAnimationStyle = React.useCallback(
+  const animationStyle: CarouselItemAnimation = React.useCallback(
     (value: number) => {
       "worklet";
 
@@ -45,12 +45,12 @@ function Index() {
     >
       <Carousel
         loop
-        vertical
+        orientation="vertical"
         style={{
           width: PAGE_WIDTH,
           height: PAGE_HEIGHT,
         }}
-        pagingEnabled={false}
+        snapMode="nearest"
         data={[...new Array(10).keys()].map((v) => faker.animal.dog())}
         renderItem={({ index, item }) => {
           return (
@@ -115,7 +115,7 @@ function Index() {
             </View>
           );
         }}
-        customAnimation={animationStyle}
+        itemAnimation={animationStyle}
       />
     </View>
   );

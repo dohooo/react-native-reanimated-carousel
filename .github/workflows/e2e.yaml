@@ -398,3 +398,31 @@ jobs:
           path: |
             ~/.maestro/tests/
             /tmp/e2e-debug/
+
+  e2e-gate:
+    name: E2E Gate
+    if: always()
+    needs:
+      - changes
+      - e2e-web
+      - e2e-ios
+      - e2e-android
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Require every applicable E2E job
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          RUN_E2E: ${{ needs.changes.outputs.run_e2e }}
+          WEB_RESULT: ${{ needs.e2e-web.result }}
+          IOS_RESULT: ${{ needs.e2e-ios.result }}
+          ANDROID_RESULT: ${{ needs.e2e-android.result }}
+        run: |
+          test "$CHANGES_RESULT" = "success"
+          if [ "$RUN_E2E" != "true" ]; then
+            exit 0
+          fi
+          test "$WEB_RESULT" = "success"
+          test "$IOS_RESULT" = "success"
+          test "$ANDROID_RESULT" = "success"

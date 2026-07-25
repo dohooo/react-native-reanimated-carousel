@@ -48,7 +48,10 @@ import Demo from '@/components/Demo'
 import * as React from "react";
 import { View } from "react-native";
 import { interpolate } from "react-native-reanimated";
-import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
+import {
+	Carousel,
+	CarouselItemAnimation,
+} from "react-native-reanimated-carousel";
 
 import { SBItem } from "@/components/SBItem";
 import { ElementsText, window } from "@/constants/sizes";
@@ -64,22 +67,25 @@ function Index() {
 		buttonTitle: ElementsText.AUTOPLAY,
 	});
 
-	const animationStyle: TAnimationStyle = React.useCallback((value: number) => {
-		"worklet";
+	const animationStyle: CarouselItemAnimation = React.useCallback(
+		(value: number) => {
+			"worklet";
 
-		const zIndex = interpolate(value, [-1, 0, 1], [10, 20, 30]);
-		const rotateZ = `${interpolate(value, [-1, 0, 1], [-45, 0, 45])}deg`;
-		const translateX = interpolate(
-			value,
-			[-1, 0, 1],
-			[-window.width, 0, window.width],
-		);
+			const zIndex = interpolate(value, [-1, 0, 1], [10, 20, 30]);
+			const rotateZ = `${interpolate(value, [-1, 0, 1], [-45, 0, 45])}deg`;
+			const translateX = interpolate(
+				value,
+				[-1, 0, 1],
+				[-window.width, 0, window.width],
+			);
 
-		return {
-			transform: [{ rotateZ }, { translateX }],
-			zIndex,
-		};
-	}, []);
+			return {
+				transform: [{ rotateZ }, { translateX }],
+				zIndex,
+			};
+		},
+		[],
+	);
 
 	return (
 		<View
@@ -110,8 +116,8 @@ function Index() {
 						/>
 					);
 				}}
-				autoPlay={AutoPLay.status}
-				customAnimation={animationStyle}
+				autoplay={AutoPLay.status}
+				itemAnimation={animationStyle}
 			/>
 		</View>
 	);

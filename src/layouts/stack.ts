@@ -1,57 +1,36 @@
-import { useMemo } from "react";
 import type { TransformsStyle, ViewStyle } from "react-native";
 import { Dimensions } from "react-native";
 import { Extrapolation, interpolate } from "react-native-reanimated";
 
-import type { CustomConfig, IComputedDirectionTypes } from "../types";
+import type { CarouselLayout } from "../types";
+import type { CarouselDirectionSign } from "../utils/carousel-direction";
+import { toPhysicalHorizontalValue } from "../utils/carousel-direction";
 
 const screen = Dimensions.get("window");
 
-export interface ILayoutConfig {
-  showLength?: number;
-  moveSize?: number;
-  stackInterval?: number;
-  scaleInterval?: number;
-  opacityInterval?: number;
-  rotateZDeg?: number;
-  snapDirection?: "left" | "right";
-}
+type StackLayout = Extract<CarouselLayout, { type: "horizontal-stack" | "vertical-stack" }>;
 
-export type TStackModeProps = IComputedDirectionTypes<{
-  /**
-   * Carousel Animated transitions.
-   */
-  mode?: "horizontal-stack" | "vertical-stack";
-  /**
-   * Stack animation style.
-   * @default
-   *     snapDirection: 'right',
-   *     moveSize: window.width,
-   *     stackInterval: 30,
-   *     scaleInterval: 0.08,
-   *     rotateZDeg: 135,
-   *     opacityInterval: 0.1,
-   */
-  modeConfig?: ILayoutConfig;
-}>;
-
-export function horizontalStackLayout(modeConfig: ILayoutConfig = {}) {
+export function horizontalStackLayout(
+  config: StackLayout,
+  directionSign: CarouselDirectionSign = 1
+) {
   return (_value: number) => {
     "worklet";
 
     const {
-      showLength,
-      snapDirection = "left",
-      moveSize = screen.width,
-      stackInterval = 18,
-      scaleInterval = 0.04,
-      opacityInterval = 0.1,
-      rotateZDeg = 30,
-    } = modeConfig;
+      visibleCount,
+      exitDirection: snapDirection = "left",
+      exitDistance: moveSize = screen.width,
+      spacing: stackInterval = 18,
+      scaleStep: scaleInterval = 0.04,
+      opacityStep: opacityInterval = 0.1,
+      rotation: rotateZDeg = 30,
+    } = config;
 
+    const physicalProgress = toPhysicalHorizontalValue(_value, directionSign);
     const { validLength, value, inputRange } = getCommonVariables({
-      showLength: showLength!,
-      value: _value,
+      showLength: visibleCount!,
+      value: physicalProgress,
       snapDirection,
     });
     const { zIndex, opacity } = getCommonStyles({
@@ -117,41 +96,22 @@ export function horizontalStackLayout(modeConfig: ILayoutConfig = {}) {
   };
 }
 
-export function useHorizontalStackLayout(
-  customAnimationConfig: ILayoutConfig = {},
-  customConfig: CustomConfig = {}
-) {
-  const config = useMemo(
-    () => ({
-      type: customAnimationConfig.snapDirection === "right" ? "negative" : "positive",
-      viewCount: customAnimationConfig.showLength,
-      ...customConfig,
-    }),
-    [customAnimationConfig, customConfig]
-  );
-
-  return {
-    layout: horizontalStackLayout(customAnimationConfig),
-    config,
-  };
-}
-
-export function verticalStackLayout(modeConfig: ILayoutConfig = {}) {
+export function verticalStackLayout(config: StackLayout) {
   return (_value: number) => {
     "worklet";
 
     const {
-      showLength,
-      snapDirection = "left",
-      moveSize = screen.width,
-      stackInterval = 18,
-      scaleInterval = 0.04,
-      opacityInterval = 0.1,
-      rotateZDeg = 30,
-    } = modeConfig;
+      visibleCount,
+      exitDirection: snapDirection = "left",
+      exitDistance: moveSize = screen.width,
+      spacing: stackInterval = 18,
+      scaleStep: scaleInterval = 0.04,
+      opacityStep: opacityInterval = 0.1,
+      rotation: rotateZDeg = 30,
+    } = config;
 
     const { validLength, value, inputRange } = getCommonVariables({
-      showLength: showLength!,
+      showLength: visibleCount!,
       value: _value,
       snapDirection,
     });

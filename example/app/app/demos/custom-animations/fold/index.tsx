@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { Extrapolation, interpolate } from "react-native-reanimated";
 import type { SharedValue } from "react-native-reanimated";
-import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
+import { Carousel, CarouselItemAnimation } from "react-native-reanimated-carousel";
 
 import SButton from "@/components/SButton";
 import { SlideItem } from "@/components/SlideItem";
@@ -24,7 +24,7 @@ function Index() {
   const sideItemCount = 3;
   const sideItemWidth = (PAGE_WIDTH - itemSize) / (2 * sideItemCount);
 
-  const animationStyle: TAnimationStyle = React.useCallback(
+  const animationStyle: CarouselItemAnimation = React.useCallback(
     (value: number) => {
       "worklet";
 
@@ -86,15 +86,15 @@ function Index() {
             height: PAGE_WIDTH / 2,
           }}
           loop
-          windowSize={Math.round(dataLength / 2)}
-          scrollAnimationDuration={1500}
-          autoPlay={isAutoPlay}
-          autoPlayInterval={isFast ? 100 : 1200}
+          renderWindowSize={Math.round(dataLength / 2)}
+          animation={{ type: "timing", duration: 1500 }}
+          autoplay={isAutoPlay}
+          autoplayInterval={isFast ? 100 : 1200}
           data={getImages(10)}
-          renderItem={({ index, animationValue }) => (
-            <Item animationValue={animationValue} index={index} key={index} />
+          renderItem={({ index, relativeProgress }) => (
+            <Item relativeProgress={relativeProgress} index={index} key={index} />
           )}
-          customAnimation={animationStyle}
+          itemAnimation={animationStyle}
         />
       </CaptureWrapper>
 
@@ -118,7 +118,7 @@ function Index() {
 
 const Item: React.FC<{
   index: number;
-  animationValue: SharedValue<number>;
+  relativeProgress: SharedValue<number>;
 }> = ({ index }) => {
   return (
     <TouchableWithoutFeedback

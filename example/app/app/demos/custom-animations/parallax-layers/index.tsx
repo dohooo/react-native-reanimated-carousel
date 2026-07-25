@@ -2,7 +2,7 @@ import * as React from "react";
 import { View } from "react-native";
 import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
 import type { SharedValue } from "react-native-reanimated";
-import Carousel from "react-native-reanimated-carousel";
+import { Carousel } from "react-native-reanimated-carousel";
 
 import SButton from "@/components/SButton";
 import { ElementsText, window } from "@/constants/sizes";
@@ -18,7 +18,7 @@ function Index() {
   const [isAutoPlay, setIsAutoPlay] = React.useState(false);
 
   const baseOptions = {
-    vertical: false,
+    orientation: "horizontal",
   } as const;
 
   return (
@@ -30,17 +30,15 @@ function Index() {
           width: PAGE_WIDTH,
           height: PAGE_HEIGHT,
         }}
-        autoPlay={isAutoPlay}
-        withAnimation={{
+        autoplay={isAutoPlay}
+        animation={{
           type: "spring",
-          config: {
-            damping: 13,
-          },
+          damping: 13,
         }}
-        autoPlayInterval={1500}
+        autoplayInterval={1500}
         data={colors}
-        renderItem={({ index, animationValue }) => (
-          <Card animationValue={animationValue} key={index} index={index} />
+        renderItem={({ index, relativeProgress }) => (
+          <Card relativeProgress={relativeProgress} key={index} index={index} />
         )}
       />
       <SButton
@@ -56,20 +54,24 @@ function Index() {
 
 const Card: React.FC<{
   index: number;
-  animationValue: SharedValue<number>;
-}> = ({ index, animationValue }) => {
+  relativeProgress: SharedValue<number>;
+}> = ({ index, relativeProgress }) => {
   const WIDTH = PAGE_WIDTH / 1.5;
   const HEIGHT = PAGE_HEIGHT / 1.5;
 
   const cardStyle = useAnimatedStyle(() => {
     const scale = interpolate(
-      animationValue.value,
+      relativeProgress.value,
       [-0.1, 0, 1],
       [0.95, 1, 1],
       Extrapolation.CLAMP
     );
 
-    const translateX = interpolate(animationValue.value, [-1, -0.2, 0, 1], [0, WIDTH * 0.3, 0, 0]);
+    const translateX = interpolate(
+      relativeProgress.value,
+      [-1, -0.2, 0, 1],
+      [0, WIDTH * 0.3, 0, 0]
+    );
 
     const transform = {
       transform: [
@@ -78,7 +80,7 @@ const Card: React.FC<{
         { perspective: 200 },
         {
           rotateY: `${interpolate(
-            animationValue.value,
+            relativeProgress.value,
             [-1, 0, 0.4, 1],
             [30, 0, -25, -25],
             Extrapolation.CLAMP
@@ -93,11 +95,11 @@ const Card: React.FC<{
   }, [index]);
 
   const blockStyle = useAnimatedStyle(() => {
-    const translateX = interpolate(animationValue.value, [-1, 0, 1], [0, 60, 60]);
+    const translateX = interpolate(relativeProgress.value, [-1, 0, 1], [0, 60, 60]);
 
-    const translateY = interpolate(animationValue.value, [-1, 0, 1], [0, -40, -40]);
+    const translateY = interpolate(relativeProgress.value, [-1, 0, 1], [0, -40, -40]);
 
-    const rotateZ = interpolate(animationValue.value, [-1, 0, 1], [0, 0, -25]);
+    const rotateZ = interpolate(relativeProgress.value, [-1, 0, 1], [0, 0, -25]);
 
     return {
       transform: [{ translateX }, { translateY }, { rotateZ: `${rotateZ}deg` }],

@@ -1,593 +1,287 @@
 ---
 id: props
-title: Props
-sidebar_label: Getting Started
-description: The react-native-reanimated-carousel props guide. 📖
+title: API Reference
+sidebar_label: API
+description: Public API reference for react-native-reanimated-carousel v5
 keywords:
   - react-native-reanimated-carousel
-  - reanimated-carousel
-  - reanimated carousel
-  - react-native
-  - snap-carousel
-  - react native
-  - snap carousel
-  - ios
-  - android
   - carousel
-  - snap
-  - reanimated
-image: 
+  - api
+  - props
 slug: /props
 ---
 
-# Props
----
+# API Reference
 
-import { Callout } from 'nextra/components'
-
-## Basic
-
-<Callout type="info">
-This page documents the v5 beta API. The exported TypeScript types remain the source of truth for exact signatures.
-</Callout>
-
-### `data`
-
-Carousel items data set
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| T[] | -     | ✅      |
-
-### `renderItem`
-
-Render carousel item
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| \(info: \{ item: T, index: number, animationValue: SharedValue\<number\> \}\) =\> React.ReactElement | -     | ✅      |
-
-### `defaultScrollOffsetValue`
-
-> @deprecated Use `scrollOffsetValue` instead.
-
-Legacy name for the carousel scroll offset shared value. If provided, the carousel will mutate it during gestures/animations.
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| SharedValue\<number\> | -     | ❌      |
-
-### `scrollOffsetValue`
-
-The carousel scroll offset shared value (recommended). If provided, the carousel will mutate it during gestures/animations.
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| SharedValue\<number\> | -     | ❌      |
-
-### `autoFillData`
-
-Auto fill data array to allow loop playback when the loop props is true.\(\[1\] \=\> \[1, 1, 1\]；\[1, 2\] \=\> \[1, 2, 1, 2\]\)
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| boolean | true     | ❌      |
-
-### `vertical`
-
-Layout items vertically instead of horizontally
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| boolean | false     | ❌      |
-
-### `width`
-
-> @deprecated Use `style` prop instead. e.g. `style={{ width: 300 }}`
-
-Specified carousel container width (legacy v4 API)
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| number \| undefined | -     | ❌      |
-
-### `height`
-
-> @deprecated Use `style` prop instead. e.g. `style={{ height: 200 }}`
-
-Specified carousel container height (legacy v4 API)
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| number \| undefined | -     | ❌      |
-
-### `mode`
-
-Carousel Animated transitions
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| 'horizontal-stack' \| 'vertical-stack' \| 'parallax' | undefined (normal layout) | ❌ |
-
-### `modeConfig`
-
-Mode-specific animation configuration. See the Parallax Mode and Stack Mode sections below.
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| object | \{\} | ❌ |
-
-### `style`
-
-Style of the carousel container (recommended for sizing).
-
-If `style.width` / `style.height` are not provided, the carousel will fall back to automatic measurement via layout — but the parent layout must still constrain the size (e.g. `flex: 1`, or a fixed size wrapper).
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| StyleProp\<ViewStyle\> | \{\}     | ❌      |
-
-### `itemWidth`
-
-Horizontal **page size** used for snapping and animations.
-
-This is **not** the same as the container width. Use this when you want multiple items visible within a single viewport.
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| number \| undefined | container width | ❌ |
-
-### `itemHeight`
-
-Vertical **page size** used for snapping and animations.
-
-This is **not** the same as the container height. Use this when you want multiple rows visible at once in vertical mode.
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| number \| undefined | container height | ❌ |
-
-### `contentContainerStyle`
-
-Style of the carousel content container.
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| StyleProp\<ViewStyle\> | \{\}     | ❌      |
-
-### `defaultIndex`
-
-Default index
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| number | 0     | ❌      |
-
-### `autoPlay`
-
-Auto play
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| boolean | false     | ❌      |
-
-### `autoPlayReverse`
-
-Auto play reverse playback
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| boolean | false     | ❌      |
-
-### `autoPlayInterval`
-
-Auto play playback interval
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| number | 1000     | ❌      |
-
-### `scrollAnimationDuration`
-
-Time a scroll animation takes to finish
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| number | 500     | ❌      |
-
-### `loop`
-
-Carousel loop playback
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| boolean | true     | ❌      |
-
-### `testID`
-
-Used to locate this view in end-to-end tests
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| string | -     | ❌      |
-
-### `onSnapToItem`
-
-Callback fired when navigating to an item
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| \(index: number\) => void | -     | ❌      |
-
-### `onScrollStart`
-
-Callback fired when scroll start
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| \(\) => void | -     | ❌      |
-
-### `onScrollEnd`
-
-Callback fired when scroll end
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| \(index: number\) => void | -     | ❌      |
-
-### `withAnimation`
-
-Specifies the scrolling animation effect.
-
-If provided, it takes precedence over `scrollAnimationDuration`.
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| \{type: 'spring';config: WithSpringConfig;\} \| \{type: 'timing';config: WithTimingConfig;\} | -     | ❌      |
-
-### `onConfigurePanGesture`
-
-PanGesture config
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| onConfigurePanGesture?: \(panGesture: PanGesture\) => void | -     | ❌      |
-
-### `windowSize`
-
-The maximum number of items that can respond to pan gesture events, `0` means all items will respond to pan gesture events
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| number | 0     | ❌      |
-
-### `onProgressChange`
-
-This callback is called when the carousel is scrolled. If you want to update a shared value automatically, you can use the shared value as a parameter directly.
-The callback provides two parameters: `offsetProgress`:Total of offset distance \(0 390 780 ...\); `absoluteProgress`:Convert to index \(0 1 2 ...\)
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| \(\(offsetProgress: number, absoluteProgress: number\) => void\) \| SharedValue\<number\> | -     | ❌      |
-
-### `onLayout`
-
-Called when the carousel content container is laid out.
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| \(event: LayoutChangeEvent\) => void | - | ❌ |
-
-### `pagingEnabled`
-
-When true, the scroll view stops on multiples of the scroll view's size when scrolling
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| boolean | true     | ❌      |
-
-### `overscrollEnabled`
-
-If enabled, the item will scroll to the first placement when scrolling past the edge rather than closing to the last. (previous conditions: loop=false)
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| boolean | true     | ❌      |
-
-### `snapEnabled`
-
-If enabled, releasing the touch will scroll to the nearest item, valid when pagingEnabled=false
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| boolean | true     | ❌      |
-
-### `enableSnap`
-
-> @deprecated Use `snapEnabled` instead.
-
-Legacy name for `snapEnabled`.
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| boolean | - | ❌ |
-
-### `enabled`
-
-when false, Carousel will not respond to any gestures
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| boolean | true     | ❌      |
-
-### `fixedDirection`
-
-If positive, the carousel will scroll to the positive direction and vice versa.
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| 'positive' \| 'negative' | -     | ❌      |
-
-### `customConfig`
-
-Custom carousel config
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| \{type\?: 'negative' \| 'positive';viewCount\?: number;\} \| \(\) => \{type\?: 'negative' \| 'positive';viewCount\?: number;\} | -     | ❌      |
-
-### `customAnimation`
-
-Custom worklet animation. See [Custom Animations](/custom-animations).
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| \(value: number, index: number\) => ViewStyle | -     | ❌      |
-
-### `maxScrollDistancePerSwipe`
-
-Maximum offset value for one scroll. Carousel cannot scroll over than this value.
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| number | -     | ❌      |
-
-### `minScrollDistancePerSwipe`
-
-Minimum offset value for once scroll. If the translation value is less than this value, the carousel will not scroll.
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| number | -     | ❌      |
-
-## Parallax Mode
-
-```tsx copy
-<Carousel
-    {...restProps}
-    mode="parallax"
-    modeConfig={{
-        parallaxScrollingScale: 0.9,
-        parallaxScrollingOffset: 50,
-        parallaxAdjacentItemScale: 0.8,
-    }}
-/>
-```
-
-### `parallaxScrollingOffset`
-
-control prev/next item offset
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| number | 100     | ❌      |
-
-### `parallaxScrollingScale`
-
-control prev/current/next item scale
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| number | 0.8     | ❌      |
-
-### `parallaxAdjacentItemScale`
-
-control prev/next item scale
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| number | parallaxScrollingScale ** 2 | ❌ |
-
-## Stack Mode
-
-```tsx copy
-<Carousel
-    {...restProps}
-    mode="horizontal-stack"
-    modeConfig={{
-        moveSize: 200,
-        stackInterval: 30,
-        scaleInterval: 0.08,
-        rotateZDeg: 135,
-        snapDirection: 'left',
-    }}
-/>
-```
-
-### `showLength`
-
-Maximum number of cards shown in the stack. By default, the stack can show the remaining data length.
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| number | data length - 1 | ❌ |
-
-### `stackInterval`
-
-The spacing of each item
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| number | 18     | ❌      |
-
-### `moveSize`
-
-Item translate size
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| number | screen.width     | ❌      |
-
-### `scaleInterval`
-
-The scale of each item
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| number | 0.04     | ❌      |
-
-### `opacityInterval`
-
-The opacity of each item
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| number | 0.1     | ❌      |
-
-### `rotateZDeg`
-
-The item rotation Angle
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| number | 30     | ❌      |
-
-### `snapDirection`
-
-Slide direction
-
-| type   | default | required |
-| ------ | ------- | -------- |
-| 'left'\|'right' | 'left'     | ❌      |
-
-
-## Ref
-
-By using these methods, remember you need to reference the component using [React useRef()](https://react.dev/reference/react/useRef).
-
-**JavaScript**
-
-```js
-const ref = React.useRef(null)
-```
-
-If you're using **TypeScript**:
-
-You need to import:
+v5 exposes two runtime components and a deliberate type whitelist:
 
 ```ts
-import type { ICarouselInstance } from "react-native-reanimated-carousel";
+import {
+  Carousel,
+  Pagination,
+  type CarouselAnimation,
+  type CarouselItemAnimation,
+  type CarouselLayout,
+  type CarouselPanGesture,
+  type CarouselProgressChangeHandler,
+  type CarouselProps,
+  type CarouselRef,
+  type CarouselRenderItem,
+  type CarouselRenderItemInfo,
+  type CarouselScrollToOptions,
+  type CarouselStepOptions,
+  type PaginationDotStyle,
+  type PaginationProps,
+} from "react-native-reanimated-carousel";
 ```
 
-and then:
+There is no default export and package deep imports are unsupported.
 
-```ts
-const ref = React.useRef<ICarouselInstance>(null);
-```
-
-Now, you only need to pass the ref to the Carousel component:
-
-```js
-<Carousel ref={ref} (...) />;
-```
-
-And now you can use these methods throughout your component. Here's an example of implementing a button to go to the next slide:
+## Carousel
 
 ```tsx
-import React from "react";
-import Carousel from "react-native-reanimated-carousel";
-import type { ICarouselInstance } from "react-native-reanimated-carousel";
-import { Button, Text, View } from "react-native";
+<Carousel
+  data={items}
+  renderItem={({ item }) => <Slide item={item} />}
+/>
+```
 
-// 1. Create a data array with the slides
-const data = [
-  {
-    title: "Slide 1",
-    content: "Slide 1 Content",
-  },
-  {
-    title: "Slide 2",
-    content: "Slide 2 Content",
-  },
-  {
-    title: "Slide 3",
-    content: "Slide 3 Content",
-  },
-];
+### Data and selection
 
-const Example = () => {
-  const ref = React.useRef<ICarouselInstance>(null); // 2. Create a ref for the Carousel component
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `data` | `Item[]` | required | Raw application data. All public indices refer to this array. |
+| `renderItem` | `CarouselRenderItem<Item>` | required | JS-thread renderer for each mounted slide. |
+| `keyExtractor` | `(item, index) => string` | — | Stable identity used to preserve selection across data updates. |
+| `defaultIndex` | `number` | `0` | Mount-only initial raw-data index. |
+| `loop` | `boolean` | `false` | Enables infinite logical wrapping. |
 
-  return (
-    <View>
-      {/* 3. Add the Carousel component with the ref */}
-      <Carousel
-        ref={ref}
-        data={data}
-        style={{ width: 300, height: 200 }} // 4. Provide size via the style prop
-        renderItem={({ item }) => (
-          <View>
-            <Text>{item.title}</Text>
-            <Text>{item.content}</Text>
-          </View>
-        )}
-      />
-      {/* 5. Add a button to trigger the next slide */}
-      <Button
-        title="Next"
-        onPress={() => {
-          ref.current?.next(); // 6. Call the "next" method on the ref
-        }}
-      />
-    </View>
-  );
+An empty `data` array is valid and produces neutral index/progress/offset values of `0`. Navigation and lifecycle callbacks are no-ops. With non-empty data, `defaultIndex` must be an in-range integer.
+
+When data changes, a matching `keyExtractor` key remains selected. Otherwise the previous numeric index is clamped. Reconciliation waits for active movement to settle and does not emit lifecycle callbacks.
+
+### Size, orientation, and rendering
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `orientation` | `"horizontal" \| "vertical"` | `"horizontal"` | Logical main axis. |
+| `itemSize` | `number` | container main-axis size | Page distance used by snapping and progress. Must be positive. |
+| `renderWindowSize` | `number` | all slides | Maximum mounted slides including the current slide. Must be a positive integer. |
+| `style` | `StyleProp<ViewStyle>` | `{}` | Root viewport style and container dimensions. |
+| `contentContainerStyle` | `StyleProp<ViewStyle>` | `{}` | Inner content layer. `opacity` and `transform` are library-owned. |
+| `testID` | `string` | — | Applied to the root viewport. |
+| `onLayout` | `(event: LayoutChangeEvent) => void` | — | Root viewport layout callback. |
+
+Use `style` for the viewport and `itemSize` only when the page distance differs from its main-axis size:
+
+```tsx
+<Carousel
+  style={{ width: 360, height: 200 }}
+  itemSize={240}
+  data={items}
+  renderItem={renderItem}
+/>
+```
+
+If `renderWindowSize` is omitted, all raw slides are mounted. It affects mounting only, not navigation or progress.
+
+### Scrolling and snapping
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `scrollEnabled` | `boolean` | `true` | Enables user pan gestures. It does not stop autoplay or ref commands. |
+| `snapMode` | `"page" \| "nearest" \| "none"` | `"page"` | Single-page snap, nearest-page snap, or free decay. |
+| `overscrollEnabled` | `boolean` | `true` | Enables resisted overdrag and rebound when `loop={false}`. |
+| `animation` | `CarouselAnimation` | timing, `500ms` | Transition config for gesture snapping, commands, and autoplay. |
+| `onConfigurePanGesture` | `(gesture: CarouselPanGesture) => void` | — | Configures thresholds, pointers, relationships, and worklet observers. |
+
+Timing and spring configs are flat discriminated unions:
+
+```tsx
+<Carousel animation={{ type: "timing", duration: 350 }} />
+
+<Carousel
+  animation={{
+    type: "spring",
+    damping: 18,
+    stiffness: 180,
+  }}
+/>
+```
+
+`snapMode="none"` decay and overscroll rebound use internal physics. Reanimated's system reduce-motion behavior remains active.
+
+`CarouselPanGesture` is a narrow facade over the real Gesture Handler pan gesture. It includes:
+
+- activation/failure offsets, distance, velocity, pointer count, hit slop, mouse, and trackpad configuration;
+- simultaneous, require-to-fail, and blocking external relationships;
+- `onBegin`, `onStart`, `onUpdate`, `onChange`, `onEnd`, and `onFinalize` worklet observers.
+
+It intentionally excludes `enabled`, `runOnJS`, and `manualActivation`. Use `scrollEnabled` for gesture enablement and `scheduleOnRN` for JS side effects. Carousel-owned handlers run before consumer observers.
+
+### Autoplay
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `autoplay` | `boolean` | `false` | Controlled autoplay switch. |
+| `autoplayInterval` | `number` | `3000` | Idle dwell in milliseconds after one transition settles. |
+| `autoplayDirection` | `"forward" \| "backward"` | `"forward"` | Logical raw-data direction. |
+
+The interval does not include animation time. Autoplay pauses during active gestures and transitions, then restarts its dwell after settle. With `loop={false}`, it stops at the logical boundary.
+
+### Progress and advanced offset
+
+| Prop | Type | Thread | Description |
+|---|---|---|---|
+| `progress` | `SharedValue<number>` | UI | Fractional logical index, written by Carousel every frame. |
+| `onProgressChange` | `(progress: number) => void` | JS | Per-frame logical progress callback. |
+| `scrollOffsetValue` | `SharedValue<number>` | UI | Advanced two-way signed main-axis translation in pixels. |
+
+Progress moves `+1` in logical forward order and `-1` backward. Non-loop progress is bounded to `[0, count - 1]`; loop progress is continuous and unbounded. Its positive modulo by `count` identifies the settled raw index.
+
+Offset is `0` at item `0`; moving forward one page changes it by `-itemSize`. This sign is stable across horizontal, vertical, LTR, and RTL.
+
+`progress` is consumer-read-only. Prefer it for UI-thread work; `onProgressChange` crosses to JS every frame and should stay light. `scrollOffsetValue` is intentionally writable, but an external write only moves content—it does not commit selection or fire `onSnapToItem`.
+
+### Item animation and layouts
+
+`layout` and `itemAnimation` are a TypeScript XOR: supply at most one.
+
+```tsx
+<Carousel
+  layout={{ type: "parallax", offset: 100, scale: 0.8 }}
+  data={items}
+  renderItem={renderItem}
+/>
+```
+
+`CarouselLayout` supports:
+
+```ts
+type CarouselLayout =
+  | {
+      type: "parallax";
+      offset?: number;        // 100
+      scale?: number;         // 0.8
+      adjacentScale?: number; // scale ** 2
+    }
+  | {
+      type: "horizontal-stack" | "vertical-stack";
+      visibleCount?: number;  // raw data length - 1
+      exitDistance?: number;  // screen width
+      spacing?: number;       // 18
+      scaleStep?: number;     // 0.04
+      opacityStep?: number;   // 0.1
+      rotation?: number;      // 30 degrees
+      exitDirection?: "left" | "right"; // physical, default "left"
+    };
+```
+
+For a custom effect:
+
+```tsx
+const itemAnimation: CarouselItemAnimation = (relativeProgress) => {
+  "worklet";
+  return {
+    opacity: Math.max(0, 1 - Math.abs(relativeProgress)),
+  };
 };
 
-export default Example;
+<Carousel itemAnimation={itemAnimation} data={items} renderItem={renderItem} />
 ```
 
-### `prev`
+`relativeProgress` is logical: `0` is selected, positive values are forward, negative values are backward, and fractions represent motion. Direction-sensitive `translateX` values returned by a custom animation are physical; custom horizontal RTL effects must mirror those values when appropriate.
 
-Scroll to previous item, it takes one optional argument \(count\), which allows you to specify how many items to cross
+### Lifecycle callbacks
 
-| type   |
-| ------ |
-| \(options?: \{ count?: number, animated?: boolean, onFinished?: \(\) => void \}\) => void |
+| Prop | Type | Description |
+|---|---|---|
+| `onScrollStart` | `() => void` | JS callback once when an accepted gesture, command, or autoplay transition starts. |
+| `onSnapToItem` | `(index: number) => void` | JS callback when movement settles, with the raw-data index. |
 
-### `next`
+Rejected/no-op commands, direct offset writes, relayout, and data reconciliation do not fire lifecycle callbacks. An accepted non-animated command emits start and then immediately emits settled.
 
-Scroll to next item, it takes one optional argument \(count\), which allows you to specify how many items to cross
+`onScrollStart` is not a user-touch detector because autoplay also fires it. Use an `onBegin` gesture observer when that distinction matters.
 
-| type   |
-| ------ |
-| \(options?: \{ count?: number, animated?: boolean, onFinished?: \(\) => void \}\) => void |
+### Render item
 
-### `scrollTo`
-
-```tsx copy
-scrollTo({ count: -2 })
+```ts
+interface CarouselRenderItemInfo<Item> {
+  item: Item;
+  index: number;
+  relativeProgress: SharedValue<number>;
+}
 ```
 
-Use count to scroll to a position where relative to the current position, scrollTo\(\{count:-2\}\) is equivalent to prev\(2\), scrollTo\(\{count:2\}\) is equivalent to next\(2\). And also can jump to specific position.
+`renderItem` executes on the JS thread. `relativeProgress` is consumed from worklets or animated styles.
 
-| type   |
-| ------ |
-| \(options?: \{ index?: number, count?: number, animated?: boolean, onFinished\?: \(\) => void \}\) => void |
+## Carousel ref
 
-### `getCurrentIndex`
+```ts
+interface CarouselRef {
+  prev(options?: CarouselStepOptions): void;
+  next(options?: CarouselStepOptions): void;
+  getCurrentIndex(): number;
+  scrollTo(options: CarouselScrollToOptions): void;
+}
 
-Get the current item index. Call this from an event handler or effect, not while React is rendering.
+interface CarouselStepOptions {
+  count?: number;
+  animated?: boolean;
+}
 
-| type   |
-| ------ |
-| \(\)=>number |
+interface CarouselScrollToOptions {
+  index: number;
+  animated?: boolean;
+}
+```
+
+- `next` and `prev` use `count: 1` and `animated: true` by default.
+- `count` must be a positive integer. `0` is a no-op.
+- `scrollTo` requires an in-range raw-data index and defaults to animated.
+- In loop mode, `scrollTo` takes the shortest route and chooses logical forward on an exact tie.
+- `getCurrentIndex()` returns the last settled raw-data index, including during an in-flight transition.
+
+## Pagination
+
+```tsx
+<Pagination count={items.length} progress={progress} />
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `count` | `number` | required | Non-negative integer number of raw-data dots. |
+| `progress` | read-only `SharedValue<number>` | required | Same logical progress produced by Carousel. |
+| `orientation` | `"horizontal" \| "vertical"` | `"horizontal"` | Horizontal start-edge order or vertical top-to-bottom order. |
+| `containerStyle` | `StyleProp<ViewStyle>` | — | Outer style; cannot override `direction` or `flexDirection`. |
+| `dotStyle` | `PaginationDotStyle` | `10 × 10` gray dot | Base dot style. |
+| `activeDotStyle` | `PaginationDotStyle` | dark base-size dot | Active style inheriting omitted base fields. |
+| `onPress` | `(index: number) => void` | — | Makes dots focusable buttons and receives a raw-data index. |
+| `getItemAccessibilityLabel` | `(index, count) => string` | `Slide N of M` | Only valid when `onPress` is present. |
+
+`PaginationDotStyle` includes numeric `width`, `height`, `borderRadius`, `borderWidth`, `opacity`, plus `borderColor` and `backgroundColor`. The component reserves the larger active/base dimensions to avoid layout shift.
+
+Loop progress needs no `loop` prop: each dot compares itself with the nearest equivalent `index + k * count`. `count={0}` renders nothing; `count={1}` keeps the only dot selected.
+
+With `onPress`, each item is an accessible button with selected state. Without it, dots are decorative and hidden from the accessibility tree.
+
+## Accessibility
+
+Carousel hides non-current slides from the accessibility tree. The application owns semantics inside `renderItem` and can compose headings, regions, external navigation buttons, or an interactive Pagination around the viewport.
+
+Avoid making a slide's outer wrapper an accessible group when it contains separately focusable controls: React Native may group descendants and change their focus behavior.
+
+## Thread boundaries
+
+UI-thread/worklet surfaces:
+
+- `progress`, `scrollOffsetValue`, and `relativeProgress`;
+- `itemAnimation`;
+- gesture observer callbacks;
+- Pagination dot interpolation.
+
+JS-thread surfaces:
+
+- `renderItem`, `keyExtractor`, and the `onConfigurePanGesture` configuration call;
+- lifecycle and progress callbacks;
+- ref calls, `onLayout`, Pagination `onPress`, and accessibility labels.

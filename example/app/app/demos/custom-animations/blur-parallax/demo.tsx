@@ -2,7 +2,7 @@ import * as React from "react";
 import { StyleSheet, View } from "react-native";
 import Animated, { interpolate, useAnimatedStyle } from "react-native-reanimated";
 import type { SharedValue } from "react-native-reanimated";
-import Carousel from "react-native-reanimated-carousel";
+import { Carousel } from "react-native-reanimated-carousel";
 
 import { BlurView as _BlurView } from "expo-blur";
 
@@ -37,10 +37,10 @@ function Index() {
           overflow: "visible",
         }}
         data={[...fruitItems, ...fruitItems]}
-        renderItem={({ index, animationValue }) => (
-          <CustomItem index={index} animationValue={animationValue} />
+        renderItem={({ index, relativeProgress }) => (
+          <CustomItem index={index} relativeProgress={relativeProgress} />
         )}
-        customAnimation={parallaxLayout(
+        itemAnimation={parallaxLayout(
           {
             size: PAGE_WIDTH,
             vertical: false,
@@ -51,7 +51,7 @@ function Index() {
             parallaxScrollingOffset: 40,
           }
         )}
-        scrollAnimationDuration={1200}
+        animation={{ type: "timing", duration: 1200 }}
       />
     </View>
   );
@@ -59,16 +59,16 @@ function Index() {
 
 interface ItemProps {
   index: number;
-  animationValue: SharedValue<number>;
+  relativeProgress: SharedValue<number>;
 }
-const CustomItem: React.FC<ItemProps> = ({ index, animationValue }) => {
+const CustomItem: React.FC<ItemProps> = ({ index, relativeProgress }) => {
   const maskStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(animationValue.value, [-1, 0, 1], [1, 0, 1]);
+    const opacity = interpolate(relativeProgress.value, [-1, 0, 1], [1, 0, 1]);
 
     return {
       opacity,
     };
-  }, [animationValue]);
+  }, [relativeProgress]);
 
   return (
     <View

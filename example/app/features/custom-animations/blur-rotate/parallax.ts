@@ -1,13 +1,11 @@
-import { Extrapolation, interpolate } from "react-native-reanimated";
-import type { IComputedDirectionTypes } from "react-native-reanimated-carousel";
-
 import { withAnchorPoint } from "@/utils/anchor-point";
+import { Extrapolation, interpolate } from "react-native-reanimated";
 
-interface TBaseConfig {
+interface BaseConfig {
   size: number;
 }
 
-export interface ILayoutConfig {
+export interface LayoutConfig {
   /**
    * control prev/next item offset.
    * @default 100
@@ -25,15 +23,7 @@ export interface ILayoutConfig {
   parallaxAdjacentItemScale?: number;
 }
 
-export type TParallaxModeProps = IComputedDirectionTypes<{
-  /**
-   * Carousel Animated transitions.
-   */
-  mode?: "parallax";
-  modeConfig?: ILayoutConfig;
-}>;
-
-export function parallaxLayout(baseConfig: TBaseConfig) {
+export function parallaxLayout(baseConfig: BaseConfig) {
   const { size } = baseConfig;
   // const {
   //   parallaxScrollingOffset = 100,

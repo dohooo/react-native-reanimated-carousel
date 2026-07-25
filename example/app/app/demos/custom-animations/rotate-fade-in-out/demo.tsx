@@ -1,7 +1,7 @@
 import * as React from "react";
 import { View } from "react-native";
 import { interpolate } from "react-native-reanimated";
-import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
+import { Carousel, CarouselItemAnimation } from "react-native-reanimated-carousel";
 
 import { SBItem } from "@/components/SBItem";
 import { window } from "@/constants/sizes";
@@ -11,7 +11,7 @@ const PAGE_WIDTH = window.width * scale;
 const PAGE_HEIGHT = 240 * scale;
 
 function Index() {
-  const animationStyle: TAnimationStyle = React.useCallback((value: number) => {
+  const animationStyle: CarouselItemAnimation = React.useCallback((value: number) => {
     "worklet";
 
     const zIndex = interpolate(value, [-1, 0, 1], [10, 20, 30]);
@@ -47,8 +47,8 @@ function Index() {
             <SBItem key={index} index={index} style={{ width: PAGE_WIDTH, height: PAGE_HEIGHT }} />
           );
         }}
-        autoPlay
-        customAnimation={animationStyle}
+        autoplay
+        itemAnimation={animationStyle}
       />
     </View>
   );

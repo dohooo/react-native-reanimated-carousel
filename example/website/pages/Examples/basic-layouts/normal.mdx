@@ -49,7 +49,7 @@ import { renderItem } from "@/utils/render-item";
 import * as React from "react";
 import { View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
-import Carousel from "react-native-reanimated-carousel";
+import { Carousel } from "react-native-reanimated-carousel";
 
 import { window } from "@/constants/sizes";
 
@@ -73,17 +73,12 @@ function Index() {
 			<Carousel
 				testID={"normal-carousel-demo"}
 				loop={true}
-				snapEnabled={true}
-				pagingEnabled={true}
-				autoPlayInterval={2000}
+				autoplayInterval={2000}
 				data={defaultDataWith6Colors}
 				scrollOffsetValue={scrollOffsetValue}
 				style={{ width: window.width, height: 258 }}
 				onScrollStart={() => {
 					console.log("Scroll start");
-				}}
-				onScrollEnd={() => {
-					console.log("Scroll end");
 				}}
 				onSnapToItem={(index: number) => console.log("current index:", index)}
 				renderItem={renderItem({ rounded: true })}

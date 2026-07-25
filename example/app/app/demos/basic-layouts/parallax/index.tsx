@@ -1,7 +1,7 @@
 import * as React from "react";
 import { View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
-import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
+import { Carousel, CarouselRef } from "react-native-reanimated-carousel";
 
 import { CarouselAdvancedSettingsPanel } from "@/components/CarouselAdvancedSettingsPanel";
 import { defaultDataWith6Colors } from "@/components/CarouselBasicSettingsPanel";
@@ -15,39 +15,37 @@ const PAGE_WIDTH = window.width;
 
 function Index() {
   const progress = useSharedValue<number>(0);
-  const ref = React.useRef<ICarouselInstance>(null);
+  const ref = React.useRef<CarouselRef>(null);
   const { advancedSettings, onAdvancedSettingsChange } = useAdvancedSettings({
     // These values will be passed in the Carousel Component as default props
     defaultSettings: {
-      autoPlay: false,
-      autoPlayInterval: 2000,
-      autoPlayReverse: false,
+      autoplay: false,
+      autoplayInterval: 2000,
+      autoplayDirection: "forward",
       data: defaultDataWith6Colors,
       loop: true,
-      pagingEnabled: true,
-      snapEnabled: true,
-      vertical: false,
+      orientation: "horizontal",
+      snapMode: "page",
     },
   });
+  const { itemAnimation: _itemAnimation, layout: _layout, ...carouselSettings } = advancedSettings;
 
   return (
     <Stack flex={1}>
       <CaptureWrapper>
         <Carousel
           ref={ref}
-          {...advancedSettings}
+          {...carouselSettings}
           style={{
             width: PAGE_WIDTH,
             height: 258,
           }}
-          mode="parallax"
-          modeConfig={{
-            parallaxScrollingScale: 0.9,
-            parallaxScrollingOffset: 50,
+          layout={{
+            type: "parallax",
+            scale: 0.9,
+            offset: 50,
           }}
-          onProgressChange={(offsetProgress, absoluteProgress) => {
-            progress.value = absoluteProgress;
-          }}
+          progress={progress}
           renderItem={renderItem({ rounded: true })}
         />
       </CaptureWrapper>

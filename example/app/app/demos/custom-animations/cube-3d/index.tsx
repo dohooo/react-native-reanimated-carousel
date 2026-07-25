@@ -7,7 +7,7 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import type { SharedValue } from "react-native-reanimated";
-import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
+import { Carousel, CarouselItemAnimation } from "react-native-reanimated-carousel";
 
 import { SBItem } from "@/components/SBItem";
 import { window } from "@/constants/sizes";
@@ -39,7 +39,7 @@ function Index() {
 function CubeItem() {
   const PAGE_WIDTH = window.width / 4;
   const PAGE_HEIGHT = PAGE_WIDTH;
-  const animationStyle = React.useCallback<TAnimationStyle>(
+  const animationStyle = React.useCallback<CarouselItemAnimation>(
     (value: number) => {
       "worklet";
       const zIndex = interpolate(value, [-1, 0, 1], [-1000, 0, -1000]);
@@ -88,15 +88,14 @@ function CubeItem() {
           justifyContent: "center",
           alignItems: "center",
         }}
-        pagingEnabled={false}
-        snapEnabled={false}
+        snapMode="none"
         data={[...new Array(6).keys()]}
-        renderItem={({ index, animationValue }) => {
-          return <CustomItem key={index} index={index} animationValue={animationValue} />;
+        renderItem={({ index, relativeProgress }) => {
+          return <CustomItem key={index} index={index} relativeProgress={relativeProgress} />;
         }}
-        customAnimation={animationStyle}
-        scrollAnimationDuration={1200}
-        autoPlay
+        itemAnimation={animationStyle}
+        animation={{ type: "timing", duration: 1200 }}
+        autoplay
       />
     </View>
   );
@@ -104,12 +103,12 @@ function CubeItem() {
 
 interface ItemProps {
   index: number;
-  animationValue: SharedValue<number>;
+  relativeProgress: SharedValue<number>;
 }
-const CustomItem: React.FC<ItemProps> = ({ index, animationValue }) => {
+const CustomItem: React.FC<ItemProps> = ({ index, relativeProgress }) => {
   const maskStyle = useAnimatedStyle(() => {
     const backgroundColor = interpolateColor(
-      animationValue.value,
+      relativeProgress.value,
       [-1, 0, 1],
       ["#000000dd", "transparent", "#000000dd"]
     );
@@ -117,7 +116,7 @@ const CustomItem: React.FC<ItemProps> = ({ index, animationValue }) => {
     return {
       backgroundColor,
     };
-  }, [animationValue]);
+  }, [relativeProgress]);
 
   return (
     <View style={{ flex: 1 }}>

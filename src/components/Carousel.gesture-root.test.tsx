@@ -3,7 +3,7 @@ import { View } from "react-native";
 
 import { render } from "@testing-library/react-native";
 
-import Carousel from "./Carousel";
+import { Carousel } from "./Carousel";
 
 jest.mock("react-native-gesture-handler", () => {
   const actual = jest.requireActual("react-native-gesture-handler");
@@ -25,12 +25,17 @@ jest.mock("./ItemRenderer", () => ({ ItemRenderer: () => null }));
 
 describe("Carousel gesture-handler root", () => {
   it("relies on the root configured by the application", async () => {
+    const { GestureHandlerRootView } = jest.requireActual<
+      typeof import("react-native-gesture-handler")
+    >("react-native-gesture-handler");
     const screen = render(
-      <Carousel
-        data={["A"]}
-        renderItem={({ index }) => <View testID={`carousel-item-${index}`} />}
-        style={{ width: 300, height: 200 }}
-      />
+      <GestureHandlerRootView>
+        <Carousel
+          data={["A"]}
+          renderItem={({ index }) => <View testID={`carousel-item-${index}`} />}
+          style={{ width: 300, height: 200 }}
+        />
+      </GestureHandlerRootView>
     );
 
     expect(screen.queryByLabelText("nested-gesture-handler-root")).toBeNull();

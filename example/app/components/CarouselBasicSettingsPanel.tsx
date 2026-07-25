@@ -1,6 +1,6 @@
 import { window } from "@/constants/sizes";
 import * as React from "react";
-import { TCarouselProps } from "react-native-reanimated-carousel";
+import { CarouselProps } from "react-native-reanimated-carousel";
 import { YStack } from "tamagui";
 import { CustomSelectActionItem, CustomSwitchActionItem } from "./ActionItems";
 
@@ -14,42 +14,29 @@ export const defaultDataWith6Colors = [
 ];
 
 export const getDefaultBasicSettings: () => BasicSettings = () => {
-  const settings = {
-    vertical: false,
-    pagingEnabled: true,
-    snapEnabled: true,
-    loop: true,
-    autoPlay: false,
-    autoPlayReverse: false,
-    autoPlayInterval: 2000,
-    data: defaultDataWith6Colors,
-  };
-  const demission = settings.vertical
-    ? ({
-        vertical: true,
-      } as const)
-    : ({
-        vertical: false,
-      } as const);
-
   return {
-    ...settings,
-    ...demission,
+    orientation: "horizontal",
+    snapMode: "page",
+    loop: true,
+    autoplay: false,
+    autoplayDirection: "forward",
+    autoplayInterval: 2000,
+    data: defaultDataWith6Colors,
+    scrollEnabled: true,
   };
 };
 
 export interface BasicSettings
   extends Pick<
-    TCarouselProps,
+    CarouselProps<string>,
     | "data"
-    | "vertical"
-    | "pagingEnabled"
-    | "snapEnabled"
+    | "orientation"
+    | "snapMode"
     | "loop"
-    | "autoPlay"
-    | "autoPlayInterval"
-    | "autoPlayReverse"
-    | "enabled"
+    | "autoplay"
+    | "autoplayInterval"
+    | "autoplayDirection"
+    | "scrollEnabled"
   > {}
 
 // This component is used to display basic properties, which are related to the basic properties of the carousel
@@ -94,31 +81,35 @@ export function CarouselBasicSettingsPanel({
   > = [
     {
       label: "Enabled",
-      key: "enabled",
+      key: "scrollEnabled",
       type: "switch",
-      value: settings.enabled,
-      onValueChange: (value: boolean) => setSettings({ ...settings, enabled: value }),
+      value: settings.scrollEnabled,
+      onValueChange: (value: boolean) => setSettings({ ...settings, scrollEnabled: value }),
     },
     {
-      label: "Set Vertical",
-      key: "vertical",
-      type: "switch",
-      value: settings.vertical,
-      onValueChange: (value: boolean) => setSettings({ ...settings, vertical: !!value as any }),
+      label: "Orientation",
+      key: "orientation",
+      type: "select",
+      value: settings.orientation,
+      options: [
+        { label: "Horizontal", value: "horizontal" },
+        { label: "Vertical", value: "vertical" },
+      ],
+      onValueChange: (value: string) =>
+        setSettings({ ...settings, orientation: value as BasicSettings["orientation"] }),
     },
     {
-      label: "Paging Enabled",
-      key: "pagingEnabled",
-      type: "switch",
-      value: settings.pagingEnabled,
-      onValueChange: (value: boolean) => setSettings({ ...settings, pagingEnabled: value }),
-    },
-    {
-      label: "Snap Enabled",
-      key: "snapEnabled",
-      type: "switch",
-      value: settings.snapEnabled,
-      onValueChange: (value: boolean) => setSettings({ ...settings, snapEnabled: value }),
+      label: "Snap Mode",
+      key: "snapMode",
+      type: "select",
+      value: settings.snapMode,
+      options: [
+        { label: "Page", value: "page" },
+        { label: "Nearest", value: "nearest" },
+        { label: "None", value: "none" },
+      ],
+      onValueChange: (value: string) =>
+        setSettings({ ...settings, snapMode: value as BasicSettings["snapMode"] }),
     },
     {
       label: "Loop",
@@ -129,23 +120,31 @@ export function CarouselBasicSettingsPanel({
     },
     {
       label: "Auto Play",
-      key: "autoPlay",
+      key: "autoplay",
       type: "switch",
-      value: settings.autoPlay,
-      onValueChange: (value: boolean) => setSettings({ ...settings, autoPlay: value }),
+      value: settings.autoplay,
+      onValueChange: (value: boolean) => setSettings({ ...settings, autoplay: value }),
     },
     {
-      label: "Auto Play Reverse",
-      key: "autoPlayReverse",
-      type: "switch",
-      value: settings.autoPlayReverse,
-      onValueChange: (value: boolean) => setSettings({ ...settings, autoPlayReverse: value }),
+      label: "Auto Play Direction",
+      key: "autoplayDirection",
+      type: "select",
+      value: settings.autoplayDirection,
+      options: [
+        { label: "Forward", value: "forward" },
+        { label: "Backward", value: "backward" },
+      ],
+      onValueChange: (value: string) =>
+        setSettings({
+          ...settings,
+          autoplayDirection: value as BasicSettings["autoplayDirection"],
+        }),
     },
     {
       label: "Interval",
-      key: "autoPlayInterval",
+      key: "autoplayInterval",
       type: "select",
-      value: settings.autoPlayInterval?.toString() ?? "",
+      value: settings.autoplayInterval?.toString() ?? "",
       placeholder: "Select Auto Play Interval",
       options: [
         { label: "200ms", value: "200" },
@@ -154,7 +153,7 @@ export function CarouselBasicSettingsPanel({
         { label: "3000ms", value: "3000" },
       ],
       onValueChange: (value: string) =>
-        setSettings({ ...settings, autoPlayInterval: Number(value) }),
+        setSettings({ ...settings, autoplayInterval: Number(value) }),
     },
   ];
 

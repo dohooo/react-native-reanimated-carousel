@@ -2,16 +2,16 @@ import { useMemo } from "react";
 import type {
   GestureStateChangeEvent,
   GestureUpdateEvent,
-  PanGesture,
   PanGestureHandlerEventPayload,
 } from "react-native-gesture-handler";
 import { Gesture } from "react-native-gesture-handler";
 
+import type { CarouselPanGesture } from "../types";
 import type { GestureConfig } from "./useUpdateGestureConfig";
 import { useUpdateGestureConfig } from "./useUpdateGestureConfig";
 
 export const usePanGestureProxy = (customization: {
-  onConfigurePanGesture?: (gesture: PanGesture) => void;
+  onConfigurePanGesture?: (gesture: CarouselPanGesture) => void;
   onGestureStart: (event: GestureStateChangeEvent<PanGestureHandlerEventPayload>) => void;
   onGestureUpdate: (event: GestureUpdateEvent<PanGestureHandlerEventPayload>) => void;
   onGestureEnd: (

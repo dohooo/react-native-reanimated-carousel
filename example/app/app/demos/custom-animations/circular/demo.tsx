@@ -2,7 +2,7 @@ import * as React from "react";
 import { View } from "react-native";
 import { Pressable } from "react-native-gesture-handler";
 import { interpolate } from "react-native-reanimated";
-import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
+import { Carousel, CarouselItemAnimation } from "react-native-reanimated-carousel";
 
 import { SlideItem } from "@/components/SlideItem";
 import { window } from "@/constants/sizes";
@@ -14,7 +14,7 @@ function Index() {
   const itemSize = 80;
   const centerOffset = PAGE_WIDTH / 2 - itemSize / 2;
 
-  const animationStyle: TAnimationStyle = React.useCallback(
+  const animationStyle: CarouselItemAnimation = React.useCallback(
     (value: number) => {
       "worklet";
 
@@ -79,7 +79,7 @@ function Index() {
             </View>
           </Pressable>
         )}
-        customAnimation={animationStyle}
+        itemAnimation={animationStyle}
       />
     </View>
   );

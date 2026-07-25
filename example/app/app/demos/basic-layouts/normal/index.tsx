@@ -6,23 +6,22 @@ import { CaptureWrapper } from "@/store/CaptureProvider";
 import { renderItem } from "@/utils/render-item";
 import * as React from "react";
 import { useSharedValue } from "react-native-reanimated";
-import type { ICarouselInstance } from "react-native-reanimated-carousel";
-import Carousel from "react-native-reanimated-carousel";
+import type { CarouselRef } from "react-native-reanimated-carousel";
+import { Carousel } from "react-native-reanimated-carousel";
 import { Stack } from "tamagui";
 
 function Index() {
   const scrollOffsetValue = useSharedValue<number>(0);
-  const ref = React.useRef<ICarouselInstance>(null);
+  const ref = React.useRef<CarouselRef>(null);
   const { advancedSettings, onAdvancedSettingsChange } = useAdvancedSettings({
     defaultSettings: {
-      autoPlay: false,
-      autoPlayInterval: 2000,
-      autoPlayReverse: false,
+      autoplay: false,
+      autoplayInterval: 2000,
+      autoplayDirection: "forward",
       data: defaultDataWith6Colors,
       loop: true,
-      pagingEnabled: true,
-      snapEnabled: true,
-      vertical: false,
+      orientation: "horizontal",
+      snapMode: "page",
     },
   });
 
@@ -40,9 +39,6 @@ function Index() {
           }}
           onScrollStart={() => {
             console.log("Scroll start");
-          }}
-          onScrollEnd={() => {
-            console.log("Scroll end");
           }}
           onSnapToItem={(index: number) => console.log("current index:", index)}
           renderItem={renderItem({ rounded: true })}

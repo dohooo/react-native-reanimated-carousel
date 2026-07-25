@@ -9,7 +9,7 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import type { SharedValue } from "react-native-reanimated";
-import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel";
+import { Carousel, CarouselItemAnimation } from "react-native-reanimated-carousel";
 import { scheduleOnRN } from "react-native-worklets";
 
 import { Arrow, ArrowDirection } from "@/components/StackCardsArrow";
@@ -23,7 +23,7 @@ function Index() {
   const directionAnim = useSharedValue<ArrowDirection>(ArrowDirection.IS_VERTICAL);
   const [isVertical, setIsVertical] = React.useState(true);
 
-  const animationStyle: TAnimationStyle = React.useCallback(
+  const animationStyle: CarouselItemAnimation = React.useCallback(
     (value: number) => {
       "worklet";
       const isVertical = directionAnim.value === ArrowDirection.IS_VERTICAL;
@@ -85,17 +85,17 @@ function Index() {
           alignItems: "center",
           backgroundColor: "black",
         }}
-        vertical={isVertical}
+        orientation={isVertical ? "vertical" : "horizontal"}
         data={[...new Array(6).keys()]}
-        renderItem={({ index, animationValue }) => (
+        renderItem={({ index, relativeProgress }) => (
           <Item
             key={index}
             index={index}
-            animationValue={animationValue}
+            relativeProgress={relativeProgress}
             directionAnim={directionAnim}
           />
         )}
-        customAnimation={animationStyle}
+        itemAnimation={animationStyle}
       />
     </View>
   );
@@ -103,14 +103,14 @@ function Index() {
 
 const Item: React.FC<{
   index: number;
-  animationValue: SharedValue<number>;
+  relativeProgress: SharedValue<number>;
   directionAnim: SharedValue<ArrowDirection>;
-}> = ({ animationValue, directionAnim }) => {
+}> = ({ relativeProgress, directionAnim }) => {
   const maskStyle = useAnimatedStyle(() => {
-    const zIndex = interpolate(animationValue.value, [-1, 0, 1], [300, 0, -300]);
+    const zIndex = interpolate(relativeProgress.value, [-1, 0, 1], [300, 0, -300]);
 
     const backgroundColor = interpolateColor(
-      animationValue.value,
+      relativeProgress.value,
       [-1, 0, 1],
       ["transparent", "transparent", "rgba(0,0,0,0.3)"]
     );
@@ -119,7 +119,7 @@ const Item: React.FC<{
       backgroundColor,
       zIndex,
     };
-  }, [animationValue]);
+  }, [relativeProgress]);
 
   return (
     <View

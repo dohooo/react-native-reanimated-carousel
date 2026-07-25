@@ -13,4 +13,8 @@ const withNextra = require("nextra")({
 
 module.exports = withNextra({
   env,
+  output: "export",
+  images: {
+    unoptimized: true,
+  },
 });

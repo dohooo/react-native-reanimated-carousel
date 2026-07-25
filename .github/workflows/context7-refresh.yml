@@ -1,0 +1,50 @@
+name: Refresh Context7 index
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "context7.json"
+      - "README.md"
+      - "docs/**"
+      - "example/website/pages/**"
+      - "scripts/codemods/**"
+      - "src/**"
+      - "package.json"
+      - ".github/workflows/context7-refresh.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  refresh:
+    name: Request Context7 refresh
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check refresh credential
+        id: credential
+        env:
+          CONTEXT7_API_KEY: ${{ secrets.CONTEXT7_API_KEY }}
+        run: |
+          if [ -n "$CONTEXT7_API_KEY" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Set the CONTEXT7_API_KEY repository secret to enable automatic index refreshes."
+          fi
+
+      - name: Request library refresh
+        if: steps.credential.outputs.available == 'true'
+        env:
+          CONTEXT7_API_KEY: ${{ secrets.CONTEXT7_API_KEY }}
+        run: |
+          curl --fail-with-body --retry 3 \
+            --request POST \
+            --url https://context7.com/api/v1/refresh \
+            --header "Authorization: Bearer $CONTEXT7_API_KEY" \
+            --header "Content-Type: application/json" \
+            --data '{"libraryName":"/dohooo/react-native-reanimated-carousel"}'

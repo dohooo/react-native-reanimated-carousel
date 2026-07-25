@@ -1,6 +1,6 @@
 import * as React from "react";
-import type { ICarouselInstance } from "react-native-reanimated-carousel";
-import Carousel from "react-native-reanimated-carousel";
+import type { CarouselRef } from "react-native-reanimated-carousel";
+import { Carousel } from "react-native-reanimated-carousel";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { SBItem } from "@/components/SBItem";
@@ -27,10 +27,10 @@ const data = getImages().slice(0, 68);
 
 function Index() {
   const scrollOffsetValue = useSharedValue<number>(0);
-  const ref = React.useRef<ICarouselInstance>(null);
+  const ref = React.useRef<CarouselRef>(null);
 
   const baseOptions = {
-    vertical: false,
+    orientation: "horizontal",
   } as const;
 
   return (
@@ -46,22 +46,17 @@ function Index() {
         <Carousel
           {...baseOptions}
           loop={false}
-          enabled // Default is true, just for demo
+          scrollEnabled={false}
           ref={ref}
           scrollOffsetValue={scrollOffsetValue}
           testID={"xxx"}
           contentContainerStyle={{ width: "100%" }}
           style={{ width: window.width, height: window.width / 2 }}
-          autoPlay={false}
-          autoPlayInterval={1000}
+          autoplay={false}
+          autoplayInterval={1000}
           data={data}
-          onConfigurePanGesture={(g) => {
-            "worklet";
-            g.enabled(false);
-          }}
-          pagingEnabled
           onSnapToItem={(index) => console.log("current index:", index)}
-          windowSize={2}
+          renderWindowSize={2}
           renderItem={({ index, item }) => {
             return (
               <Animated.View key={index} style={{ flex: 1 }}>

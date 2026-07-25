@@ -1,0 +1,13 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "React Native Reanimated Carousel",
+  "description": "Documentation and public API source for react-native-reanimated-carousel v5.",
+  "branch": "main",
+  "folders": ["src", "docs", "example/website/pages", "scripts/codemods"],
+  "excludeFolders": ["example/website/pages/Examples"],
+  "rules": [
+    "Use only exports documented by src/index.tsx; v5 does not support compatibility aliases or deep imports.",
+    "For v4-to-v5 upgrades, follow example/website/pages/migration-v5.mdx in order and run the codemod before behavioral review.",
+    "Treat progress as a logical fractional index and scrollOffsetValue as signed pixel translation."
+  ]
+}
