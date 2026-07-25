@@ -35,13 +35,13 @@ v5 is currently available under the npm `beta` tag.
 Expo projects should let Expo select compatible Reanimated and Worklets versions:
 
 ```bash
-npx expo install react-native-reanimated-carousel@beta react-native-reanimated react-native-worklets react-native-gesture-handler
+npx expo install react-native-reanimated-carousel react-native-reanimated react-native-worklets react-native-gesture-handler
 ```
 
 React Native Community CLI projects can use their package manager:
 
 ```bash
-yarn add react-native-reanimated-carousel@beta react-native-reanimated react-native-worklets react-native-gesture-handler
+yarn add react-native-reanimated-carousel react-native-reanimated react-native-worklets react-native-gesture-handler
 ```
 
 Follow the official setup instructions for [Reanimated](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started) and [Gesture Handler](https://docs.swmansion.com/react-native-gesture-handler/docs/fundamentals/installation).
@@ -83,7 +83,7 @@ export default function App() {
 
 | Carousel | Expo SDK | React Native | Reanimated | Gesture Handler | Worklets |
 |---|---|---|---|---|---|
-| **v5 beta** | **54–57 validated** | **0.80+** | **4.1.0+** | **>=2.9.0 <3.0.0** | **0.5.0+** |
+| **v5** | **54–57 validated** | **0.80+** | **4.1.0+** | **>=2.9.0 <3.0.0** | **0.5.0+** |
 | v4.x (EOL) | 50–53 | 0.70.3+ | 3.0.0+ | 2.9.0+ | — |
 | v3.x (EOL) | 47–49 | 0.66.0+ | 2.0.0+ | 2.0.0+ | — |
 
