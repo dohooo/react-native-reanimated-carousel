@@ -3,7 +3,7 @@
 <img src="assets/home-banner.png" width="100%"/>
 
 ![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS%20%7C%20Web-brightgreen.svg?style=flat-square&colorB=191A17)
-[![npm beta](https://img.shields.io/npm/v/react-native-reanimated-carousel/beta.svg?style=flat-square&label=beta)](https://www.npmjs.com/package/react-native-reanimated-carousel)
+[![npm](https://img.shields.io/npm/v/react-native-reanimated-carousel.svg?style=flat-square)](https://www.npmjs.com/package/react-native-reanimated-carousel)
 [![npm](https://img.shields.io/npm/dm/react-native-reanimated-carousel.svg?style=flat-square&colorB=007ec6)](https://www.npmjs.com/package/react-native-reanimated-carousel)
 [![github issues](https://img.shields.io/github/issues/dohooo/react-native-reanimated-carousel.svg?style=flat-square)](https://github.com/dohooo/react-native-reanimated-carousel/issues)
 [![discord chat](https://img.shields.io/badge/chat-discord-blue?style=flat&logo=discord)](https://discord.gg/KsXRuDs43y)
@@ -29,8 +29,6 @@ Read https://rn-carousel.dev/migration-v5.md and upgrade react-native-reanimated
 - Stable item identity through `keyExtractor`, horizontal RTL normalization, and package `exports`.
 
 ## Installation
-
-v5 is currently available under the npm `beta` tag.
 
 Expo projects should let Expo select compatible Reanimated and Worklets versions:
 
