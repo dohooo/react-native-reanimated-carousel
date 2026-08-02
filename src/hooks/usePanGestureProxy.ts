@@ -11,14 +11,14 @@ import type { GestureConfig } from "./useUpdateGestureConfig";
 import { useUpdateGestureConfig } from "./useUpdateGestureConfig";
 
 export const usePanGestureProxy = (customization: {
-  onConfigurePanGesture?: (gesture: CarouselPanGesture) => void;
+  onConfigurePanGesture?: ((gesture: CarouselPanGesture) => void) | undefined;
   onGestureStart: (event: GestureStateChangeEvent<PanGestureHandlerEventPayload>) => void;
   onGestureUpdate: (event: GestureUpdateEvent<PanGestureHandlerEventPayload>) => void;
   onGestureEnd: (
     event: GestureStateChangeEvent<PanGestureHandlerEventPayload>,
     success: boolean
   ) => void;
-  options?: GestureConfig;
+  options?: GestureConfig | undefined;
 }) => {
   const {
     onConfigurePanGesture,
@@ -42,11 +42,11 @@ export const usePanGestureProxy = (customization: {
 
     // Save the user defined gesture callbacks
     const userDefinedConflictGestures: {
-      onBegin?: Parameters<(typeof gesture)["onBegin"]>[0];
-      onStart?: Parameters<(typeof gesture)["onStart"]>[0];
-      onUpdate?: Parameters<(typeof gesture)["onUpdate"]>[0];
-      onEnd?: Parameters<(typeof gesture)["onEnd"]>[0];
-      onFinalize?: Parameters<(typeof gesture)["onFinalize"]>[0];
+      onBegin: Parameters<(typeof gesture)["onBegin"]>[0] | undefined;
+      onStart: Parameters<(typeof gesture)["onStart"]>[0] | undefined;
+      onUpdate: Parameters<(typeof gesture)["onUpdate"]>[0] | undefined;
+      onEnd: Parameters<(typeof gesture)["onEnd"]>[0] | undefined;
+      onFinalize: Parameters<(typeof gesture)["onFinalize"]>[0] | undefined;
     } = {
       onBegin: undefined,
       onStart: undefined,

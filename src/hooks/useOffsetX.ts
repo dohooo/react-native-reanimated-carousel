@@ -8,9 +8,9 @@ export interface OffsetOptions {
   size: number;
   handlerOffset: SharedValue<number>;
   dataLength: number;
-  type?: "positive" | "negative";
-  viewCount?: number;
-  loop?: boolean;
+  type?: "positive" | "negative" | undefined;
+  viewCount?: number | undefined;
+  loop?: boolean | undefined;
 }
 
 export const useOffsetX = (opts: OffsetOptions, visibleRanges: VisibleRangesValue) => {
