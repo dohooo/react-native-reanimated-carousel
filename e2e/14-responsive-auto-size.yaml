@@ -70,23 +70,32 @@ name: Responsive Auto Size
     visible: "Basic Layouts"
     timeout: 180000
 
-- openLink: "rnrc-example-app://demos/e2e-testing/web-release-smoke"
-
-- extendedWaitUntil:
-    visible: "Open"
-    timeout: 5000
-    optional: true
-
-- tapOn:
-    text: "Open"
-    optional: true
-
-- waitForAnimationToEnd:
-    timeout: 10000
+# Deep-link delivery to the freshly launched app is unreliable on CI
+# simulators: the URL can be silently dropped while the JS side is still
+# booting, and iOS can show a system confirmation dialog (`Open in "app"?`)
+# well after any fixed wait window — while it is up it blocks the whole UI.
+# Re-send the link every pass and dismiss the dialog whenever it appears;
+# on Android (no dialog, reliable delivery) the loop exits on the first pass.
+- repeat:
+    times: 8
+    while:
+      notVisible: "Web Release Smoke"
+    commands:
+      - openLink: "rnrc-example-app://demos/e2e-testing/web-release-smoke"
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn:
+                text: "Open"
+      - extendedWaitUntil:
+          visible: "Web Release Smoke"
+          timeout: 20000
+          optional: true
 
 - extendedWaitUntil:
     visible: "Web Release Smoke"
-    timeout: 180000
+    timeout: 30000
 
 - extendedWaitUntil:
     visible: "Horizontal Item Width: 320"

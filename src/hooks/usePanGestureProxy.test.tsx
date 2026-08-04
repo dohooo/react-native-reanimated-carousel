@@ -371,3 +371,36 @@ describe("Filling event list with defaults", () => {
     expect(handlers.end).toHaveBeenCalledTimes(1);
   });
 });
+
+describe("issue #942 touchAction configuration", () => {
+  it("applies config.touchAction set through the typed facade to the real gesture", () => {
+    let configuredPan: LegacyPanGesture | undefined;
+
+    function TouchActionCarousel() {
+      const pan = usePanGestureProxy({
+        onConfigurePanGesture: (gesture) => {
+          // Typed public path from issue #942 — no `as any` / PanGesture cast.
+          gesture.config.touchAction = "pan-y";
+        },
+        onGestureStart: jest.fn(),
+        onGestureUpdate: jest.fn(),
+        onGestureEnd: jest.fn(),
+      });
+      configuredPan = pan;
+
+      return (
+        <GestureDetector gesture={pan}>
+          <Text>touch-action</Text>
+        </GestureDetector>
+      );
+    }
+
+    render(
+      <GestureHandlerRootView>
+        <TouchActionCarousel />
+      </GestureHandlerRootView>
+    );
+
+    expect(configuredPan?.config.touchAction).toBe("pan-y");
+  });
+});
