@@ -72,21 +72,30 @@ name: Responsive Auto Size
 
 - openLink: "rnrc-example-app://demos/e2e-testing/web-release-smoke"
 
-- extendedWaitUntil:
-    visible: "Open"
-    timeout: 5000
-    optional: true
-
-- tapOn:
-    text: "Open"
-    optional: true
-
-- waitForAnimationToEnd:
-    timeout: 10000
+# The deep link can trigger an iOS system confirmation dialog (`Open in "app"?`).
+# On slow CI simulators that dialog can appear well after any fixed wait window,
+# and while it is up it blocks the whole UI. Interleave dismissing the dialog
+# with waiting for the target screen so the dialog is handled whenever it
+# appears; on Android (no dialog) the loop exits on the first pass.
+- repeat:
+    times: 12
+    while:
+      notVisible: "Web Release Smoke"
+    commands:
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn:
+                text: "Open"
+      - extendedWaitUntil:
+          visible: "Web Release Smoke"
+          timeout: 15000
+          optional: true
 
 - extendedWaitUntil:
     visible: "Web Release Smoke"
-    timeout: 180000
+    timeout: 30000
 
 - extendedWaitUntil:
     visible: "Horizontal Item Width: 320"
