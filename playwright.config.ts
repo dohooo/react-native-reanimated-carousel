@@ -4,6 +4,7 @@ import { defineConfig, devices } from "@playwright/test";
 const packedConsumerDir = process.env.PACKED_EXPO_CONSUMER_DIR;
 const packedPackageSmoke = Boolean(packedConsumerDir);
 const port = packedPackageSmoke ? 8003 : 8002;
+const ciConfig = process.env.CI ? { workers: 1 } : {};
 
 export default defineConfig({
   testDir: "./e2e-web",
@@ -12,7 +13,7 @@ export default defineConfig({
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
   failOnFlakyTests: Boolean(process.env.CI),
-  workers: process.env.CI ? 1 : undefined,
+  ...ciConfig,
   reporter: process.env.CI ? [["html", { open: "never" }], ["list"]] : "list",
   use: {
     baseURL: `http://127.0.0.1:${port}`,
