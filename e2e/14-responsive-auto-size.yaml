@@ -70,18 +70,18 @@ name: Responsive Auto Size
     visible: "Basic Layouts"
     timeout: 180000
 
-- openLink: "rnrc-example-app://demos/e2e-testing/web-release-smoke"
-
-# The deep link can trigger an iOS system confirmation dialog (`Open in "app"?`).
-# On slow CI simulators that dialog can appear well after any fixed wait window,
-# and while it is up it blocks the whole UI. Interleave dismissing the dialog
-# with waiting for the target screen so the dialog is handled whenever it
-# appears; on Android (no dialog) the loop exits on the first pass.
+# Deep-link delivery to the freshly launched app is unreliable on CI
+# simulators: the URL can be silently dropped while the JS side is still
+# booting, and iOS can show a system confirmation dialog (`Open in "app"?`)
+# well after any fixed wait window — while it is up it blocks the whole UI.
+# Re-send the link every pass and dismiss the dialog whenever it appears;
+# on Android (no dialog, reliable delivery) the loop exits on the first pass.
 - repeat:
-    times: 12
+    times: 8
     while:
       notVisible: "Web Release Smoke"
     commands:
+      - openLink: "rnrc-example-app://demos/e2e-testing/web-release-smoke"
       - runFlow:
           when:
             visible: "Open"
@@ -90,7 +90,7 @@ name: Responsive Auto Size
                 text: "Open"
       - extendedWaitUntil:
           visible: "Web Release Smoke"
-          timeout: 15000
+          timeout: 20000
           optional: true
 
 - extendedWaitUntil:
