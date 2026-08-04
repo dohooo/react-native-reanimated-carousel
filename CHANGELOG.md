@@ -1,5 +1,19 @@
 # react-native-reanimated-carousel
 
+## 5.1.0
+
+### Minor Changes
+
+- [#945](https://github.com/dohooo/react-native-reanimated-carousel/pull/945) [`bda2f0c`](https://github.com/dohooo/react-native-reanimated-carousel/commit/bda2f0c109c752347f40e82717c97f6b5c7b6420) Thanks [@dohooo](https://github.com/dohooo)! - Expose the web-only `touchAction` option on `CarouselPanGesture.config` so `onConfigurePanGesture` can set it (e.g. `"pan-y"`) without casting.
+
+### Patch Changes
+
+- [#946](https://github.com/dohooo/react-native-reanimated-carousel/pull/946) [`ec3c123`](https://github.com/dohooo/react-native-reanimated-carousel/commit/ec3c123c4668ce4874d3c5454e17bf97960bad92) Thanks [@dohooo](https://github.com/dohooo)! - Allow `react-native-gesture-handler` 3.x as a peer dependency, matching the version shipped with Expo SDK 57 templates.
+
+- [#944](https://github.com/dohooo/react-native-reanimated-carousel/pull/944) [`993bba6`](https://github.com/dohooo/react-native-reanimated-carousel/commit/993bba6b418cb3b6224ab9777d07ac0feeee8fb7) Thanks [@dohooo](https://github.com/dohooo)! - Fix Pagination re-renders triggering the Reanimated strict mode warning about reading `value` during component render.
+
+- [#943](https://github.com/dohooo/react-native-reanimated-carousel/pull/943) [`7e47bdb`](https://github.com/dohooo/react-native-reanimated-carousel/commit/7e47bdb6d559076c12a834271accc7c615a2ac27) Thanks [@cyphercodes](https://github.com/cyphercodes)! - Fix source type-checking when `exactOptionalPropertyTypes` and `noUncheckedIndexedAccess` are enabled.
+
 ## 5.0.0
 
 ### Major Changes
