@@ -19,15 +19,15 @@ interface Props {
   rawDataLength: number;
   loop: boolean;
   size: number;
-  renderWindowSize?: number;
+  renderWindowSize?: number | undefined;
   defaultIndex: number;
   autoFillData: boolean;
   offsetX: SharedValue<number>;
   handlerOffset: SharedValue<number>;
   layoutConfig: ItemAnimationStyle;
   renderItem: CarouselRenderItem<unknown>;
-  itemAnimation?: CarouselItemAnimation;
-  keyExtractor?: (item: unknown, index: number) => string;
+  itemAnimation?: CarouselItemAnimation | undefined;
+  keyExtractor?: ((item: unknown, index: number) => string) | undefined;
 }
 
 export const ItemRenderer: FC<Props> = (props) => {

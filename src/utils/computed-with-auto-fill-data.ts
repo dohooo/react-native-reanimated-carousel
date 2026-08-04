@@ -82,9 +82,9 @@ export function computedFillDataWithAutoFillData<T>(
   if (isAutoFillData({ loop, autoFillData })) {
     switch (dataLength) {
       case SINGLE_ITEM:
-        return [data[0], data[0], data[0]];
+        return [data[0]!, data[0]!, data[0]!];
       case DOUBLE_ITEM:
-        return [data[0], data[1], data[0], data[1]];
+        return [data[0]!, data[1]!, data[0]!, data[1]!];
     }
   }
 

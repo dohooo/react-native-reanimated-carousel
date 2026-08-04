@@ -8,8 +8,8 @@ import { getLogicalProgress } from "../utils/carousel-math";
 export function useOnProgressChange(options: {
   loop: boolean;
   offset: SharedValue<number>;
-  onProgressChange?: CarouselProgressChangeHandler;
-  progress?: SharedValue<number>;
+  onProgressChange?: CarouselProgressChangeHandler | undefined;
+  progress?: SharedValue<number> | undefined;
   rawDataLength: number;
   size: number;
   sizeReady: SharedValue<boolean>;

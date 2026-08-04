@@ -27,9 +27,9 @@ function normalizeLoopIndex(currentIndex: number, total: number) {
 
 export function computeVisibleRanges(params: {
   total: number;
-  windowSize?: number;
+  windowSize?: number | undefined;
   currentIndex: number;
-  loop?: boolean;
+  loop?: boolean | undefined;
 }): VisibleRanges {
   "worklet";
 
@@ -91,9 +91,9 @@ export function computeVisibleRanges(params: {
 export function useVisibleRanges(options: {
   total: number;
   viewSize: number;
-  windowSize?: number;
+  windowSize?: number | undefined;
   translation: SharedValue<number>;
-  loop?: boolean;
+  loop?: boolean | undefined;
 }): VisibleRangesValue {
   const { total = 0, viewSize, translation, windowSize: _windowSize, loop } = options;
 

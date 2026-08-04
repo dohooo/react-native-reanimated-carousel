@@ -127,7 +127,7 @@ export function reconcileOffsetAfterDataChange(params: {
   nextCount: number;
   defaultIndex: number;
   loop: boolean;
-  retainedIndex?: number;
+  retainedIndex?: number | undefined;
 }): number {
   "worklet";
 

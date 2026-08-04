@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 export interface GestureConfig {
-  enabled?: boolean;
+  enabled?: boolean | undefined;
 }
 
 type ConfigurablePanGesture = {

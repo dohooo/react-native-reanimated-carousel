@@ -27,9 +27,9 @@ interface CarouselControllerOptions {
   rawDataLength: number;
   handlerOffset: SharedValue<number>;
   animation: CarouselAnimation;
-  defaultIndex?: number;
-  onScrollStart?: () => void;
-  onMovementEnd?: (index: number) => void;
+  defaultIndex?: number | undefined;
+  onScrollStart?: (() => void) | undefined;
+  onMovementEnd?: ((index: number) => void) | undefined;
 }
 
 export interface CarouselController {

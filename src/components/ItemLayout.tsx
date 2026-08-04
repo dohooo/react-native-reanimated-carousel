@@ -22,8 +22,8 @@ import { sanitizeAnimationStyle } from "../utils/sanitize-animation-style";
 export type ItemAnimationStyle = CarouselItemAnimation;
 
 export function resolveItemMainAxisSize(params: {
-  explicitSize?: number;
-  effectivePageSize?: number;
+  explicitSize?: number | undefined;
+  effectivePageSize?: number | undefined;
   measuredSize: number | null;
 }) {
   "worklet";

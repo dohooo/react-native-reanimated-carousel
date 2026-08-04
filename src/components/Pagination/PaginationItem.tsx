@@ -45,12 +45,12 @@ function interpolateDotColor(
 }
 
 export function PaginationItem(props: {
-  activeDotStyle?: PaginationDotStyle;
+  activeDotStyle?: PaginationDotStyle | undefined;
   count: number;
-  dotStyle?: PaginationDotStyle;
+  dotStyle?: PaginationDotStyle | undefined;
   index: number;
-  label?: string;
-  onPress?: (index: number) => void;
+  label?: string | undefined;
+  onPress?: ((index: number) => void) | undefined;
   progress: PaginationProps["progress"];
 }) {
   const { activeDotStyle, count, dotStyle, index, label, onPress, progress } = props;
