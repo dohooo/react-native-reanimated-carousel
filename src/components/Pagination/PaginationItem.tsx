@@ -71,8 +71,12 @@ export function PaginationItem(props: {
   const activeBackgroundColor = activeDotStyle?.backgroundColor ?? DEFAULT_ACTIVE_DOT_COLOR;
   const activeOpacity = activeDotStyle?.opacity ?? baseOpacity;
 
+  // Lazy initializer: React only invokes it on the first render, which is
+  // exempt from Reanimated's "reading `value` during render" strict check.
+  // A plain expression would re-read `progress.value` on every re-render
+  // and trigger the warning (issue #940).
   const [selected, setSelected] = React.useState(
-    count === 1 || getPaginationSelectedIndex(progress.value, count) === index
+    () => count === 1 || getPaginationSelectedIndex(progress.value, count) === index
   );
 
   useAnimatedReaction(
