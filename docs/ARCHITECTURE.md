@@ -233,6 +233,8 @@ The public `CarouselPanGesture` interface is handwritten. Chained methods return
 - `runOnJS` — observers use worklets and explicit `scheduleOnRN`;
 - `manualActivation` — would bypass Carousel's state machine.
 
+It exposes a read-only `config` view limited to the web-only `touchAction` option, so mobile-web consumers can keep native page scrolling (for example `"pan-y"`) without casting to the raw `PanGesture`.
+
 ## Snap and animation
 
 `snapMode` selects gesture release behavior:

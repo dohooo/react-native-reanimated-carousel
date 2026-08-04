@@ -5,6 +5,7 @@ import type {
   GestureType,
   GestureUpdateEvent,
   MouseButton,
+  PanGesture,
   PanGestureChangeEventPayload,
   PanGestureHandlerEventPayload,
   PanGestureHandlerProps,
@@ -148,6 +149,16 @@ export type CarouselItemAnimation = (relativeProgress: number, index: number) =>
  * methods such as `enabled`, `runOnJS`, or `manualActivation`.
  */
 export interface CarouselPanGesture {
+  /**
+   * Controlled view of the underlying RNGH pan gesture configuration.
+   *
+   * Exposes the web-only `touchAction` option (e.g. `"pan-y"` so a
+   * horizontal carousel nested in a vertically scrollable page keeps native
+   * vertical scrolling on mobile web) without casting away the facade.
+   * Ownership-changing options such as `enabled`, `runOnJS`, or
+   * `manualActivation` intentionally stay hidden.
+   */
+  readonly config: Pick<PanGesture["config"], "touchAction">;
   activeOffsetX(offset: number | [start: number, end: number]): this;
   activeOffsetY(offset: number | [start: number, end: number]): this;
   failOffsetX(offset: number | [start: number, end: number]): this;
