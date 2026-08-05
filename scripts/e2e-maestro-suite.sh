@@ -110,11 +110,18 @@ for flow in "${FLOWS[@]}"; do
     fi
 
     if [ "$FLOW_RETRY_DRIVER_STARTUP_TIMEOUTS_ONLY" = "1" ]; then
-      if [ "$flow_status" -ne 124 ] || grep -q "Running on " "$flow_log_file"; then
+      # A dropped Maestro<->device connection surfaces as a gRPC UNAVAILABLE
+      # or a closed adb-server socket mid-flow (often followed by the outer
+      # timeout killing the hung command). That is infrastructure, not a test
+      # verdict, so it stays retryable even after the Flow has started.
+      if grep -Eq 'StatusRuntimeException: UNAVAILABLE|Command failed \(tcp:[0-9]+\): closed' "$flow_log_file"; then
+        echo "Retrying Android Maestro driver disconnect."
+      elif [ "$flow_status" -ne 124 ] || grep -q "Running on " "$flow_log_file"; then
         echo "Not retrying because the Maestro Flow started or did not time out."
         break
+      else
+        echo "Retrying Maestro driver startup timeout before the Flow began."
       fi
-      echo "Retrying Maestro driver startup timeout before the Flow began."
     elif [ "$FLOW_RETRY_IOS_TRANSIENT_DRIVER_FAILURES_ONLY" = "1" ]; then
       if [ "$flow_status" -eq 124 ] && grep -q "kAXErrorInvalidUIElement" "$flow_log_file"; then
         echo "Retrying iOS view-hierarchy driver timeout."
