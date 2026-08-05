@@ -11,7 +11,13 @@ const repoRoot = path.resolve(
   ".."
 );
 
-async function runFixture({ exitCode = 1, failure, legacyFilter = false }) {
+async function runFixture({
+  exitCode = 1,
+  failure,
+  legacyFilter = false,
+  startupTimeoutFilter = false,
+  hang = false,
+}) {
   const fixtureRoot = await mkdtemp(path.join(tmpdir(), "maestro-retry-"));
 
   try {
@@ -39,6 +45,9 @@ echo "$attempt" > "$FAKE_MAESTRO_STATE"
 
 if [ "$attempt" -eq 1 ] || [ "$FAKE_MAESTRO_RECOVERS" != "1" ]; then
   echo "$FAKE_MAESTRO_FAILURE"
+  if [ "\${FAKE_MAESTRO_HANG:-0}" = "1" ]; then
+    sleep 30
+  fi
   exit "$FAKE_MAESTRO_EXIT_CODE"
 fi
 
@@ -57,6 +66,7 @@ echo "Flow completed"
           E2E_APP_ID: "com.example",
           FAKE_MAESTRO_EXIT_CODE: String(exitCode),
           FAKE_MAESTRO_FAILURE: failure,
+          FAKE_MAESTRO_HANG: hang ? "1" : "0",
           FAKE_MAESTRO_RECOVERS: "1",
           FAKE_MAESTRO_STATE: statePath,
           GITHUB_WORKSPACE: repoRoot,
@@ -65,10 +75,15 @@ echo "Flow completed"
           MAESTRO_FLOW_LOG_DIR: logDir,
           MAESTRO_FLOW_MAX_ATTEMPTS: "2",
           MAESTRO_FLOW_TIMEOUT_SECONDS: "5",
+          MAESTRO_RETRY_DRIVER_STARTUP_TIMEOUTS_ONLY: startupTimeoutFilter
+            ? "1"
+            : "0",
           MAESTRO_RETRY_IOS_VIEW_HIERARCHY_TIMEOUTS_ONLY: legacyFilter
             ? "1"
             : "0",
-          MAESTRO_RETRY_IOS_TRANSIENT_DRIVER_FAILURES_ONLY: "1",
+          MAESTRO_RETRY_IOS_TRANSIENT_DRIVER_FAILURES_ONLY: startupTimeoutFilter
+            ? "0"
+            : "1",
           MAESTRO_REUSE_DRIVER_BETWEEN_FLOWS: "0",
         },
       }
@@ -104,6 +119,36 @@ test("preserves retries for an iOS view-hierarchy timeout", async () => {
   assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
   assert.equal(attempts, 2);
   assert.match(result.stdout, /Retrying iOS view-hierarchy driver timeout/);
+});
+
+test("retries an Android mid-flow driver disconnect under the startup-timeout filter", async () => {
+  const { attempts, result } = await runFixture({
+    exitCode: 1,
+    failure:
+      "Running on emulator-5554\n  Tap on id: btn-next...io.grpc.StatusRuntimeException: UNAVAILABLE",
+    startupTimeoutFilter: true,
+    hang: true,
+  });
+
+  assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
+  assert.equal(attempts, 2);
+  assert.match(result.stdout, /Retrying Android Maestro driver disconnect/);
+});
+
+test("still does not retry a started flow that times out without a disconnect signature", async () => {
+  const { attempts, result } = await runFixture({
+    exitCode: 1,
+    failure: "Running on emulator-5554\nAssertion is false: something",
+    startupTimeoutFilter: true,
+    hang: true,
+  });
+
+  assert.equal(result.status, 1, `${result.stdout}\n${result.stderr}`);
+  assert.equal(attempts, 1);
+  assert.match(
+    result.stdout,
+    /Not retrying because the Maestro Flow started or did not time out/
+  );
 });
 
 test("does not retry a non-driver Maestro failure", async () => {
