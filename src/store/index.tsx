@@ -1,6 +1,6 @@
 import React from "react";
 
-import { SharedValue, useSharedValue } from "react-native-reanimated";
+import { type SharedValue, useSharedValue } from "react-native-reanimated";
 import type { CarouselCommonVariables } from "../hooks/useCommonVariables";
 import type { InitializedCarouselProps } from "../hooks/useInitProps";
 
