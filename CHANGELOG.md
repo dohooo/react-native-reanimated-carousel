@@ -1,5 +1,11 @@
 # react-native-reanimated-carousel
 
+## 5.1.1
+
+### Patch Changes
+
+- [#948](https://github.com/dohooo/react-native-reanimated-carousel/pull/948) [`715b737`](https://github.com/dohooo/react-native-reanimated-carousel/commit/715b7376f14b936580958658327fa7bc702891f5) Thanks [@RakaDoank](https://github.com/RakaDoank)! - Fix source type-checking when `verbatimModuleSyntax` is enabled.
+
 ## 5.1.0
 
 ### Minor Changes
