@@ -21,7 +21,8 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "esnext",
-    "types": ["jest", "node"]
+    "types": ["jest", "node"],
+    "verbatimModuleSyntax": true
   },
   "exclude": ["example", "e2e/fixtures", "node_modules", "**/*.test.ts", "**/*.test.tsx"]
 }
