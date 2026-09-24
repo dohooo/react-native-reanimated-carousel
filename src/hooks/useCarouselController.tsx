@@ -18,6 +18,7 @@ import {
   positiveModulo,
 } from "../utils/carousel-math";
 import { dealWithAnimation } from "../utils/deal-with-animation";
+import { webOnlyDependencies } from "../utils/web-only-dependencies";
 
 interface CarouselControllerOptions {
   ref: React.ForwardedRef<CarouselRef>;
@@ -106,7 +107,7 @@ export function useCarouselController(options: CarouselControllerOptions): Carou
       index.value = physicalIndex;
       scheduleOnRN(setLiveRawIndex, rawIndex);
     },
-    [dataLength, handlerOffset, index, rawDataLength, size]
+    webOnlyDependencies([dataLength, handlerOffset, index, rawDataLength, size])
   );
 
   const settle = React.useCallback(

@@ -21,6 +21,7 @@ import { useGlobalState } from "../store";
 import { toLogicalGestureValue } from "../utils/carousel-direction";
 import { computeGestureTranslation } from "../utils/compute-gesture-translation";
 import { dealWithAnimation } from "../utils/deal-with-animation";
+import { webOnlyDependencies } from "../utils/web-only-dependencies";
 
 interface Props {
   size: number;
@@ -63,7 +64,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
   const isVertical = orientation === "vertical";
 
   const maxPage = dataLength;
-  const isHorizontal = useDerivedValue(() => !isVertical, [isVertical]);
+  const isHorizontal = useDerivedValue(() => !isVertical, webOnlyDependencies([isVertical]));
   const max = useSharedValue(0);
   const panOffset = useSharedValue<number | undefined>(undefined); // set to undefined when not actively in a pan gesture
   const touching = useSharedValue(false);
@@ -71,10 +72,11 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
   const hasStartedMovement = useSharedValue(false);
   const scrollEndTranslation = useSharedValue(0);
   const scrollEndVelocity = useSharedValue(0);
+  const sizeReadyDependencies = webOnlyDependencies([resolvedSize, sizePhase]);
   const sizeReady = useDerivedValue(() => {
     const currentSize = resolvedSize.value ?? 0;
     return sizePhase.value === "ready" && currentSize > 0;
-  }, [resolvedSize, sizePhase]);
+  }, sizeReadyDependencies);
 
   // Get the limit of the scroll.
   const getLimit = React.useCallback(() => {
@@ -238,7 +240,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
     () => {
       if (snapMode !== "page") resetBoundary();
     },
-    [resetBoundary, snapMode]
+    webOnlyDependencies([resetBoundary, snapMode])
   );
 
   const onGestureStart = useCallback(
