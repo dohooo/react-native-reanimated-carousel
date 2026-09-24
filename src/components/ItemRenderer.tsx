@@ -11,6 +11,7 @@ import type { VisibleRanges } from "../hooks/useVisibleRanges";
 import { computeVisibleRanges, useVisibleRanges } from "../hooks/useVisibleRanges";
 import type { CarouselItemAnimation, CarouselRenderItem } from "../types";
 import { computedRealIndexWithAutoFillData } from "../utils/computed-with-auto-fill-data";
+import { webOnlyDependencies } from "../utils/web-only-dependencies";
 
 interface Props {
   data: unknown[];
@@ -74,7 +75,7 @@ export const ItemRenderer: FC<Props> = (props) => {
   useAnimatedReaction(
     () => visibleRanges.value,
     (ranges) => scheduleOnRN(setDisplayedItems, ranges),
-    [visibleRanges]
+    webOnlyDependencies([visibleRanges])
   );
 
   return (

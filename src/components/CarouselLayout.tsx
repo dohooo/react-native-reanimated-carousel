@@ -8,6 +8,7 @@ import { useLayoutConfig } from "../hooks/useLayoutConfig";
 import { useOnProgressChange } from "../hooks/useOnProgressChange";
 import { useGlobalState } from "../store";
 import type { CarouselRef } from "../types";
+import { webOnlyDependencies } from "../utils/web-only-dependencies";
 import { ItemRenderer } from "./ItemRenderer";
 import { ScrollViewGesture } from "./ScrollViewGesture";
 
@@ -66,11 +67,13 @@ export const CarouselLayout = React.forwardRef<CarouselRef>((_props, ref) => {
   const { size, handlerOffset, resolvedSize, sizePhase, sizeExplicit } = common;
   const layoutConfig = useLayoutConfig({ ...props, size });
 
+  const isSizeReadyDependencies = webOnlyDependencies([resolvedSize, sizePhase]);
   const isSizeReady = useDerivedValue(() => {
     const currentSize = resolvedSize.value ?? 0;
     return sizePhase.value === "ready" && currentSize > 0;
-  }, [resolvedSize, sizePhase]);
+  }, isSizeReadyDependencies);
 
+  const offsetXDependencies = webOnlyDependencies([loop, dataLength, handlerOffset, resolvedSize]);
   const offsetX = useDerivedValue(() => {
     const currentSize = resolvedSize.value ?? 0;
     if (currentSize <= 0) return 0;
@@ -83,7 +86,7 @@ export const CarouselLayout = React.forwardRef<CarouselRef>((_props, ref) => {
 
     const x = value % totalSize;
     return Number.isNaN(x) ? 0 : x;
-  }, [loop, dataLength, handlerOffset, resolvedSize]);
+  }, offsetXDependencies);
 
   useOnProgressChange({
     loop,
@@ -135,7 +138,7 @@ export const CarouselLayout = React.forwardRef<CarouselRef>((_props, ref) => {
       if (state.ready) scheduleOnRN(triggerAutoPlay);
       else scheduleOnRN(pauseAutoPlay);
     },
-    [autoplay]
+    webOnlyDependencies([autoplay])
   );
 
   const scrollViewGestureOnScrollStart = React.useCallback(() => {
@@ -158,6 +161,14 @@ export const CarouselLayout = React.forwardRef<CarouselRef>((_props, ref) => {
     StyleSheet.flatten(contentContainerStyle as StyleProp<ViewStyle>) || {};
   const flattenedStyle = StyleSheet.flatten(style) || {};
 
+  const layoutStyleDependencies = webOnlyDependencies([
+    flattenedStyle,
+    isSizeReady,
+    isVertical,
+    resolvedSize,
+    sizePhase,
+    sizeExplicit,
+  ]);
   const layoutStyle = useAnimatedStyle(() => {
     const measuredSize = resolvedSize.value ?? 0;
     const { width, height } = resolveCarouselLayoutStyle({
@@ -172,7 +183,7 @@ export const CarouselLayout = React.forwardRef<CarouselRef>((_props, ref) => {
       height,
       opacity: isSizeReady.value ? 1 : 0,
     };
-  }, [flattenedStyle, isSizeReady, isVertical, resolvedSize, sizePhase, sizeExplicit]);
+  }, layoutStyleDependencies);
 
   return (
     <View testID={testID} style={[styles.layoutContainer, style]} onLayout={props.onLayout}>

@@ -12,6 +12,7 @@ import {
   reconcileOffsetAfterDataChange,
 } from "../utils/carousel-math";
 import { computeOffsetIfSizeChanged } from "../utils/compute-offset-if-size-changed";
+import { webOnlyDependencies } from "../utils/web-only-dependencies";
 
 export type CarouselSizePhase = "pending" | "ready" | "updating";
 
@@ -97,7 +98,7 @@ export function useCommonVariables(
         scheduleOnRN(syncSize, current);
       }
     },
-    [syncSize]
+    webOnlyDependencies([syncSize])
   );
 
   React.useEffect(() => {
@@ -242,7 +243,7 @@ export function useCommonVariables(
       prevSize.value = currentSize;
       sizePhase.value = "ready";
     },
-    [dataLength, defaultIndex, hasInitializedOffset, resolvedSize, sizePhase]
+    webOnlyDependencies([dataLength, defaultIndex, hasInitializedOffset, resolvedSize, sizePhase])
   );
 
   return {
