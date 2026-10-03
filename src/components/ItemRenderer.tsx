@@ -8,7 +8,11 @@ import type { ItemAnimationStyle } from "./ItemLayout";
 import { ItemLayout } from "./ItemLayout";
 
 import type { VisibleRanges } from "../hooks/useVisibleRanges";
-import { computeVisibleRanges, useVisibleRanges } from "../hooks/useVisibleRanges";
+import {
+  computeVisibleRanges,
+  normalizeWindowSize,
+  useVisibleRanges,
+} from "../hooks/useVisibleRanges";
 import type { CarouselItemAnimation, CarouselRenderItem } from "../types";
 import { computedRealIndexWithAutoFillData } from "../utils/computed-with-auto-fill-data";
 import { webOnlyDependencies } from "../utils/web-only-dependencies";
@@ -72,6 +76,10 @@ export const ItemRenderer: FC<Props> = (props) => {
 
   const [displayedItems, setDisplayedItems] = React.useState<VisibleRanges>(initialRanges);
 
+  // When the window covers every item, the ranges always span the whole list. Skip them so a
+  // stale range from before a data change cannot unmount keyed items for one render.
+  const rendersAllItems = normalizeWindowSize(dataLength, renderWindowSize) >= dataLength;
+
   useAnimatedReaction(
     () => visibleRanges.value,
     (ranges) => scheduleOnRN(setDisplayedItems, ranges),
@@ -91,6 +99,7 @@ export const ItemRenderer: FC<Props> = (props) => {
         const { negativeRange, positiveRange } = displayedItems;
 
         const shouldRender =
+          rendersAllItems ||
           (index >= negativeRange[0] && index <= negativeRange[1]) ||
           (index >= positiveRange[0] && index <= positiveRange[1]);
 
