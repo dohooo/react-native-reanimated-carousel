@@ -11,7 +11,7 @@ export interface VisibleRanges {
 
 export type VisibleRangesValue = SharedValue<VisibleRanges>;
 
-function normalizeWindowSize(total: number, windowSize?: number) {
+export function normalizeWindowSize(total: number, windowSize?: number) {
   "worklet";
 
   return typeof windowSize === "number" && Number.isFinite(windowSize) && windowSize > 0
