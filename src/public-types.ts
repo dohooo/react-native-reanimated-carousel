@@ -76,6 +76,7 @@ export type CarouselProps<Item> = {
   itemSize?: number;
   scrollEnabled?: boolean;
   snapMode?: CarouselSnapMode;
+  snapMomentum?: number;
   overscrollEnabled?: boolean;
   renderWindowSize?: number;
   animation?: CarouselAnimation;
