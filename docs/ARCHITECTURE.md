@@ -75,6 +75,7 @@ autoplayDirection  forward
 orientation        horizontal
 scrollEnabled      true
 snapMode           page
+snapMomentum       2
 overscrollEnabled  true
 animation          timing / 500ms / easeOutQuart
 ```
@@ -240,10 +241,12 @@ It exposes a read-only `config` view limited to the web-only `touchAction` optio
 `snapMode` selects gesture release behavior:
 
 - `page`: one-page movement;
-- `nearest`: nearest logical page;
+- `nearest`: nearest logical page (fine-tuned by `snapMomentum`);
 - `none`: free decay, then nearest-index settle.
 
 `dealWithAnimation` maps the flat `CarouselAnimation` union to Reanimated timing or spring configuration. The same animation config controls gesture snapping, commands, and autoplay. Free decay and overscroll rebound remain internal.
+
+fine-tune `nearest` behaviour by providing `snapMomentum` (default 2). A value of 0 disables momentum and snaps to the page under the finger.
 
 No hidden duration is added. Reanimated supplies system-aware reduced-motion behavior.
 

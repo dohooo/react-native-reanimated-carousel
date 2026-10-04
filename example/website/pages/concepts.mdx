@@ -129,7 +129,7 @@ Autoplay follows the same logical raw-data order. In non-loop mode it stops at t
 `snapMode` describes release behavior:
 
 - `"page"`: move at most one logical page per gesture;
-- `"nearest"`: settle on the nearest logical page after free movement;
+- `"nearest"`: settle on the nearest logical page after free movement, fine-tune with `snapMomentum`;
 - `"none"`: use free decay, then publish the nearest raw index when motion stops.
 
 `animation` controls page/nearest settle, commands, and autoplay. Free decay and overscroll rebound remain internal physics.

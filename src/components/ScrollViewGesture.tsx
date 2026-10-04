@@ -41,6 +41,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       onConfigurePanGesture,
       orientation,
       snapMode,
+      snapMomentum,
       loop,
       animation,
       scrollEnabled,
@@ -171,7 +172,11 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
       }
 
       if (snapMode === "nearest") {
-        finalTranslation = withSpring(withProcessTranslation(-nextPage * currentSize), onFinished);
+        const nearestPage = -Math.round((origin + velocity * snapMomentum) / currentSize);
+        finalTranslation = withSpring(
+          withProcessTranslation(-nearestPage * currentSize),
+          onFinished
+        );
       }
 
       translation.value = finalTranslation;
@@ -185,7 +190,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
         return translation;
       }
     },
-    [withSpring, resolvedSize, maxPage, loop, snapMode, translation]
+    [withSpring, resolvedSize, maxPage, loop, snapMode, snapMomentum, translation]
   );
 
   const onFinish = React.useCallback(

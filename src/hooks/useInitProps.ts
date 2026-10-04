@@ -20,6 +20,7 @@ export type InitializedCarouselProps<Item> = Omit<
   | "overscrollEnabled"
   | "scrollEnabled"
   | "snapMode"
+  | "snapMomentum"
   | "style"
 > & {
   autoplay: boolean;
@@ -32,6 +33,7 @@ export type InitializedCarouselProps<Item> = Omit<
   overscrollEnabled: boolean;
   scrollEnabled: boolean;
   snapMode: CarouselSnapMode;
+  snapMomentum: number;
   style: NonNullable<CarouselProps<Item>["style"]>;
   animation: CarouselAnimation;
   rawData: Item[];
@@ -57,6 +59,7 @@ export function useInitProps<Item>(props: CarouselProps<Item>): InitializedCarou
   });
   const scrollEnabled = props.scrollEnabled ?? true;
   const snapMode = props.snapMode ?? "page";
+  const snapMomentum = props.snapMomentum ?? 2;
   const overscrollEnabled = props.overscrollEnabled ?? true;
   const style = props.style ?? {};
   const animation: CarouselAnimation = props.animation ?? {
@@ -123,6 +126,7 @@ export function useInitProps<Item>(props: CarouselProps<Item>): InitializedCarou
     overscrollEnabled,
     scrollEnabled,
     snapMode,
+    snapMomentum,
     style,
     animation,
     data,
@@ -151,6 +155,15 @@ function validateStaticProps<Item>(props: CarouselProps<Item>) {
   ) {
     throw new Error(
       "[react-native-reanimated-carousel] autoplayInterval must be a non-negative number."
+    );
+  }
+
+  if (
+    props.snapMomentum !== undefined &&
+    (!Number.isFinite(props.snapMomentum) || props.snapMomentum < 0)
+  ) {
+    throw new Error(
+      "[react-native-reanimated-carousel] snapMomentum must be a non-negative number."
     );
   }
 
