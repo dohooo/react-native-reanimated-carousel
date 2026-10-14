@@ -60,6 +60,7 @@
       "example/app/ios/**/*",
       "example/app/android/**/*",
       "scripts/**/*",
+      "codemod/transforms/**/*",
       "package.json",
       "junit.xml",
       "example/app/.tamagui/tamagui.config.json",

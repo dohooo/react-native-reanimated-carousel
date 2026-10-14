@@ -240,7 +240,7 @@ export function createLlmsIndex(pages) {
 
 - Use the v5 public API documented here; do not suggest removed v4 aliases or deep imports.
 - For a v4-to-v5 upgrade, read ${SITE_URL}/migration-v5.md and follow its protocol in order.
-- Run \`npx --yes -p typescript@5 -p react-native-reanimated-carousel@5 rnrc-v5-codemod .\` before making behavioral migration decisions.
+- Run \`npx --yes rnrc-codemod v5 .\` before making behavioral migration decisions.
 - Keep user changes uncommitted unless the user explicitly asks you to commit.
 
 ## Documentation

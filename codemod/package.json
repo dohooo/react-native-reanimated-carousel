@@ -1,0 +1,27 @@
+{
+  "name": "rnrc-codemod",
+  "version": "1.0.0",
+  "description": "Codemods for upgrading react-native-reanimated-carousel between major versions.",
+  "author": "Doho <zhaodonghao586@outlook.com> (https://github.com/dohooo)",
+  "license": "MIT",
+  "homepage": "https://rn-carousel.dev/migration-v5",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dohooo/react-native-reanimated-carousel.git",
+    "directory": "codemod"
+  },
+  "type": "module",
+  "bin": {
+    "rnrc-codemod": "cli.mjs"
+  },
+  "files": ["cli.mjs", "transforms", "README.md"],
+  "scripts": {
+    "prepack": "node sync-transforms.mjs"
+  },
+  "dependencies": {
+    "typescript": "^5.5.4"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
