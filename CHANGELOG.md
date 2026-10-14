@@ -1,5 +1,22 @@
 # react-native-reanimated-carousel
 
+## 5.2.0
+
+### Minor Changes
+
+- [#960](https://github.com/dohooo/react-native-reanimated-carousel/pull/960) [`579df0a`](https://github.com/dohooo/react-native-reanimated-carousel/commit/579df0a3e754136c788c66579d66f3b6520b0420) Thanks [@dohooo](https://github.com/dohooo)! - Add `snapMomentum` to fine-tune `snapMode="nearest"`. Defaults to `2` (current behaviour); `0` snaps to the page under the finger.
+
+### Patch Changes
+
+- [#960](https://github.com/dohooo/react-native-reanimated-carousel/pull/960) [`579df0a`](https://github.com/dohooo/react-native-reanimated-carousel/commit/579df0a3e754136c788c66579d66f3b6520b0420) Thanks [@dohooo](https://github.com/dohooo)! - Keep existing keyed slides mounted when items are inserted before them (Issue #954).
+
+- [#960](https://github.com/dohooo/react-native-reanimated-carousel/pull/960) [`579df0a`](https://github.com/dohooo/react-native-reanimated-carousel/commit/579df0a3e754136c788c66579d66f3b6520b0420) Thanks [@dohooo](https://github.com/dohooo)! - Fix a `TS2322` error in built-in layouts when an app type-checks the package source without `strict` mode (Issue #959).
+
+- [#960](https://github.com/dohooo/react-native-reanimated-carousel/pull/960) [`579df0a`](https://github.com/dohooo/react-native-reanimated-carousel/commit/579df0a3e754136c788c66579d66f3b6520b0420) Thanks [@dohooo](https://github.com/dohooo)! - Allow a looping carousel with a single item to advance through its auto-filled copies.
+
+- [#960](https://github.com/dohooo/react-native-reanimated-carousel/pull/960) [`579df0a`](https://github.com/dohooo/react-native-reanimated-carousel/commit/579df0a3e754136c788c66579d66f3b6520b0420) Thanks [@dohooo](https://github.com/dohooo)! - Stop the per-render "dependencies should only be used in web implementation" warning from Reanimated 4.6+ on iOS and Android (Issue #953).
+  - Hook dependency arrays are now passed on Web only, where Reanimated can still use them without the Babel plugin.
+
 ## 5.1.1
 
 ### Patch Changes
