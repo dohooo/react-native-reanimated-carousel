@@ -17,7 +17,13 @@ A performant, customizable carousel for React Native, powered by Reanimated and 
 
 ## Migrating from v4
 
+v5 requires React Native 0.80+, Reanimated 4.1+ and React Native Worklets 0.5+ (Expo SDK 54+). Apps still on Reanimated 3 can keep using v4 until they upgrade.
+
+To upgrade, give this prompt to your AI coding agent:
+
+```text
 Read https://rn-carousel.dev/migration-v5.md and upgrade react-native-reanimated-carousel to v5 in this project, then summarize what changed for my review.
+```
 
 ## v5 highlights
 

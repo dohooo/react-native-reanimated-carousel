@@ -31,7 +31,7 @@ First update the project dependency to v5 with the package manager already used 
 {
   "react": ">=18.0.0",
   "react-native": ">=0.80.0",
-  "react-native-gesture-handler": ">=2.9.0 <3.0.0",
+  "react-native-gesture-handler": ">=2.9.0 <4.0.0",
   "react-native-reanimated": ">=4.1.0",
   "react-native-worklets": ">=0.5.0"
 }
@@ -43,16 +43,16 @@ Expo projects should let Expo choose compatible peer versions:
 npx expo install react-native-reanimated-carousel react-native-reanimated react-native-worklets react-native-gesture-handler
 ```
 
-Then run the v5 codemod from the project root:
+Then run the v5 codemod from the project root. The command names both packages it needs, the codemod and the TypeScript parser it uses, so it works the same in JavaScript and TypeScript projects and in monorepos:
 
 ```bash
-npx rnrc-v5-codemod .
+npx --yes -p typescript@5 -p react-native-reanimated-carousel@5 rnrc-v5-codemod .
 ```
 
 Use `--dry` first when the working tree already contains unrelated edits:
 
 ```bash
-npx rnrc-v5-codemod --dry .
+npx --yes -p typescript@5 -p react-native-reanimated-carousel@5 rnrc-v5-codemod --dry .
 ```
 
 The codemod performs deterministic changes only:
