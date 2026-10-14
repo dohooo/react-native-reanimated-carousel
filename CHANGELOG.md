@@ -22,6 +22,16 @@
 
 ## 5.0.0
 
+v5 is a redesigned, named-export API for React Native 0.80+, Reanimated 4.1+ and Worklets 0.5+ (Expo SDK 54+); apps still on Reanimated 3 can keep using v4 until they upgrade.
+
+### Migrate with your AI agent
+
+```text
+Read https://rn-carousel.dev/migration-v5.md and upgrade react-native-reanimated-carousel to v5 in this project, then summarize what changed for my review.
+```
+
+The agent only edits files in your working tree — nothing is committed, and it stops for your review. The full guide is at https://rn-carousel.dev/migration-v5.
+
 ### Major Changes
 
 - [#850](https://github.com/dohooo/react-native-reanimated-carousel/pull/850) [`9b388e6`](https://github.com/dohooo/react-native-reanimated-carousel/commit/9b388e6f6237126c4ed25c2442c4b788aad7adf6) Thanks [@dohooo](https://github.com/dohooo)! - Add v5 support for Expo 54 and dynamic sizing with optional `width`/`height` and layout-based measurement (PR #850).
@@ -35,15 +45,9 @@
   - See the v5 migration guide for required prop, ref, layout, and behavior changes.
   - Cap the gesture-handler peer at >=2.9.0 <3.0.0 while keeping types compatible with the RNGH 3 legacy builder for a 5.0.x range expansion.
 
-  ### Migrate with your AI agent
-
-  ```text
-  Read https://rn-carousel.dev/migration-v5.md and upgrade react-native-reanimated-carousel to v5 in this project, then summarize what changed for my review.
-  ```
-
-  The agent only edits files in your working tree — nothing is committed, and it stops for your review.
-
 ### Minor Changes
+
+> Notes from #853 and #873 below describe the beta API; #938 replaced `width`/`height`, `itemWidth`/`itemHeight` and `defaultScrollOffsetValue` with `style`, `itemSize` and `scrollOffsetValue`, and 5.1.0 widened the gesture-handler peer to `<4.0.0`.
 
 - [#853](https://github.com/dohooo/react-native-reanimated-carousel/pull/853) [`c595958`](https://github.com/dohooo/react-native-reanimated-carousel/commit/c59595896381c36cc395f95b8631aee503cfd927) Thanks [@dohooo](https://github.com/dohooo)! - Add `itemWidth`/`itemHeight` to define snap step explicitly (for example, multi-card pages) (PR #853).
 

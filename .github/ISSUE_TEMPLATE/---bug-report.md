@@ -6,7 +6,7 @@ labels: bug
 assignees: dohooo
 ---
 
-<!-- Before filing, search existing issues and confirm the problem on the latest v5 beta. -->
+<!-- Before filing, search existing issues and confirm the problem on the latest v5 release. -->
 
 **Describe the bug**
 A clear description of what happened and whether this is a regression.
