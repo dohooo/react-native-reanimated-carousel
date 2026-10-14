@@ -86,6 +86,24 @@ export const ItemRenderer: FC<Props> = (props) => {
     webOnlyDependencies([visibleRanges])
   );
 
+  // With a render window, the ranges still describe the previous data for the renders between a
+  // data change and the next range update. Keep the keyed items mounted with the last up-to-date
+  // ranges until then, so an item that shifted index is not unmounted and mounted again.
+  const lastSettledRender = React.useRef<{
+    data: unknown[];
+    ranges: VisibleRanges;
+    keys: ReadonlySet<string>;
+  } | null>(null);
+  const settled = lastSettledRender.current;
+  const rangesAreStale =
+    !!keyExtractor && !!settled && settled.ranges === displayedItems && settled.data !== data;
+  const renderedKeys = new Set<string>();
+
+  React.useEffect(() => {
+    if (rangesAreStale) return;
+    lastSettledRender.current = { data, ranges: displayedItems, keys: renderedKeys };
+  });
+
   return (
     <>
       {data.map((item, index) => {
@@ -98,12 +116,12 @@ export const ItemRenderer: FC<Props> = (props) => {
 
         const { negativeRange, positiveRange } = displayedItems;
 
-        const shouldRender =
+        const isInRange =
           rendersAllItems ||
           (index >= negativeRange[0] && index <= negativeRange[1]) ||
           (index >= positiveRange[0] && index <= positiveRange[1]);
 
-        if (!shouldRender) return null;
+        if (!isInRange && !rangesAreStale) return null;
 
         const rawItem = rawData[realIndex] ?? item;
         const key = keyExtractor
@@ -111,6 +129,10 @@ export const ItemRenderer: FC<Props> = (props) => {
               index / Math.max(rawDataLength, 1)
             )}`
           : String(index);
+
+        if (!isInRange && !settled?.keys.has(key)) return null;
+
+        renderedKeys.add(key);
 
         return (
           <ItemLayout
