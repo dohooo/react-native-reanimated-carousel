@@ -62,7 +62,7 @@ jobs:
 
       - name: Check repository scripts
         run: |
-          node --test scripts/check-changeset-style.test.mjs scripts/check-package-entries.test.mjs scripts/codemods/v5.test.mjs scripts/e2e-maestro-suite.test.mjs
+          node --test scripts/check-changeset-style.test.mjs scripts/check-package-entries.test.mjs scripts/codemods/v5.test.mjs codemod/cli.test.mjs scripts/e2e-maestro-suite.test.mjs
           yarn changeset:check
 
   build-and-test:
