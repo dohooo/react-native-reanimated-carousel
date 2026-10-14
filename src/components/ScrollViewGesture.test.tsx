@@ -199,6 +199,32 @@ describe("issue #857 web regression", () => {
     expect(translation.value).toBe(-180);
   });
 
+  it("treats a cancelled touch as the end of an autoplay pause", () => {
+    const onTouchBegin = jest.fn();
+    const onTouchEnd = jest.fn();
+    const { screen } = renderGesture({ onTouchBegin, onTouchEnd });
+    const gestureView = screen.getByTestId("gesture-view");
+
+    fireEvent(gestureView, "touchStart");
+    fireEvent(gestureView, "touchCancel");
+
+    expect(onTouchBegin).toHaveBeenCalledTimes(1);
+    expect(onTouchEnd).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("nearest snap", () => {
+  // A nearest-mode release leaves its snap animation running under the Reanimated Jest mock,
+  // so keep the animation frames on fake timers instead of the real event loop.
+  beforeEach(() => {
+    mockUsePanGestureProxy.mockClear();
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it.each([
     ["projects release velocity by default", 2, -900],
     ["snaps to the page under the finger with snapMomentum 0", 0, -100],
@@ -229,18 +255,5 @@ describe("issue #857 web regression", () => {
     });
 
     expect(translation.value).toMatchObject({ toValue: expectedTranslation });
-  });
-
-  it("treats a cancelled touch as the end of an autoplay pause", () => {
-    const onTouchBegin = jest.fn();
-    const onTouchEnd = jest.fn();
-    const { screen } = renderGesture({ onTouchBegin, onTouchEnd });
-    const gestureView = screen.getByTestId("gesture-view");
-
-    fireEvent(gestureView, "touchStart");
-    fireEvent(gestureView, "touchCancel");
-
-    expect(onTouchBegin).toHaveBeenCalledTimes(1);
-    expect(onTouchEnd).toHaveBeenCalledTimes(1);
   });
 });
