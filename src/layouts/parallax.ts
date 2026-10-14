@@ -1,3 +1,4 @@
+import type { ViewStyle } from "react-native";
 import { Extrapolation, interpolate } from "react-native-reanimated";
 
 import type { CarouselLayout } from "../types";
@@ -17,7 +18,7 @@ export function parallaxLayout(
   const { size, isVertical, directionSign } = baseConfig;
   const { offset = 100, scale = 0.8, adjacentScale = scale ** 2 } = config;
 
-  return (relativeProgress: number) => {
+  return (relativeProgress: number): ViewStyle => {
     "worklet";
     const logicalTranslate = interpolate(
       relativeProgress,

@@ -91,6 +91,7 @@ If `renderWindowSize` is omitted, all raw slides are mounted. It affects mountin
 |---|---|---|---|
 | `scrollEnabled` | `boolean` | `true` | Enables user pan gestures. It does not stop autoplay or ref commands. |
 | `snapMode` | `"page" \| "nearest" \| "none"` | `"page"` | Single-page snap, nearest-page snap, or free decay. |
+| `snapMomentum` | `number` | `2` | Seconds of release velocity added before `snapMode="nearest"` picks a page. `0` snaps to the page under the finger. Throws when negative or not finite. |
 | `overscrollEnabled` | `boolean` | `true` | Enables resisted overdrag and rebound when `loop={false}`. |
 | `animation` | `CarouselAnimation` | timing, `500ms` | Transition config for gesture snapping, commands, and autoplay. |
 | `onConfigurePanGesture` | `(gesture: CarouselPanGesture) => void` | — | Configures thresholds, pointers, relationships, and worklet observers. |

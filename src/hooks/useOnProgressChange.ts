@@ -4,6 +4,7 @@ import { scheduleOnRN } from "react-native-worklets";
 
 import type { CarouselProgressChangeHandler } from "../types";
 import { getLogicalProgress } from "../utils/carousel-math";
+import { webOnlyDependencies } from "../utils/web-only-dependencies";
 
 export function useOnProgressChange(options: {
   loop: boolean;
@@ -28,6 +29,6 @@ export function useOnProgressChange(options: {
       if (progress) progress.value = nextProgress;
       if (onProgressChange) scheduleOnRN(onProgressChange, nextProgress);
     },
-    [loop, offset, onProgressChange, progress, rawDataLength, size, sizeReady]
+    webOnlyDependencies([loop, offset, onProgressChange, progress, rawDataLength, size, sizeReady])
   );
 }

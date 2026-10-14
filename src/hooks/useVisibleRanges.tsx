@@ -2,6 +2,8 @@ import { useRef } from "react";
 import type { SharedValue } from "react-native-reanimated";
 import { useDerivedValue } from "react-native-reanimated";
 
+import { webOnlyDependencies } from "../utils/web-only-dependencies";
+
 type Range = [number, number];
 
 export interface VisibleRanges {
@@ -11,7 +13,7 @@ export interface VisibleRanges {
 
 export type VisibleRangesValue = SharedValue<VisibleRanges>;
 
-function normalizeWindowSize(total: number, windowSize?: number) {
+export function normalizeWindowSize(total: number, windowSize?: number) {
   "worklet";
 
   return typeof windowSize === "number" && Number.isFinite(windowSize) && windowSize > 0
@@ -100,6 +102,7 @@ export function useVisibleRanges(options: {
   const windowSize = normalizeWindowSize(total, _windowSize);
   const cachedRanges = useRef<VisibleRanges | null>(null);
 
+  const rangesDependencies = webOnlyDependencies([loop, total, windowSize, translation, viewSize]);
   const ranges = useDerivedValue(() => {
     if (total <= 0) {
       return computeVisibleRanges({ total, currentIndex: 0, windowSize, loop });
@@ -128,7 +131,7 @@ export function useVisibleRanges(options: {
 
     cachedRanges.current = newRanges;
     return newRanges;
-  }, [loop, total, windowSize, translation, viewSize]);
+  }, rangesDependencies);
 
   return ranges;
 }

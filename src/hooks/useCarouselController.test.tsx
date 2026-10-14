@@ -209,17 +209,38 @@ describe("useCarouselController", () => {
     expect(warnSpy).toHaveBeenCalledTimes(2);
   });
 
-  it("is a no-op for empty and single-item data", () => {
-    const empty = renderController({ dataLength: 0, rawDataLength: 0 });
+  it("advances a looping single item through its auto-filled copies", () => {
+    const { result, handlerOffset, onScrollStart, onMovementEnd } = renderController({
+      loop: true,
+      dataLength: 3,
+      rawDataLength: 1,
+    });
+
+    act(() => result.current.next({ animated: false }));
+    expect(handlerOffset.value).toBe(-300);
+    expect(result.current.getCurrentIndex()).toBe(0);
+
+    act(() => result.current.prev({ animated: false }));
+    expect(handlerOffset.value).toBeCloseTo(0);
+    expect(onScrollStart).toHaveBeenCalledTimes(2);
+    expect(onMovementEnd).toHaveBeenCalledTimes(2);
+    expect(onMovementEnd).toHaveBeenLastCalledWith(0);
+  });
+
+  it("is a no-op for empty, non-looping, and unfilled single-item data", () => {
+    const empty = renderController({ loop: true, dataLength: 0, rawDataLength: 0 });
     const single = renderController({ dataLength: 1, rawDataLength: 1 });
+    const unfilled = renderController({ loop: true, dataLength: 1, rawDataLength: 1 });
 
     act(() => {
       empty.result.current.next({ animated: false });
       single.result.current.next({ animated: false });
+      unfilled.result.current.next({ animated: false });
     });
 
     expect(empty.handlerOffset.value).toBe(0);
     expect(single.handlerOffset.value).toBe(0);
+    expect(unfilled.handlerOffset.value).toBe(0);
     expect(Number.isNaN(empty.result.current.index.value)).toBe(false);
   });
 });

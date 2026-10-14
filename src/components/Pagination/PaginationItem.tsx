@@ -12,6 +12,7 @@ import { scheduleOnRN } from "react-native-worklets";
 
 import type { PaginationDotStyle, PaginationProps } from "../../public-types";
 import { getNearestLoopPosition, getSettledRawIndex } from "../../utils/carousel-math";
+import { webOnlyDependencies } from "../../utils/web-only-dependencies";
 
 const DEFAULT_DOT_SIZE = 10;
 const DEFAULT_DOT_COLOR = "#D1D5DB";
@@ -86,9 +87,28 @@ export function PaginationItem(props: {
         scheduleOnRN(setSelected, nextSelected);
       }
     },
-    [count, index, progress]
+    webOnlyDependencies([count, index, progress])
   );
 
+  const animatedStyleDependencies = webOnlyDependencies([
+    activeBackgroundColor,
+    activeBorderColor,
+    activeBorderRadius,
+    activeBorderWidth,
+    activeHeight,
+    activeOpacity,
+    activeWidth,
+    baseBackgroundColor,
+    baseBorderColor,
+    baseBorderRadius,
+    baseBorderWidth,
+    baseHeight,
+    baseOpacity,
+    baseWidth,
+    count,
+    index,
+    progress,
+  ]);
   const animatedStyle = useAnimatedStyle<ViewStyle>(() => {
     const distance = Math.min(1, getPaginationDotDistance(progress.value, index, count));
 
@@ -111,25 +131,7 @@ export function PaginationItem(props: {
       backgroundColor: interpolateDotColor(distance, activeBackgroundColor, baseBackgroundColor),
       opacity: interpolate(distance, [0, 1], [activeOpacity, baseOpacity], Extrapolation.CLAMP),
     };
-  }, [
-    activeBackgroundColor,
-    activeBorderColor,
-    activeBorderRadius,
-    activeBorderWidth,
-    activeHeight,
-    activeOpacity,
-    activeWidth,
-    baseBackgroundColor,
-    baseBorderColor,
-    baseBorderRadius,
-    baseBorderWidth,
-    baseHeight,
-    baseOpacity,
-    baseWidth,
-    count,
-    index,
-    progress,
-  ]);
+  }, animatedStyleDependencies);
 
   const reservedStyle: ViewStyle = {
     alignItems: "center",

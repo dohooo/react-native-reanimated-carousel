@@ -45,6 +45,8 @@ type RenderGestureOptions = {
   size?: number;
   dataLength?: number;
   containerSize?: { width: number; height: number };
+  snapMode?: "page" | "nearest" | "none";
+  snapMomentum?: number;
   onTouchBegin?: () => void;
   onTouchEnd?: () => void;
 };
@@ -55,6 +57,8 @@ function renderGesture({
   size = 300,
   dataLength = 3,
   containerSize = { width: 300, height: 200 },
+  snapMode = "page",
+  snapMomentum = 2,
   onTouchBegin,
   onTouchEnd,
 }: RenderGestureOptions = {}) {
@@ -64,7 +68,8 @@ function renderGesture({
       onConfigurePanGesture: undefined,
       orientation: vertical ? "vertical" : "horizontal",
       directionSign: !vertical && rtl ? -1 : 1,
-      snapMode: "page",
+      snapMode,
+      snapMomentum,
       loop: false,
       animation: { type: "timing", duration: 500 },
       scrollEnabled: true,
@@ -205,5 +210,50 @@ describe("issue #857 web regression", () => {
 
     expect(onTouchBegin).toHaveBeenCalledTimes(1);
     expect(onTouchEnd).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("nearest snap", () => {
+  // A nearest-mode release leaves its snap animation running under the Reanimated Jest mock,
+  // so keep the animation frames on fake timers instead of the real event loop.
+  beforeEach(() => {
+    mockUsePanGestureProxy.mockClear();
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  it.each([
+    ["projects release velocity by default", 2, -900],
+    ["snaps to the page under the finger with snapMomentum 0", 0, -100],
+  ] as const)("nearest snap %s", (_name, snapMomentum, expectedTranslation) => {
+    const { gestureCallbacks, translation } = renderGesture({
+      size: 100,
+      dataLength: 10,
+      containerSize: { width: 100, height: 200 },
+      snapMode: "nearest",
+      snapMomentum,
+    });
+
+    act(() => {
+      gestureCallbacks.onGestureStart({} as GestureStateChangeEvent<PanGestureHandlerEventPayload>);
+      gestureCallbacks.onGestureUpdate({
+        translationX: -120,
+        translationY: 0,
+      } as GestureUpdateEvent<PanGestureHandlerEventPayload>);
+      gestureCallbacks.onGestureEnd(
+        {
+          translationX: -120,
+          translationY: 0,
+          velocityX: -400,
+          velocityY: 0,
+        } as GestureStateChangeEvent<PanGestureHandlerEventPayload>,
+        true
+      );
+    });
+
+    expect(translation.value).toMatchObject({ toValue: expectedTranslation });
   });
 });

@@ -8,9 +8,14 @@ import type { ItemAnimationStyle } from "./ItemLayout";
 import { ItemLayout } from "./ItemLayout";
 
 import type { VisibleRanges } from "../hooks/useVisibleRanges";
-import { computeVisibleRanges, useVisibleRanges } from "../hooks/useVisibleRanges";
+import {
+  computeVisibleRanges,
+  normalizeWindowSize,
+  useVisibleRanges,
+} from "../hooks/useVisibleRanges";
 import type { CarouselItemAnimation, CarouselRenderItem } from "../types";
 import { computedRealIndexWithAutoFillData } from "../utils/computed-with-auto-fill-data";
+import { webOnlyDependencies } from "../utils/web-only-dependencies";
 
 interface Props {
   data: unknown[];
@@ -71,11 +76,33 @@ export const ItemRenderer: FC<Props> = (props) => {
 
   const [displayedItems, setDisplayedItems] = React.useState<VisibleRanges>(initialRanges);
 
+  // When the window covers every item, the ranges always span the whole list. Skip them so a
+  // stale range from before a data change cannot unmount keyed items for one render.
+  const rendersAllItems = normalizeWindowSize(dataLength, renderWindowSize) >= dataLength;
+
   useAnimatedReaction(
     () => visibleRanges.value,
     (ranges) => scheduleOnRN(setDisplayedItems, ranges),
-    [visibleRanges]
+    webOnlyDependencies([visibleRanges])
   );
+
+  // With a render window, the ranges still describe the previous data for the renders between a
+  // data change and the next range update. Keep the keyed items mounted with the last up-to-date
+  // ranges until then, so an item that shifted index is not unmounted and mounted again.
+  const lastSettledRender = React.useRef<{
+    data: unknown[];
+    ranges: VisibleRanges;
+    keys: ReadonlySet<string>;
+  } | null>(null);
+  const settled = lastSettledRender.current;
+  const rangesAreStale =
+    !!keyExtractor && !!settled && settled.ranges === displayedItems && settled.data !== data;
+  const renderedKeys = new Set<string>();
+
+  React.useEffect(() => {
+    if (rangesAreStale) return;
+    lastSettledRender.current = { data, ranges: displayedItems, keys: renderedKeys };
+  });
 
   return (
     <>
@@ -89,11 +116,12 @@ export const ItemRenderer: FC<Props> = (props) => {
 
         const { negativeRange, positiveRange } = displayedItems;
 
-        const shouldRender =
+        const isInRange =
+          rendersAllItems ||
           (index >= negativeRange[0] && index <= negativeRange[1]) ||
           (index >= positiveRange[0] && index <= positiveRange[1]);
 
-        if (!shouldRender) return null;
+        if (!isInRange && !rangesAreStale) return null;
 
         const rawItem = rawData[realIndex] ?? item;
         const key = keyExtractor
@@ -101,6 +129,10 @@ export const ItemRenderer: FC<Props> = (props) => {
               index / Math.max(rawDataLength, 1)
             )}`
           : String(index);
+
+        if (!isInRange && !settled?.keys.has(key)) return null;
+
+        renderedKeys.add(key);
 
         return (
           <ItemLayout

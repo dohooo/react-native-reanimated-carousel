@@ -18,6 +18,7 @@ import type { CarouselItemAnimation } from "../types";
 import { getHorizontalStackOffsetType } from "../utils/carousel-direction";
 import { positiveModulo } from "../utils/carousel-math";
 import { sanitizeAnimationStyle } from "../utils/sanitize-animation-style";
+import { webOnlyDependencies } from "../utils/web-only-dependencies";
 
 export type ItemAnimationStyle = CarouselItemAnimation;
 
@@ -67,6 +68,13 @@ export const ItemLayout: React.FC<{
   const size = (itemSize ?? fallbackSize) || 0;
   const effectivePageSize = size > 0 ? size : undefined;
 
+  const dimensionsStyleDependencies = webOnlyDependencies([
+    effectivePageSize,
+    isVertical,
+    itemSize,
+    styleHeightNumber,
+    styleWidthNumber,
+  ]);
   const dimensionsStyle = useAnimatedStyle<ViewStyle>(() => {
     const widthCandidate = isVertical ? styleWidthNumber : itemSize;
     const heightCandidate = isVertical ? itemSize : styleHeightNumber;
@@ -95,7 +103,7 @@ export const ItemLayout: React.FC<{
       width: computedWidth,
       height: computedHeight,
     };
-  }, [effectivePageSize, isVertical, itemSize, styleHeightNumber, styleWidthNumber]);
+  }, dimensionsStyleDependencies);
 
   let offsetXConfig: OffsetOptions = {
     handlerOffset,
@@ -137,17 +145,19 @@ export const ItemLayout: React.FC<{
         scheduleOnRN(setIsAccessibilityCurrent, isCurrent);
       }
     },
-    [isCurrentForAccessibility]
+    webOnlyDependencies([isCurrentForAccessibility])
   );
 
+  const relativeProgressDependencies = webOnlyDependencies([x, size]);
   const relativeProgress = useDerivedValue(() => {
     if (!size) return 0;
     return x.value / size;
-  }, [x, size]);
+  }, relativeProgressDependencies);
+  const animatedStyleDependencies = webOnlyDependencies([animationStyle, rawIndex, x, size]);
   const animatedStyle = useAnimatedStyle<ViewStyle>(() => {
     const safeSize = size || 1;
     return sanitizeAnimationStyle(animationStyle(x.value / safeSize, rawIndex));
-  }, [animationStyle, rawIndex, x, size]);
+  }, animatedStyleDependencies);
 
   // TODO: For dynamic dimension in the future
   // function handleLayout(e: LayoutChangeEvent) {

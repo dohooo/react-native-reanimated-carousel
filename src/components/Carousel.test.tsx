@@ -309,6 +309,45 @@ describe("Carousel v5 integration", () => {
     expect(onScrollStart).not.toHaveBeenCalled();
     expect(onSnapToItem).not.toHaveBeenCalled();
   });
+
+  it("keeps existing keyed items mounted when data is prepended", () => {
+    const events: string[] = [];
+    function Page({ id }: { id: string }) {
+      React.useEffect(() => {
+        events.push(`mount ${id}`);
+        return () => {
+          events.push(`unmount ${id}`);
+        };
+      }, [id]);
+      return <View testID={`page-${id}`} />;
+    }
+    const renderItem = ({ item }: { item: { id: string } }) => <Page id={item.id} />;
+    const a = { id: "a" };
+    const b = { id: "b" };
+    const screen = render(
+      <Carousel
+        data={[a, b]}
+        defaultIndex={1}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+        style={{ width: 300, height: 200 }}
+      />
+    );
+    events.length = 0;
+
+    screen.rerender(
+      <Carousel
+        data={[{ id: "c" }, a, b]}
+        defaultIndex={1}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+        style={{ width: 300, height: 200 }}
+      />
+    );
+
+    expect(events).toEqual(["mount c"]);
+    expect(screen.getByTestId("page-b")).toBeTruthy();
+  });
 });
 
 describe("layout sizing helpers", () => {

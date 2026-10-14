@@ -39,6 +39,7 @@ describe("useInitProps", () => {
       orientation: "horizontal",
       scrollEnabled: true,
       snapMode: "page",
+      snapMomentum: 2,
       overscrollEnabled: true,
       dataLength: 4,
       rawDataLength: 4,
@@ -57,6 +58,7 @@ describe("useInitProps", () => {
       orientation: "vertical",
       scrollEnabled: false,
       snapMode: "nearest",
+      snapMomentum: 0,
       overscrollEnabled: false,
       animation: { type: "spring", damping: 18 },
       style: { height: 320 },
@@ -72,6 +74,7 @@ describe("useInitProps", () => {
       orientation: "vertical",
       scrollEnabled: false,
       snapMode: "nearest",
+      snapMomentum: 0,
       overscrollEnabled: false,
       animation: { type: "spring", damping: 18 },
     });
@@ -92,6 +95,9 @@ describe("useInitProps", () => {
     ["itemSize", { itemSize: 0 }],
     ["autoplayInterval", { autoplayInterval: -1 }],
     ["renderWindowSize", { renderWindowSize: 1.5 }],
+    ["snapMomentum", { snapMomentum: -1 }],
+    ["snapMomentum", { snapMomentum: Number.NaN }],
+    ["snapMomentum", { snapMomentum: Number.POSITIVE_INFINITY }],
   ] as const)("rejects invalid %s", (_name, invalid) => {
     jest.spyOn(console, "error").mockImplementation(() => {});
     const { result } = renderHook(() => useInitProps(createProps(invalid)));

@@ -1,6 +1,7 @@
 import type { SharedValue } from "react-native-reanimated";
 import { Extrapolation, interpolate, useDerivedValue } from "react-native-reanimated";
 
+import { webOnlyDependencies } from "../utils/web-only-dependencies";
 import type { VisibleRangesValue } from "./useVisibleRanges";
 
 export interface OffsetOptions {
@@ -38,6 +39,15 @@ export const useOffsetX = (opts: OffsetOptions, visibleRanges: VisibleRangesValu
   const MAX = positiveCount * size;
   const MIN = -((VALID_LENGTH - positiveCount) * size);
 
+  const xDependencies = webOnlyDependencies([
+    loop,
+    dataLength,
+    viewCount,
+    type,
+    size,
+    visibleRanges,
+    handlerOffset,
+  ]);
   const x = useDerivedValue(() => {
     if (!size) return 0;
 
@@ -75,7 +85,7 @@ export const useOffsetX = (opts: OffsetOptions, visibleRanges: VisibleRangesValu
     }
 
     return Number.MAX_SAFE_INTEGER;
-  }, [loop, dataLength, viewCount, type, size, visibleRanges, handlerOffset]);
+  }, xDependencies);
 
   return x;
 };
