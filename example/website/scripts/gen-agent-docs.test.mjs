@@ -7,9 +7,11 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 import {
+  absolutizeLinks,
   generateAgentDocs,
   hasMdxResidue,
   mdxToMarkdown,
+  stripFencedCode,
 } from "./gen-agent-docs.mjs";
 
 const websiteDir = fileURLToPath(new URL("..", import.meta.url));
@@ -50,6 +52,26 @@ export const Example = () => <Carousel data={[]} />;
   assert.equal(hasMdxResidue(markdown), false);
 });
 
+test("points site-relative links at Markdown twins and leaves code untouched", () => {
+  const routes = new Set(["/", "/props", "/Examples/scenes"]);
+  const markdown = [
+    "See [props](/props#loop), [home](/), [scenes](/Examples/scenes/) and ![shot](/steps-1.png).",
+    "Keep [GitHub](https://github.com/dohooo/react-native-reanimated-carousel).",
+    "```tsx",
+    'const link = "[x](/props)";',
+    "```",
+  ].join("\n");
+
+  const result = absolutizeLinks(markdown, routes);
+
+  assert.match(result, /\[props\]\(https:\/\/rn-carousel\.dev\/props\.md#loop\)/u);
+  assert.match(result, /\[home\]\(https:\/\/rn-carousel\.dev\/index\.md\)/u);
+  assert.match(result, /\[scenes\]\(https:\/\/rn-carousel\.dev\/Examples\/scenes\.md\)/u);
+  assert.match(result, /!\[shot\]\(https:\/\/rn-carousel\.dev\/steps-1\.png\)/u);
+  assert.match(result, /\[GitHub\]\(https:\/\/github\.com\/dohooo\/react-native-reanimated-carousel\)/u);
+  assert.match(result, /const link = "\[x\]\(\/props\)";/u);
+});
+
 test("generates twins and llms files for every documentation page", async () => {
   const outputDir = await mkdtemp(path.join(os.tmpdir(), "rnrc-agent-docs-"));
   const pagesDir = path.join(websiteDir, "pages");
@@ -67,8 +89,21 @@ test("generates twins and llms files for every documentation page", async () => 
   const migration = await readFile(path.join(outputDir, "migration-v5.md"), "utf8");
   const expo = await readFile(path.join(outputDir, "works-with-expo.md"), "utf8");
 
+  const scenes = await readFile(path.join(outputDir, "Examples/scenes.md"), "utf8");
+  const docsSection = llms.slice(llms.indexOf("## Docs"), llms.indexOf("## Scenes"));
+
   assert.match(llms, /^# React Native Reanimated Carousel/mu);
   assert.match(llms, /## Instructions for AI coding agents/u);
+  assert.match(llms, /Peer dependencies: .*react-native-reanimated >=/u);
+  assert.match(docsSection, /\[API Reference\]\(https:\/\/rn-carousel\.dev\/props\.md\)/u);
+  assert.doesNotMatch(docsSection, /\/Examples\//u);
+  assert.match(llms, /## Scenes[\s\S]*\/Examples\/scenes\/slot-machine\.md[\s\S]*## Optional/u);
+  assert.match(llms, /## Optional[\s\S]*\/Examples\/basic-layouts\/normal\.md/u);
+  assert.match(llms, /https:\/\/rn-carousel\.dev\/llms-full\.txt/u);
+  assert.doesNotMatch(llmsFull, /^Source: https:\/\/rn-carousel\.dev\/Examples\//mu);
+  assert.ok(llmsFull.length < 150_000, `llms-full.txt is ${llmsFull.length} characters`);
+  assert.match(scenes, /## All scenes/u);
+  assert.match(scenes, /\[Slot Machine\]\(https:\/\/rn-carousel\.dev\/Examples\/scenes\/slot-machine\.md\)/u);
   assert.match(llms, /https:\/\/rn-carousel\.dev\/migration-v5\.md/u);
   assert.match(llms, /https:\/\/rn-carousel\.dev\/works-with-expo\.md/u);
   assert.match(llmsFull, /# Migration Guide to v5/u);
@@ -85,6 +120,8 @@ test("generates twins and llms files for every documentation page", async () => 
         : path.join(outputDir, `${page.route.slice(1)}.md`);
     const markdown = await readFile(outputPath, "utf8");
     assert.equal(hasMdxResidue(markdown), false, page.route);
+    assert.match(markdown, /\n---\n# /u, `${page.route} starts with a title`);
+    assert.doesNotMatch(stripFencedCode(markdown), /\]\(\//u, `${page.route} has a relative link`);
   }
 });
 

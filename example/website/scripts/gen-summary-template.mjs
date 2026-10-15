@@ -14,7 +14,7 @@ export const summaryTemplate = (pages) => {
 id: ${page}
 title: ${upcaseLetter(page)}
 sidebar_label: ${upcaseLetter(page)}
-description: ${upcaseLetter(page)} animation
+description: Every carousel animation example for React Native on one page, each with a live preview.
 keywords:
   - ${page}
   - carousel animation

@@ -6,7 +6,7 @@ export const pagesTemplate = (kind, page, content) => {
 id: ${page}
 title: ${upcaseLetter(page)}
 sidebar_label: ${upcaseLetter(page)}
-description: ${upcaseLetter(page)} animation
+description: ${upcaseLetter(page)} carousel animation for React Native, with a live demo and its full source.
 keywords:
   - ${kind}
   - ${page}
