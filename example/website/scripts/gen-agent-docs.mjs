@@ -5,6 +5,8 @@ import { fileURLToPath } from "node:url";
 const SITE_URL = "https://rn-carousel.dev";
 const DEFAULT_PAGES_DIR = fileURLToPath(new URL("../pages", import.meta.url));
 const DEFAULT_OUTPUT_DIR = fileURLToPath(new URL("../out", import.meta.url));
+const DEFAULT_SCENES_FILE = fileURLToPath(new URL("../components/scenes/scenes.json", import.meta.url));
+const PACKAGE_FILE = fileURLToPath(new URL("../../../package.json", import.meta.url));
 
 function quotedYaml(value) {
   return JSON.stringify(value);
@@ -166,6 +168,38 @@ export function mdxToMarkdown(source) {
   return `${markdown}\n`;
 }
 
+function markdownUrlForRoute(route) {
+  return `${canonicalForRoute(route === "/" ? "/index" : route)}.md`;
+}
+
+/**
+ * Rewrites site-relative links in prose to absolute URLs. Links to documentation
+ * pages point at their Markdown twins, so an agent that follows them stays in
+ * Markdown; other files (images, videos) keep their path on the site.
+ */
+export function absolutizeLinks(markdown, routes) {
+  const resolve = (target) => {
+    const match = /^(\/[^\s#?)]*)([?#][^\s)]*)?$/u.exec(target);
+    if (!match) return target;
+    const [, pathname, suffix = ""] = match;
+    const route = pathname.length > 1 ? pathname.replace(/\/$/u, "") : pathname;
+    if (routes.has(route)) return `${markdownUrlForRoute(route)}${suffix}`;
+    return `${SITE_URL}${pathname}${suffix}`;
+  };
+
+  const output = [];
+  let inFence = false;
+  for (const line of markdown.split("\n")) {
+    if (/^\s*```/u.test(line)) inFence = !inFence;
+    output.push(
+      inFence || /^\s*```/u.test(line)
+        ? line
+        : line.replace(/(\]\()(\/[^\s)]*)(\))/gu, (_match, open, target, close) => `${open}${resolve(target)}${close}`)
+    );
+  }
+  return output.join("\n");
+}
+
 async function collectMdxFiles(directory) {
   const files = [];
 
@@ -180,6 +214,25 @@ async function collectMdxFiles(directory) {
   }
 
   return files.sort();
+}
+
+async function readSidebarOrder(pagesDir) {
+  const order = new Map();
+  const visit = async (directory, prefix) => {
+    let meta = {};
+    try {
+      meta = JSON.parse(await readFile(path.join(directory, "_meta.json"), "utf8"));
+    } catch {
+      return;
+    }
+    for (const key of Object.keys(meta)) {
+      const route = key === "index" ? prefix || "/" : `${prefix}/${key}`;
+      if (!order.has(route)) order.set(route, order.size);
+      await visit(path.join(directory, key), `${prefix}/${key}`);
+    }
+  };
+  await visit(pagesDir, "");
+  return order;
 }
 
 function routeForFile(file, pagesDir) {
@@ -204,12 +257,13 @@ function canonicalForRoute(route) {
   return route === "/" ? SITE_URL : `${SITE_URL}${route}`;
 }
 
-function documentFrontmatter({ title, route }) {
+function documentFrontmatter({ title, description, route }) {
   return [
     "---",
     `title: ${quotedYaml(title)}`,
+    ...(description ? [`description: ${quotedYaml(description)}`] : []),
     `canonical_url: ${quotedYaml(canonicalForRoute(route))}`,
-    `markdown_url: ${quotedYaml(`${canonicalForRoute(route === "/" ? "/index" : route)}.md`)}`,
+    `markdown_url: ${quotedYaml(markdownUrlForRoute(route))}`,
     'version: "5"',
     "---",
     "",
@@ -217,25 +271,46 @@ function documentFrontmatter({ title, route }) {
 }
 
 function splitPages(pages) {
-  const examples = pages.filter(({ route }) => route.startsWith("/Examples/"));
-  const documentation = pages.filter(({ route }) => !route.startsWith("/Examples/"));
-  return { documentation, examples };
+  const isScene = ({ route }) => route === "/Examples/scenes" || route.startsWith("/Examples/scenes/");
+  const isExample = ({ route }) => route.startsWith("/Examples/");
+  return {
+    documentation: pages.filter((page) => !isExample(page)),
+    scenes: pages.filter(isScene),
+    examples: pages.filter((page) => isExample(page) && !isScene(page)),
+  };
 }
 
-export function createLlmsIndex(pages) {
-  const { documentation, examples } = splitPages(pages);
-  const links = (items) =>
-    items
-      .map(
-        ({ route, title, description }) =>
-          `- [${title}](${canonicalForRoute(route === "/" ? "/index" : route)}.md)${description ? `: ${description}` : ""}`
-      )
-      .join("\n");
+function linkList(items, { descriptions = true } = {}) {
+  return items
+    .map(
+      ({ route, title, description }) =>
+        `- [${title}](${markdownUrlForRoute(route)})${descriptions && description ? `: ${description}` : ""}`
+    )
+    .join("\n");
+}
+
+function packageFacts(pkg) {
+  if (!pkg) return "";
+  const peers = Object.entries(pkg.peerDependencies ?? {})
+    .map(([name, range]) => `${name} ${range}`)
+    .join(", ");
+  return [
+    `- Package: \`${pkg.name}\`, current version ${pkg.version}. Named exports only: \`import { Carousel, Pagination } from "${pkg.name}"\`.`,
+    ...(peers ? [`- Peer dependencies: ${peers}.`] : []),
+    `- Install with Expo: \`npx expo install ${pkg.name} react-native-reanimated react-native-worklets react-native-gesture-handler\`.`,
+    "- Every page below is Markdown. On the site, add `.md` to a page URL for the same text (the home page is `/index.md`).",
+    "",
+  ].join("\n");
+}
+
+export function createLlmsIndex(pages, { pkg } = {}) {
+  const { documentation, scenes, examples } = splitPages(pages);
 
   return `# React Native Reanimated Carousel
 
-> Documentation for react-native-reanimated-carousel v5, a performant React Native carousel powered by Reanimated.
+> react-native-reanimated-carousel v5 is a performant, customizable carousel for React Native, powered by Reanimated and Gesture Handler. It works on iOS, Android and Web.
 
+${packageFacts(pkg)}
 ## Instructions for AI coding agents
 
 - Use the v5 public API documented here; do not suggest removed v4 aliases or deep imports.
@@ -243,59 +318,96 @@ export function createLlmsIndex(pages) {
 - Run \`npx --yes rnrc-codemod v5 .\` before making behavioral migration decisions.
 - Keep user changes uncommitted unless the user explicitly asks you to commit.
 
-## Documentation
+## Docs
 
-${links(documentation)}
+${linkList(documentation)}
 
-## Examples
+## Scenes
 
-${links(examples)}
+Full app screens built with one or more carousels. Each page explains the technique, lists the props it uses and includes the complete source.
+
+${linkList(scenes)}
 
 ## Optional
 
-- [Complete documentation in one file](${SITE_URL}/llms-full.txt)
+- [Complete documentation in one file](${SITE_URL}/llms-full.txt): every page under Docs, without examples or scenes.
+
+Animation examples, each a live demo with its source:
+
+${linkList(examples, { descriptions: false })}
 `;
 }
 
 export function createLlmsFull(pages) {
-  return pages
-    .map(({ route, title, markdown }) => {
+  const { documentation } = splitPages(pages);
+  const preamble = `# React Native Reanimated Carousel: complete documentation
+
+> Every documentation page of react-native-reanimated-carousel v5 in one file. Examples and scenes are listed in ${SITE_URL}/llms.txt.`;
+
+  return [
+    preamble,
+    ...documentation.map(({ route, title, markdown }) => {
       const body = markdown.replace(/^#\s+.+\n+/u, "").trim();
-      return `# ${title}\n\nSource: ${canonicalForRoute(route === "/" ? "/index" : route)}.md\n\n${body}`;
-    })
+      return `# ${title}\n\nSource: ${markdownUrlForRoute(route)}\n\n${body}`;
+    }),
+  ]
     .join("\n\n---\n\n")
     .concat("\n");
+}
+
+/** The scenes gallery is a React component, so its Markdown twin gets the list written out. */
+export function scenesList(scenesData) {
+  const labels = new Map(scenesData.tags.map(({ k, label }) => [k, label]));
+  const lines = scenesData.scenes.map(({ slug, title, description, tags }) => {
+    const techniques = tags.map((tag) => labels.get(tag) ?? tag).join(", ");
+    return `- [${title}](${markdownUrlForRoute(`/Examples/scenes/${slug}`)}): ${description}${techniques ? ` Techniques: ${techniques}.` : ""}`;
+  });
+  return `## All scenes\n\n${lines.join("\n")}\n`;
+}
+
+async function readJson(file) {
+  try {
+    return JSON.parse(await readFile(file, "utf8"));
+  } catch {
+    return undefined;
+  }
 }
 
 export async function generateAgentDocs({
   pagesDir = DEFAULT_PAGES_DIR,
   outputDir = DEFAULT_OUTPUT_DIR,
+  scenesFile = DEFAULT_SCENES_FILE,
+  packageFile = PACKAGE_FILE,
 } = {}) {
   const files = await collectMdxFiles(pagesDir);
+  const routes = new Set(files.map((file) => routeForFile(file, pagesDir)));
+  const order = await readSidebarOrder(pagesDir);
+  const scenesData = await readJson(scenesFile);
+  const pkg = await readJson(packageFile);
   const pages = [];
 
   for (const file of files) {
     const source = await readFile(file, "utf8");
     const { attributes } = parseFrontmatter(source);
     const route = routeForFile(file, pagesDir);
-    const markdown = mdxToMarkdown(source);
+    let markdown = mdxToMarkdown(source);
     const title = titleForPage(attributes, markdown, route);
+    if (!/^#\s/u.test(markdown)) markdown = `# ${title}\n\n${markdown}`;
+    if (route === "/Examples/scenes" && scenesData) markdown = `${markdown}\n${scenesList(scenesData)}`;
+    markdown = absolutizeLinks(markdown, routes);
+    const description = attributes.description ?? "";
     const outputPath = outputPathForRoute(route, outputDir);
-    const content = `${documentFrontmatter({ title, route })}${markdown}`;
+    const content = `${documentFrontmatter({ title, description, route })}${markdown}`;
 
     await mkdir(path.dirname(outputPath), { recursive: true });
     await writeFile(outputPath, content);
-    pages.push({
-      route,
-      title,
-      description: attributes.description ?? "",
-      markdown,
-    });
+    pages.push({ route, title, description, markdown });
   }
 
-  pages.sort((left, right) => left.route.localeCompare(right.route));
+  const rank = (route) => order.get(route) ?? Number.MAX_SAFE_INTEGER;
+  pages.sort((left, right) => rank(left.route) - rank(right.route) || left.route.localeCompare(right.route));
   await mkdir(outputDir, { recursive: true });
-  await writeFile(path.join(outputDir, "llms.txt"), createLlmsIndex(pages));
+  await writeFile(path.join(outputDir, "llms.txt"), createLlmsIndex(pages, { pkg }));
   await writeFile(path.join(outputDir, "llms-full.txt"), createLlmsFull(pages));
 
   return pages;

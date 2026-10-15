@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* The logo glyph is white; darken it on the light theme. */
+html:not(.dark) .rnrc-logo {
+  filter: invert(1);
+}
+
 .summary-item {
   @apply relative flex flex-col rounded-2xl overflow-hidden bg-[#111111];
 }
