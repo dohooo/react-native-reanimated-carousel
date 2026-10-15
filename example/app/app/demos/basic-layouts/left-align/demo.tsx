@@ -13,6 +13,7 @@ function Index() {
         autoplayInterval={2000}
         data={defaultDataWith6Colors}
         style={{ width: 430, height: 258 }}
+        itemSize={430 * 0.75}
         onSnapToItem={(index) => console.log("current index:", index)}
         renderItem={renderItem({ rounded: true, style: { marginRight: 8 } })}
       />

@@ -54,6 +54,7 @@ function Index() {
           width: PAGE_WIDTH,
           height: PAGE_WIDTH / 2,
         }}
+        itemSize={itemSize}
         data={getImages(12)}
         renderItem={({ index }) => (
           <Pressable

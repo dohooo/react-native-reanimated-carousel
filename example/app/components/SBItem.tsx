@@ -1,5 +1,6 @@
 import React from "react";
 import type { ImageSourcePropType, StyleProp, ViewProps, ViewStyle } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { LongPressGestureHandler } from "react-native-gesture-handler";
 import type { AnimatedProps } from "react-native-reanimated";
 import Animated from "react-native-reanimated";
@@ -37,9 +38,23 @@ export const SBItem: React.FC<Props> = (props) => {
         setIsPretty(!isPretty);
       }}
     >
-      <Animated.View testID={testID} style={{ flex: 1 }} {...animatedViewProps}>
-        <SlideItem index={index} rounded={rounded} source={img} />
+      <Animated.View testID={testID} style={styles.container} {...animatedViewProps}>
+        <View style={[styles.card, style]}>
+          <SlideItem index={index} rounded={rounded} source={img} showIndex={showIndex} />
+        </View>
       </Animated.View>
     </LongPressGestureHandler>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  card: {
+    width: "100%",
+    height: "100%",
+  },
+});
