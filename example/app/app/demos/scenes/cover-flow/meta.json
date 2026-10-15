@@ -1,0 +1,25 @@
+{
+  "title": "Cover Flow",
+  "group": "Media & Play",
+  "order": 4,
+  "htmlId": "coverflow",
+  "statusBar": "light",
+  "description": "Music library with the classic 3D cover flow, mirrored reflections and momentum flicks.",
+  "tags": ["3d", "nearest", "control"],
+  "uses": [
+    "itemAnimation",
+    "itemSize",
+    "relativeProgress",
+    "snapMode",
+    "snapMomentum",
+    "progress",
+    "autoplay",
+    "ref.prev()",
+    "ref.next()"
+  ],
+  "steps": [
+    "`itemSize` is 90 per 200 pt of cover, and `itemAnimation` puts ±1 at 120 from the center and every album beyond only 48 further, so the sides stack up.",
+    "Inside each item, `relativeProgress` turns the cover up to 62° on Y and scales it to 0.88, with a flipped copy underneath as the reflection.",
+    "`snapMode=\"nearest\"` with `snapMomentum` 0.4 lets a flick skip several albums; `progress` swaps the caption, and the arrows call `ref.prev()` and `ref.next()`."
+  ]
+}

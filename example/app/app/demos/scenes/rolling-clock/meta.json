@@ -1,0 +1,24 @@
+{
+  "title": "Rolling Clock",
+  "group": "Pickers & Widgets",
+  "order": 11,
+  "htmlId": "odometer",
+  "statusBar": "light",
+  "description": "A clock app where each of the six digits is its own vertical carousel, rolling forward every second, with a 12/24-hour switch and an alarms list.",
+  "tags": ["vertical", "control", "multi"],
+  "uses": [
+    "orientation",
+    "loop",
+    "scrollEnabled",
+    "animation",
+    "itemAnimation",
+    "defaultIndex",
+    "ref.next()",
+    "ref.getCurrentIndex()"
+  ],
+  "steps": [
+    "Six vertical `loop` carousels hold 3, 10, 6, 10, 6 and 10 digits, with `scrollEnabled={false}` because the clock moves them, not your finger.",
+    "Each change calls `next({ count })` with the forward distance from `getCurrentIndex()`, so 9 rolls on to 0 and 23 to 00 without turning back.",
+    "`animation` is a 650 ms timing on an overshooting bezier (0.34, 1.56, 0.64, 1), and `itemAnimation` moves each digit one tile while it shrinks to 0.6 and fades."
+  ]
+}

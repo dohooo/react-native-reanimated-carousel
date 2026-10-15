@@ -1,0 +1,26 @@
+{
+  "title": "Editorial Cards",
+  "group": "Commerce & Brand",
+  "order": 2,
+  "htmlId": "editorial",
+  "statusBar": "dark",
+  "description": "Magazine picks whose landscape art slides in layers as each card moves, with section tabs that jump to a story.",
+  "tags": ["parallax", "control", "progress"],
+  "uses": [
+    "itemAnimation",
+    "itemSize",
+    "relativeProgress",
+    "progress",
+    "Pagination",
+    "onSnapToItem",
+    "ref.scrollTo()",
+    "loop",
+    "autoplay",
+    "animation"
+  ],
+  "steps": [
+    "`itemSize` is 76% of the screen width, so a slice of each neighbor shows; `itemAnimation` sinks the neighbors `16` pt and scales them to `0.9`.",
+    "Each card's art is a stack of SVG layers, and each layer moves by `relativeProgress` × its depth × `80` pt, so the near hills slide faster than the sun and stars.",
+    "`autoplay` advances every `3200` ms with a `650` ms ease-out; a section tab calls `scrollTo({ index })`, and `onSnapToItem` moves its underline."
+  ]
+}

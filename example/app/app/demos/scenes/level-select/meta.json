@@ -1,0 +1,25 @@
+{
+  "title": "Level Select",
+  "group": "Spatial & 3D",
+  "order": 17,
+  "htmlId": "levels",
+  "statusBar": "light",
+  "description": "Neon level picker with 3D cards, a parallax starfield and a sliding retro grid.",
+  "tags": ["3d", "progress", "control"],
+  "uses": [
+    "itemAnimation",
+    "itemSize",
+    "relativeProgress",
+    "defaultIndex",
+    "autoplayDirection",
+    "onSnapToItem",
+    "progress",
+    "Pagination",
+    "ref.scrollTo()"
+  ],
+  "steps": [
+    "`itemAnimation` spaces cards by `itemSize`, drops neighbors 18 pt and scales them to 0.78; each card turns ±35° from its `relativeProgress`.",
+    "`defaultIndex={5}` opens on the newest level, and `onSnapToItem` flips `autoplayDirection` at either end.",
+    "Three star layers and the floor grid slide by `progress` × 10, 25, 45 and 60 for depth."
+  ]
+}

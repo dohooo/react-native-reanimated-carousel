@@ -9,6 +9,10 @@ import { SlideItem } from "@/components/SlideItem";
 import { window } from "@/constants/sizes";
 import { CaptureWrapper } from "@/store/CaptureProvider";
 
+// Seeded so the statically rendered HTML and the client render show the same names.
+faker.seed(10);
+const DOG_NAMES = [...new Array(10).keys()].map(() => faker.animal.dog());
+
 function Index() {
   const headerHeight = 100;
   const scale = 0.9;
@@ -49,7 +53,7 @@ function Index() {
             height: PAGE_HEIGHT,
           }}
           snapMode="nearest"
-          data={[...new Array(10).keys()].map((v) => faker.animal.dog())}
+          data={DOG_NAMES}
           renderItem={({ index, item }) => {
             return (
               <View

@@ -10,7 +10,11 @@ function Index() {
   const ref = React.useRef<CarouselRef>(null);
 
   return (
-    <View id="carousel-component" dataSet={{ kind: "basic-layouts", name: "stack" }}>
+    <View
+      id="carousel-component"
+      dataSet={{ kind: "basic-layouts", name: "stack" }}
+      style={{ alignItems: "center" }}
+    >
       <Carousel
         ref={ref}
         autoplayInterval={2000}
@@ -21,7 +25,9 @@ function Index() {
           height: 220,
           alignItems: "center",
           justifyContent: "center",
+          overflow: "visible",
         }}
+        contentContainerStyle={{ overflow: "visible" }}
         layout={{
           type: "horizontal-stack",
           exitDirection: "left",

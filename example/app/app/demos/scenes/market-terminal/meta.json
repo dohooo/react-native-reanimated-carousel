@@ -1,0 +1,27 @@
+{
+  "title": "Market Terminal",
+  "group": "Spatial & 3D",
+  "order": 19,
+  "htmlId": "ticker",
+  "statusBar": "light",
+  "description": "Trading terminal with two marquee tapes running in opposite directions, swipeable chart cards and a watchlist that follows them.",
+  "tags": ["marquee", "multi", "progress", "control"],
+  "uses": [
+    "autoplay",
+    "autoplayInterval",
+    "autoplayDirection",
+    "animation",
+    "scrollEnabled",
+    "loop",
+    "itemSize",
+    "itemAnimation",
+    "progress",
+    "Pagination",
+    "ref.scrollTo()"
+  ],
+  "steps": [
+    "Both tapes are `autoplay` carousels with `autoplayInterval={0}`, linear timing and `scrollEnabled={false}`: 2600 ms per 170 pt quote, and 4400 ms per 320 pt headline with `autoplayDirection=\"backward\"`.",
+    "The chart cards loop with `itemSize` set to the screen width minus 64 and autoplay every 3000 ms; `itemAnimation` scales the neighbors to 0.92 and fades them to 0.35.",
+    "`progress` drives the `Pagination`, the highlighted watchlist row and the BUY/SELL bar, and tapping a row calls `scrollTo({ index })`."
+  ]
+}

@@ -1,0 +1,501 @@
+import { SceneScreen, useScene } from "@/features/scenes/kit";
+import { LinearGradient } from "expo-linear-gradient";
+import * as React from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import Animated, {
+  Easing,
+  type SharedValue,
+  cancelAnimation,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import {
+  Carousel,
+  type CarouselItemAnimation,
+  type CarouselRef,
+} from "react-native-reanimated-carousel";
+import Svg, { Circle, Ellipse, G, Path, Rect } from "react-native-svg";
+
+type Deco = "sea" | "steam" | "track" | "paws" | "code" | "film";
+
+interface Story {
+  user: string;
+  time: string;
+  text: string;
+  colors: [string, string, string];
+  angle: number;
+  deco: Deco;
+}
+
+const STORIES: Story[] = [
+  {
+    user: "lin.travel",
+    time: "2h",
+    text: "The sea today\nis mint green",
+    colors: ["#7FD6C2", "#2A9D8F", "#1B6F69"],
+    angle: 180,
+    deco: "sea",
+  },
+  {
+    user: "chef.mao",
+    time: "4h",
+    text: "Beef stew,\nthird time lucky",
+    colors: ["#F4A261", "#E76F51", "#9C3D2E"],
+    angle: 160,
+    deco: "steam",
+  },
+  {
+    user: "daily.run",
+    time: "5h",
+    text: "10 km\nat 5′12″ pace",
+    colors: ["#3A0CA3", "#4361EE", "#4CC9F0"],
+    angle: 200,
+    deco: "track",
+  },
+  {
+    user: "cat.mochi",
+    time: "7h",
+    text: "Her Majesty\napproves today",
+    colors: ["#FFD6E0", "#FFB3C6", "#F48FB1"],
+    angle: 180,
+    deco: "paws",
+  },
+  {
+    user: "rn.weekly",
+    time: "9h",
+    text: "RNRC 5.2\nis out",
+    colors: ["#0F172A", "#312E81", "#6D28D9"],
+    angle: 150,
+    deco: "code",
+  },
+  {
+    user: "film.zz",
+    time: "12h",
+    text: "Autumn,\non film",
+    colors: ["#D4A373", "#A0522D", "#5C3317"],
+    angle: 180,
+    deco: "film",
+  },
+];
+
+const INTERVAL = 4000;
+const FOOTER = 64;
+const EASE_OUT_QUART = Easing.bezier(0.25, 1, 0.5, 1);
+
+// A CSS gradient angle as expo-linear-gradient start / end points.
+function direction(deg: number) {
+  const a = (deg * Math.PI) / 180;
+  const x = Math.sin(a) / 2;
+  const y = -Math.cos(a) / 2;
+  return { start: { x: 0.5 - x, y: 0.5 - y }, end: { x: 0.5 + x, y: 0.5 + y } };
+}
+
+const wave = (y: number) => `M0 ${y}Q40 ${y - 20} 80 ${y}T160 ${y}T240 ${y}T330 ${y}V200H0Z`;
+const PAWS = [
+  [60, 150],
+  [120, 110],
+  [190, 140],
+  [250, 90],
+];
+
+// Illustrations drawn in a 330 x 200 box at the bottom of the card.
+function DecoArt({ kind }: { kind: Deco }) {
+  switch (kind) {
+    case "sea":
+      return (
+        <>
+          <Path d={wave(60)} fill="#FFFFFF" fillOpacity={0.13} />
+          <Path d={wave(100)} fill="#FFFFFF" fillOpacity={0.13} />
+          <Path d={wave(140)} fill="#FFFFFF" fillOpacity={0.19} />
+        </>
+      );
+    case "steam":
+      return (
+        <>
+          <Ellipse cx={165} cy={170} rx={110} ry={26} fill="#000000" fillOpacity={0.19} />
+          <Path d="M70 150Q165 210 260 150Z" fill="#FFFFFF" fillOpacity={0.9} />
+          <Path
+            d="M130 120q-16-24 0-48q16-24 0-48M165 120q-16-24 0-48q16-24 0-48M200 120q-16-24 0-48q16-24 0-48"
+            stroke="#FFFFFF"
+            strokeOpacity={0.6}
+            strokeWidth={5}
+            strokeLinecap="round"
+            fill="none"
+          />
+        </>
+      );
+    case "track":
+      return (
+        <>
+          <Path
+            d="M30 170C80 40 160 200 210 90S300 40 310 120"
+            stroke="#FFFFFF"
+            strokeOpacity={0.8}
+            strokeWidth={6}
+            strokeLinecap="round"
+            strokeDasharray="1 14"
+            fill="none"
+          />
+          <Circle cx={310} cy={120} r={9} fill="#FDE047" />
+        </>
+      );
+    case "paws":
+      return (
+        <G fill="#FFFFFF" fillOpacity={0.5}>
+          {PAWS.map(([x, y]) => (
+            <G key={x} transform={`translate(${x} ${y})`}>
+              <Ellipse cx={0} cy={10} rx={14} ry={11} />
+              <Circle cx={-13} cy={-6} r={5} />
+              <Circle cx={-4} cy={-12} r={5} />
+              <Circle cx={6} cy={-12} r={5} />
+              <Circle cx={14} cy={-5} r={5} />
+            </G>
+          ))}
+        </G>
+      );
+    case "film":
+      // A strip of 35 mm film with three warm frames.
+      return (
+        <G transform="rotate(-6 165 110)">
+          <Rect x={-20} y={60} width={370} height={96} rx={4} fill="#2A1508" fillOpacity={0.85} />
+          <Path
+            d={Array.from(
+              { length: 19 },
+              (_, k) => `M${-8 + k * 20} 66h10v8h-10zM${-8 + k * 20} 142h10v8h-10z`
+            ).join("")}
+            fill="#F3E3C8"
+            fillOpacity={0.7}
+          />
+          {["#E9C46A", "#D4A373", "#BC6C25"].map((color, k) => (
+            <Rect key={color} x={6 + k * 108} y={80} width={100} height={56} rx={2} fill={color} />
+          ))}
+          <Circle cx={150} cy={104} r={11} fill="#FFF3D6" />
+          <Path
+            d="M6 136l30-26 22 18 20-14 28 22zM222 136l26-30 24 20 22-12 12 22z"
+            fill="#5C3317"
+            fillOpacity={0.55}
+          />
+        </G>
+      );
+    default:
+      return null;
+  }
+}
+
+function Icon({
+  d,
+  color = "#FFFFFF",
+  size = 24,
+  fill = "none",
+}: { d: string; color?: string; size?: number; fill?: string }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24">
+      <Path
+        d={d}
+        fill={fill}
+        stroke={color}
+        strokeWidth={1.8}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  );
+}
+
+const ICONS = {
+  heart:
+    "M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.2a4.3 4.3 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z",
+  send: "M21 3.5L10.5 13.5M21 3.5l-6.5 17-4-7-7-4z",
+  close: "M6 6l12 12M18 6L6 18",
+  more: "M5 12h.01M12 12h.01M19 12h.01",
+};
+
+interface StoryPageProps {
+  story: Story;
+  index: number;
+  card: { width: number; height: number };
+  relativeProgress: SharedValue<number>;
+  active: SharedValue<number>;
+  fill: SharedValue<number>;
+}
+
+const StoryPage = React.memo(function StoryPage({
+  story,
+  index,
+  card,
+  relativeProgress,
+  active,
+  fill,
+}: StoryPageProps) {
+  const [liked, setLiked] = React.useState(false);
+  const s = card.width / 330; // the prototype's card is 330 wide
+  const S = card.width;
+
+  // Cube face: the leaving page turns on its right edge, the entering one on its left edge.
+  const face = useAnimatedStyle(() => {
+    const v = relativeProgress.value;
+    return {
+      transformOrigin: v < 0 ? "right center" : "left center",
+      transform: [{ perspective: 900 * s }, { rotateY: `${Math.max(-1, Math.min(1, v)) * 90}deg` }],
+    };
+  });
+  const shade = useAnimatedStyle(() => ({
+    opacity: Math.min(1, Math.abs(relativeProgress.value)) * 0.7,
+  }));
+  const bar = useAnimatedStyle(() => ({
+    transform: [{ scaleX: active.value === index ? fill.value : 0 }],
+  }));
+
+  return (
+    <Animated.View style={[{ width: S, height: card.height + FOOTER }, face]}>
+      <LinearGradient
+        colors={story.colors}
+        locations={[0, 0.58, 1]}
+        {...direction(story.angle)}
+        style={[styles.card, { height: card.height }]}
+      >
+        <LinearGradient colors={["rgba(0,0,0,0.22)", "rgba(0,0,0,0)"]} style={styles.scrim} />
+        {story.deco === "code" ? (
+          <View
+            style={[
+              styles.code,
+              { top: card.height - 200 * s + 40 * s, left: 28 * s, padding: 16 * s },
+            ]}
+          >
+            <Text style={[styles.codeText, { fontSize: 14 * s, lineHeight: 22 * s }]}>
+              {"<Carousel\n  loop\n  itemAnimation={cube}\n/>"}
+            </Text>
+          </View>
+        ) : (
+          <Svg width={S} height={200 * s} viewBox="0 0 330 200" style={styles.deco}>
+            <DecoArt kind={story.deco} />
+          </Svg>
+        )}
+        <Text
+          style={[
+            styles.text,
+            { top: 150 * s, left: 24 * s, right: 24 * s, fontSize: 34 * s, lineHeight: 42 * s },
+          ]}
+        >
+          {story.text}
+        </Text>
+        <View style={styles.track}>
+          <Animated.View style={[styles.bar, bar]} />
+        </View>
+        <View style={styles.user}>
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>{story.user[0].toUpperCase()}</Text>
+          </View>
+          <Text style={styles.name}>{story.user}</Text>
+          <Text style={styles.time}>{story.time}</Text>
+          <View style={styles.spacer} />
+          <Icon d={ICONS.more} />
+          <Icon d={ICONS.close} />
+        </View>
+        <Animated.View style={[styles.shade, shade]} />
+      </LinearGradient>
+      <View style={styles.footer}>
+        <View style={styles.reply}>
+          <Text style={styles.replyText}>Send message</Text>
+        </View>
+        <Pressable accessibilityLabel="Like" hitSlop={10} onPress={() => setLiked((on) => !on)}>
+          <Icon
+            d={ICONS.heart}
+            size={28}
+            color={liked ? "#FF3B5C" : "#FFFFFF"}
+            fill={liked ? "#FF3B5C" : "none"}
+          />
+        </Pressable>
+        <Icon d={ICONS.send} size={28} />
+      </View>
+    </Animated.View>
+  );
+});
+
+function StoriesCube() {
+  const { width, height, insets } = useScene();
+  const ref = React.useRef<CarouselRef>(null);
+  const active = useSharedValue(0);
+  const fill = useSharedValue(0);
+
+  // A 9:16 story card above the reply bar, as wide as the screen allows.
+  const room = height - insets.top - Math.max(insets.bottom, 8) - FOOTER;
+  const cardHeight = Math.min(Math.round((width * 16) / 9), room);
+  const card = { width: Math.round((cardHeight * 9) / 16), height: cardHeight };
+
+  const startBar = React.useCallback(
+    (index: number) => {
+      active.value = index;
+      fill.value = 0;
+      fill.value = withTiming(1, { duration: INTERVAL, easing: Easing.linear });
+    },
+    [active, fill]
+  );
+  React.useEffect(() => startBar(0), [startBar]);
+
+  const itemAnimation = React.useCallback<CarouselItemAnimation>(
+    (value) => {
+      "worklet";
+      return {
+        transform: [{ translateX: value * card.width + (width - card.width) / 2 }],
+        opacity: Math.abs(value) >= 1 ? 0 : 1,
+      };
+    },
+    [card.width, width]
+  );
+
+  // Tap the left third for the previous person, anywhere else on the card for the next.
+  const tap = React.useMemo(
+    () =>
+      Gesture.Tap()
+        .runOnJS(true)
+        .onEnd((e, success) => {
+          if (!success || e.y > card.height) return;
+          if (e.x < width / 3) ref.current?.prev();
+          else ref.current?.next();
+        }),
+    [card.height, width]
+  );
+
+  const renderItem = React.useCallback(
+    ({
+      item,
+      index,
+      relativeProgress,
+    }: { item: Story; index: number; relativeProgress: SharedValue<number> }) => (
+      <StoryPage
+        story={item}
+        index={index}
+        card={card}
+        relativeProgress={relativeProgress}
+        active={active}
+        fill={fill}
+      />
+    ),
+    [card.width, card.height, active, fill]
+  );
+
+  return (
+    <View
+      style={[styles.screen, { paddingTop: insets.top, paddingBottom: Math.max(insets.bottom, 8) }]}
+    >
+      <GestureDetector gesture={tap}>
+        <View collapsable={false}>
+          <Carousel
+            ref={ref}
+            data={STORIES}
+            loop
+            autoplay
+            autoplayInterval={INTERVAL}
+            itemSize={card.width}
+            style={{ width, height: card.height + FOOTER }}
+            animation={{ type: "timing", duration: 700, easing: EASE_OUT_QUART }}
+            itemAnimation={itemAnimation}
+            onScrollStart={() => cancelAnimation(fill)}
+            onSnapToItem={startBar}
+            renderItem={renderItem}
+          />
+        </View>
+      </GestureDetector>
+    </View>
+  );
+}
+
+export default function Scene() {
+  return (
+    <SceneScreen
+      background="#000000"
+      statusBar="light"
+      fonts={[
+        "Bricolage-Bold",
+        "Instrument-Regular",
+        "Instrument-SemiBold",
+        "Instrument-Bold",
+        "JetBrainsMono-Regular",
+      ]}
+    >
+      <StoriesCube />
+    </SceneScreen>
+  );
+}
+
+const styles = StyleSheet.create({
+  screen: { flex: 1, justifyContent: "center" },
+  card: { borderRadius: 12, overflow: "hidden" },
+  scrim: { position: "absolute", left: 0, right: 0, top: 0, height: 120 },
+  deco: { position: "absolute", left: 0, bottom: 0 },
+  code: { position: "absolute", borderRadius: 12, backgroundColor: "rgba(0,0,0,0.35)" },
+  codeText: { fontFamily: "JetBrainsMono-Regular", color: "#C4B5FD" },
+  text: {
+    position: "absolute",
+    fontFamily: "Bricolage-Bold",
+    color: "#FFFFFF",
+    textShadowColor: "rgba(0,0,0,0.25)",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 16,
+  },
+  track: {
+    position: "absolute",
+    left: 12,
+    right: 12,
+    top: 12,
+    height: 3,
+    borderRadius: 2,
+    overflow: "hidden",
+    backgroundColor: "rgba(255,255,255,0.35)",
+  },
+  bar: { flex: 1, backgroundColor: "#FFFFFF", transformOrigin: "left center" },
+  user: {
+    position: "absolute",
+    left: 12,
+    right: 12,
+    top: 26,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  avatar: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: "#FFFFFF",
+    backgroundColor: "rgba(255,255,255,0.25)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  avatarText: { fontFamily: "Instrument-Bold", fontSize: 13, color: "#FFFFFF" },
+  name: { fontFamily: "Instrument-SemiBold", fontSize: 14, lineHeight: 18, color: "#FFFFFF" },
+  time: {
+    fontFamily: "Instrument-Regular",
+    fontSize: 14,
+    lineHeight: 18,
+    color: "rgba(255,255,255,0.7)",
+  },
+  spacer: { flex: 1 },
+  shade: { ...StyleSheet.absoluteFillObject, backgroundColor: "#000000", pointerEvents: "none" },
+  footer: {
+    height: FOOTER,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 18,
+    paddingHorizontal: 12,
+  },
+  reply: {
+    flex: 1,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.45)",
+    justifyContent: "center",
+    paddingHorizontal: 18,
+  },
+  replyText: {
+    fontFamily: "Instrument-Regular",
+    fontSize: 15,
+    lineHeight: 20,
+    color: "rgba(255,255,255,0.85)",
+  },
+});

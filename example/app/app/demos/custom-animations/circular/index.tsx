@@ -49,6 +49,7 @@ function Index() {
           loop
           autoplay={isAutoPlay}
           autoplayInterval={isFast ? 100 : 2000}
+          itemSize={itemSize}
           data={getImages(12)}
           renderItem={({ index }) => (
             <Pressable

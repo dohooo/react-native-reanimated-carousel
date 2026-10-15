@@ -1,0 +1,15 @@
+{
+  "title": "Map Explorer",
+  "group": "Spatial & 3D",
+  "order": 16,
+  "htmlId": "map",
+  "statusBar": "dark",
+  "description": "Place cards that pan the city map from one spot to the next as you swipe.",
+  "tags": ["progress", "control"],
+  "uses": ["itemSize", "itemAnimation", "loop", "autoplay", "progress", "ref.scrollTo()"],
+  "steps": [
+    "`itemSize` is the screen width minus 72, so both neighbors peek in, scaled to 0.94 by `itemAnimation`.",
+    "The `progress` shared value pans the map on the UI thread, sliding from the current place toward the next one.",
+    "Pins grow up to 1.4× as `progress` nears them, and tapping a pin calls `scrollTo({ index })`."
+  ]
+}

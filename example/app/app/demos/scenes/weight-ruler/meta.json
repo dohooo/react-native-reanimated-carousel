@@ -1,0 +1,23 @@
+{
+  "title": "Weight Ruler",
+  "group": "Pickers & Widgets",
+  "order": 10,
+  "htmlId": "ruler",
+  "statusBar": "dark",
+  "description": "A weight log with an 801-tick ruler that only mounts the ticks near the needle, and a readout, BMI band and chart that follow it frame by frame.",
+  "tags": ["large", "nearest", "progress"],
+  "uses": [
+    "itemSize",
+    "itemAnimation",
+    "renderWindowSize",
+    "snapMode",
+    "snapMomentum",
+    "defaultIndex",
+    "progress"
+  ],
+  "steps": [
+    "Each tick is `itemSize` 12 and stands for 0.1 kg, from 40.0 to 120.0; `defaultIndex` 284 opens on 68.4 kg.",
+    "`renderWindowSize={80}` keeps only the ticks around the needle mounted, and `snapMode=\"nearest\"` with `snapMomentum` 0.3 lets a flick travel.",
+    "`progress` feeds derived values on the UI thread: the kg and BMI text, the WHO band marker and today's bar update every frame without a React render."
+  ]
+}

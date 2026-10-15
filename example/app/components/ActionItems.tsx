@@ -5,17 +5,34 @@ import {
   ChevronUp as ChevronUpRaw,
 } from "@tamagui/lucide-icons";
 import * as React from "react";
-import { Adapt, Button, Checkbox, Label, Select, Sheet, Switch, XStack, YStack } from "tamagui";
+import {
+  Adapt,
+  Button,
+  Checkbox,
+  Label,
+  Select,
+  Sheet,
+  Switch,
+  XStack,
+  YStack,
+  useDidFinishSSR,
+} from "tamagui";
 
 type IconProps = {
   size?: number;
   color?: string;
 };
 
-const ChevronDownIcon = ChevronDownRaw as React.ComponentType<IconProps>;
-const ChevronUpIcon = ChevronUpRaw as React.ComponentType<IconProps>;
-const CheckIcon = CheckIconRaw as React.ComponentType<IconProps>;
-const CheckIconMinimal = Check as React.ComponentType<IconProps>;
+// During static rendering the lucide icons load a second @tamagui/web copy that has no config and
+// throws, so icons render only after hydration.
+function clientOnly(Icon: React.ComponentType<IconProps>) {
+  return (props: IconProps) => (useDidFinishSSR() ? <Icon {...props} /> : null);
+}
+
+const ChevronDownIcon = clientOnly(ChevronDownRaw as React.ComponentType<IconProps>);
+const ChevronUpIcon = clientOnly(ChevronUpRaw as React.ComponentType<IconProps>);
+const CheckIcon = clientOnly(CheckIconRaw as React.ComponentType<IconProps>);
+const CheckIconMinimal = clientOnly(Check as React.ComponentType<IconProps>);
 import { LinearGradient } from "tamagui/linear-gradient";
 
 interface SwitchActionItemProps {

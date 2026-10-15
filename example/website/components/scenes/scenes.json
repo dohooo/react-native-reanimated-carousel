@@ -1,0 +1,290 @@
+{
+  "tags": [
+    {
+      "k": "3d",
+      "label": "3D",
+      "api": "perspective with rotateX / rotateY inside itemAnimation"
+    },
+    {
+      "k": "vertical",
+      "label": "Vertical",
+      "api": "orientation=\"vertical\""
+    },
+    {
+      "k": "progress",
+      "label": "Progress-driven UI",
+      "api": "onProgressChange feeds a shared value that drives UI outside the carousel"
+    },
+    {
+      "k": "parallax",
+      "label": "Parallax inside items",
+      "api": "renderItem({ relativeProgress })"
+    },
+    {
+      "k": "multi",
+      "label": "Multiple carousels",
+      "api": "several <Carousel>s kept in step through refs and callbacks"
+    },
+    {
+      "k": "control",
+      "label": "Programmatic control",
+      "api": "ref.current.next({ count }) and ref.current.scrollTo({ index })"
+    },
+    {
+      "k": "nearest",
+      "label": "Momentum snapping",
+      "api": "snapMode=\"nearest\" with snapMomentum"
+    },
+    {
+      "k": "marquee",
+      "label": "Marquee",
+      "api": "autoplay with autoplayInterval={0} and linear timing"
+    },
+    {
+      "k": "large",
+      "label": "Large lists",
+      "api": "renderWindowSize"
+    }
+  ],
+  "scenes": [
+    {
+      "slug": "flavor-switcher",
+      "title": "Flavor Switcher",
+      "group": "Commerce & Brand",
+      "description": "Drink landing page where the background, ink and giant flavor word blend between flavors as you drag the cans.",
+      "tags": [
+        "progress",
+        "parallax"
+      ],
+      "statusBar": "dark"
+    },
+    {
+      "slug": "product-gallery",
+      "title": "Product Gallery",
+      "group": "Commerce & Brand",
+      "description": "Watch product page where a full-width hero carousel and a thumbnail strip follow each other frame by frame.",
+      "tags": [
+        "multi",
+        "control",
+        "parallax",
+        "progress"
+      ],
+      "statusBar": "dark"
+    },
+    {
+      "slug": "editorial-cards",
+      "title": "Editorial Cards",
+      "group": "Commerce & Brand",
+      "description": "Magazine picks whose landscape art slides in layers as each card moves, with section tabs that jump to a story.",
+      "tags": [
+        "parallax",
+        "control",
+        "progress"
+      ],
+      "statusBar": "dark"
+    },
+    {
+      "slug": "onboarding",
+      "title": "Onboarding",
+      "group": "Commerce & Brand",
+      "description": "Four intro pages whose art, title and body slide at different speeds while the background and button blend from one page color to the next.",
+      "tags": [
+        "progress",
+        "parallax",
+        "control"
+      ],
+      "statusBar": "dark"
+    },
+    {
+      "slug": "cover-flow",
+      "title": "Cover Flow",
+      "group": "Media & Play",
+      "description": "Music library with the classic 3D cover flow, mirrored reflections and momentum flicks.",
+      "tags": [
+        "3d",
+        "nearest",
+        "control"
+      ],
+      "statusBar": "light"
+    },
+    {
+      "slug": "stories-cube",
+      "title": "Stories Cube",
+      "group": "Media & Play",
+      "description": "Full-screen stories that turn to the next person like the faces of a cube.",
+      "tags": [
+        "3d",
+        "control"
+      ],
+      "statusBar": "light"
+    },
+    {
+      "slug": "now-showing",
+      "title": "Now Showing",
+      "group": "Media & Play",
+      "description": "Cinema app with movie posters over a blurred backdrop that cross-fades with progress.",
+      "tags": [
+        "progress"
+      ],
+      "statusBar": "light"
+    },
+    {
+      "slug": "page-turn",
+      "title": "Page Turn",
+      "group": "Media & Play",
+      "description": "A small book of Tang poems whose pages turn around the spine, with the art on the back of each leaf.",
+      "tags": [
+        "3d",
+        "progress",
+        "control"
+      ],
+      "statusBar": "light"
+    },
+    {
+      "slug": "card-fan",
+      "title": "Card Fan",
+      "group": "Media & Play",
+      "description": "A daily card draw: a hand of playing cards fanned around a pivot far below the table.",
+      "tags": [
+        "control",
+        "progress"
+      ],
+      "statusBar": "light"
+    },
+    {
+      "slug": "date-wheel",
+      "title": "Date Wheel",
+      "group": "Pickers & Widgets",
+      "description": "An iOS-style date picker sheet: three vertical carousels turn like wheels while a month calendar follows along.",
+      "tags": [
+        "vertical",
+        "3d",
+        "nearest",
+        "multi",
+        "control",
+        "progress"
+      ],
+      "statusBar": "dark"
+    },
+    {
+      "slug": "weight-ruler",
+      "title": "Weight Ruler",
+      "group": "Pickers & Widgets",
+      "description": "A weight log with an 801-tick ruler that only mounts the ticks near the needle, and a readout, BMI band and chart that follow it frame by frame.",
+      "tags": [
+        "large",
+        "nearest",
+        "progress"
+      ],
+      "statusBar": "dark"
+    },
+    {
+      "slug": "rolling-clock",
+      "title": "Rolling Clock",
+      "group": "Pickers & Widgets",
+      "description": "A clock app where each of the six digits is its own vertical carousel, rolling forward every second, with a 12/24-hour switch and an alarms list.",
+      "tags": [
+        "vertical",
+        "control",
+        "multi"
+      ],
+      "statusBar": "light"
+    },
+    {
+      "slug": "slot-machine",
+      "title": "Slot Machine",
+      "group": "Pickers & Widgets",
+      "description": "A three-reel slot machine: SPIN calls `next({ count })` on three vertical loop carousels with staggered durations.",
+      "tags": [
+        "vertical",
+        "3d",
+        "control",
+        "multi"
+      ],
+      "statusBar": "light"
+    },
+    {
+      "slug": "mood-rating",
+      "title": "Mood Rating",
+      "group": "Pickers & Widgets",
+      "description": "A daily check-in whose big face morphs continuously with the carousel's `progress`.",
+      "tags": [
+        "progress",
+        "control"
+      ],
+      "statusBar": "dark"
+    },
+    {
+      "slug": "helix-gallery",
+      "title": "Helix Gallery",
+      "group": "Spatial & 3D",
+      "description": "A photo album wound around a vertical 3D helix that keeps turning on its own.",
+      "tags": [
+        "vertical",
+        "3d",
+        "parallax"
+      ],
+      "statusBar": "light"
+    },
+    {
+      "slug": "radial-ring",
+      "title": "Radial Ring",
+      "group": "Spatial & 3D",
+      "description": "A home-screen launcher that winds eight apps around a dial; `itemAnimation` maps each item's value to an angle.",
+      "tags": [
+        "control",
+        "progress",
+        "parallax"
+      ],
+      "statusBar": "light"
+    },
+    {
+      "slug": "map-explorer",
+      "title": "Map Explorer",
+      "group": "Spatial & 3D",
+      "description": "Place cards that pan the city map from one spot to the next as you swipe.",
+      "tags": [
+        "progress",
+        "control"
+      ],
+      "statusBar": "dark"
+    },
+    {
+      "slug": "level-select",
+      "title": "Level Select",
+      "group": "Spatial & 3D",
+      "description": "Neon level picker with 3D cards, a parallax starfield and a sliding retro grid.",
+      "tags": [
+        "3d",
+        "progress",
+        "control"
+      ],
+      "statusBar": "light"
+    },
+    {
+      "slug": "wallet-stack",
+      "title": "Wallet Stack",
+      "group": "Spatial & 3D",
+      "description": "Wallet of stacked cards where only each top edge peeks out, with recent transactions underneath.",
+      "tags": [
+        "vertical",
+        "progress",
+        "control"
+      ],
+      "statusBar": "light"
+    },
+    {
+      "slug": "market-terminal",
+      "title": "Market Terminal",
+      "group": "Spatial & 3D",
+      "description": "Trading terminal with two marquee tapes running in opposite directions, swipeable chart cards and a watchlist that follows them.",
+      "tags": [
+        "marquee",
+        "multi",
+        "progress",
+        "control"
+      ],
+      "statusBar": "light"
+    }
+  ]
+}

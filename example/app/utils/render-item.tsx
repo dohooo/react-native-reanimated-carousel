@@ -1,11 +1,11 @@
 import { SlideItem } from "@/components/SlideItem";
-import { ImageStyle, StyleProp } from "react-native";
+import { StyleProp, ViewStyle } from "react-native";
 import { CarouselRenderItem } from "react-native-reanimated-carousel";
 
 interface Options {
   colorFill?: boolean;
   rounded?: boolean;
-  style?: StyleProp<ImageStyle>;
+  style?: StyleProp<ViewStyle>;
 }
 
 export const renderItem =

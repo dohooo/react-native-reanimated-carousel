@@ -2,22 +2,23 @@ import { PURPLE_IMAGES } from "@/constants/purple-images";
 import React, { useMemo } from "react";
 import {
   ImageSourcePropType,
-  type ImageStyle,
   type StyleProp,
   StyleSheet,
   Text,
   View,
   type ViewProps,
+  type ViewStyle,
 } from "react-native";
 import type { AnimatedProps } from "react-native-reanimated";
 import Animated from "react-native-reanimated";
 
 interface Props extends AnimatedProps<ViewProps> {
-  style?: StyleProp<ImageStyle>;
+  style?: StyleProp<ViewStyle>;
   index?: number;
   rounded?: boolean;
   source?: ImageSourcePropType;
   colorFill?: boolean;
+  showIndex?: boolean;
 }
 
 export const SlideItem: React.FC<Props> = (props) => {
@@ -27,6 +28,7 @@ export const SlideItem: React.FC<Props> = (props) => {
     rounded = false,
     testID,
     colorFill = false,
+    showIndex = true,
     ...animatedViewProps
   } = props;
 
@@ -36,20 +38,25 @@ export const SlideItem: React.FC<Props> = (props) => {
   );
 
   return (
-    <Animated.View testID={testID} style={{ flex: 1 }} {...animatedViewProps}>
+    <Animated.View testID={testID} style={[{ flex: 1 }, style]} {...animatedViewProps}>
       {!colorFill && (
         <Animated.Image
-          style={[style, styles.container, rounded && { borderRadius: 15 }]}
+          style={[styles.container, rounded && { borderRadius: 15 }]}
           source={source}
           resizeMode="cover"
         />
       )}
       {colorFill && <View style={[styles.colorFill, rounded && { borderRadius: 15 }]} />}
-      <View style={styles.overlay}>
-        <View style={styles.overlayTextContainer}>
-          <Text testID={`slide-index-${index}`} style={styles.overlayText}>{`Slide ${index}`}</Text>
+      {showIndex && (
+        <View style={styles.overlay}>
+          <View style={styles.overlayTextContainer}>
+            <Text
+              testID={`slide-index-${index}`}
+              style={styles.overlayText}
+            >{`Slide ${index}`}</Text>
+          </View>
         </View>
-      </View>
+      )}
     </Animated.View>
   );
 };

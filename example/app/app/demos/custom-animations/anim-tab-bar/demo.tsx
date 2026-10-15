@@ -47,7 +47,9 @@ function Index() {
           style={{
             width: PAGE_WIDTH,
             height: PAGE_HEIGHT,
+            overflow: "visible",
           }}
+          contentContainerStyle={{ overflow: "visible" }}
           data={DATA}
           renderItem={({ index, item, relativeProgress }) => {
             return (
@@ -107,7 +109,7 @@ const Item: React.FC<Props> = (props) => {
     const color = interpolateColor(
       relativeProgress.value,
       [-1, 0, 1],
-      ["#ffffff", "#002a57", "#ffffff"]
+      ["#ffffff", "#4ea1ff", "#ffffff"]
     );
 
     return {

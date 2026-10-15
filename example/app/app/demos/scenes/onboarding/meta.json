@@ -1,0 +1,25 @@
+{
+  "title": "Onboarding",
+  "group": "Commerce & Brand",
+  "order": 3,
+  "htmlId": "onboarding",
+  "statusBar": "dark",
+  "description": "Four intro pages whose art, title and body slide at different speeds while the background and button blend from one page color to the next.",
+  "tags": ["progress", "parallax", "control"],
+  "uses": [
+    "loop",
+    "progress",
+    "relativeProgress",
+    "onSnapToItem",
+    "ref.next()",
+    "ref.scrollTo()",
+    "autoplay",
+    "animation",
+    "Pagination"
+  ],
+  "steps": [
+    "Pages are full width with `loop={false}`; in each page the art lags by `relativeProgress` × `0.4` of a page while the title and body lead by `0.25` and `0.45` and fade.",
+    "The `progress` shared value blends the background and button colors with `interpolateColor` and fades out Skip on the last page.",
+    "Next calls `next()` and Skip calls `scrollTo({ index: 3 })`; `autoplay` turns a page every `2800` ms, and on the last page the demo waits one interval and calls `scrollTo({ index: 0 })`."
+  ]
+}

@@ -2513,6 +2513,41 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo-google-fonts/bricolage-grotesque@npm:0.4.1":
+  version: 0.4.1
+  resolution: "@expo-google-fonts/bricolage-grotesque@npm:0.4.1"
+  checksum: 890f85b9ca23d982876fa7626fc69562749879aa63d8daf628a9679eaafe4527fa18c3b2c3f7e660d825c03a1dad805904c42d7ea27e2ddf5470b95ff8a1593c
+  languageName: node
+  linkType: hard
+
+"@expo-google-fonts/eb-garamond@npm:0.4.3":
+  version: 0.4.3
+  resolution: "@expo-google-fonts/eb-garamond@npm:0.4.3"
+  checksum: d097407774d3cc7932cd89f5404304ac3d69a9b5375cb9316da754e084c65e4d3e9a1423908a81caf71927dba8360a4028ae7b5c754963a630b41e637b1efd30
+  languageName: node
+  linkType: hard
+
+"@expo-google-fonts/fraunces@npm:0.4.1":
+  version: 0.4.1
+  resolution: "@expo-google-fonts/fraunces@npm:0.4.1"
+  checksum: 4a5dbac413596a09205c3d90dec72bf2521b395ebc3c83d1603a464c9acc018a83d18061331e38eef899689902694ce34543e767e53910d76cf4f2ccd1919c57
+  languageName: node
+  linkType: hard
+
+"@expo-google-fonts/instrument-sans@npm:0.4.2":
+  version: 0.4.2
+  resolution: "@expo-google-fonts/instrument-sans@npm:0.4.2"
+  checksum: a4e227d9bd04007cb35a51557c1ff5074054ec3b50f214564887fe4caf7f0d509be049dfb45d562364499db92b87684fd384994d27ab1c58956bb1aa56e786b7
+  languageName: node
+  linkType: hard
+
+"@expo-google-fonts/jetbrains-mono@npm:0.4.1":
+  version: 0.4.1
+  resolution: "@expo-google-fonts/jetbrains-mono@npm:0.4.1"
+  checksum: 32fe2cf1a2066dff493c877b1316bd9c25f1da407d27e77bf4dbbcdc24fa7a876eac50e8c87fa1879fc7cd6d4cfc22517f805375bcfc8eff521a415fd5becfd2
+  languageName: node
+  linkType: hard
+
 "@expo/cli@npm:54.0.7":
   version: 54.0.7
   resolution: "@expo/cli@npm:54.0.7"
@@ -6398,6 +6433,11 @@ __metadata:
     "@babel/core": "npm:^7.26.0"
     "@babel/plugin-transform-private-methods": "npm:^7.25.9"
     "@babel/plugin-transform-private-property-in-object": "npm:^7.25.9"
+    "@expo-google-fonts/bricolage-grotesque": "npm:0.4.1"
+    "@expo-google-fonts/eb-garamond": "npm:0.4.3"
+    "@expo-google-fonts/fraunces": "npm:0.4.1"
+    "@expo-google-fonts/instrument-sans": "npm:0.4.2"
+    "@expo-google-fonts/jetbrains-mono": "npm:0.4.1"
     "@expo/metro-runtime": "npm:~6.1.2"
     "@expo/vector-icons": "npm:^15.0.2"
     "@faker-js/faker": "npm:^9.0.1"

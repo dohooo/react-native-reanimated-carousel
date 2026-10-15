@@ -8,7 +8,7 @@ import { reloadAsync } from "expo-updates";
 import React from "react";
 import { ColorValue, I18nManager, Platform, Text } from "react-native";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { XStack } from "tamagui";
+import { XStack, useDidFinishSSR } from "tamagui";
 
 type IconProps = {
   size?: number;
@@ -34,6 +34,8 @@ export const HeaderRight: React.FC<HeaderRightProps> = ({ tintColor, isRTL, setI
   const pathname = usePathname();
   const inDemos = pathname.startsWith("/demos");
   const router = useRouter();
+  // The QR code dialog renders different markup on the server, so mount it after hydration.
+  const didFinishSSR = useDidFinishSSR();
 
   function demoToggle() {
     const isDemoPage = pathname.endsWith("/demo");
@@ -46,7 +48,7 @@ export const HeaderRight: React.FC<HeaderRightProps> = ({ tintColor, isRTL, setI
 
   return (
     <XStack alignItems="center" justifyContent="center" gap={8}>
-      {IS_WEB && (
+      {IS_WEB && didFinishSSR && (
         <>
           <QRCode tintColor={tintColor} />
           <Text style={{ color: tintColor }}> | </Text>
