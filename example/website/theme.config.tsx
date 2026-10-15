@@ -2,6 +2,7 @@ import React from "react";
 
 import type { DocsThemeConfig } from "nextra-theme-docs";
 
+import { DocTable } from "./components/DocTable";
 import { MarkdownLinks, useHeadTags, useSeoProps } from "./components/PageMeta";
 
 const config: DocsThemeConfig = {
@@ -25,6 +26,9 @@ const config: DocsThemeConfig = {
   },
   toc: {
     extraContent: MarkdownLinks,
+  },
+  components: {
+    table: DocTable,
   },
   darkMode: true,
   useNextSeoProps: useSeoProps,

@@ -34,6 +34,9 @@ export const SBItem: React.FC<Props> = (props) => {
   const [isPretty, setIsPretty] = React.useState(pretty || enablePretty);
   return (
     <LongPressGestureHandler
+      // Web only. Without it the handler claims every touch on the slide, so the
+      // carousel's own touch-action (set by its embedder) could not let the page scroll.
+      touchAction="auto"
       onActivated={() => {
         setIsPretty(!isPretty);
       }}

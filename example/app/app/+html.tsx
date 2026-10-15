@@ -27,10 +27,13 @@ export default function Root({ children }: { children: React.ReactNode }) {
         */}
         <ScrollViewStyleReset />
 
-        {/* Using raw CSS styles as an escape-hatch to ensure the background color never flickers in dark-mode. */}
+        {/* Touch handling for demos embedded in the docs; see the script below. */}
         <style
           dangerouslySetInnerHTML={{
-            __html: "",
+            __html: `
+              [data-page-scroll="y"] { touch-action: pan-y !important; }
+              [data-page-scroll="x"] { touch-action: pan-x !important; }
+            `,
           }}
         />
 
@@ -39,29 +42,58 @@ export default function Root({ children }: { children: React.ReactNode }) {
       <script
         dangerouslySetInnerHTML={{
           __html: `
-            window.addEventListener("load", () => {
-              const inDoc = window.location.search.includes("in_doc=true");
-
-              if (!inDoc) {
+            (() => {
+              if (!window.location.search.includes("in_doc=true")) {
                 return;
               }
 
-              const carouselComponent = document.getElementById("carousel-component");
-
-              if (carouselComponent) {
-                const kind = carouselComponent.getAttribute("data-kind");
-                const name = carouselComponent.getAttribute("data-name");
+              // Tell the docs page how tall the demo is. The page can hydrate after this
+              // document has loaded, so it may also ask again with "requestCarouselHeight".
+              const postHeight = () => {
+                const carouselComponent = document.getElementById("carousel-component");
+                if (!carouselComponent || window.parent === window) {
+                  return;
+                }
                 window.parent.postMessage(
                   {
                     type: "carouselHeight",
                     height: carouselComponent.offsetHeight,
-                    kind,
-                    name,
+                    kind: carouselComponent.getAttribute("data-kind"),
+                    name: carouselComponent.getAttribute("data-name"),
                   },
                   "*",
                 );
+              };
+              window.addEventListener("load", postHeight);
+              window.addEventListener("message", (event) => {
+                if (event.data && event.data.type === "requestCarouselHeight") {
+                  postHeight();
+                }
+              });
+
+              // A carousel embedded in the docs only claims swipes along its own axis, so a
+              // vertical swipe over a horizontal demo still scrolls the page on a phone.
+              // Scenes in the iPhone frame keep every touch: the docs page decides when.
+              if (window.location.search.includes("frame=iphone")) {
+                return;
               }
-            });
+              const markPageScroll = () => {
+                const views = document.querySelectorAll(
+                  '[data-testid="carousel-content-container"]:not([data-page-scroll])',
+                );
+                for (const view of views) {
+                  const vertical = getComputedStyle(view).flexDirection.startsWith("column");
+                  view.setAttribute("data-page-scroll", vertical ? "x" : "y");
+                }
+              };
+              window.addEventListener("load", () => {
+                markPageScroll();
+                new MutationObserver(markPageScroll).observe(document.body, {
+                  childList: true,
+                  subtree: true,
+                });
+              });
+            })();
           `,
         }}
       />
