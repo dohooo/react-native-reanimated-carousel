@@ -32,19 +32,27 @@ function Index() {
   return (
     <View style={{ flex: 1 }}>
       <CaptureWrapper>
-        <View style={{ marginVertical: 100 }}>
+        <View
+          style={{
+            marginVertical: 100,
+            width: window.width,
+            height: PAGE_HEIGHT,
+            justifyContent: "center",
+            alignItems: "center",
+            borderBottomWidth: 1,
+            borderBottomColor: "#002a57",
+          }}
+        >
           <Carousel
             key={`${loop}`}
             ref={r}
             loop={loop}
             style={{
-              width: window.width,
+              width: PAGE_WIDTH,
               height: PAGE_HEIGHT,
-              justifyContent: "center",
-              alignItems: "center",
-              borderBottomWidth: 1,
-              borderBottomColor: "#002a57",
+              overflow: "visible",
             }}
+            contentContainerStyle={{ overflow: "visible" }}
             data={DATA}
             renderItem={({ index, item, relativeProgress }) => {
               return (

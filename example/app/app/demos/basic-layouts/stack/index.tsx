@@ -39,8 +39,8 @@ function Index() {
   const mergedStyle = React.useMemo<StyleProp<ViewStyle>>(
     () =>
       [
-        { width: window.width, height: 258 },
-        { alignItems: "center", justifyContent: "center" },
+        { width: window.width * 0.75, height: 258 },
+        { alignItems: "center", justifyContent: "center", overflow: "visible" },
         advancedStyle,
       ].filter(Boolean) as StyleProp<ViewStyle>[],
     [advancedStyle]
@@ -48,11 +48,12 @@ function Index() {
 
   return (
     <View style={{ flex: 1 }}>
-      <CaptureWrapper>
+      <CaptureWrapper alignItems="center">
         <Carousel
           ref={ref}
           {...restSettings}
           style={mergedStyle}
+          contentContainerStyle={{ overflow: "visible" }}
           layout={{
             type: mode,
             exitDirection: snapDirection,
