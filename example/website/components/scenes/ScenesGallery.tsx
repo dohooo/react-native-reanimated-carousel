@@ -15,6 +15,21 @@ export function SceneVideo({ slug, title, autoPlay = false }: { slug: string; ti
       video.current?.pause();
     }
   }, [autoPlay]);
+  // Touch screens have no hover, so play a card's recording while most of it is on screen.
+  useEffect(() => {
+    const v = video.current;
+    if (!v || autoPlay || !window.matchMedia("(hover: none)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) v.play().catch(() => {});
+        else v.pause();
+      },
+      { threshold: 0.6 }
+    );
+    observer.observe(v);
+    return () => observer.disconnect();
+  }, [autoPlay]);
   const play = () => {
     const v = video.current;
     if (!v || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
