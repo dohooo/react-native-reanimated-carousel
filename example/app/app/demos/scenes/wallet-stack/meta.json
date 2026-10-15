@@ -1,0 +1,24 @@
+{
+  "title": "Wallet Stack",
+  "group": "Spatial & 3D",
+  "order": 18,
+  "htmlId": "wallet",
+  "statusBar": "light",
+  "description": "Wallet of stacked cards where only each top edge peeks out, with recent transactions underneath.",
+  "tags": ["vertical", "progress", "control"],
+  "uses": [
+    "orientation",
+    "itemSize",
+    "itemAnimation",
+    "autoplay",
+    "autoplayDirection",
+    "onSnapToItem",
+    "progress",
+    "ref.scrollTo()"
+  ],
+  "steps": [
+    "`orientation=\"vertical\"` with `itemSize` 120: `itemAnimation` shows the current card in full and each later card 52 pt lower, covering the one before.",
+    "Passed cards tuck 16 pt up behind it, shrink to 0.84 and fade, and tapping a card calls `scrollTo({ index })`.",
+    "Autoplay deals a card every 2200 ms and `onSnapToItem` flips `autoplayDirection` at both ends, while `progress` keeps the transaction list under the last card."
+  ]
+}

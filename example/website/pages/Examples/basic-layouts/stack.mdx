@@ -67,6 +67,7 @@ function Index() {
 		<View
 			id="carousel-component"
 			dataSet={{ kind: "basic-layouts", name: "stack" }}
+			style={{ alignItems: "center" }}
 		>
 			<Carousel
 				ref={ref}
@@ -78,7 +79,9 @@ function Index() {
 					height: 220,
 					alignItems: "center",
 					justifyContent: "center",
+					overflow: "visible",
 				}}
+				contentContainerStyle={{ overflow: "visible" }}
 				layout={{
 					type: "horizontal-stack",
 					exitDirection: "left",

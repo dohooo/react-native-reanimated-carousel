@@ -1,0 +1,15 @@
+{
+  "title": "Card Fan",
+  "group": "Media & Play",
+  "order": 8,
+  "htmlId": "card-fan",
+  "statusBar": "light",
+  "description": "A daily card draw: a hand of playing cards fanned around a pivot far below the table.",
+  "tags": ["control", "progress"],
+  "uses": ["itemAnimation", "itemSize", "loop", "autoplay", "progress", "ref.scrollTo()"],
+  "steps": [
+    "`itemSize` 44 gives each card a thin slice of the drag, and `autoplay` deals the next one every 1.6 s.",
+    "`itemAnimation` turns each card by `value × 8°` around a `transformOrigin` 360 pt below its centre and lifts the current one 30 pt.",
+    "`progress` lights up the rank strip; tapping a rank or Shuffle calls `scrollTo({ index })`."
+  ]
+}

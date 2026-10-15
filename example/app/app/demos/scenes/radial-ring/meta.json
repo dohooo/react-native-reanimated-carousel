@@ -1,0 +1,25 @@
+{
+  "title": "Radial Ring",
+  "group": "Spatial & 3D",
+  "order": 15,
+  "htmlId": "ring",
+  "statusBar": "light",
+  "description": "A home-screen launcher that winds eight apps around a dial; `itemAnimation` maps each item's value to an angle.",
+  "tags": ["control", "progress", "parallax"],
+  "uses": [
+    "loop",
+    "autoplay",
+    "autoplayInterval",
+    "itemSize",
+    "progress",
+    "itemAnimation",
+    "animation",
+    "renderItem({ relativeProgress })",
+    "ref.scrollTo()"
+  ],
+  "steps": [
+    "`itemSize` 60 means every 60 pt of drag turns the dial 45°, and `autoplay` with `autoplayInterval` 2000 keeps it turning.",
+    "`translateX` = R·sin(value·45°) and `translateY` = −R·cos(value·45°) with R = 0.38 × width put 8 apps on one circle, with the top icon at `scale` 1.3 and the rest fading to opacity 0.45.",
+    "`progress` names the app in the hub, and tapping an icon or widget calls `scrollTo({ index })` to turn it to the top."
+  ]
+}

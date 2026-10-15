@@ -18,7 +18,7 @@ import { useInDoc } from "@/hooks/useInDoc";
 import { CaptureProvider } from "@/store/CaptureProvider";
 import { useWebContext } from "@/store/WebProvider";
 import { routes } from "@/utils/routes";
-import { Link } from "expo-router";
+import { Link, usePathname } from "expo-router";
 import Stack from "expo-router/stack";
 import { useReducedMotion } from "react-native-reanimated";
 
@@ -60,6 +60,8 @@ function RootLayoutNav() {
   const webHeaderShown = !useWebContext()?.page;
   const [isRTL, setIsRTL] = useState(I18nManager.isRTL);
   const { inDoc } = useInDoc();
+  // Scenes are full-screen phone layouts, so they get the whole viewport.
+  const isScene = usePathname().startsWith("/demos/scenes/");
 
   const backgroundColor = inDoc
     ? tamaguiConfig.themes.dark.background.val
@@ -86,7 +88,7 @@ function RootLayoutNav() {
     <TamaguiProvider config={tamaguiConfig} defaultTheme={inDoc ? "dark" : "light"}>
       <Providers>
         <XStack flex={1} justifyContent="center" backgroundColor={backgroundColor}>
-          <YStack minWidth={IS_WEB ? MAX_WIDTH : "100%"} height={"100%"}>
+          <YStack minWidth={IS_WEB && !isScene ? MAX_WIDTH : "100%"} height={"100%"}>
             {IS_WEB && !inDoc && reduceMotion && (
               <XStack paddingHorizontal={"$2"} width={MAX_WIDTH}>
                 <Text
@@ -133,6 +135,7 @@ function RootLayoutNav() {
                     name={`demos/${item.kind}/${item.name}/index`}
                     options={{
                       title: item.title,
+                      ...(item.kind === "scenes" ? { headerShown: false } : null),
                     }}
                   />
                 ))}

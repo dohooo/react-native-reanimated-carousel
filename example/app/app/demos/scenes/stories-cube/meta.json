@@ -1,0 +1,24 @@
+{
+  "title": "Stories Cube",
+  "group": "Media & Play",
+  "order": 5,
+  "htmlId": "stories",
+  "statusBar": "light",
+  "description": "Full-screen stories that turn to the next person like the faces of a cube.",
+  "tags": ["3d", "control"],
+  "uses": [
+    "itemAnimation",
+    "itemSize",
+    "relativeProgress",
+    "autoplayInterval",
+    "onScrollStart",
+    "onSnapToItem",
+    "ref.prev()",
+    "ref.next()"
+  ],
+  "steps": [
+    "`itemSize` is the width of the 9:16 page, and `itemAnimation` just lines the pages up side by side and hides any page at ±1 or beyond.",
+    "Inside each page, `relativeProgress` sets `rotateY` to value × 90° with `perspective` 900 per 330 pt of width, turning on the right edge when leaving and on the left edge when entering, so the faces meet like a cube.",
+    "`onSnapToItem` restarts the bar over the 4000 ms `autoplayInterval`, `onScrollStart` freezes it, and a tap on the left third or the rest of the card calls `ref.prev()` or `ref.next()`."
+  ]
+}

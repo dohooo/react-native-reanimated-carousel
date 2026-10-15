@@ -15,6 +15,17 @@ A performant, customizable carousel for React Native, powered by Reanimated and 
 - [Examples](https://rn-carousel.dev/Examples/summary)
 - [Migrating from v4](https://rn-carousel.dev/migration-v5)
 
+## What you can build
+
+<p align="center">
+  <a href="https://rn-carousel.dev/Examples/scenes/flavor-switcher"><img src="assets/scenes/flavor-switcher.webp" width="24%" alt="Flavor Switcher"/></a>
+  <a href="https://rn-carousel.dev/Examples/scenes/stories-cube"><img src="assets/scenes/stories-cube.webp" width="24%" alt="Stories Cube"/></a>
+  <a href="https://rn-carousel.dev/Examples/scenes/date-wheel"><img src="assets/scenes/date-wheel.webp" width="24%" alt="Date Wheel"/></a>
+  <a href="https://rn-carousel.dev/Examples/scenes/map-explorer"><img src="assets/scenes/map-explorer.webp" width="24%" alt="Map Explorer"/></a>
+</p>
+
+Each one is a full app screen built on `<Carousel>`. [Browse all 20 scenes](https://rn-carousel.dev/Examples/scenes) to drag them live and copy the code.
+
 ## Migrating from v4
 
 v5 requires React Native 0.80+, Reanimated 4.1+ and React Native Worklets 0.5+ (Expo SDK 54+). Apps still on Reanimated 3 can keep using v4 until they upgrade.

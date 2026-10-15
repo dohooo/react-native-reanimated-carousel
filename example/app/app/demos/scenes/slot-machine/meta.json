@@ -1,0 +1,24 @@
+{
+  "title": "Slot Machine",
+  "group": "Pickers & Widgets",
+  "order": 12,
+  "htmlId": "slot",
+  "statusBar": "light",
+  "description": "A three-reel slot machine: SPIN calls `next({ count })` on three vertical loop carousels with staggered durations.",
+  "tags": ["vertical", "3d", "control", "multi"],
+  "uses": [
+    "orientation",
+    "loop",
+    "itemSize",
+    "itemAnimation",
+    "animation",
+    "scrollEnabled",
+    "onSnapToItem",
+    "ref.next()"
+  ],
+  "steps": [
+    "Each reel is a vertical `loop` carousel of 16 symbols whose `itemAnimation` bends it into a cylinder: 24° per symbol with `perspective` 600 and `rotateX`.",
+    "SPIN calls `next({ count: 24 + rand + 6 * k })` on reel k (rand is 0–15), and `animation` durations of 1500, 2050 and 2600 ms stop the reels left to right.",
+    "`onSnapToItem` reports each reel's symbol; once all three have stopped, three 7s pay 300, any three of a kind 100 and any pair 10."
+  ]
+}

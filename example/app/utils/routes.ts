@@ -21,6 +21,91 @@ export const routes = [
     ],
   },
   {
+    kind: "scenes",
+    demos: [
+      {
+        name: "flavor-switcher",
+        title: "Flavor Switcher",
+      },
+      {
+        name: "product-gallery",
+        title: "Product Gallery",
+      },
+      {
+        name: "editorial-cards",
+        title: "Editorial Cards",
+      },
+      {
+        name: "onboarding",
+        title: "Onboarding",
+      },
+      {
+        name: "cover-flow",
+        title: "Cover Flow",
+      },
+      {
+        name: "stories-cube",
+        title: "Stories Cube",
+      },
+      {
+        name: "now-showing",
+        title: "Now Showing",
+      },
+      {
+        name: "page-turn",
+        title: "Page Turn",
+      },
+      {
+        name: "card-fan",
+        title: "Card Fan",
+      },
+      {
+        name: "date-wheel",
+        title: "Date Wheel",
+      },
+      {
+        name: "weight-ruler",
+        title: "Weight Ruler",
+      },
+      {
+        name: "rolling-clock",
+        title: "Rolling Clock",
+      },
+      {
+        name: "slot-machine",
+        title: "Slot Machine",
+      },
+      {
+        name: "mood-rating",
+        title: "Mood Rating",
+      },
+      {
+        name: "helix-gallery",
+        title: "Helix Gallery",
+      },
+      {
+        name: "radial-ring",
+        title: "Radial Ring",
+      },
+      {
+        name: "map-explorer",
+        title: "Map Explorer",
+      },
+      {
+        name: "level-select",
+        title: "Level Select",
+      },
+      {
+        name: "wallet-stack",
+        title: "Wallet Stack",
+      },
+      {
+        name: "market-terminal",
+        title: "Market Terminal",
+      },
+    ],
+  },
+  {
     kind: "utils",
     demos: [
       {

@@ -1,0 +1,15 @@
+{
+  "title": "Now Showing",
+  "group": "Media & Play",
+  "order": 6,
+  "htmlId": "movies",
+  "statusBar": "light",
+  "description": "Cinema app with movie posters over a blurred backdrop that cross-fades with progress.",
+  "tags": ["progress"],
+  "uses": ["itemAnimation", "itemSize", "progress", "loop", "autoplay"],
+  "steps": [
+    "`itemSize` is 1.05 × the poster width, and `itemAnimation` scales neighbors to 0.84, sinks them 24 pt per 220 pt of poster and fades them to 0.6.",
+    "Every movie has a full-screen backdrop layer whose opacity is 1 minus its distance to `progress` on the loop, so two backdrops cross-fade while you drag.",
+    "The same `progress` blends the button between the two accents with `interpolateColor`, and the details switch as soon as another poster is the nearest."
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "title": "Flavor Switcher",
+  "group": "Commerce & Brand",
+  "order": 0,
+  "htmlId": "fizz",
+  "statusBar": "dark",
+  "description": "Drink landing page where the background, ink and giant flavor word blend between flavors as you drag the cans.",
+  "tags": ["progress", "parallax"],
+  "uses": [
+    "itemAnimation",
+    "itemSize",
+    "progress",
+    "relativeProgress",
+    "onSnapToItem",
+    "loop",
+    "autoplay",
+    "defaultIndex",
+    "animation",
+    "Pagination"
+  ],
+  "steps": [
+    "`itemAnimation` spaces the cans 40% of the screen width apart (`itemSize` is half the width), tilting neighbors `14°`, scaling them to `0.62` and fading the next ones out.",
+    "The carousel writes `progress` every frame; `interpolateColor` blends the background and ink between the current and next flavor, and the flavor words slide `0.9` screen widths per item.",
+    "Each can's two fruit slices read `relativeProgress` and drift and spin against the motion, while `onSnapToItem` swaps the name, note and calories."
+  ]
+}

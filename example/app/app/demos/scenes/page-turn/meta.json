@@ -1,0 +1,27 @@
+{
+  "title": "Page Turn",
+  "group": "Media & Play",
+  "order": 7,
+  "htmlId": "book",
+  "statusBar": "light",
+  "description": "A small book of Tang poems whose pages turn around the spine, with the art on the back of each leaf.",
+  "tags": ["3d", "progress", "control"],
+  "uses": [
+    "itemAnimation",
+    "itemSize",
+    "relativeProgress",
+    "loop",
+    "autoplay",
+    "autoplayInterval",
+    "progress",
+    "onSnapToItem",
+    "ref.prev()",
+    "ref.next()",
+    "ref.scrollTo()"
+  ],
+  "steps": [
+    "`itemSize` is one page wide and `itemAnimation` hangs all 8 leaves on the spine, with the leaf in the air (value between −1 and 0) on top at `zIndex` 300.",
+    "Inside each leaf, `relativeProgress` turns the front from 0° to −180° with `perspective` 1400 around its left edge, and the back follows 180° behind with `backfaceVisibility` hidden.",
+    "With `loop` false, `autoplay` turns a page every 2400 ms; when `onSnapToItem` reports the last page, `ref.scrollTo({ index: 0 })` closes the book and autoplay starts again."
+  ]
+}

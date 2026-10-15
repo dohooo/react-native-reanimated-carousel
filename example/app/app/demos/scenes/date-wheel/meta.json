@@ -1,0 +1,27 @@
+{
+  "title": "Date Wheel",
+  "group": "Pickers & Widgets",
+  "order": 9,
+  "htmlId": "date-wheel",
+  "statusBar": "dark",
+  "description": "An iOS-style date picker sheet: three vertical carousels turn like wheels while a month calendar follows along.",
+  "tags": ["vertical", "3d", "nearest", "multi", "control", "progress"],
+  "uses": [
+    "orientation",
+    "itemSize",
+    "itemAnimation",
+    "snapMode",
+    "snapMomentum",
+    "progress",
+    "onSnapToItem",
+    "relativeProgress",
+    "ref.scrollTo()",
+    "ref.next()",
+    "ref.prev()"
+  ],
+  "steps": [
+    "Three `orientation=\"vertical\"` carousels with `itemSize` 36; `itemAnimation` sets rows 18° apart on a cylinder with `translateY = R·sin θ` and `rotateX = −θ`.",
+    "`snapMode=\"nearest\"` with `snapMomentum` 0.25 handles flicks, and each wheel's `progress` updates the header, calendar and dimmed days while it turns.",
+    "`onSnapToItem` rolls February 30 back to the 28th with `scrollTo({ index })`; calendar taps and arrows drive the wheels with `scrollTo`, `next()` and `prev()`."
+  ]
+}

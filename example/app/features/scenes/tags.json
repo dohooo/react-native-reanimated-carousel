@@ -1,0 +1,47 @@
+[
+  {
+    "k": "3d",
+    "label": "3D",
+    "api": "perspective with rotateX / rotateY inside itemAnimation"
+  },
+  {
+    "k": "vertical",
+    "label": "Vertical",
+    "api": "orientation=\"vertical\""
+  },
+  {
+    "k": "progress",
+    "label": "Progress-driven UI",
+    "api": "onProgressChange feeds a shared value that drives UI outside the carousel"
+  },
+  {
+    "k": "parallax",
+    "label": "Parallax inside items",
+    "api": "renderItem({ relativeProgress })"
+  },
+  {
+    "k": "multi",
+    "label": "Multiple carousels",
+    "api": "several <Carousel>s kept in step through refs and callbacks"
+  },
+  {
+    "k": "control",
+    "label": "Programmatic control",
+    "api": "ref.current.next({ count }) and ref.current.scrollTo({ index })"
+  },
+  {
+    "k": "nearest",
+    "label": "Momentum snapping",
+    "api": "snapMode=\"nearest\" with snapMomentum"
+  },
+  {
+    "k": "marquee",
+    "label": "Marquee",
+    "api": "autoplay with autoplayInterval={0} and linear timing"
+  },
+  {
+    "k": "large",
+    "label": "Large lists",
+    "api": "renderWindowSize"
+  }
+]

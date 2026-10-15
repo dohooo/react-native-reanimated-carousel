@@ -1,0 +1,25 @@
+{
+  "title": "Helix Gallery",
+  "group": "Spatial & 3D",
+  "order": 14,
+  "htmlId": "helix",
+  "statusBar": "light",
+  "description": "A photo album wound around a vertical 3D helix that keeps turning on its own.",
+  "tags": ["vertical", "3d", "parallax"],
+  "uses": [
+    "orientation",
+    "loop",
+    "autoplay",
+    "autoplayInterval",
+    "itemSize",
+    "progress",
+    "itemAnimation",
+    "animation",
+    "renderItem({ relativeProgress })"
+  ],
+  "steps": [
+    "A vertical `loop` carousel of 20 photos uses an `itemSize` of 1/13 of the space between the bars (47 pt on an iPhone 17 Pro) and `autoplay` every 1500 ms.",
+    "`itemAnimation` puts each photo at x = 0.35·width·sin(value·32°) and y = value·`itemSize`; cos(value·32°) is its depth, which sets opacity and `zIndex`.",
+    "Inside each tile `relativeProgress` turns the photo with `perspective` 800 and `rotateY` up to 55°, scales it from 0.55 to 1.05 and lights the glow ring, while `progress` drifts two star layers."
+  ]
+}

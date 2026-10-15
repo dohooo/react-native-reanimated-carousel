@@ -1,0 +1,26 @@
+{
+  "title": "Mood Rating",
+  "group": "Pickers & Widgets",
+  "order": 13,
+  "htmlId": "mood",
+  "statusBar": "dark",
+  "description": "A daily check-in whose big face morphs continuously with the carousel's `progress`.",
+  "tags": ["progress", "control"],
+  "uses": [
+    "itemSize",
+    "defaultIndex",
+    "progress",
+    "itemAnimation",
+    "animation",
+    "autoplay",
+    "autoplayDirection",
+    "onConfigurePanGesture",
+    "onSnapToItem",
+    "ref.scrollTo()"
+  ],
+  "steps": [
+    "Five faces sit in a `loop={false}` carousel with `itemSize` 86 and `defaultIndex` 3; `itemAnimation` scales the centered face to 1.15 and fades its neighbors to 0.55 and 0.3.",
+    "The `progress` shared value drives the big face on the UI thread: mouth curve, eye height, brow tilt, blush, tear, face color and background are all interpolated from it.",
+    "Until the first touch, `autoplay` every 1600 ms ping-pongs by flipping `autoplayDirection` at both ends; tapping a small face calls `scrollTo({ index })`."
+  ]
+}

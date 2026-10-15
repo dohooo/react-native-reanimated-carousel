@@ -1,0 +1,27 @@
+{
+  "title": "Product Gallery",
+  "group": "Commerce & Brand",
+  "order": 1,
+  "htmlId": "watch",
+  "statusBar": "dark",
+  "description": "Watch product page where a full-width hero carousel and a thumbnail strip follow each other frame by frame.",
+  "tags": ["multi", "control", "parallax", "progress"],
+  "uses": [
+    "scrollOffsetValue",
+    "onConfigurePanGesture",
+    "itemAnimation",
+    "itemSize",
+    "progress",
+    "relativeProgress",
+    "onScrollStart",
+    "onSnapToItem",
+    "ref.scrollTo()",
+    "loop",
+    "autoplay"
+  ],
+  "steps": [
+    "The hero pages at full width with `autoplay` every `3000` ms; each watch turns `24°` and shrinks to `0.7` with its `relativeProgress`, and `progress` blends the halo color.",
+    "The thumbnails are a second `loop` carousel with `itemSize` 76 and a centering `itemAnimation`; tapping one calls `scrollTo({ index })`.",
+    "Both carousels get a `scrollOffsetValue`; an `onBegin` observer from `onConfigurePanGesture` marks which one leads, and a reaction copies its offset to the other, scaled by page size."
+  ]
+}
