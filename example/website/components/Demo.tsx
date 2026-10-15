@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import Link from "next/link";
 import { Callout } from "nextra/components";
@@ -14,28 +14,27 @@ const ResizableIframe: React.FC<ResizableIframeProps> = ({ kind, name }) => {
   const [carouselHeight, setCarouselHeight] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [reduceMotion, setReduceMotion] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const pagePath = `/demos/${kind}/${name}`;
 
-  const handleIframeLoad = () => {
-    window.addEventListener("message", (event) => {
-      if (
-        event.data.type !== "carouselHeight" ||
-        event.data.kind !== kind ||
-        event.data.name !== name
-      )
-        return;
-
-      setCarouselHeight(event.data.height);
-      setIsLoading(false);
-    });
+  // The demo can finish loading before this page hydrates, and then its first height
+  // message is gone. Listen from mount and ask again on mount and on load.
+  const requestHeight = () => {
+    iframeRef.current?.contentWindow?.postMessage({ type: "requestCarouselHeight" }, "*");
   };
 
   useEffect(() => {
-    window.addEventListener("message", (event) => {
-      if (event.data.type === "reduceMotion")
-        setReduceMotion(event.data.reduceMotion);
-    });
-  }, []);
+    const onMessage = (event: MessageEvent) => {
+      const data = event.data;
+      if (data?.type === "reduceMotion") setReduceMotion(data.reduceMotion);
+      if (data?.type !== "carouselHeight" || data.kind !== kind || data.name !== name) return;
+      setCarouselHeight(data.height);
+      setIsLoading(false);
+    };
+    window.addEventListener("message", onMessage);
+    requestHeight();
+    return () => window.removeEventListener("message", onMessage);
+  }, [kind, name]);
 
   return (
     <div>
@@ -53,7 +52,6 @@ const ResizableIframe: React.FC<ResizableIframeProps> = ({ kind, name }) => {
           <div
             style={{
               textAlign: "center",
-              color: "white",
               opacity: 0.5,
               fontSize: 14,
             }}
@@ -70,7 +68,9 @@ const ResizableIframe: React.FC<ResizableIframeProps> = ({ kind, name }) => {
         )}
         <iframe
           id="carousel-iframe"
-          onLoad={handleIframeLoad}
+          ref={iframeRef}
+          title={`${name} demo`}
+          onLoad={requestHeight}
           src={`${process.env.DEMO_APP_URL}${pagePath}/demo?in_doc=true`}
           style={{
             width: "100%",

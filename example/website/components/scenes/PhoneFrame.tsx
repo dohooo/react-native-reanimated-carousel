@@ -46,7 +46,7 @@ export function PhoneFrame({ width, bar = "dark", children, bare, className }: P
   return (
     <div
       className={`rnrc-phone ${className ?? ""}`}
-      style={{ width, height: DEVICE.height * scale }}
+      style={{ width, height: DEVICE.height * scale, borderRadius: DEVICE.radius * scale }}
     >
       <div className="rnrc-phone-device" style={{ transform: `scale(${scale})` }}>
         <div className="rnrc-phone-bezel" />

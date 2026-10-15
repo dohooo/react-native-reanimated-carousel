@@ -253,7 +253,12 @@ html.dark .rnrc-scene-button--ghost {
   color: inherit !important;
   border-color: rgb(64 64 64);
 }
-@media (max-width: 720px) {
+/* Stack the phone above the text when the content column is narrow: on phones,
+   and on tablets where the sidebar takes part of the screen. */
+.rnrc-scene-host {
+  container-type: inline-size;
+}
+@container (max-width: 620px) {
   .rnrc-scene {
     grid-template-columns: minmax(0, 1fr);
     gap: 28px;
@@ -305,6 +310,24 @@ html.dark .rnrc-chip[aria-pressed="true"] {
   background: #f5f5f5;
   border-color: #f5f5f5;
   color: #111;
+}
+@media (max-width: 640px) {
+  /* One swipeable row of filters instead of six wrapped lines. */
+  .rnrc-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-left: -24px;
+    margin-right: -24px;
+    padding: 0 24px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .rnrc-chips::-webkit-scrollbar {
+    display: none;
+  }
+  .rnrc-chip {
+    flex: none;
+  }
 }
 .rnrc-api-line {
   margin: 14px 0 0;
@@ -413,4 +436,120 @@ html.dark .rnrc-build-lede {
 }
 html.dark .rnrc-build-more {
   color: #58a6ff !important;
+}
+
+/* ---------- Tables: one card per row on narrow screens ----------
+   Up to 1023px the content column (beside the sidebar on tablets) is too narrow
+   for four columns. */
+@media (max-width: 1023px) {
+  .rnrc-table {
+    display: block;
+    overflow: visible;
+  }
+  .rnrc-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .rnrc-table tbody {
+    display: grid;
+    gap: 12px;
+  }
+  .rnrc-table tbody tr {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    column-gap: 14px;
+    row-gap: 8px;
+    padding: 14px 16px;
+    border: 1px solid rgb(229 231 235);
+    border-radius: 12px;
+    background: transparent !important;
+  }
+  html.dark .rnrc-table tbody tr {
+    border-color: rgb(64 64 64);
+  }
+  /* Labelled cells share one label column per card through subgrid. */
+  .rnrc-table td {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    align-items: baseline;
+    padding: 0;
+    border: 0;
+    line-height: 1.6;
+  }
+  .rnrc-table td::before {
+    content: attr(data-label);
+    font-size: 13px;
+    color: rgb(107 114 128);
+  }
+  html.dark .rnrc-table td::before {
+    color: rgb(163 163 163);
+  }
+  .rnrc-table td:first-child,
+  .rnrc-table td[data-prose] {
+    display: block;
+  }
+  .rnrc-table td:first-child::before,
+  .rnrc-table td[data-prose]::before {
+    content: none;
+  }
+  .rnrc-table td:first-child {
+    font-weight: 600;
+  }
+  .rnrc-table .rnrc-cell {
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+}
+
+/* ---------- Scenes: touch devices ---------- */
+.rnrc-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.rnrc-phone-cover {
+  z-index: 3;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.rnrc-phone {
+  transition: box-shadow 0.2s ease;
+}
+.rnrc-phone--active {
+  box-shadow:
+    0 0 0 3px #fff,
+    0 0 0 5px #0a6cdb;
+}
+html.dark .rnrc-phone--active {
+  box-shadow:
+    0 0 0 3px #111,
+    0 0 0 5px #58a6ff;
+}
+.rnrc-scene-touch {
+  display: flex;
+  gap: 10px;
+}
+.rnrc-scene-touch .rnrc-scene-button {
+  justify-content: center;
+  min-width: 112px;
+  /* Beats the button reset that loads after this file. */
+  background: #111;
+}
+.rnrc-scene-touch .rnrc-scene-button--ghost {
+  background: transparent;
+}
+html.dark .rnrc-scene-touch .rnrc-scene-button {
+  background: #f5f5f5;
+}
+html.dark .rnrc-scene-touch .rnrc-scene-button--ghost {
+  background: transparent;
 }

@@ -2,6 +2,8 @@ import React from "react";
 
 import type { DocsThemeConfig } from "nextra-theme-docs";
 
+import { DocTable } from "./components/DocTable";
+
 const config: DocsThemeConfig = {
   logo: <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
     <img src="/site-icon.png" alt="RNRC Logo" width={24} height={24} style={{ marginRight: "8px" }} />
@@ -22,6 +24,9 @@ const config: DocsThemeConfig = {
     defaultMenuCollapseLevel: 1,
   },
   darkMode: true,
+  components: {
+    table: DocTable,
+  },
   useNextSeoProps() {
     return {
       titleTemplate: "%s – RNRC",
