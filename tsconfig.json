@@ -3,6 +3,7 @@
     "baseUrl": "./",
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
+    "erasableSyntaxOnly": true,
     "esModuleInterop": true,
     "exactOptionalPropertyTypes": true,
     "forceConsistentCasingInFileNames": true,
