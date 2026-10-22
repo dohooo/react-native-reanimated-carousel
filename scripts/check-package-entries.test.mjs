@@ -40,7 +40,10 @@ async function createFixture(options = {}) {
       },
       exports: {
         ".": {
-          "react-native": "./src/index.tsx",
+          "react-native": {
+            types: "./lib/typescript/index.d.ts",
+            default: "./src/index.tsx",
+          },
           import: {
             types: "./lib/typescript/index.d.ts",
             default: "./lib/module/index.js",

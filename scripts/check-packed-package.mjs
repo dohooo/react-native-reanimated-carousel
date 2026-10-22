@@ -33,7 +33,7 @@ async function linkDependency(consumerNodeModules, dependency) {
   await symlink(source, destination, "junction");
 }
 
-async function writeTypeConsumer(consumerRoot, moduleResolution) {
+async function writeTypeConsumer(consumerRoot, moduleResolution, customConditions) {
   const source = `
 import { Carousel, Pagination } from "${packageName}";
 import type {
@@ -74,6 +74,7 @@ void values;
   const tsconfig = {
     compilerOptions: {
       allowSyntheticDefaultImports: true,
+      customConditions,
       jsx: "react-jsx",
       module: "esnext",
       moduleResolution,
@@ -87,10 +88,29 @@ void values;
 
   await writeFile(path.join(consumerRoot, "consumer.ts"), source);
   await writeFile(path.join(consumerRoot, "tsconfig.json"), JSON.stringify(tsconfig, null, 2));
-  run(
+  const label = customConditions
+    ? `${moduleResolution} resolution with ${customConditions.join(", ")} condition`
+    : `${moduleResolution} resolution`;
+  const packageFiles = run(
     process.execPath,
-    [path.join(repositoryRoot, "node_modules", "typescript", "bin", "tsc"), "-p", "tsconfig.json"],
-    { cwd: consumerRoot }
+    [
+      path.join(repositoryRoot, "node_modules", "typescript", "bin", "tsc"),
+      "-p",
+      "tsconfig.json",
+      "--listFiles",
+    ],
+    { capture: true, cwd: consumerRoot }
+  )
+    .split(/\r?\n/)
+    .map((line) => line.replaceAll("\\", "/"))
+    .filter((line) => line.includes(`/node_modules/${packageName}/`));
+  assert(
+    packageFiles.some((file) => file.includes(`/node_modules/${packageName}/lib/typescript/`)),
+    `${label} must load the package declarations`
+  );
+  assert(
+    packageFiles.every((file) => !file.includes(`/node_modules/${packageName}/src/`)),
+    `${label} must not type-check the package source`
   );
 }
 
@@ -240,6 +260,7 @@ if (!blocked) throw new Error("ESM deep import was not blocked");
 
     await writeTypeConsumer(consumerRoot, "node");
     await writeTypeConsumer(consumerRoot, "bundler");
+    await writeTypeConsumer(consumerRoot, "bundler", ["react-native"]);
 
     console.log(
       JSON.stringify(
@@ -254,6 +275,7 @@ if (!blocked) throw new Error("ESM deep import was not blocked");
             "jest",
             "typescript-node",
             "typescript-bundler",
+            "typescript-bundler-react-native",
           ],
         },
         null,

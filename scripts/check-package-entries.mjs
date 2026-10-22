@@ -89,7 +89,9 @@ export async function checkPackageEntries(root = repositoryRoot) {
   assert.deepEqual(Object.keys(rootExport.require ?? {}), ["types", "default"]);
   assert.equal(rootExport.import.types, withDotSlash(packageJson.types));
   await readEntry(root, "exports['.'].require.types", rootExport.require.types);
-  assert.equal(rootExport["react-native"], withDotSlash(packageJson["react-native"]));
+  assert.deepEqual(Object.keys(rootExport["react-native"] ?? {}), ["types", "default"]);
+  assert.equal(rootExport["react-native"].types, withDotSlash(packageJson.types));
+  assert.equal(rootExport["react-native"].default, withDotSlash(packageJson["react-native"]));
   assert.equal(rootExport.import.default, withDotSlash(packageJson.module, ".js"));
   assert.equal(rootExport.require.default, withDotSlash(packageJson.main, ".js"));
   assert.equal(rootExport.default, rootExport.import.default);
