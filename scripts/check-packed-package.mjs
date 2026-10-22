@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
-import { cp, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -123,16 +123,25 @@ async function main() {
 
   try {
     await mkdir(tarballDirectory, { recursive: true });
-    const packOutput = run(
-      "npm",
-      ["pack", "--json", "--pack-destination", tarballDirectory],
-      { capture: true, env: { npm_config_ignore_scripts: "true" } }
-    );
-    const jsonPayload = packOutput.match(/(\[\s*\{\s*"id"[\s\S]*\]\s*)$/)?.[1];
-    assert(jsonPayload, "npm pack did not return its JSON manifest");
-    const packResult = JSON.parse(jsonPayload)[0];
-    const tarballPath = path.join(tarballDirectory, packResult.filename);
-    const filePaths = packResult.files.map((file) => file.path);
+    run("npm", ["pack", "--pack-destination", tarballDirectory], {
+      capture: true,
+      env: { npm_config_ignore_scripts: "true" },
+    });
+    const tarballs = (await readdir(tarballDirectory)).filter((file) => file.endsWith(".tgz"));
+    assert.equal(tarballs.length, 1, "npm pack must produce exactly one tarball");
+    const tarballPath = path.join(tarballDirectory, tarballs[0]);
+
+    await mkdir(extractedDirectory, { recursive: true });
+    run("tar", ["-xzf", tarballPath, "-C", extractedDirectory]);
+    const extractedPackage = path.join(extractedDirectory, "package");
+    const filePaths = (await readdir(extractedPackage, { recursive: true, withFileTypes: true }))
+      .filter((entry) => entry.isFile())
+      .map((entry) =>
+        path
+          .relative(extractedPackage, path.join(entry.parentPath, entry.name))
+          .split(path.sep)
+          .join("/")
+      );
 
     assert(filePaths.includes("package.json"), "tarball must contain package.json");
     assert(filePaths.includes("lib/commonjs/index.js"), "tarball must contain the CommonJS root");
@@ -163,9 +172,6 @@ async function main() {
       "tarball must not contain test files"
     );
 
-    await mkdir(extractedDirectory, { recursive: true });
-    run("tar", ["-xzf", tarballPath, "-C", extractedDirectory]);
-    const extractedPackage = path.join(extractedDirectory, "package");
     const packedPackageJson = JSON.parse(
       await readFile(path.join(extractedPackage, "package.json"), "utf8")
     );
