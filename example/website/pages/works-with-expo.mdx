@@ -42,12 +42,13 @@ The App Store build of Expo Go currently remains on SDK 54. That is a supported 
 | 55 | Development build or `eas go` | Verified |
 | 56 | Development build or `eas go` | Verified |
 | 57 | Development build or `eas go` | Verified |
+| 58 | Development build or `eas go` | Verified |
 
-For SDK 55–57, use a [development build](https://docs.expo.dev/develop/development-builds/introduction/) or install the matching Expo Go build with [`eas go`](https://docs.expo.dev/eas/go/). Expo CLI can also install supported simulator or emulator builds.
+For SDK 55–58, use a [development build](https://docs.expo.dev/develop/development-builds/introduction/) or install the matching Expo Go build with [`eas go`](https://docs.expo.dev/eas/go/). Expo CLI can also install supported simulator or emulator builds.
 
 ## What our compatibility matrix verifies
 
-The repository tests SDK 54, 55, 56, and 57 using the package created by `npm pack`, rather than importing workspace source. For every SDK, CI:
+The repository tests SDK 54, 55, 56, 57, and 58 using the package created by `npm pack`, rather than importing workspace source. For every SDK, CI:
 
 1. creates a clean Expo app;
 2. installs the packed carousel and SDK-compatible peers;
