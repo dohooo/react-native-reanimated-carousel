@@ -1,5 +1,16 @@
 # react-native-reanimated-carousel
 
+## 5.2.1
+
+### Patch Changes
+
+- [#970](https://github.com/dohooo/react-native-reanimated-carousel/pull/970) [`6986288`](https://github.com/dohooo/react-native-reanimated-carousel/commit/6986288d1c74d58a875398f517ceab01fd208ce6) Thanks [@dohooo](https://github.com/dohooo)! - Restart the autoplay interval after `ref.scrollTo`, `next` and `prev`, and keep autoplay running when one of them interrupts an autoplay step.
+
+- [#969](https://github.com/dohooo/react-native-reanimated-carousel/pull/969) [`83ecb79`](https://github.com/dohooo/react-native-reanimated-carousel/commit/83ecb7961b6b588ee2b82fdbbc3b067a4fe5d40c) Thanks [@dohooo](https://github.com/dohooo)! - Fix source type-checking when `erasableSyntaxOnly` is enabled.
+
+- [#968](https://github.com/dohooo/react-native-reanimated-carousel/pull/968) [`7ffff40`](https://github.com/dohooo/react-native-reanimated-carousel/commit/7ffff40503d7f09498c200fb47f35f828e5a72ab) Thanks [@saviocmc](https://github.com/saviocmc)! - Point the `react-native` export condition at the shipped declarations so apps stop type-checking the package source (Issues #959, #967).
+  - Expo projects (`customConditions: ["react-native"]`) now resolve `lib/typescript` types, covered by `skipLibCheck`; Metro still bundles `src`.
+
 ## 5.2.0
 
 ### Minor Changes
