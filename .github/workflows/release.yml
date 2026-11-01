@@ -10,6 +10,11 @@ jobs:
   version:
     timeout-minutes: 15
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # npm trusted publishing: npm exchanges this job's OIDC token for a
+      # short-lived publish token, so the workflow keeps no npm secret.
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -22,6 +27,10 @@ jobs:
         with:
           node-version: 22
           cache: yarn
+
+      # Trusted publishing needs npm 11.5.1 or later; Node 22 ships npm 10.
+      - name: Update npm
+        run: npm install -g npm@^11.5.1
 
       - name: Install dependencies
         run: yarn install
@@ -41,4 +50,3 @@ jobs:
           title: 'release: version packages'
         env:
           GITHUB_TOKEN: ${{ secrets.CHANGESET_ACTIONS }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
