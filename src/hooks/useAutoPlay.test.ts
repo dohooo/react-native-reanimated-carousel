@@ -41,11 +41,6 @@ describe("useAutoPlay", () => {
     });
 
     expect(mockCarouselController.next).toHaveBeenCalledTimes(1);
-    expect(mockCarouselController.next).toHaveBeenCalledWith(
-      expect.objectContaining({
-        onFinished: expect.any(Function),
-      })
-    );
   });
 
   it("should not start autoplay when autoPlay is false", () => {
@@ -164,8 +159,8 @@ describe("useAutoPlay", () => {
     expect(mockCarouselController.next).toHaveBeenCalledTimes(1);
   });
 
-  it("should chain autoplay calls correctly", () => {
-    renderHook(() =>
+  it("starts the next dwell when the step settles", () => {
+    const { result } = renderHook(() =>
       useAutoPlay({
         autoplay: true,
         autoplayInterval: 1000,
@@ -173,26 +168,113 @@ describe("useAutoPlay", () => {
       })
     );
 
-    // First interval
     act(() => {
       jest.runOnlyPendingTimers();
     });
     expect(mockCarouselController.next).toHaveBeenCalledTimes(1);
 
-    // Trigger onFinished callback to start the next timer
-    const onFinished = mockCarouselController.next.mock.calls[0][0].onFinished;
+    // Nothing is scheduled while the step is still moving.
     act(() => {
-      onFinished();
-      jest.runOnlyPendingTimers();
+      result.current.onTransitionStart();
+      jest.advanceTimersByTime(5000);
+    });
+    expect(mockCarouselController.next).toHaveBeenCalledTimes(1);
+
+    act(() => {
+      result.current.onTransitionEnd();
+      jest.advanceTimersByTime(1000);
     });
     expect(mockCarouselController.next).toHaveBeenCalledTimes(2);
+  });
 
-    // Trigger onFinished callback to start the next timer
-    const onFinished2 = mockCarouselController.next.mock.calls[1][0].onFinished;
+  it("restarts the dwell after a manual move settles", () => {
+    const { result } = renderHook(() =>
+      useAutoPlay({
+        autoplay: true,
+        autoplayInterval: 1000,
+        carouselController: mockCarouselController,
+      })
+    );
+
+    // A pagination tap or ref command 600 ms into the dwell.
     act(() => {
-      onFinished2();
+      jest.advanceTimersByTime(600);
+      result.current.onTransitionStart();
+      result.current.onTransitionEnd();
+    });
+
+    act(() => {
+      jest.advanceTimersByTime(999);
+    });
+    expect(mockCarouselController.next).not.toHaveBeenCalled();
+
+    act(() => {
+      jest.advanceTimersByTime(1);
+    });
+    expect(mockCarouselController.next).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps playing when a manual move interrupts its step", () => {
+    const { result } = renderHook(() =>
+      useAutoPlay({
+        autoplay: true,
+        autoplayInterval: 1000,
+        carouselController: mockCarouselController,
+      })
+    );
+
+    act(() => {
       jest.runOnlyPendingTimers();
     });
-    expect(mockCarouselController.next).toHaveBeenCalledTimes(3);
+    expect(mockCarouselController.next).toHaveBeenCalledTimes(1);
+
+    // The step's animation is cancelled by a manual move, so only the manual move settles.
+    act(() => {
+      result.current.onTransitionStart();
+      result.current.onTransitionEnd();
+      jest.advanceTimersByTime(1000);
+    });
+    expect(mockCarouselController.next).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not resume on settle while paused", () => {
+    const { result } = renderHook(() =>
+      useAutoPlay({
+        autoplay: true,
+        autoplayInterval: 1000,
+        carouselController: mockCarouselController,
+      })
+    );
+
+    act(() => {
+      result.current.pause();
+      result.current.onTransitionStart();
+      result.current.onTransitionEnd();
+      jest.advanceTimersByTime(5000);
+    });
+    expect(mockCarouselController.next).not.toHaveBeenCalled();
+
+    act(() => {
+      result.current.start();
+      jest.advanceTimersByTime(1000);
+    });
+    expect(mockCarouselController.next).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not schedule anything when autoplay is off", () => {
+    const { result } = renderHook(() =>
+      useAutoPlay({
+        autoplay: false,
+        autoplayInterval: 1000,
+        carouselController: mockCarouselController,
+      })
+    );
+
+    act(() => {
+      result.current.onTransitionStart();
+      result.current.onTransitionEnd();
+      jest.advanceTimersByTime(5000);
+    });
+    expect(mockCarouselController.next).not.toHaveBeenCalled();
   });
 });

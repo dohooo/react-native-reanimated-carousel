@@ -31,7 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        expo-sdk: [54, 55, 56, 57]
+        expo-sdk: [54, 55, 56, 57, 58]
 
     steps:
       - uses: actions/checkout@v4

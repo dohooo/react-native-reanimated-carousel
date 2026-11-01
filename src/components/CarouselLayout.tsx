@@ -2,7 +2,7 @@ import React from "react";
 import { type StyleProp, StyleSheet, View, type ViewStyle } from "react-native";
 import { useAnimatedReaction, useAnimatedStyle, useDerivedValue } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
-import { useAutoPlay } from "../hooks/useAutoPlay";
+import { type AutoPlayControls, useAutoPlay } from "../hooks/useAutoPlay";
 import { useCarouselController } from "../hooks/useCarouselController";
 import { useLayoutConfig } from "../hooks/useLayoutConfig";
 import { useOnProgressChange } from "../hooks/useOnProgressChange";
@@ -105,6 +105,24 @@ export const CarouselLayout = React.forwardRef<CarouselRef>((_props, ref) => {
     [onSnapToItem]
   );
 
+  // Autoplay steps through the controller, and every controller transition (an autoplay
+  // step or a ref command such as a pagination tap) has to restart the autoplay dwell.
+  // The controller is created first, so it reaches autoplay through this ref.
+  const autoPlayRef = React.useRef<AutoPlayControls | null>(null);
+
+  const onControllerTransitionStart = React.useCallback(() => {
+    autoPlayRef.current?.onTransitionStart();
+    onScrollStart?.();
+  }, [onScrollStart]);
+
+  const onControllerTransitionEnd = React.useCallback(
+    (realIndex: number) => {
+      autoPlayRef.current?.onTransitionEnd();
+      _onScrollEnd(realIndex);
+    },
+    [_onScrollEnd]
+  );
+
   const carouselController = useCarouselController({
     ref,
     loop,
@@ -114,20 +132,21 @@ export const CarouselLayout = React.forwardRef<CarouselRef>((_props, ref) => {
     handlerOffset,
     animation,
     defaultIndex,
-    onMovementEnd: _onScrollEnd,
-    onScrollStart,
+    onMovementEnd: onControllerTransitionEnd,
+    onScrollStart: onControllerTransitionStart,
   });
 
-  const {
-    start: startAutoPlay,
-    pause: pauseAutoPlay,
-    trigger: triggerAutoPlay,
-  } = useAutoPlay({
+  const autoPlay = useAutoPlay({
     autoplay,
     autoplayDirection,
     autoplayInterval,
     carouselController,
   });
+  const { start: startAutoPlay, pause: pauseAutoPlay, trigger: triggerAutoPlay } = autoPlay;
+
+  React.useEffect(() => {
+    autoPlayRef.current = autoPlay;
+  }, [autoPlay]);
 
   useAnimatedReaction(
     () => ({ ready: isSizeReady.value }),

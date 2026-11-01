@@ -5,9 +5,9 @@ set -euo pipefail
 SDK_VERSION="${1:-}"
 
 case "$SDK_VERSION" in
-  54|55|56|57) ;;
+  54|55|56|57|58) ;;
   *)
-    echo "Usage: $0 <54|55|56|57>" >&2
+    echo "Usage: $0 <54|55|56|57|58>" >&2
     exit 2
     ;;
 esac
