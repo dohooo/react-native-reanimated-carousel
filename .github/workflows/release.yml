@@ -50,3 +50,16 @@ jobs:
           title: 'release: version packages'
         env:
           GITHUB_TOKEN: ${{ secrets.CHANGESET_ACTIONS }}
+
+      # rnrc-codemod is versioned by hand in codemod/package.json, outside
+      # Changesets. Publish it through the same trusted publisher whenever
+      # that version is not on npm yet.
+      - name: Publish rnrc-codemod
+        working-directory: codemod
+        run: |
+          version=$(node -p "require('./package.json').version")
+          if npm view "rnrc-codemod@$version" version > /dev/null 2>&1; then
+            echo "rnrc-codemod@$version is already published"
+          else
+            npm publish
+          fi
