@@ -1,6 +1,6 @@
 {
   "name": "rnrc-codemod",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Codemods for upgrading react-native-reanimated-carousel between major versions.",
   "author": "Doho <zhaodonghao586@outlook.com> (https://github.com/dohooo)",
   "license": "MIT",

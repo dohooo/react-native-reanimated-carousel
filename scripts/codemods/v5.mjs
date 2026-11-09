@@ -209,10 +209,56 @@ function snapModeAttribute(attributes) {
   );
 }
 
-function migrateCarouselAttributes(properties, warnings, markChanged) {
+const sharedValueFactories = new Set(["makeMutable", "useSharedValue"]);
+
+function isSharedValueInitializer(node) {
+  if (!node || !ts.isCallExpression(node)) return false;
+  const callee = node.expression;
+  if (ts.isIdentifier(callee)) return sharedValueFactories.has(callee.text);
+  return ts.isPropertyAccessExpression(callee) && sharedValueFactories.has(callee.name.text);
+}
+
+// Names bound only by `const x = useSharedValue(...)` (or makeMutable) anywhere in the file. A name
+// that is also bound some other way (a parameter, a destructured prop, another variable) is left out.
+function collectSharedValueNames(sourceFile) {
+  const sharedValues = new Set();
+  const otherBindings = new Set();
+  const visit = (node) => {
+    if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name)) {
+      (isSharedValueInitializer(node.initializer) ? sharedValues : otherBindings).add(node.name.text);
+    } else if (
+      (ts.isParameter(node) || ts.isBindingElement(node)) &&
+      ts.isIdentifier(node.name)
+    ) {
+      otherBindings.add(node.name.text);
+    } else if (
+      (ts.isFunctionDeclaration(node) || ts.isClassDeclaration(node)) &&
+      node.name
+    ) {
+      otherBindings.add(node.name.text);
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sourceFile);
+  return new Set([...sharedValues].filter((name) => !otherBindings.has(name)));
+}
+
+function isSharedValueAttribute(attribute, sharedValueNames) {
+  const initializer = attribute.initializer;
+  return (
+    initializer !== undefined &&
+    ts.isJsxExpression(initializer) &&
+    initializer.expression !== undefined &&
+    ts.isIdentifier(initializer.expression) &&
+    sharedValueNames.has(initializer.expression.text)
+  );
+}
+
+function migrateCarouselAttributes(properties, warnings, markChanged, sharedValueNames) {
   const attributes = [...properties.properties];
   const output = [];
   const hasLoop = attributes.some((attribute) => jsxAttributeName(attribute) === "loop");
+  const hasProgress = attributes.some((attribute) => jsxAttributeName(attribute) === "progress");
   const generatedItemSize = itemSizeAttribute(attributes);
   const generatedSnapMode = snapModeAttribute(attributes);
 
@@ -260,6 +306,15 @@ function migrateCarouselAttributes(properties, warnings, markChanged) {
       output.push(renamedAttribute(attribute, directPropRenames.get(name)));
       continue;
     }
+    if (name === "onProgressChange" && isSharedValueAttribute(attribute, sharedValueNames)) {
+      if (hasProgress) {
+        warnings.add(name);
+      } else {
+        markChanged();
+        output.push(renamedAttribute(attribute, "progress"));
+        continue;
+      }
+    }
     if (manualMigrationProps.has(name)) warnings.add(name);
     output.push(attribute);
   }
@@ -288,6 +343,7 @@ export function transformSource(source, fileName = "source.tsx") {
     scriptKind(fileName)
   );
   const carouselNames = new Set();
+  const sharedValueNames = collectSharedValueNames(sourceFile);
   const warnings = new Set();
   let didTransform = false;
 
@@ -380,9 +436,14 @@ export function transformSource(source, fileName = "source.tsx") {
           node,
           node.tagName,
           node.typeArguments,
-          migrateCarouselAttributes(node.attributes, warnings, () => {
-            didTransform = true;
-          })
+          migrateCarouselAttributes(
+            node.attributes,
+            warnings,
+            () => {
+              didTransform = true;
+            },
+            sharedValueNames
+          )
         );
       }
 
@@ -395,9 +456,14 @@ export function transformSource(source, fileName = "source.tsx") {
           node,
           node.tagName,
           node.typeArguments,
-          migrateCarouselAttributes(node.attributes, warnings, () => {
-            didTransform = true;
-          })
+          migrateCarouselAttributes(
+            node.attributes,
+            warnings,
+            () => {
+              didTransform = true;
+            },
+            sharedValueNames
+          )
         );
       }
 
