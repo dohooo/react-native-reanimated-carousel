@@ -1,7 +1,13 @@
 import React from "react";
 import { I18nManager, StyleSheet, View, type ViewStyle } from "react-native";
 
+import { useLegacyPropsWarning } from "../../hooks/useLegacyPropsWarning";
 import type { PaginationProps } from "../../public-types";
+import {
+  LEGACY_PAGINATION_PROPS,
+  describeLegacyProps,
+  findLegacyProps,
+} from "../../utils/legacy-props";
 import { PaginationItem } from "./PaginationItem";
 
 const numericStyleFields = ["width", "height", "borderRadius", "borderWidth", "opacity"] as const;
@@ -46,9 +52,16 @@ export function Pagination(props: PaginationProps) {
     progress,
   } = props;
 
+  useLegacyPropsWarning("Pagination", props, LEGACY_PAGINATION_PROPS);
+
   if (!Number.isInteger(count) || count < 0) {
+    const legacyProps = __DEV__ ? findLegacyProps(props, LEGACY_PAGINATION_PROPS) : [];
+    const legacyHint =
+      legacyProps.length > 0
+        ? ` It received ${describeLegacyProps(legacyProps, LEGACY_PAGINATION_PROPS)}`
+        : "";
     throw new Error(
-      "[react-native-reanimated-carousel] Pagination count must be a non-negative integer."
+      `[react-native-reanimated-carousel] Pagination count must be a non-negative integer.${legacyHint}`
     );
   }
   validateDotStyle("dotStyle", dotStyle);
