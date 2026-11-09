@@ -93,7 +93,7 @@ test("generates twins and llms files for every documentation page", async () => 
   const docsSection = llms.slice(llms.indexOf("## Docs"), llms.indexOf("## Scenes"));
 
   assert.match(llms, /^# React Native Reanimated Carousel/mu);
-  assert.match(llms, /## Instructions for AI coding agents/u);
+  assert.match(llms, /## When to use it[\s\S]*https:\/\/rn-carousel\.dev\/compare\.md[\s\S]*## Instructions for AI coding agents/u);
   assert.match(llms, /Peer dependencies: .*react-native-reanimated >=/u);
   assert.match(docsSection, /\[API Reference\]\(https:\/\/rn-carousel\.dev\/props\.md\)/u);
   assert.doesNotMatch(docsSection, /\/Examples\//u);
