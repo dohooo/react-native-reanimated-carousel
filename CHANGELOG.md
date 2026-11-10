@@ -1,5 +1,17 @@
 # react-native-reanimated-carousel
 
+## 5.2.2
+
+### Patch Changes
+
+- [#974](https://github.com/dohooo/react-native-reanimated-carousel/pull/974) [`b1045ad`](https://github.com/dohooo/react-native-reanimated-carousel/commit/b1045ad27cba964366e46bf80c4a551b190c7cd9) Thanks [@dohooo](https://github.com/dohooo)! - Throw a clear error instead of crashing natively when `onProgressChange` receives a shared value, the v4 form; pass it as `progress={value}`.
+
+  - The v5 codemod now makes that change when the file declares the value with `useSharedValue`.
+
+- [#975](https://github.com/dohooo/react-native-reanimated-carousel/pull/975) [`d29c791`](https://github.com/dohooo/react-native-reanimated-carousel/commit/d29c791123872930ffd4947747c3542c37281ed2) Thanks [@dohooo](https://github.com/dohooo)! - Warn in development when `Carousel` or `Pagination` gets a v4 prop that v5 ignores, and name the v5 replacement.
+  - Reading `animationValue` in `renderItem` now points to `relativeProgress`.
+  - Add npm keywords and a fuller package description so the package is easier to find.
+
 ## 5.2.1
 
 ### Patch Changes
