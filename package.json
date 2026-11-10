@@ -1,6 +1,6 @@
 {
 	"name": "react-native-reanimated-carousel",
-	"version": "5.2.1",
+	"version": "5.2.2",
 	"packageManager": "yarn@4.0.2",
 	"description": "A performant, customizable carousel for React Native, powered by Reanimated and Gesture Handler. Works on iOS, Android and Web.",
 	"author": "Doho <zhaodonghao586@outlook.com> (https://github.com/dohooo)",
