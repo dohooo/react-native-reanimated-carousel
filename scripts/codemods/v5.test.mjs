@@ -77,6 +77,25 @@ const Example = () => (
   assert.deepEqual(result.warnings, ["mode", "onScrollEnd", "width"]);
 });
 
+test("moves a shared value from onProgressChange to progress", () => {
+  const source = `
+import { useSharedValue } from "react-native-reanimated";
+import Carousel from "react-native-reanimated-carousel";
+export function Example() {
+  const progress = useSharedValue(0);
+  return <Carousel data={[]} renderItem={() => null} onProgressChange={progress} loop />;
+}
+export function Other({ handler }) {
+  return <Carousel data={[]} renderItem={() => null} onProgressChange={handler} loop />;
+}
+`;
+  const result = transformSource(source, "fixture.tsx");
+
+  assert.match(result.code, /progress=\{progress\}/);
+  assert.doesNotMatch(result.code, /onProgressChange=\{progress\}/);
+  assert.match(result.code, /onProgressChange=\{handler\}/);
+});
+
 test("is idempotent", () => {
   const source = `
 import Carousel from "react-native-reanimated-carousel";

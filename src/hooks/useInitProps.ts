@@ -145,6 +145,14 @@ function validateStaticProps<Item>(props: CarouselProps<Item>) {
     );
   }
 
+  // The handler is scheduled from the UI runtime, where a non-function aborts the app natively.
+  // v4 accepted a shared value here; v5 takes it through `progress`.
+  if (props.onProgressChange !== undefined && typeof props.onProgressChange !== "function") {
+    throw new Error(
+      "[react-native-reanimated-carousel] onProgressChange must be a function. To write progress into a shared value, pass it as `progress={value}`."
+    );
+  }
+
   if (props.itemSize !== undefined && (!Number.isFinite(props.itemSize) || props.itemSize <= 0)) {
     throw new Error("[react-native-reanimated-carousel] itemSize must be a positive number.");
   }

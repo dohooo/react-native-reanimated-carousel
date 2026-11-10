@@ -118,6 +118,15 @@ describe("useInitProps", () => {
     expect(result.error?.message).toContain("mutually exclusive");
   });
 
+  it("rejects a shared value passed as onProgressChange", () => {
+    jest.spyOn(console, "error").mockImplementation(() => {});
+    const { result } = renderHook(() =>
+      useInitProps(createProps({ onProgressChange: { value: 0 } as never }))
+    );
+
+    expect(result.error?.message).toContain("pass it as `progress={value}`");
+  });
+
   it("throws synchronously for an invalid initial defaultIndex", () => {
     jest.spyOn(console, "error").mockImplementation(() => {});
     const { result } = renderHook(() => useInitProps(createProps({ defaultIndex: 4 })));

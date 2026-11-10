@@ -61,6 +61,7 @@ The codemod performs deterministic changes only:
 - renames direct Carousel props and public type imports;
 - converts `vertical`, `autoPlayReverse`, item sizing, and snap booleans;
 - adds `loop={true}` wherever v4 code relied on the old default;
+- moves a shared value passed to `onProgressChange` to `progress` when the file declares it with `useSharedValue`;
 - reports APIs that require a product decision instead of guessing.
 
 It is idempotent. Review every warning before continuing.
