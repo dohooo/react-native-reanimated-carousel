@@ -2,36 +2,45 @@
 id: compare
 title: Compare
 sidebar_label: Compare
-description: The react-native-reanimated-carousel compared with react-native-snap-carousel.
+description: When to use react-native-reanimated-carousel, and how it compares with PagerView and react-native-snap-carousel.
 keywords:
   - react-native-reanimated-carousel
-  - reanimated-carousel
+  - react native carousel
   - reanimated carousel
-  - react-native
-  - snap-carousel
-  - react native
-  - snap carousel
-  - ios
-  - android
+  - react-native-snap-carousel alternative
+  - react-native-pager-view
+  - pager view
+  - swiper
   - carousel
-  - snap
-  - reanimated
-image: 
 slug: /compare
 ---
 
 # Compare
----
 
-> react-native-reanimated-carousel vs react-native-snap-carousel
+## When to use it
 
-The common RN infinite scroll component. It get stuck on a fast slide. Wait for the next element to appear. This component will not have similar problems.Because using a completely different approach so the best performance is achieved.That's why this library was created.
+Use react-native-reanimated-carousel for any swipeable row or column of items: banners, image galleries, product cards, onboarding screens and card stacks.
 
-Use react-native-snap-carousel for quick swiping,you can see caton clearly when you reach the junction.
+- Items can be narrower than the carousel, so the neighbors peek in.
+- `loop`, `autoplay` and `snapMode` (`"page"`, `"nearest"` or `"none"`) are props.
+- Parallax and stack layouts are built in. For anything else, `itemAnimation` takes your own Reanimated worklet.
+- Gestures and animations run on the UI thread through Reanimated and Gesture Handler.
+- The same code runs on iOS, Android and web. The library has no native module of its own, so it works in Expo Go.
+
+## PagerView
+
+[`react-native-pager-view`](https://github.com/callstack/react-native-pager-view) and its [`@expo/ui` drop-in](https://docs.expo.dev/versions/latest/sdk/ui/drop-in-replacements/pagerview/) wrap the platform's native pager. Each child fills the whole pager, one page at a time. Neither runs on web, and neither has a built-in loop or autoplay.
+
+Pick PagerView when you want the platform's own page swipe for full-screen pages on iOS and Android only. Pick this library when items should peek, loop, autoplay, animate as a parallax or stack, or run on web too.
+
+## react-native-snap-carousel
+
+`react-native-snap-carousel` is no longer maintained. [React Native Directory](https://reactnative.directory/?search=react-native-snap-carousel) lists react-native-reanimated-carousel as its alternative.
+
+With looping on, fast swipes make react-native-snap-carousel stall at the loop seam while it waits for the next item to render:
 
 ![react-native-snap-carousel](../../../assets/react-native-snap-carousel.gif)
 
-Compared with react-native-reanimated-carousel,The actual test was ten slides per second, but it didn't show up very well in gif.
+react-native-reanimated-carousel keeps up at about ten swipes per second (the GIF frame rate hides some of it):
 
 ![react-native-reanimated-carousel](../../../assets/normal-fast.gif)
-

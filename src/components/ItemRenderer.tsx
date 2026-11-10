@@ -15,6 +15,7 @@ import {
 } from "../hooks/useVisibleRanges";
 import type { CarouselItemAnimation, CarouselRenderItem } from "../types";
 import { computedRealIndexWithAutoFillData } from "../utils/computed-with-auto-fill-data";
+import { withLegacyRenderItemWarning } from "../utils/legacy-props";
 import { webOnlyDependencies } from "../utils/web-only-dependencies";
 
 interface Props {
@@ -144,11 +145,13 @@ export const ItemRenderer: FC<Props> = (props) => {
             animationStyle={itemAnimation || layoutConfig}
           >
             {({ relativeProgress }) =>
-              renderItem({
-                item: rawItem,
-                index: realIndex,
-                relativeProgress,
-              })
+              renderItem(
+                withLegacyRenderItemWarning({
+                  item: rawItem,
+                  index: realIndex,
+                  relativeProgress,
+                })
+              )
             }
           </ItemLayout>
         );

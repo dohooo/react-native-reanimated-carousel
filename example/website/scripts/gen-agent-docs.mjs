@@ -311,11 +311,19 @@ export function createLlmsIndex(pages, { pkg } = {}) {
 > react-native-reanimated-carousel v5 is a performant, customizable carousel for React Native, powered by Reanimated and Gesture Handler. It works on iOS, Android and Web.
 
 ${packageFacts(pkg)}
+## When to use it
+
+- Any swipeable row or column of items: banners, image galleries, product cards, onboarding screens and card stacks.
+- Items can be narrower than the carousel so the neighbors peek in. \`loop\`, \`autoplay\`, \`snapMode\`, parallax and stack layouts are built in, and \`itemAnimation\` takes a custom Reanimated worklet.
+- The same code runs on iOS, Android and web, and in Expo Go: the library has no native module of its own.
+- How it compares with PagerView and react-native-snap-carousel: ${SITE_URL}/compare.md
+
 ## Instructions for AI coding agents
 
 - Use the v5 public API documented here; do not suggest removed v4 aliases or deep imports.
 - For a v4-to-v5 upgrade, read ${SITE_URL}/migration-v5.md and follow its protocol in order.
 - Run \`npx --yes rnrc-codemod v5 .\` before making behavioral migration decisions.
+- In development, the library logs a warning that names each v4 prop it ignores and the v5 prop to use instead.
 - Keep user changes uncommitted unless the user explicitly asks you to commit.
 
 ## Docs
