@@ -8,6 +8,7 @@ import Animated, {
   type SharedValue,
   cancelAnimation,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
@@ -234,13 +235,17 @@ const StoryPage = React.memo(function StoryPage({
   const S = card.width;
 
   // Cube face: the leaving page turns on its right edge, the entering one on its left edge.
-  const face = useAnimatedStyle(() => {
-    const v = relativeProgress.value;
-    return {
-      transformOrigin: v < 0 ? "right center" : "left center",
-      transform: [{ perspective: 900 * s }, { rotateY: `${Math.max(-1, Math.min(1, v)) * 90}deg` }],
-    };
-  });
+  // Android turns a view in 3D only around its center, so the turning view is moved onto that
+  // edge and the page is moved back inside it.
+  const edge = useDerivedValue(() => (relativeProgress.value < 0 ? S / 2 : -S / 2));
+  const toEdge = useAnimatedStyle(() => ({ transform: [{ translateX: edge.value }] }));
+  const turn = useAnimatedStyle(() => ({
+    transform: [
+      { perspective: 900 * s },
+      { rotateY: `${Math.max(-1, Math.min(1, relativeProgress.value)) * 90}deg` },
+    ],
+  }));
+  const fromEdge = useAnimatedStyle(() => ({ transform: [{ translateX: -edge.value }] }));
   const shade = useAnimatedStyle(() => ({
     opacity: Math.min(1, Math.abs(relativeProgress.value)) * 0.7,
   }));
@@ -248,68 +253,73 @@ const StoryPage = React.memo(function StoryPage({
     transform: [{ scaleX: active.value === index ? fill.value : 0 }],
   }));
 
+  const size = { width: S, height: card.height + FOOTER };
   return (
-    <Animated.View style={[{ width: S, height: card.height + FOOTER }, face]}>
-      <LinearGradient
-        colors={story.colors}
-        locations={[0, 0.58, 1]}
-        {...direction(story.angle)}
-        style={[styles.card, { height: card.height }]}
-      >
-        <LinearGradient colors={["rgba(0,0,0,0.22)", "rgba(0,0,0,0)"]} style={styles.scrim} />
-        {story.deco === "code" ? (
-          <View
-            style={[
-              styles.code,
-              { top: card.height - 200 * s + 40 * s, left: 28 * s, padding: 16 * s },
-            ]}
+    <Animated.View style={[size, toEdge]}>
+      <Animated.View style={[size, turn]}>
+        <Animated.View style={[size, fromEdge]}>
+          <LinearGradient
+            colors={story.colors}
+            locations={[0, 0.58, 1]}
+            {...direction(story.angle)}
+            style={[styles.card, { height: card.height }]}
           >
-            <Text style={[styles.codeText, { fontSize: 14 * s, lineHeight: 22 * s }]}>
-              {"<Carousel\n  loop\n  itemAnimation={cube}\n/>"}
+            <LinearGradient colors={["rgba(0,0,0,0.22)", "rgba(0,0,0,0)"]} style={styles.scrim} />
+            {story.deco === "code" ? (
+              <View
+                style={[
+                  styles.code,
+                  { top: card.height - 200 * s + 40 * s, left: 28 * s, padding: 16 * s },
+                ]}
+              >
+                <Text style={[styles.codeText, { fontSize: 14 * s, lineHeight: 22 * s }]}>
+                  {"<Carousel\n  loop\n  itemAnimation={cube}\n/>"}
+                </Text>
+              </View>
+            ) : (
+              <Svg width={S} height={200 * s} viewBox="0 0 330 200" style={styles.deco}>
+                <DecoArt kind={story.deco} />
+              </Svg>
+            )}
+            <Text
+              style={[
+                styles.text,
+                { top: 150 * s, left: 24 * s, right: 24 * s, fontSize: 34 * s, lineHeight: 42 * s },
+              ]}
+            >
+              {story.text}
             </Text>
+            <View style={styles.track}>
+              <Animated.View style={[styles.bar, bar]} />
+            </View>
+            <View style={styles.user}>
+              <View style={styles.avatar}>
+                <Text style={styles.avatarText}>{story.user[0].toUpperCase()}</Text>
+              </View>
+              <Text style={styles.name}>{story.user}</Text>
+              <Text style={styles.time}>{story.time}</Text>
+              <View style={styles.spacer} />
+              <Icon d={ICONS.more} />
+              <Icon d={ICONS.close} />
+            </View>
+            <Animated.View style={[styles.shade, shade]} />
+          </LinearGradient>
+          <View style={styles.footer}>
+            <View style={styles.reply}>
+              <Text style={styles.replyText}>Send message</Text>
+            </View>
+            <Pressable accessibilityLabel="Like" hitSlop={10} onPress={() => setLiked((on) => !on)}>
+              <Icon
+                d={ICONS.heart}
+                size={28}
+                color={liked ? "#FF3B5C" : "#FFFFFF"}
+                fill={liked ? "#FF3B5C" : "none"}
+              />
+            </Pressable>
+            <Icon d={ICONS.send} size={28} />
           </View>
-        ) : (
-          <Svg width={S} height={200 * s} viewBox="0 0 330 200" style={styles.deco}>
-            <DecoArt kind={story.deco} />
-          </Svg>
-        )}
-        <Text
-          style={[
-            styles.text,
-            { top: 150 * s, left: 24 * s, right: 24 * s, fontSize: 34 * s, lineHeight: 42 * s },
-          ]}
-        >
-          {story.text}
-        </Text>
-        <View style={styles.track}>
-          <Animated.View style={[styles.bar, bar]} />
-        </View>
-        <View style={styles.user}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{story.user[0].toUpperCase()}</Text>
-          </View>
-          <Text style={styles.name}>{story.user}</Text>
-          <Text style={styles.time}>{story.time}</Text>
-          <View style={styles.spacer} />
-          <Icon d={ICONS.more} />
-          <Icon d={ICONS.close} />
-        </View>
-        <Animated.View style={[styles.shade, shade]} />
-      </LinearGradient>
-      <View style={styles.footer}>
-        <View style={styles.reply}>
-          <Text style={styles.replyText}>Send message</Text>
-        </View>
-        <Pressable accessibilityLabel="Like" hitSlop={10} onPress={() => setLiked((on) => !on)}>
-          <Icon
-            d={ICONS.heart}
-            size={28}
-            color={liked ? "#FF3B5C" : "#FFFFFF"}
-            fill={liked ? "#FF3B5C" : "none"}
-          />
-        </Pressable>
-        <Icon d={ICONS.send} size={28} />
-      </View>
+        </Animated.View>
+      </Animated.View>
     </Animated.View>
   );
 });

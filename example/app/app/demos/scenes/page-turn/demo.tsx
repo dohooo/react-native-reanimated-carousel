@@ -295,6 +295,8 @@ interface LeafProps {
 }
 
 // The front turns from 0° to −180° around the spine; the back follows 180° behind it.
+// Android turns a view in 3D only around its center, so each side spans both pages with the
+// spine in the middle, and padding keeps its page in one half.
 const Leaf = React.memo(function Leaf({ leaf, page, relativeProgress }: LeafProps) {
   const scale = page.width / PAGE.width;
   const angle = useDerivedValue(() =>
@@ -309,16 +311,21 @@ const Leaf = React.memo(function Leaf({ leaf, page, relativeProgress }: LeafProp
   const shade = useAnimatedStyle(() => ({
     opacity: interpolate(relativeProgress.value, [-1, -0.5, 0], [0, 0.45, 0], Extrapolation.CLAMP),
   }));
+  const spread = { top: page.top, left: -page.width, width: 2 * page.width, height: page.height };
   const fit = [styles.sheet, { transform: [{ scale }] }];
   return (
     <>
-      <Animated.View style={[styles.side, styles.frontSide, page, front]}>
+      <Animated.View
+        style={[styles.side, styles.turning, spread, { paddingLeft: page.width }, front]}
+      >
         <View style={fit}>
           <Front leaf={leaf} />
           <Shade style={shade} />
         </View>
       </Animated.View>
-      <Animated.View style={[styles.side, styles.backSide, page, { left: -page.width }, back]}>
+      <Animated.View
+        style={[styles.side, styles.turning, spread, { paddingRight: page.width }, back]}
+      >
         <View style={fit}>
           <Back leaf={leaf} />
           <Shade style={shade} spineRight />
@@ -558,8 +565,7 @@ const styles = StyleSheet.create({
   gutter: { position: "absolute", width: 16, pointerEvents: "none" },
   // A page on screen holds the 190 x 440 sheet, scaled to fill it.
   side: { position: "absolute", alignItems: "center", justifyContent: "center" },
-  frontSide: { left: 0, transformOrigin: "left center", backfaceVisibility: "hidden" },
-  backSide: { transformOrigin: "right center", backfaceVisibility: "hidden" },
+  turning: { backfaceVisibility: "hidden" },
   sheet: { width: PAGE.width, height: PAGE.height },
   // Everything below is in sheet units, the same numbers as the prototype's CSS.
   face: { ...StyleSheet.absoluteFillObject, overflow: "hidden" },
